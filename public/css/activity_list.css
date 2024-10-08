@@ -4,10 +4,6 @@
     font-family: "Noto Sans Thai", sans-serif;
 }
 
-.modal {
-    z-index: 1050;
-}
-
 body,
 .table-heading,
 .table-responsive table {

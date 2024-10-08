@@ -1,0 +1,19 @@
+body,
+.form-control,
+.form-label,
+.form-select,
+.form-check-input,
+.form-check-label,
+.btn {
+    font-family: "Noto Sans Thai", sans-serif;
+}
+
+/* Style to center the modal vertically and horizontally */
+.modal-dialog {
+    display: flex;
+    align-items: center; /* Centers vertically */
+    justify-content: center; /* Centers horizontally */
+    min-height: calc(
+        100vh - 1rem
+    ); /* Ensures modal does not overflow screen height */
+}

@@ -1,0 +1,142 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Thai&display=swap");
+
+.modal-content {
+    font-family: "Noto Sans Thai", sans-serif;
+}
+
+.modal {
+    z-index: 1050;
+}
+
+body,
+.table-heading,
+.table-responsive table {
+    font-family: "Noto Sans Thai", sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.table-heading {
+    text-align: center;
+    background: linear-gradient(
+        101.5deg,
+        rgb(249, 100, 100) 48.8%,
+        rgb(146, 166, 250) 98.7%
+    );
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+table {
+    min-width: 100vw;
+    width: auto;
+    flex: 1;
+    display: grid;
+    border-collapse: collapse;
+    grid-template-columns:
+        minmax(100px, 1fr)
+        minmax(300px, 1.67fr)
+        minmax(200px, 1.67fr)
+        minmax(300px, 1.67fr)
+        minmax(170px, 1.67fr)
+        minmax(150px, 1.67fr)
+        minmax(190px, 1.67fr)
+        minmax(190px, 1.67fr)
+        minmax(190px, 1.67fr);
+}
+
+thead th {
+    text-align: center;
+}
+
+thead,
+tbody,
+tr {
+    display: contents;
+}
+
+th,
+td {
+    padding: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+th {
+    position: sticky;
+    top: 0;
+    background: #f9f9f9;
+    font-weight: semibold;
+    font-size: 1.1rem;
+    color: black;
+}
+
+th:last-child {
+    border: 0;
+}
+
+.resize-handle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: black;
+    opacity: 0;
+    width: 3px;
+    cursor: col-resize;
+}
+
+.resize-handle:hover,
+.header--being-resized .resize-handle {
+    opacity: 0.5;
+}
+
+th:hover .resize-handle {
+    opacity: 0.3;
+}
+
+td {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: #808080;
+}
+
+tr:nth-child(even) td {
+    background: #f8f6ff;
+}
+
+.status-btn {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #f0fff8;
+    color: #18ab56;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+td.custom-td {
+    font-weight: 600;
+    color: black;
+    text-align: center;
+}
+.long-cell {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    text-align: left;
+}

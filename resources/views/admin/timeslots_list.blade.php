@@ -49,13 +49,13 @@
                                     <td>{{ $timeslot->max_capacity }}</td>
                                     <td>
                                         <ul class="list-inline m-0">
-                                            <li class="list-inline-item">
+                                            {{-- <li class="list-inline-item">
                                                 <a href="/" data-toggle="tooltip" data-placement="top" title="Add">
                                                     <button class="btn btn-primary btn-sm rounded-0" type="button">
                                                         <i class="fa fa-table"></i>
                                                     </button>
                                                 </a>
-                                            </li>
+                                            </li> --}}
                                             <li class="list-inline-item">
                                                 <button class="btn btn-success btn-sm rounded-0" type="button"
                                                     data-toggle="modal"
@@ -119,8 +119,10 @@
                                                             class="form-control" value="{{ $timeslot->max_capacity }}"
                                                             required>
                                                     </div>
-                                                    <button type="submit"
-                                                        class="btn btn-primary">บันทึกการเปลี่ยนแปลง</button>
+                                                    <div class="pt-2">
+                                                        <button type="submit"
+                                                            class="btn btn-primary">บันทึกการเปลี่ยนแปลง</button>
+                                                    </div>
                                                 </form>
                                             </div>
                                         </div>
@@ -137,7 +139,7 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="InsertTimeslotsModalLabel">เพิ่มกิจกรรมรอบการเข้าชมใหม่</h5>
+                            <h5 class="modal-title" id="InsertTimeslotsModalLabel">เพิ่มรอบการเข้าชมของกิจกรรม</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>

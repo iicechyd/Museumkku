@@ -50,27 +50,44 @@ function calculateTotal() {
 
 function fetchTimeslots() {
     const activityId = document.getElementById("fk_activity_id").value;
-    const timeslotSelect = document.getElementById("fk_timeslots_id");
 
-    timeslotSelect.innerHTML = '<option value="">เลือกรอบการเข้าชม</option>';
-
-    if (activityId) {
-        fetch(`/timeslots?activity_id=${activityId}`)
-            .then((response) => response.json())
-            .then((data) => {
-                data.forEach((timeslot) => {
-                    const option = document.createElement("option");
-                    option.value = timeslot.timeslots_id;
-                    option.textContent = `${timeslot.start_time} - ${timeslot.end_time}`;
-                    timeslotSelect.appendChild(option);
-                });
-            })
-            .catch((error) =>
-                console.error("Error fetching timeslots:", error)
-            );
-    }
+    // สมมติว่าคุณมี route ที่จัดการการดึง timeslots โดยใช้ activity_id
+    fetch(`/timeslots/${activityId}`)
+        .then((response) => response.json())
+        .then((data) => {
+            const timeslotSelect = document.getElementById("fk_timeslots_id");
+            timeslotSelect.innerHTML =
+                '<option value="">เลือกรอบการเข้าชม</option>';
+            data.forEach((timeslot) => {
+                const option = document.createElement("option");
+                option.value = timeslot.id;
+                option.text = `${timeslot.start_time} - ${timeslot.end_time}`;
+                timeslotSelect.appendChild(option);
+            });
+        });
 }
+// function fetchTimeslots() {
+//     const activityId = document.getElementById("fk_activity_id").value;
+//     const timeslotSelect = document.getElementById("fk_timeslots_id");
 
+//     timeslotSelect.innerHTML = '<option value="">เลือกรอบการเข้าชม</option>';
+
+//     if (activityId) {
+//         fetch(`/timeslots?activity_id=${activityId}`)
+//             .then((response) => response.json())
+//             .then((data) => {
+//                 data.forEach((timeslot) => {
+//                     const option = document.createElement("option");
+//                     option.value = timeslot.timeslots_id;
+//                     option.textContent = `${timeslot.start_time} - ${timeslot.end_time}`;
+//                     timeslotSelect.appendChild(option);
+//                 });
+//             })
+//             .catch((error) =>
+//                 console.error("Error fetching timeslots:", error)
+//             );
+//     }
+// }
 function showProvinces() {
     let input_province = document.querySelector("#province");
     let url = "https://ckartisan.com/api/provinces";

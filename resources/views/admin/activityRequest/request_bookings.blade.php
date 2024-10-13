@@ -46,9 +46,8 @@
                         <td>{{ $item->students_qty }} คน</td>
                         <td>{{ $item->adults_qty }} คน</td>
                         <td>{{ $item->totalVisitors }} คน</td>
-                        <td>{{ $item->remaining_capacity }}</td>
+                        <td>{{ $item->remaining_capacity }} / {{ $item->timeslot->max_capacity }} คน</td>
                         <td>{{ number_format($item->totalPrice, 2) }} บาท</td>
-
                         <td>
                             @switch($item->status)
                                 @case(0)

@@ -20,14 +20,16 @@ class BookingController extends Controller
             })
             ->where('status', 0)
             ->paginate(5);
+
         foreach ($requestBookings as $item) {
-            // Calculate total booked for the same booking_date and timeslot
-            $totalBooked = Bookings::where('booking_date', $item->booking_date)
+            // Calculate total approved bookings for the same booking_date and timeslot
+            $totalApproved = Bookings::where('booking_date', $item->booking_date)
                 ->where('timeslots_id', $item->timeslot->timeslots_id)
-                ->where('status', 0)
+                ->where('status', 1) // Only count approved bookings
                 ->sum(DB::raw('children_qty + students_qty + adults_qty'));
 
-            $item->remaining_capacity = $item->timeslot->max_capacity - $totalBooked;
+            // For unapproved bookings, keep max_capacity without adjustments
+            $item->remaining_capacity = $item->timeslot->max_capacity - $totalApproved;
 
             // Calculate total price
             $childrenPrice = $item->children_qty * $item->activity->children_price;
@@ -46,15 +48,66 @@ class BookingController extends Controller
 
     function showApproved()
     {
-        $approvedBookings = Bookings::with('activity', 'timeslot')->where('status', 1) // สถานะอนุมัติ
+        $approvedBookings = Bookings::with('activity', 'timeslot')
+            ->where('status', 1) // Only fetch approved bookings
             ->paginate(5);
+
+        foreach ($approvedBookings as $item) {
+            // Calculate total approved bookings for the same booking_date and timeslot
+            $totalApproved = Bookings::where('booking_date', $item->booking_date)
+                ->where('timeslots_id', $item->timeslot->timeslots_id)
+                ->where('status', 1) // Only count approved bookings
+                ->sum(DB::raw('children_qty + students_qty + adults_qty'));
+
+            // For approved bookings, adjust the remaining capacity
+            $item->remaining_capacity = $item->timeslot->max_capacity - $totalApproved;
+
+            // Calculate total price
+            $childrenPrice = $item->children_qty * $item->activity->children_price;
+            $studentPrice = $item->students_qty * $item->activity->student_price;
+            $adultPrice = $item->adults_qty * $item->activity->adult_price;
+
+            // Calculate total price
+            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
+
+            // Calculate total visitors
+            $item->totalVisitors = $item->children_qty + $item->students_qty + $item->adults_qty;
+        }
+
         return view('admin.generalRequest.approved_bookings', compact('approvedBookings'));
     }
 
     function showExcept()
     {
-        $exceptBookings = Bookings::with('activity', 'timeslot')->where('status', 2) // สถานะยกเลิก
+        $exceptBookings = Bookings::with('activity', 'timeslot')
+            ->where('status', 2) // Only fetch canceled bookings (status = 2)
             ->paginate(5);
+
+        foreach ($exceptBookings as $item) {
+            // Calculate total approved bookings for the same booking_date and timeslot
+            $totalApproved = Bookings::where('booking_date', $item->booking_date)
+                ->where('timeslots_id', $item->timeslot->timeslots_id)
+                ->where('status', 1) // Only count approved bookings
+                ->sum(DB::raw('children_qty + students_qty + adults_qty'));
+
+            // Set remaining capacity initially, subtract approved bookings
+            $item->remaining_capacity = $item->timeslot->max_capacity - $totalApproved;
+
+            // Since the status is 2 (canceled), add back the visitors of this booking to remaining capacity
+            $item->remaining_capacity += $item->children_qty + $item->students_qty + $item->adults_qty;
+
+            // Calculate total price (for reference or auditing purposes)
+            $childrenPrice = $item->children_qty * $item->activity->children_price;
+            $studentPrice = $item->students_qty * $item->activity->student_price;
+            $adultPrice = $item->adults_qty * $item->activity->adult_price;
+
+            // Calculate total price
+            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
+
+            // Calculate total visitors
+            $item->totalVisitors = $item->children_qty + $item->students_qty + $item->adults_qty;
+        }
+
         return view('admin.generalRequest.except_cases_bookings', compact('exceptBookings'));
     }
 
@@ -151,7 +204,6 @@ class BookingController extends Controller
             return back()->with('error', 'รอบการเข้าชมนี้เต็มแล้วหรือเกินความจุสูงสุด');
         }
 
-
         // หากไม่เกินความจุสูงสุด ให้ทำการบันทึกข้อมูลการจอง
         $booking = new Bookings();
         $booking->activity_id = $request->input('fk_activity_id');
@@ -194,10 +246,4 @@ class BookingController extends Controller
         return view('form_bookings', ['activities' => $activities]);
     }
 
-    // ฟังก์ชันแสดงฟอร์มจองเข้าร่วมกิจกรรม (เฉพาะ activity_type_id = 2)
-    public function showActivityBookingForm()
-    {
-        $activities = Activity::where('activity_type_id', 2)->get(); // ดึงกิจกรรมที่มี activity_type_id = 2
-        return view('form_bookings', ['activities' => $activities]);
-    }
 }

@@ -39,11 +39,11 @@
                         <td>{{ $item->visitorName }}</td>
                         <td>{{ $item->visitorEmail }}</td>
                         <td>{{ $item->tel }}</td>
-                        <td>{{ $item->children_qty }}</td>
-                        <td>{{ $item->students_qty }}</td>
-                        <td>{{ $item->adults_qty }}</td>
-                        <td>{{ $item->children_qty + $item->students_qty + $item->adults_qty }}</td>
-
+                        <td>{{ $item->children_qty }} คน</td>
+                        <td>{{ $item->students_qty }} คน</td>
+                        <td>{{ $item->adults_qty }} คน</td>
+                        <td>{{ $item->children_qty + $item->students_qty + $item->adults_qty }} คน</td>
+                        <td>{{ $item->remaining_capacity }} / {{ $item->timeslot->max_capacity }} คน</td>
                         <td>
                             @switch($item->status)
                                 @case(0)

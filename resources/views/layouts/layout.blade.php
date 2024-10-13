@@ -62,9 +62,7 @@
         </div>
     </nav>
 
-    <div class="container">
-        @yield('content')
-    </div>
+    @yield('content')
 
     <div class="footer">
         <footer class="text-center" style="background-color: #F9F9F9;">

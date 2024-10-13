@@ -1,6 +1,74 @@
 @extends('layouts.layout')
 
+<head>
+    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+</head>
 @section('content')
+    <div class="container py-4">
+        <div class="wrapper">
+            <h2>สมัครสมาชิก</h2>
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
+                <div class="input-box">
+                    <input id="name" type="text" class="form-control @error('name') is-invalid @enderror"
+                        placeholder="กรุณากรอกชื่อของคุณ" name="name" value="{{ old('name') }}" required
+                        autocomplete="name" autofocus>
+
+                    @error('name')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="input-box">
+                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
+                        placeholder="กรุณาอีเมลของคุณ" name="email" value="{{ old('email') }}" required
+                        autocomplete="email">
+
+                    @error('email')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="input-box">
+                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
+                        placeholder="กรุณากรอกรหัสผ่านของคุณ" name="password" required autocomplete="new-password">
+
+                    @error('password')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="input-box">
+                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required
+                        placeholder="กรุณากรอกรหัสผ่านของคุณอีกครั้ง" autocomplete="new-password">
+                </div>
+                {{-- <div class="policy">
+                    <input type="checkbox">
+                    <h3>ฉันยอมรับข้อกำหนดและเงื่อนไขทั้งหมด</h3>
+                </div> --}}
+                <div class="input-box button">
+                    <input type="Submit" value="สมัครสมาชิก">
+                </div>
+                <div class="text">
+                    <h3>มีบัญชีอยู่แล้วใช่หรือไม่? <a href="login">เข้าสู่ระบบ</a></h3>
+                </div>
+            </form>
+        </div>
+
+    </div>
+@endsection
+
+
+{{-- @extends('layouts.layout')
+
+<head>
+    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+</head>
+@section('content')
+
     <div class="container py-4">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -12,7 +80,8 @@
                             @csrf
 
                             <div class="row mb-3">
-                                <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
+                                <label for="name"
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="name" type="text"
@@ -84,4 +153,4 @@
             </div>
         </div>
     </div>
-@endsection
+@endsection --}}

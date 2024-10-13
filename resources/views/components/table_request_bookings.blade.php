@@ -15,7 +15,7 @@
                 <th data-type="numeric">นร / นศ<span class="resize-handle"></span></th>
                 <th data-type="numeric">ผู้ใหญ่ / คุณครู<span class="resize-handle"></span></th>
                 <th data-type="numeric">จำนวนคนทั้งหมด<span class="resize-handle"></span></th>
-                <th data-type="numeric">ยอดคงเหลือต่อรอบ (คน)<span class="resize-handle"></span></th>
+                <th data-type="numeric">ยอดคงเหลือต่อรอบ<span class="resize-handle"></span></th>
                 <th data-type="numeric">ยอดรวมราคา<span class="resize-handle"></span></th>
                 <th data-type="text-short">สถานะการจอง<span class="resize-handle"></span></th>
                 <th data-type="text-short">แก้ไขสถานะ<span class="resize-handle"></span></th>

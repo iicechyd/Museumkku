@@ -9,8 +9,8 @@
 @section('content')
     <div class="container">
         <div class="title p-5 text-center">
-            <h1 style="color: #E6A732; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);">
-                กิจกรรมค่ายวิทยาศาสตร์
+            <h1 style="color: #489085; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);">
+                จองเข้าชมพิพิธภัณฑ์นิทรรศการทั่วไป
             </h1>
         </div>
     </div>
@@ -29,5 +29,26 @@
         @else
             <div class="text-center pb-5">ไม่มีข้อมูลกิจกรรม</div>
     @endif
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="activityDetailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p></p>
+                    <img src="" class="img-fluid" alt="Activity Image">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection

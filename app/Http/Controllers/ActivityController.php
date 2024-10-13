@@ -9,6 +9,12 @@ use App\Models\ActivityType;
 
 class ActivityController extends Controller
 {
+    public function showDetail($activity_id)
+    {
+        $activity = Activity::findOrFail($activity_id);
+        return view('activity_detail', compact('activity')); // Pass the single activity
+    }
+
     public function index()
     {
         $activities = Activity::all();
@@ -17,8 +23,14 @@ class ActivityController extends Controller
 
     public function previewActivity()
     {
-        $activities = Activity::all();
+        $activities = Activity::where('activity_type_id', 2)->get();
         return view('preview_activity', compact('activities'));
+    }
+
+    public function previewGeneral()
+    {
+        $activities = Activity::where('activity_type_id', 1)->get();
+        return view('preview_general', compact('activities'));
     }
 
     function showListActivity()

@@ -49,9 +49,6 @@
 
                         <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                                <a href="{{ url('/admin/timeslots_list') }}" class="sidebar-link">
-                                    แก้ไขรอบการเข้าชม
-                                </a>
                                 <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"
                                     data-bs-target="#multi-two" aria-expanded="false" aria-controls="multi-two">
                                     สถานะการจอง
@@ -86,6 +83,11 @@
                         <ul id="dashboard" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
                                 <a href="/admin/activity_list" class="sidebar-link">แก้ไขรายละเอียดกิจกรรม</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="{{ url('/admin/timeslots_list') }}" class="sidebar-link">
+                                    แก้ไขรอบการเข้าชม
+                                </a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="#" class="sidebar-link">แก้ไขข้อมูลพิพิธภัณฑ์</a>

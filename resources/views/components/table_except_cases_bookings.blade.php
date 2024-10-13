@@ -14,11 +14,10 @@
                 <th data-type="numeric">เด็ก (คน)<span class="resize-handle"></span></th>
                 <th data-type="numeric">นร / นศ (คน)<span class="resize-handle"></span></th>
                 <th data-type="numeric">ผู้ใหญ่ / คุณครู (คน)<span class="resize-handle"></span></th>
-                <th data-type="numeric">ยอดรวมจำนวน (คน)<span class="resize-handle"></span></th>
+                <th data-type="numeric">จำนวนคนทั้งหมด<span class="resize-handle"></span></th>
                 <th data-type="text-short">สถานะการจอง<span class="resize-handle"></span></th>
                 <th data-type="text-short">แก้ไขสถานะ<span class="resize-handle"></span></th>
                 <th data-type="text-short">วันเวลาที่จองเข้ามา<span class="resize-handle"></span></th>
-                <th data-type="numeric">ยอดคงเหลือต่อรอบ (คน)<span class="resize-handle"></span></th>
             </tr>
         </thead>
         <tbody>

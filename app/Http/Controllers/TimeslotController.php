@@ -16,13 +16,20 @@ class TimeslotController extends Controller
 
         return view('admin.timeslots_list', compact('activities'));
     }
-    public function getTimeslots(Request $request)
+    public function getTimeslots($activity_id)
     {
-        $activityId = $request->get('activity_id');
-        $timeslots = Timeslots::where('activity_id', $activityId)->get();
-
+        $timeslots = Timeslots::where('activity_id', $activity_id)->get(); // ดึง timeslots ตาม activity_id
         return response()->json($timeslots);
     }
+
+
+    // public function getTimeslots(Request $request)
+    // {
+    //     $activityId = $request->get('activity_id');
+    //     $timeslots = Timeslots::where('activity_id', $activityId)->get();
+
+    //     return response()->json($timeslots);
+    // }
 
     public function fetchTimeslots(Request $request)
     {

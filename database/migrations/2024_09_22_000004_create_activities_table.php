@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->string('activity_name');
             $table->text('description');
             $table->integer('children_price')->nullable()->default(0);
-            $table->integer(column: 'student_price')->nullable()->default(0);
+            $table->integer('student_price')->nullable()->default(0);
             $table->integer('adult_price')->nullable()->default(0);
             $table->string('image')->nullable();
 

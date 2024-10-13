@@ -15,12 +15,21 @@
                 @csrf
                 <div class="col-md-4">
                     <label for="fk_activity_id" class="form-label">ประเภทเข้าชม</label>
+                    <input type="hidden" id="fk_activity_id" name="fk_activity_id" value="{{ $activity_id }}">
+                    <select class="form-select" disabled>
+                        <option value="{{ $activity_id }}">{{ $selectedActivity->activity_name }}</option>
+                        <!-- Display selected activity -->
+                    </select>
+                </div>
+
+                {{-- <div class="col-md-4">
+                    <label for="fk_activity_id" class="form-label">ประเภทเข้าชม</label>
                     <select id="fk_activity_id" class="form-select @error('fk_activity_id') is-invalid @enderror"
                         name="fk_activity_id" onchange="fetchTimeslots(); fetchActivityPrice();">
                         <option value="">เลือกประเภทเข้าชม</option>
                         @foreach ($activities as $activity)
-                            <option value="{{ $activity->activity_id }}"
-                                {{ old('fk_activity_id') == $activity->activity_id ? 'selected' : '' }}>
+                            <option value="{{ $activity->activity_id }}" {{ old('fk_activity_id') == $activity->activity_id ? 'selected' : '' }}
+                                {{ $selectedActivity && $selectedActivity->activity_id == $activity->activity_id ? 'selected' : '' }}>
                                 {{ $activity->activity_name }}
                             </option>
                         @endforeach
@@ -30,12 +39,17 @@
                             <span class="text-danger">{{ $message }}</span>
                         </div>
                     @enderror
-                </div>
+                </div> --}}
                 <div class="form-group col-5">
                     <label for="fk_timeslots_id">รอบการเข้าชม:</label>
                     <select id="fk_timeslots_id" class="form-select @error('fk_timeslots_id') is-invalid @enderror"
                         name="fk_timeslots_id">
                         <option value="">เลือกรอบการเข้าชม</option>
+                        @foreach ($timeslots as $timeslot)
+                            <option value="{{ $timeslot->timeslots_id }}">
+                                {{ $timeslot->start_time }} - {{ $timeslot->end_time }}
+                            </option>
+                        @endforeach
                     </select>
                     @error('fk_timeslots_id')
                         <div class="my-2">
@@ -43,6 +57,7 @@
                         </div>
                     @enderror
                 </div>
+
 
                 <div class="form-group col-5">
                     <label for="booking_date">วันที่จอง:</label>
@@ -201,9 +216,12 @@
                     <h5>ราคารวม: <span id="totalPrice">0.00</span> บาท</h5>
                 </div>
 
-                <input type="hidden" id="children_price" name="children_price">
-                <input type="hidden" id="student_price" name="student_price">
-                <input type="hidden" id="adult_price" name="adult_price">
+                <input type="hidden" id="children_price" name="children_price"
+                    value="{{ $selectedActivity->children_price }}">
+                <input type="hidden" id="student_price" name="student_price"
+                    value="{{ $selectedActivity->student_price }}">
+                <input type="hidden" id="adult_price" name="adult_price" value="{{ $selectedActivity->adult_price }}">
+
 
                 <div class="col-12 d-flex justify-content-center py-4">
                     <button type="submit" class="btn btn-primary btn-lg ms-2">

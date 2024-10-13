@@ -3,39 +3,35 @@
 
 <head>
     <link rel="stylesheet" href="{{ asset('css/card.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Maitree&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 @section('content')
-    <div class="container">
-        <div class="title p-5 text-center">
-            <h1 style="color: #489085; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); 
-">
-                ระบบจองเข้าชมศูนย์พิพิธภัณฑ์</h1>
-            <h2 style="color: #E6A732; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); 
-">
-                และแหล่งเรียนรู้ตลอดชีวิต <span style="color: #C06628;">มหาวิทยาลัยขอนแก่น</span>
-            </h2>
-            <a href="{{ url('/form_bookings/general') }}" class="btn"
-                style="background-color: #489085; color: #fff; font-size: 1.6rem; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); font-family: 'Noto Sans Thai', sans-serif; font-weight: 700;">+
-                จองเข้าชมพิพิธภัณฑ์</a>
-            <a href="{{ url('/form_bookings/activity') }}" class="btn"
-                style="background-color: #E6A732; color: #fff; font-size: 1.6rem; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); font-family: 'Noto Sans Thai', sans-serif; font-weight: 700;">+
-                จองเข้าร่วมกิจกรรม</a>
+    <div class="container-fluid p-0">
+        <div class="row align-items-center"
+            style="background-image: url('/img/bg_cover.png'); background-color: #C5C6C7; background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 100vh; width: 100%; margin: 0; padding: 0;">
+            <div class="col-12 col-md-8 offset-md-2 text-left text-md-left" style="padding-left: 2rem;">
+                <h1 class="display-4 font-weight-bold"
+                    style="font-family: 'Maitree', serif; color: white; text-shadow: 3px 2px 2px rgba(0, 0, 0, 0.3);">
+                    ศูนย์พิพิธภัณฑ์
+                </h1>
+                <h1 class="display-4 font-weight-bold"
+                    style="font-family: 'Maitree', serif; color: white; text-shadow: 3px 2px 2px rgba(0, 0, 0, 0.3);">
+                    และแหล่งเรียนรู้ตลอดชีวิต
+                </h1>
+                <h2 class="display-4 font-weight-bold"
+                    style="font-family: 'Maitree', serif; color: white; text-shadow: 3px 2px 2px rgba(0, 0, 0, 0.3);">
+                    มหาวิทยาลัยขอนแก่น
+                </h2>
+                <a href="{{ url('/preview') }}" class="btn btn-lg"
+                    style="font-family: 'Noto Sans Thai', sans-serif; background-color: black; color: white; font-size: 1.6rem; padding: 0.45rem 3rem; border-radius: 0; transition: all 0.3s ease;"
+                    onmouseover="this.style.backgroundColor='white'; this.style.color='black';"
+                    onmouseout="this.style.backgroundColor='black'; this.style.color='white';">
+                    จองเข้าชม
+                </a>
+            </div>
         </div>
-    </div>
-    @if ($activities->count())
-        <div class="container pb-5 d-flex flex-wrap justify-content-center">
-            @foreach ($activities as $item)
-                <div class="col-md-3 mb-4">
-                    <x-card-group>
-                        <x-card title="{{ $item->activity_name }}" text="{{ $item->description }}"
-                            image="{{ asset('images/' . $item->image) }}" />
-                    </x-card-group>
-                </div>
-            @endforeach
-        @else
-            <div class="text-center pb-5">ไม่มีข้อมูลกิจกรรม</div>
-    @endif
     </div>
 @endsection

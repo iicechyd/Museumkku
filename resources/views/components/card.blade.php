@@ -1,4 +1,4 @@
-@props(['title', 'text', 'image', 'footer'])
+@props(['title', 'text', 'image', 'detail', 'booking'])
 
 
 <div class="card" style="width: 18rem; min-height: 100%; display: flex; flex-direction: column;">
@@ -8,7 +8,13 @@
         <p class="card-text">{{ $text }}</p>
     </div>
     <div class="footer text-center" style="padding: 10px;">
-        <a href="#" class="btn text-white"
-            style="width: 100%; margin: 0 auto; background-color: #489085;">รายละเอียดเพิ่มเติม</a>
+        <div class="flex justify-center space-x-4">
+            <a href="{{ $detail }}" class="btn text-white width:50%" style="background-color: #489085;">
+                รายละเอียดเพิ่มเติม
+            </a>
+            <a href="{{ $booking }}" class="btn text-white width:50%" style=" background-color: #E6A732;">
+                จองกิจกรรม
+            </a>
+        </div>
     </div>
 </div>

@@ -15,9 +15,9 @@
 
     <div class="container">
         <div class="button pb-2">
-            <a href="{{ route('request_bookings') }}" class="btn-request-outline">รออนุมัติ</a>
-            <a href="{{ route('approved_bookings') }}" class="btn-approved-outline">อนุมัติ</a>
-            <a href="{{ route('except_bookings') }}" class="btn-except">กรณีพิเศษ</a>
+            <a href="{{ url('/admin/request_bookings/general') }}" class="btn-request-outline">รออนุมัติ</a>
+            <a href="{{ url('/admin/approved_bookings/general') }}" class="btn-approved-outline">อนุมัติ</a>
+            <a href="{{ url('/admin/except_cases_bookings/general') }}" class="btn-except">กรณีพิเศษ</a>
         </div>
         @if (count($exceptBookings) > 0)
             <h1 class="table-heading text-center">การจองกรณีพิเศษ</h1>
@@ -41,10 +41,10 @@
                         <td>{{ $item->visitorName }}</td>
                         <td>{{ $item->visitorEmail }}</td>
                         <td>{{ $item->tel }}</td>
-                        <td>{{ $item->children_qty }}</td>
-                        <td>{{ $item->students_qty }}</td>
-                        <td>{{ $item->adults_qty }}</td>
-                        <td>{{ $item->children_qty + $item->students_qty + $item->adults_qty }}</td>
+                        <td>{{ $item->children_qty }} คน</td>
+                        <td>{{ $item->students_qty }} คน</td>
+                        <td>{{ $item->adults_qty }} คน</td>
+                        <td>{{ $item->children_qty + $item->students_qty + $item->adults_qty }} คน</td>
                         <td>
                             @switch($item->status)
                                 @case(0)
@@ -75,7 +75,6 @@
                             </form>
                         </td>
                         <td>{{ $item->created_at }}</td>
-                        <td>{{ $item->remaining_capacity }}</td> <!-- Show remaining capacity -->
                         </td>
                     </tr>
                 @endforeach

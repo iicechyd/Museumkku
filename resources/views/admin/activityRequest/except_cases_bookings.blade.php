@@ -74,7 +74,9 @@
                                 </select>
                             </form>
                         </td>
-                        <td>{{ $item->created_at }}</td>
+                        <td>{{ $item->latestStatusChange->updated_at ?? 'N/A' }}</td>
+                        <td>{{ $item->latestStatusChange->changed_by ?? 'N/A' }}</td>
+                        <td>{{ $item->latestStatusChange->comments ?? 'ไม่มีความคิดเห็น' }}</td>
                     </tr>
                 @endforeach
             @endcomponent

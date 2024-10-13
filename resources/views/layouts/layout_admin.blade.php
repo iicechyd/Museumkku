@@ -55,11 +55,11 @@
                                 </a>
                                 <ul id="multi-two" class="sidebar-dropdown list-unstyled collapse">
                                     <li class="sidebar-item">
-                                        <a href="{{ url('/admin/request_bookings/general') }}"
+                                        <a href="{{ route('request_bookings.general') }}"
                                             class="sidebar-link">การจองเข้าชมทั่วไป</a>
                                     </li>
                                     <li class="sidebar-item">
-                                        <a href="{{ url('/admin/request_bookings/activity') }}"
+                                        <a href="{{ route('request_bookings.activity') }}"
                                             class="sidebar-link">การจองเข้าร่วมกิจกรรม</a>
                                     </li>
                                     {{-- <li class="sidebar-item">

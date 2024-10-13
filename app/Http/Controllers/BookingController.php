@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Bookings;
 use App\Models\Timeslots;
 use App\Models\Activity;
+use App\Models\StatusChanges;
 
 use Carbon\Carbon;
 
@@ -119,23 +121,73 @@ class BookingController extends Controller
 
         $booking = Bookings::where('booking_id', $booking_id)->firstOrFail();
 
+        // Store the old status before changing
+        $oldStatus = $booking->status;
+
         // Map status values to database values
         switch ($request->status) {
             case 'pending':
-                $booking->status = 0;
+                $newStatus = 0;
                 break;
             case 'approve':
-                $booking->status = 1;
+                $newStatus = 1;
                 break;
             case 'cancel':
-                $booking->status = 2;
+                $newStatus = 2;
                 break;
         }
 
+        // Update booking status
+        $booking->status = $newStatus;
         $booking->save();
 
+        // หา status_change ของ booking_id เดิมที่มีอยู่ในฐานข้อมูล
+        $statusChange = StatusChanges::where('booking_id', $booking_id)->first();
+
+        if ($statusChange) {
+            $statusChange->old_status = $oldStatus;
+            $statusChange->new_status = $newStatus;
+            $statusChange->comments = $request->input('comments', $statusChange->comments);
+            $statusChange->changed_by = Auth::user()->name;
+            $statusChange->save();
+        } else {
+            // ถ้าไม่พบ ให้สร้างรายการใหม่
+            StatusChanges::create([
+                'booking_id' => $booking->booking_id,
+                'old_status' => $oldStatus,
+                'new_status' => $newStatus,
+                'comments' => $request->input('comments', null),
+                'changed_by' => Auth::user()->name,
+            ]);
+        }
         return redirect()->back()->with('success', 'สถานะการจองถูกอัปเดตแล้ว');
     }
+
+    // public function updateStatus(Request $request, $booking_id)
+    // {
+    //     $request->validate([
+    //         'status' => 'required|in:pending,approve,cancel',
+    //     ]);
+
+    //     $booking = Bookings::where('booking_id', $booking_id)->firstOrFail();
+
+    //     // Map status values to database values
+    //     switch ($request->status) {
+    //         case 'pending':
+    //             $booking->status = 0;
+    //             break;
+    //         case 'approve':
+    //             $booking->status = 1;
+    //             break;
+    //         case 'cancel':
+    //             $booking->status = 2;
+    //             break;
+    //     }
+
+    //     $booking->save();
+
+    //     return redirect()->back()->with('success', 'สถานะการจองถูกอัปเดตแล้ว');
+    // }
 
     public function showCalendar()
     {

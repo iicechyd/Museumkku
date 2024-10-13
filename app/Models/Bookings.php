@@ -38,4 +38,16 @@ class Bookings extends Model
     {
         return $this->belongsTo(Timeslots::class, 'timeslots_id');
     }
+    public function statusChanges()
+    {
+        return $this->hasMany(StatusChanges::class, 'booking_id', 'booking_id');
+    }
+    // Method สำหรับดึง statusChange ล่าสุด
+    public function latestStatusChange()
+    {
+        return $this->hasOne(StatusChanges::class, 'booking_id', 'booking_id')
+            ->orderBy('changed_id', 'desc'); // ใช้ changed_id แทน id
+
+    }
+
 }

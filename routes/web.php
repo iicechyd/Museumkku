@@ -27,12 +27,9 @@ Route::get('/mbd', function () {
     return view('mbd');
 });
 
-// Route::get('/calendar', function () {
-//     return view('calendar');
-// });
-
 Route::get('/calendar', [BookingController::class, 'showCalendar'])->name('calendar');
 Route::get('/calendar/bookings', [BookingController::class, 'getApprovedBookings']);
+
 Route::get('/', [ActivityController::class, 'index']);
 Route::get('/preview', function () {
     return view('preview');
@@ -45,12 +42,12 @@ Route::get('/admin/activity_list', [ActivityController::class, 'showListActivity
 
 
 // Route สำหรับฝั่งแอดมิน การจองทั่วไป
-Route::get('/admin/request_bookings/general', [BookingController::class, 'showBookings']);
+// Route::get('/admin/request_bookings/general', [BookingController::class, 'showBookings']);
 Route::get('/admin/approved_bookings/general', [BookingController::class, 'showApproved']);
 Route::get('/admin/except_cases_bookings/general', [BookingController::class, 'showExcept']);
 
 // Route สำหรับฝั่งแอดมิน การจองกิจกรรม
-Route::get('/admin/request_bookings/activity', [BookingActivityController::class, 'showBookingsActivity']);
+// Route::get('/admin/request_bookings/activity', [BookingActivityController::class, 'showActivityBookings']);
 Route::get('/admin/approved_bookings/activity', [BookingActivityController::class, 'showApprovedActivity']);
 Route::get('/admin/except_cases_bookings/activity', [BookingActivityController::class, 'showExceptActivity']);
 
@@ -76,6 +73,12 @@ Route::get('delete/{activity_id}', [ActivityController::class, 'delete'])->name(
 Route::post('/UpdateActivity', [ActivityController::class, 'updateActivity'])->name('updateActivity');
 Route::get('/getActivityPrice/{activity_id}', [ActivityController::class, 'getActivityPrice']);
 
+//เพิ่มประเภทกิจกรรม
+// Route::post('/insert-activity-type', [ActivityController::class, 'store'])->name('insert.activityType');
+
+//UpdateStutus
+Route::post('/bookings/{booking_id}/updateStatus', [BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
+
 //แก้ไข Timeslots 
 Route::get('/admin/timeslots_list', [TimeslotController::class, 'showTimeslots'])->name('showTimeslots');
 Route::post('/InsertTimeslots', [TimeslotController::class, 'InsertTimeslots'])->name('InsertTimeslots');
@@ -88,8 +91,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');
     });
-    Route::get('/admin/request_bookings', [BookingController::class, 'showBookings'])->name('request_bookings');
-    Route::get('/admin/approved_bookings', [BookingController::class, 'showApproved'])->name('approved_bookings');
-    Route::get('/admin/except_cases_bookings', [BookingController::class, 'showExcept'])->name('except_bookings');
-    Route::post('/admin/request_bookings/update-status/{booking_id}', [BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
+    Route::get('/admin/request_bookings/general', [BookingController::class, 'showBookings'])->name('request_bookings.general');
+    Route::get('/admin/approved_bookings/general', [BookingController::class, 'showApproved'])->name('approved_bookings');
+    Route::get('/admin/except_cases_bookings/general', [BookingController::class, 'showExcept'])->name('except_bookings');
+    Route::get('/admin/request_bookings/activity', [BookingActivityController::class, 'showBookingsActivity'])->name('request_bookings.activity');
+    Route::get('/admin/approved_bookings/activity', [BookingActivityController::class, 'showApprovedActivity'])->name('approved_bookings');
+    Route::get('/admin/except_cases_bookings/activity', [BookingActivityController::class, 'showExceptActivity'])->name('except_bookings');
+    // Route::post('/admin/request_bookings/update-status/{booking_id}', [BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
 });

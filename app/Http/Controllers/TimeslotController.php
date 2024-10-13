@@ -18,7 +18,7 @@ class TimeslotController extends Controller
     }
     public function getTimeslots($activity_id)
     {
-        $timeslots = Timeslots::where('activity_id', $activity_id)->get(); // ดึง timeslots ตาม activity_id
+        $timeslots = Timeslots::where('activity_id', $activity_id)->get();
         return response()->json($timeslots);
     }
 

@@ -2,6 +2,7 @@
 @section('title', 'จองกิจกรรมพิพิธภัณฑ์')
 
 <head>
+    <link rel="stylesheet" href="{{ asset('activity_detail.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -37,7 +38,7 @@
                         </div>
                         <div class="col-lg-6 col-md-12">
                             <div class="card-body">
-                                <h1 class="card-title">{{ $activity->activity_name }}</h1>
+                                <h2 class="card-title">{{ $activity->activity_name }}</h2>
                                 <p class="card-text text-muted">{{ $activity->description }}</p>
                                 <div class="mt-3">
                                     <p>ราคา </p>
@@ -46,7 +47,8 @@
                                 </div>
                                 <div class="mt-4">
                                     <a href="{{ route('form_bookings.activity', ['activity_id' => $activity->activity_id]) }}"
-                                        class="btn text-white width:50%" style=" background-color: #489085;">
+                                        class="btn text-white width:50%"
+                                        style="background-color: #489085; font-family: 'Noto Sans Thai', sans-serif;">
                                         จองกิจกรรม
                                     </a>
                                 </div>

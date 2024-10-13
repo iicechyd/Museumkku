@@ -189,7 +189,6 @@ tr:nth-child(even) td {
     background: #f8f6ff;
 }
 
-/* ปุ่มสถานะ */
 .status-btn-request {
     display: inline-block;
     padding: 8px 12px;
@@ -199,16 +198,50 @@ tr:nth-child(even) td {
     text-decoration: none;
     font-weight: 600;
     font-size: 14px;
-    border: 2px solid #feffe5; /* กำหนดเส้นขอบที่นี่ */
+    border: 2px solid #feffe5;
 }
 
 td.custom-td {
-    font-weight: 600; /* semibold */
-    color: black; /* สีดำ */
+    font-weight: 600;
+    color: black;
 }
 .long-cell {
-    white-space: normal; /* Allow text to wrap */
-    overflow: visible; /* Ensure overflowing text is visible */
-    text-overflow: clip; /* Prevent ellipsis for overflowing text */
-    text-align: left; /* Align text to the left */
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    text-align: left;
+}
+
+.button-custom {
+    background-color: #3b82f6;
+    color: white;
+    font-weight: bold;
+    border: none;
+    font-size: 0.875rem;
+    padding: 0.4rem 0.5rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+}
+
+.button-custom:hover {
+    background-color: #2563eb;
+}
+.comments-input {
+    background-color: #f7fafc;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.comments-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+.comments-field {
+    margin-top: 10px;
 }

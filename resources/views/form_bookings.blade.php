@@ -18,7 +18,6 @@
                     <input type="hidden" id="fk_activity_id" name="fk_activity_id" value="{{ $activity_id }}">
                     <select class="form-select" disabled>
                         <option value="{{ $activity_id }}">{{ $selectedActivity->activity_name }}</option>
-                        <!-- Display selected activity -->
                     </select>
                 </div>
 

@@ -17,7 +17,9 @@
                 <th data-type="numeric">จำนวนคนทั้งหมด<span class="resize-handle"></span></th>
                 <th data-type="text-short">สถานะการจอง<span class="resize-handle"></span></th>
                 <th data-type="text-short">แก้ไขสถานะ<span class="resize-handle"></span></th>
-                <th data-type="text-short">วันเวลาที่จองเข้ามา<span class="resize-handle"></span></th>
+                <th data-type="text-short">เวลาที่แก้ไขสถานะ<span class="resize-handle"></span></th>
+                <th data-type="text-short">เปลี่ยนแปลงโดย<span class="resize-handle"></span></th>
+                <th data-type="text-short">ยกเลิกเนื่องจาก<span class="resize-handle"></span></th>
             </tr>
         </thead>
         <tbody>

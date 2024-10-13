@@ -66,17 +66,28 @@
                         </td>
                         <td>
                             <form action="{{ route('bookings.updateStatus', $item->booking_id) }}" method="POST"
-                                style="display:inline;">
+                                style="display: inline;">
                                 @csrf
-                                <select name="status" onchange="this.form.submit()">
-                                    <option value="pending" {{ $item->status == 0 ? 'selected' : '' }}>รออนุมัติ
-                                    </option>
-                                    <option value="approve" {{ $item->status == 1 ? 'selected' : '' }}>อนุมัติ
-                                    </option>
-                                    <option value="cancel" {{ $item->status == 2 ? 'selected' : '' }}>ยกเลิก
-                                    </option>
-                                </select>
+                                <div class="flex items-center space-x-3">
+                                    <select name="status" id="statusSelect" onchange="toggleCommentsAndButton()"
+                                        class="bg-gray-100 border border-gray-300 rounded-lg p-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="pending" {{ $item->status == 0 ? 'selected' : '' }}>รออนุมัติ</option>
+                                        <option value="approve" {{ $item->status == 1 ? 'selected' : '' }}>อนุมัติ</option>
+                                        <option value="cancel" {{ $item->status == 2 ? 'selected' : '' }}>ยกเลิก</option>
+                                    </select>
+
+                                    <!-- ฟิลด์ comments ที่จะถูกซ่อนไว้ในตอนแรก -->
+                                    <div id="commentsField" class="comments-field">
+                                        <input type="text" name="comments" placeholder="กรอกความคิดเห็น"
+                                            class="bg-gray-100 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                    </div>
+
+                                    <button type="submit" class="button-custom">
+                                        อัปเดตสถานะ
+                                    </button>
+                                </div>
                             </form>
+
                         </td>
                         <td>{{ $item->created_at }}</td>
                         </td>

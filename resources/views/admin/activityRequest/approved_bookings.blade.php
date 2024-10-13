@@ -63,19 +63,23 @@
                             <form action="{{ route('bookings.updateStatus', $item->booking_id) }}" method="POST"
                                 style="display:inline;">
                                 @csrf
-                                <select name="status" onchange="this.form.submit()">
-                                    <option value="pending" {{ $item->status == 0 ? 'selected' : '' }}>
-                                        รออนุมัติ
+                                <select name="status" id="statusSelect" onchange="toggleCommentsAndButton()">
+                                    <option value="pending" {{ $item->status == 0 ? 'selected' : '' }}>รออนุมัติ
                                     </option>
                                     <option value="approve" {{ $item->status == 1 ? 'selected' : '' }}>อนุมัติ
                                     </option>
                                     <option value="cancel" {{ $item->status == 2 ? 'selected' : '' }}>ยกเลิก
                                     </option>
                                 </select>
+                                <!-- ฟิลด์ comments ที่จะถูกซ่อนไว้ในตอนแรก -->
+                                <div id="commentsField" style="display: none; margin-top: 10px;">
+                                    <input type="text" name="comments" placeholder="กรอกความคิดเห็น" />
+                                </div>
+                                <button type="submit">อัปเดตสถานะ</button>
                             </form>
                         </td>
-                        <td>{{ $item->created_at }}</td>
-                        </td>
+                        <td>{{ $item->latestStatusChange->updated_at ?? 'N/A' }}</td>
+                        <td>{{ $item->latestStatusChange->changed_by ?? 'N/A' }}</td>
                     </tr>
                 @endforeach
             @endcomponent

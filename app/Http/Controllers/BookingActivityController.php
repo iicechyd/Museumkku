@@ -129,7 +129,7 @@ class BookingActivityController extends Controller
         return view('form_bookings', [
             'activity_id' => $activity_id,
             'selectedActivity' => $selectedActivity,
-            'timeslots' => $timeslots, // Include other data as needed, like $activities for dropdowns
+            'timeslots' => $timeslots,
         ]);
 
     }

@@ -10,7 +10,7 @@
     <div class="container">
         <div class="title p-5 text-center">
             <h1 style="color: #489085; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);">
-                จองเข้าชมพิพิธภัณฑ์นิทรรศการทั่วไป
+                จองเข้าชมพิพิธภัณฑ์
             </h1>
         </div>
     </div>

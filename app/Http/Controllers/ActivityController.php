@@ -116,23 +116,35 @@ class ActivityController extends Controller
         return redirect()->back()->with('success', 'แก้ไขกิจกรรมเรียบร้อยแล้ว');
     }
 
-
-    public function createBookingForm()
+    public function store(Request $request)
     {
-        $activities = Activity::all();
-
-        return view('form_bookings', compact('activities'));
-    }
-
-    public function getActivityPrice($activity_id)
-    {
-        $activity = Activity::find($activity_id);
-
-        return response()->json([
-            'children_price' => $activity->children_price,
-            'student_price' => $activity->student_price,
-            'adult_price' => $activity->adult_price
+        $request->validate([
+            'type_name' => 'required|string|max:255',
         ]);
+
+        ActivityType::create([
+            'type_name' => $request->type_name,
+        ]);
+
+        return redirect()->back()->with('success', 'เพิ่มประเภทกิจกรรมเรียบร้อยแล้ว');
     }
+
+    // public function createBookingForm()
+    // {
+    //     $activities = Activity::all();
+
+    //     return view('form_bookings', compact('activities'));
+    // }
+
+    // public function getActivityPrice($activity_id)
+    // {
+    //     $activity = Activity::find($activity_id);
+
+    //     return response()->json([
+    //         'children_price' => $activity->children_price,
+    //         'student_price' => $activity->student_price,
+    //         'adult_price' => $activity->adult_price
+    //     ]);
+    // }
 
 }

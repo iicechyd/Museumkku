@@ -1,7 +1,4 @@
-// Our real web app uses Vue.js but I'll stick to plain JavaScript here
-
 const min = 150;
-// The max (fr) values for grid-template-columns
 const columnTypeToRatioMap = {
     numeric: 1,
     "text-short": 1.67,
@@ -9,49 +6,33 @@ const columnTypeToRatioMap = {
 };
 
 const table = document.querySelector("table");
-/*
-  The following will soon be filled with column objects containing
-  the header element and their size value for grid-template-columns 
-*/
 const columns = [];
 let headerBeingResized;
 
-// The next three functions are mouse event callbacks
-
-// Where the magic happens. I.e. when they're actually resizing
 const onMouseMove = (e) =>
     requestAnimationFrame(() => {
         console.log("onMouseMove");
 
-        // Calculate the desired width
         horizontalScrollOffset = document.documentElement.scrollLeft;
         const width =
             horizontalScrollOffset + e.clientX - headerBeingResized.offsetLeft;
 
-        // Update the column object with the new size value
         const column = columns.find(
             ({ header }) => header === headerBeingResized
         );
-        column.size = Math.max(min, width) + "px"; // Enforce our minimum
+        column.size = Math.max(min, width) + "px";
 
-        // For the other headers which don't have a set width, fix it to their computed width
         columns.forEach((column) => {
             if (column.size.startsWith("minmax")) {
-                // isn't fixed yet (it would be a pixel value otherwise)
                 column.size = parseInt(column.header.clientWidth, 10) + "px";
             }
         });
 
-        /* 
-    Update the column sizes
-    Reminder: grid-template-columns sets the width for all columns in one value
-  */
         table.style.gridTemplateColumns = columns
             .map(({ header, size }) => size)
             .join(" ");
     });
 
-// Clean up event listeners, classes, etc.
 const onMouseUp = () => {
     console.log("onMouseUp");
 
@@ -61,7 +42,6 @@ const onMouseUp = () => {
     headerBeingResized = null;
 };
 
-// Get ready, they're about to resize
 const initResize = ({ target }) => {
     console.log("initResize");
 
@@ -71,15 +51,33 @@ const initResize = ({ target }) => {
     headerBeingResized.classList.add("header--being-resized");
 };
 
-// Let's populate that columns array and add listeners to the resize handles
 document.querySelectorAll("th").forEach((header) => {
     const max = columnTypeToRatioMap[header.dataset.type] + "fr";
     columns.push({
         header,
-        // The initial size value for grid-template-columns:
         size: `minmax(${min}px, ${max})`,
     });
     header
         .querySelector(".resize-handle")
         .addEventListener("mousedown", initResize);
+});
+
+function toggleCommentsAndButton() {
+    var status = document.getElementById("statusSelect").value;
+    var commentsField = document.getElementById("commentsField");
+    var updateButton = document.getElementById("updateButton");
+
+    // แสดงฟิลด์ comments และปุ่มยืนยันเมื่อสถานะเป็น 'cancel' (ค่าเท่ากับ 2)
+    if (status == "cancel") {
+        commentsField.style.display = "block";
+        updateButton.style.display = "block";
+    } else {
+        commentsField.style.display = "none";
+        updateButton.style.display = "none";
+    }
+}
+
+// เรียกใช้ฟังก์ชันนี้เมื่อหน้าเพจโหลด เพื่อให้แน่ใจว่าฟิลด์ comments และปุ่มถูกตั้งค่าอย่างถูกต้อง
+document.addEventListener("DOMContentLoaded", function () {
+    toggleCommentsAndButton();
 });

@@ -14,11 +14,22 @@
     @if (count($requestListActivity) > 0)
         <div>
             <h1 class="table-heading text-center">แก้ไขรายละเอียดกิจกรรม</h1>
+            {{-- <button type="button" class="btn my-3"
+                style="background-color: rgb(100, 149, 237); border-color: rgb(100, 149, 237); color: white;"
+                data-toggle="modal" data-target="#InsertActivityTypeModal">
+                + ประเภทกิจกรรม
+            </button> --}}
             <button type="button" class="btn my-3"
                 style="background-color: rgb(249, 100, 100); border-color: rgb(249, 100, 100); color: white;"
                 data-toggle="modal" data-target="#InsertActivityModal">
-                เพิ่มกิจกรรม
+                + กิจกรรม
             </button>
+            <button type="button" class="btn my-3"
+                style="background-color: rgb(119, 144, 242); border-color: rgb(119, 144, 242); color: white;"
+                onclick="window.location='{{ url('/admin/timeslots_list') }}'">
+                ตรวจสอบรอบการเข้าชม
+            </button>
+
             {{ $requestListActivity->links() }}
             <div class="table-responsive">
                 <table>
@@ -55,13 +66,13 @@
                                 <td>{{ $item->adult_price }} บาท</td>
                                 <td>
                                     <ul class="list-inline m-0">
-                                        <li class="list-inline-item">
+                                        {{-- <li class="list-inline-item">
                                             <a href="/" data-toggle="tooltip" data-placement="top" title="Add">
                                                 <button class="btn btn-primary btn-sm rounded-0" type="button">
                                                     <i class="fa fa-table"></i>
                                                 </button>
                                             </a>
-                                        </li>
+                                        </li> --}}
                                         <li class="list-inline-item">
                                             <button class="btn btn-success btn-sm rounded-0 edit-activity-btn"
                                                 type="button" data-toggle="modal" data-target="#EditActivityModal"
@@ -92,10 +103,16 @@
         </div>
     @else
         <h1 class="text text-center py-5 ">ไม่พบข้อมูลในระบบ</h1>
+        {{-- <button type="button" class="btn my-3"
+            style="background-color: rgb(100, 149, 237); border-color: rgb(100, 149, 237); color: white;"
+            data-toggle="modal" data-target="#InsertActivityTypeModal">
+            + ประเภทกิจกรรม
+        </button> --}}
+
         <button type="button" class="btn my-3"
             style="background-color: rgb(249, 100, 100); border-color: rgb(249, 100, 100); color: white;"
             data-toggle="modal" data-target="#InsertActivityModal">
-            เพิ่มกิจกรรม
+            + กิจกรรม
         </button>
     @endif
 
@@ -150,12 +167,42 @@
                             <input type="file" class="form-control-file" id="image" name="image"
                                 accept="image/*" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">บันทึก</button>
+                        <div class="pt-2">
+                            <button type="submit" class="btn btn-primary">บันทึก</button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    {{-- <!-- Modal สำหรับเพิ่มประเภทกิจกรรม -->
+    <div class="modal fade" id="InsertActivityTypeModal" tabindex="-1" role="dialog"
+        aria-labelledby="InsertActivityTypeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="InsertActivityTypeModalLabel">เพิ่มประเภทกิจกรรมใหม่</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- ฟอร์มเพิ่มประเภทกิจกรรม -->
+                    <form action="{{ route('insert.activityType') }}" method="POST">
+                        @csrf
+                        <div class="form-group ">
+                            <label for="type_name">ชื่อประเภทกิจกรรม</label>
+                            <input type="text" class="form-control" id="type_name" name="type_name" required>
+                        </div>
+                        <div class="pt-2">
+                            <button type="submit" class="btn btn-primary pt-2">บันทึก</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+
     <!-- Modal สำหรับแก้ไขกิจกรรม -->
     <div class="modal fade" id="EditActivityModal" tabindex="-1" role="dialog"
         aria-labelledby="EditActivityModalLabel" aria-hidden="true">

@@ -18,6 +18,7 @@
             data-target="#InsertTimeslotsModal">
             เพิ่มรอบการเข้าชม
         </button>
+
         <div class="table-responsive">
             @if ($activities->isEmpty() || $activities->every(fn($activity) => $activity->timeslots->isEmpty()))
                 <div class="text-center mt-4">
@@ -46,7 +47,7 @@
                                     @endif
                                     <td>{{ \Carbon\Carbon::parse($timeslot->start_time)->format('H:i') }} น. -
                                         {{ \Carbon\Carbon::parse($timeslot->end_time)->format('H:i') }} น.</td>
-                                    <td>{{ $timeslot->max_capacity }}</td>
+                                    <td>{{ $timeslot->max_capacity }} คน</td>
                                     <td>
                                         <ul class="list-inline m-0">
                                             {{-- <li class="list-inline-item">
@@ -105,6 +106,7 @@
                                                             class="form-control"
                                                             value="{{ \Carbon\Carbon::parse($timeslot->start_time)->format('H:i') }}"
                                                             required>
+
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="end_time">เวลาสิ้นสุด:</label>

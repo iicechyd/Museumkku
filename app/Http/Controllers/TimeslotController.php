@@ -22,15 +22,6 @@ class TimeslotController extends Controller
         return response()->json($timeslots);
     }
 
-
-    // public function getTimeslots(Request $request)
-    // {
-    //     $activityId = $request->get('activity_id');
-    //     $timeslots = Timeslots::where('activity_id', $activityId)->get();
-
-    //     return response()->json($timeslots);
-    // }
-
     public function fetchTimeslots(Request $request)
     {
         $activityId = $request->input('fk_activity_id');
@@ -72,7 +63,7 @@ class TimeslotController extends Controller
     {
         $request->validate([
             'activity_id' => 'required|exists:activities,activity_id',
-            'start_time' => 'required',
+            'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|after:start_time',
             'max_capacity' => 'required|integer|min:1',
         ]);

@@ -45,7 +45,7 @@ table {
         minmax(200px, 1fr)
         minmax(230px, 1fr)
         minmax(200px, 1fr)
-        minmax(230px, 1fr)
+        /* minmax(230px, 1fr) */
         minmax(230px, 1fr)
         minmax(230px, 1fr)
         minmax(230px, 1fr);

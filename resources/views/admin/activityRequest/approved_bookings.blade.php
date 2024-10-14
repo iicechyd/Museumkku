@@ -61,21 +61,29 @@
                         </td>
                         <td>
                             <form action="{{ route('bookings.updateStatus', $item->booking_id) }}" method="POST"
-                                style="display:inline;">
+                                style="display: inline;">
                                 @csrf
-                                <select name="status" id="statusSelect" onchange="toggleCommentsAndButton()">
-                                    <option value="pending" {{ $item->status == 0 ? 'selected' : '' }}>รออนุมัติ
-                                    </option>
-                                    <option value="approve" {{ $item->status == 1 ? 'selected' : '' }}>อนุมัติ
-                                    </option>
-                                    <option value="cancel" {{ $item->status == 2 ? 'selected' : '' }}>ยกเลิก
-                                    </option>
-                                </select>
-                                <!-- ฟิลด์ comments ที่จะถูกซ่อนไว้ในตอนแรก -->
-                                <div id="commentsField" style="display: none; margin-top: 10px;">
-                                    <input type="text" name="comments" placeholder="กรอกความคิดเห็น" />
+                                <div class="flex items-center space-x-3">
+                                    <select name="status" id="statusSelect_{{ $item->booking_id }}"
+                                        onchange="toggleCommentsField({{ $item->booking_id }})"
+                                        class="bg-gray-100 border border-gray-300 rounded-lg p-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        {{-- <option value="pending" {{ $item->status == 0 ? 'selected' : '' }}>รออนุมัติ</option> --}}
+                                        <option value="approve" {{ $item->status == 1 ? 'selected' : '' }}>อนุมัติ</option>
+                                        <option value="cancel" {{ $item->status == 2 ? 'selected' : '' }}>ยกเลิก</option>
+                                    </select>
+
+                                    <!-- ฟิลด์ comments ที่จะถูกซ่อนไว้ในตอนแรก -->
+                                    <div id="commentsField_{{ $item->booking_id }}" class="comments-field"
+                                        style="display: {{ $item->status == 2 ? 'block' : 'none' }};">
+                                        <input type="text" name="comments" placeholder="กรอกความคิดเห็น"
+                                            class="bg-gray-100 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                    </div>
+
+                                    <!-- ปุ่มอัปเดตสถานะจะแสดงตลอดเวลา -->
+                                    <button type="submit" class="button-custom">
+                                        อัปเดตสถานะ
+                                    </button>
                                 </div>
-                                <button type="submit">อัปเดตสถานะ</button>
                             </form>
                         </td>
                         <td>{{ $item->latestStatusChange->updated_at ?? 'N/A' }}</td>
@@ -86,6 +94,28 @@
     </div>
 
     <script src="{{ asset('js/approved_bookings.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var approvedBookings = @json($approvedBookings->pluck('booking_id'));
+
+            // เรียกใช้ toggleCommentsField สำหรับแต่ละ booking_id
+            approvedBookings.forEach(function(booking_id) {
+                toggleCommentsField(booking_id);
+            });
+        });
+
+        function toggleCommentsField(booking_id) {
+            var status = document.getElementById("statusSelect_" + booking_id).value;
+            var commentsField = document.getElementById("commentsField_" + booking_id);
+
+            // แสดงฟิลด์คอมเม้นต์เมื่อสถานะเป็น 'cancel'
+            if (status === "cancel") {
+                commentsField.style.display = "block"; // แสดงฟิลด์คอมเม้นต์
+            } else {
+                commentsField.style.display = "none"; // ซ่อนฟิลด์คอมเม้นต์
+            }
+        }
+    </script>
 @else
     <h1 class="text text-center py-5 ">ไม่พบข้อมูลในระบบ</h1>
     @endif

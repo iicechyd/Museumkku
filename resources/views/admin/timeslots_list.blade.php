@@ -65,7 +65,6 @@
                                                 </button>
                                             </li>
                                             <li class="list-inline-item">
-                                                <!-- ฟอร์ม DELETE พร้อมกับการส่ง timeslot ID -->
                                                 <form action="{{ route('timeslots.destroy', $timeslot->timeslots_id) }}"
                                                     method="POST"
                                                     onsubmit="return confirm('คุณต้องการลบรอบการเข้าชมหรือไม่?');">
@@ -184,8 +183,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Include Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

@@ -60,20 +60,6 @@
                                 @break
                             @endswitch
                         </td>
-                        <td>
-                            <form action="{{ route('bookings.updateStatus', $item->booking_id) }}" method="POST"
-                                style="display:inline;">
-                                @csrf
-                                <select name="status" onchange="this.form.submit()">
-                                    <option value="pending" {{ $item->status == 0 ? 'selected' : '' }}>รออนุมัติ
-                                    </option>
-                                    <option value="approve" {{ $item->status == 1 ? 'selected' : '' }}>อนุมัติ
-                                    </option>
-                                    <option value="cancel" {{ $item->status == 2 ? 'selected' : '' }}>ยกเลิก
-                                    </option>
-                                </select>
-                            </form>
-                        </td>
                         <td>{{ $item->latestStatusChange->updated_at ?? 'N/A' }}</td>
                         <td>{{ $item->latestStatusChange->changed_by ?? 'N/A' }}</td>
                         <td>{{ $item->latestStatusChange->comments ?? 'ไม่มีความคิดเห็น' }}</td>

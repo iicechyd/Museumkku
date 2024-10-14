@@ -60,29 +60,6 @@
                                 @break
                             @endswitch
                         </td>
-                        <td>
-                            <form action="{{ route('bookings.updateStatus', $item->booking_id) }}" method="POST"
-                                style="display:inline;">
-                                @csrf
-                                <div class="flex items-center space-x-3">
-                                    <select name="status" id="statusSelect" onchange="toggleCommentsAndButton()"
-                                        class="bg-gray-100 border border-gray-300 rounded-lg p-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                        <option value="pending" {{ $item->status == 0 ? 'selected' : '' }}>รออนุมัติ</option>
-                                        <option value="approve" {{ $item->status == 1 ? 'selected' : '' }}>อนุมัติ</option>
-                                        <option value="cancel" {{ $item->status == 2 ? 'selected' : '' }}>ยกเลิก</option>
-                                    </select>
-
-                                    {{-- <!-- ฟิลด์ comments ที่จะถูกซ่อนไว้ในตอนแรก -->
-                                    <div id="commentsField" class="comments-field">
-                                        <input type="text" name="comments" placeholder="กรอกความคิดเห็น"
-                                            class="bg-gray-100 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                    </div> --}}
-                                    <button type="submit" class="button-custom">
-                                        อัปเดตสถานะ
-                                    </button>
-                                </div>
-                            </form>
-                        </td>
                         <td>{{ $item->latestStatusChange->updated_at ?? 'N/A' }}</td>
                         <td>{{ $item->latestStatusChange->changed_by ?? 'N/A' }}</td>
                         <td>{{ $item->latestStatusChange->comments ?? 'ไม่มีความคิดเห็น' }}</td>
@@ -93,6 +70,28 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="{{ asset('js/except_cases_bookings.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var exceptBookings = @json($exceptBookings->pluck('booking_id'));
+
+            // เรียกใช้ toggleCommentsField สำหรับแต่ละ booking_id
+            exceptBookings.forEach(function(booking_id) {
+                toggleCommentsField(booking_id);
+            });
+        });
+
+        function toggleCommentsField(booking_id) {
+            var status = document.getElementById("statusSelect_" + booking_id).value;
+            var commentsField = document.getElementById("commentsField_" + booking_id);
+
+            // แสดงฟิลด์คอมเม้นต์เมื่อสถานะเป็น 'cancel'
+            if (status === "cancel") {
+                commentsField.style.display = "block"; // แสดงฟิลด์คอมเม้นต์
+            } else {
+                commentsField.style.display = "none"; // ซ่อนฟิลด์คอมเม้นต์
+            }
+        }
+    </script>
 @else
     <h1 class="text text-center py-5 ">ไม่พบข้อมูลในระบบ</h1>
     @endif

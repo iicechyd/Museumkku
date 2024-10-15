@@ -43,6 +43,7 @@
                             <th data-type="numeric">ราคา เด็ก (คน)<span class="resize-handle"></span></th>
                             <th data-type="numeric">ราคา นร/นศ (คน)<span class="resize-handle"></span></th>
                             <th data-type="numeric">ราคา ผู้ใหญ่ (คน)<span class="resize-handle"></span></th>
+                            <th data-type="numeric">ความจุคนต่อรอบ<span class="resize-handle"></span></th>
                             <th data-type="text-short">แก้ไขรายละเอียด<span class="resize-handle"></span></th>
                         </tr>
                     </thead>
@@ -64,6 +65,7 @@
                                 <td>{{ $item->children_price }} บาท</td>
                                 <td>{{ $item->student_price }} บาท</td>
                                 <td>{{ $item->adult_price }} บาท</td>
+                                <td>{{ $item->max_capacity }} คน / รอบ</td>
                                 <td>
                                     <ul class="list-inline m-0">
                                         {{-- <li class="list-inline-item">
@@ -152,15 +154,23 @@
                         <div class="form-group">
                             <label for="children_price">ราคาเด็ก</label>
                             <input type="number" class="form-control" id="children_price" name="children_price"
-                                required>
+                                min="0" required>
                         </div>
                         <div class="form-group">
                             <label for="student_price">ราคานร/นศ</label>
-                            <input type="number" class="form-control" id="student_price" name="student_price" required>
+                            <input type="number" class="form-control" id="student_price" name="student_price"
+                                min="0" required>
                         </div>
                         <div class="form-group">
                             <label for="adult_price">ราคาผู้ใหญ่</label>
-                            <input type="number" class="form-control" id="adult_price" name="adult_price" required>
+                            <input type="number" class="form-control" id="adult_price" name="adult_price"
+                                min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="max_capacity">ความจุคนต่อรอบการเข้าชม</label>
+                            <input type="number" class="form-control" id="max_capacity" name="max_capacity"
+                                min="0" required>
                         </div>
                         <div class="form-group">
                             <label for="image">รูปภาพ</label>
@@ -175,34 +185,6 @@
             </div>
         </div>
     </div>
-    {{-- <!-- Modal สำหรับเพิ่มประเภทกิจกรรม -->
-    <div class="modal fade" id="InsertActivityTypeModal" tabindex="-1" role="dialog"
-        aria-labelledby="InsertActivityTypeModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="InsertActivityTypeModalLabel">เพิ่มประเภทกิจกรรมใหม่</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- ฟอร์มเพิ่มประเภทกิจกรรม -->
-                    <form action="{{ route('insert.activityType') }}" method="POST">
-                        @csrf
-                        <div class="form-group ">
-                            <label for="type_name">ชื่อประเภทกิจกรรม</label>
-                            <input type="text" class="form-control" id="type_name" name="type_name" required>
-                        </div>
-                        <div class="pt-2">
-                            <button type="submit" class="btn btn-primary pt-2">บันทึก</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-
     <!-- Modal สำหรับแก้ไขกิจกรรม -->
     <div class="modal fade" id="EditActivityModal" tabindex="-1" role="dialog"
         aria-labelledby="EditActivityModalLabel" aria-hidden="true">
@@ -252,6 +234,11 @@
                         <div class="form-group">
                             <label for="edit_adultprice">ราคาผู้ใหญ่</label>
                             <input type="number" class="form-control" id="edit_adultprice" name="adult_price"
+                                min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_max_capacity">ความจุคนต่อรอบการเข้าชม</label>
+                            <input type="number" class="form-control" id="max_capacity" name="max_capacity"
                                 min="0" required>
                         </div>
                         <div class="form-group">

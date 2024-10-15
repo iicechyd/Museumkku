@@ -78,6 +78,7 @@ class ActivityController extends Controller
         $activity->children_price = $request->children_price;
         $activity->student_price = $request->student_price;
         $activity->adult_price = $request->adult_price;
+        $activity->max_capacity = $request->max_capacity;
         $activity->activity_type_id = $request->activity_type_id;
 
         // จัดการการอัปโหลดรูปภาพ

@@ -66,28 +66,7 @@ function fetchTimeslots() {
             });
         });
 }
-// function fetchTimeslots() {
-//     const activityId = document.getElementById("fk_activity_id").value;
-//     const timeslotSelect = document.getElementById("fk_timeslots_id");
 
-//     timeslotSelect.innerHTML = '<option value="">เลือกรอบการเข้าชม</option>';
-
-//     if (activityId) {
-//         fetch(`/timeslots?activity_id=${activityId}`)
-//             .then((response) => response.json())
-//             .then((data) => {
-//                 data.forEach((timeslot) => {
-//                     const option = document.createElement("option");
-//                     option.value = timeslot.timeslots_id;
-//                     option.textContent = `${timeslot.start_time} - ${timeslot.end_time}`;
-//                     timeslotSelect.appendChild(option);
-//                 });
-//             })
-//             .catch((error) =>
-//                 console.error("Error fetching timeslots:", error)
-//             );
-//     }
-// }
 function showProvinces() {
     let input_province = document.querySelector("#province");
     let url = "https://ckartisan.com/api/provinces";
@@ -206,3 +185,25 @@ document.querySelector("#subdistrict").addEventListener("change", (event) => {
 
 // เรียกใช้ฟังก์ชันเพื่อโหลดจังหวัดเมื่อเริ่มต้น
 showProvinces();
+
+document.addEventListener("DOMContentLoaded", function () {
+    // กำหนดค่าที่ต้องการให้ autofill ในฟิลด์ต่าง ๆ
+    document.getElementById("booking_date").value = "2024-10-20";
+    document.getElementById("instituteName").value = "โรงเรียนเด่นดี";
+    document.getElementById("instituteAddress").value = "123/45 ถนนทดสอบ";
+    document.getElementById("visitorName").value = "นายทดสอบ ผู้ประสานงาน";
+    document.getElementById("visitorEmail").value = "test@example.com";
+    document.getElementById("tel").value = "0812345678";
+    document.getElementById("children_qty").checked = true;
+    document.getElementById("childrenInput").disabled = false;
+    document.getElementById("childrenInput").value = 10;
+    document.getElementById("students_qty").checked = true;
+    document.getElementById("studentInput").disabled = false;
+    document.getElementById("studentInput").value = 20;
+    document.getElementById("adults_qty").checked = true;
+    document.getElementById("adultsInput").disabled = false;
+    document.getElementById("adultsInput").value = 5; // จำนวนครู 5 คน
+
+    // เรียกใช้ฟังก์ชัน calculateTotal เพื่อคำนวณจำนวนคนและราคารวม
+    calculateTotal();
+});

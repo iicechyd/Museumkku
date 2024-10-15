@@ -7,8 +7,8 @@ $(document).ready(function () {
         var activityChildrenPrice = $(this).data("children_price");
         var activityStudentPrice = $(this).data("student_price");
         var activityAdultPrice = $(this).data("adult_price");
+        var activityMaxCapacity = $(this).data("max_capacity");
         var activityImage = $(this).data("image");
-
         // ใส่ข้อมูลลงใน modal
         $("#edit_activity_id").val(activityId);
         $("#edit_activity_name").val(activityName);
@@ -16,6 +16,7 @@ $(document).ready(function () {
         $("#edit_childrenprice").val(activityChildrenPrice);
         $("#edit_studentprice").val(activityStudentPrice);
         $("#edit_adultprice").val(activityAdultPrice);
+        $("#edit_max_capacity").val(activityMaxCapacity);
 
         if (activityImage) {
             $("#current_image").attr("src", activityImage).show();
@@ -37,16 +38,8 @@ const columnTypeToRatioMap = {
 };
 
 const table = document.querySelector("table");
-/*
-  The following will soon be filled with column objects containing
-  the header element and their size value for grid-template-columns 
-*/
 const columns = [];
 let headerBeingResized;
-
-// The next three functions are mouse event callbacks
-
-// Where the magic happens. I.e. when they're actually resizing
 const onMouseMove = (e) =>
     requestAnimationFrame(() => {
         console.log("onMouseMove");

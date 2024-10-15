@@ -172,8 +172,8 @@
                     <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"
                         onclick="toggleInput('childrenInput')">
                     <label class="form-check-label" for="children_qty">เด็ก</label>
-                    <input type="number" class="form-control mt-2" id="childrenInput" name="children_qty" disabled
-                        oninput="calculateTotal()">
+                    <input type="number" class="form-control mt-2" id="childrenInput" name="children_qty"
+                        min="0" disabled oninput="calculateTotal()">
                 </div>
 
                 <!-- นักเรียน/นักศึกษา -->
@@ -181,8 +181,8 @@
                     <input class="form-check-input" type="checkbox" id="students_qty" name="students_qty"
                         onclick="toggleInput('studentInput')">
                     <label class="form-check-label" for="students_qty">นักเรียน/นักศึกษา</label>
-                    <input type="number" class="form-control mt-2" id="studentInput" name="students_qty" disabled
-                        oninput="calculateTotal()">
+                    <input type="number" class="form-control mt-2" id="studentInput" name="students_qty"
+                        min="0" disabled oninput="calculateTotal()">
                 </div>
 
                 <!-- ครู / อาจารย์ -->
@@ -190,8 +190,8 @@
                     <input class="form-check-input" type="checkbox" id="adults_qty" name="adults_qty"
                         onclick="toggleInput('adultsInput')">
                     <label class="form-check-label" for="adults_qty">ครู / อาจารย์</label>
-                    <input type="number" class="form-control mt-2" id="adultsInput" name="adults_qty" disabled
-                        oninput="calculateTotal()">
+                    <input type="number" class="form-control mt-2" id="adultsInput" name="adults_qty" min="0"
+                        disabled oninput="calculateTotal()">
                 </div>
 
                 <!-- จำนวนผู้เข้าร่วมกิจกรรม -->

@@ -8,7 +8,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
         <h2 class="text-center py-3">แบบฟอร์มจองเข้าชมพิพิธภัณฑ์</h2>
         <div class="card shadow p-4">
             <form method="POST" action="/InsertBooking" class="row g-3" novalidate>
@@ -20,25 +24,6 @@
                         <option value="{{ $activity_id }}">{{ $selectedActivity->activity_name }}</option>
                     </select>
                 </div>
-
-                {{-- <div class="col-md-4">
-                    <label for="fk_activity_id" class="form-label">ประเภทเข้าชม</label>
-                    <select id="fk_activity_id" class="form-select @error('fk_activity_id') is-invalid @enderror"
-                        name="fk_activity_id" onchange="fetchTimeslots(); fetchActivityPrice();">
-                        <option value="">เลือกประเภทเข้าชม</option>
-                        @foreach ($activities as $activity)
-                            <option value="{{ $activity->activity_id }}" {{ old('fk_activity_id') == $activity->activity_id ? 'selected' : '' }}
-                                {{ $selectedActivity && $selectedActivity->activity_id == $activity->activity_id ? 'selected' : '' }}>
-                                {{ $activity->activity_name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('fk_activity_id')
-                        <div class="my-2">
-                            <span class="text-danger">{{ $message }}</span>
-                        </div>
-                    @enderror
-                </div> --}}
                 <div class="form-group col-5">
                     <label for="fk_timeslots_id">รอบการเข้าชม:</label>
                     <select id="fk_timeslots_id" class="form-select @error('fk_timeslots_id') is-invalid @enderror"

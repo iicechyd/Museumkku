@@ -13,5 +13,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ActivityTypeSeeder::class);
         $this->call(ActivitySeeder::class);
         $this->call(TimeslotsSeeder::class);
+        $this->call(UserSeeder::class);
+
     }
 }

@@ -29,6 +29,7 @@
                     <thead>
                         <tr>
                             <th data-type="text-long">ชื่อกิจกรรม<span class="resize-handle"></span></th>
+                            <th data-type="text-short">รอบที่<span class="resize-handle"></span></th>
                             <th data-type="text-short">รอบการเข้าชม<span class="resize-handle"></span></th>
                             {{-- <th data-type="text-long">ความจุต่อรอบเข้าชม<span class="resize-handle"></span></th> --}}
                             <th data-type="text-short">แก้ไขรอบการเข้าชม<span class="resize-handle"></span></th>
@@ -45,9 +46,10 @@
                                         <!-- แสดงชื่อกิจกรรมในบรรทัดแรก และใช้ rowspan -->
                                         <td rowspan="{{ $rowspan }}">{{ $activity->activity_name }}</td>
                                     @endif
+                                    <td>{{ $index + 1 }}</td>
+
                                     <td>{{ \Carbon\Carbon::parse($timeslot->start_time)->format('H:i') }} น. -
                                         {{ \Carbon\Carbon::parse($timeslot->end_time)->format('H:i') }} น.</td>
-                                    {{-- <td>{{ $timeslot->max_capacity }} คน</td> --}}
                                     <td>
                                         <ul class="list-inline m-0">
                                             {{-- <li class="list-inline-item">

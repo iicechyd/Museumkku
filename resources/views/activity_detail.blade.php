@@ -8,32 +8,14 @@
 
 @section('content')
     <div class="container py-5">
-        <div class="row gy-4">
+        <div class="srow gy-4">
             <div class="col-lg-12 col-md-12">
                 <div class="card">
                     <div class="row g-0">
                         <div class="col-lg-6 col-md-12 px-2 py-2">
-                            <div class="text-center">
+                            <div class="image">
                                 <img src="{{ asset('images/' . $activity->image) }}" class="card-img-top "
                                     style="max-height: 380px; object-fit: cover;" alt="{{ $activity->activity_name }}">
-                            </div>
-                            <div class="d-flex gap-2 pt-2">
-                                <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
-                                    style="width: 115px; height: 100px;">
-                                    <p>115 X 100</p>
-                                </div>
-                                <div class="bg-warning text-white text-center d-flex align-items-center justify-content-center"
-                                    style="width: 115px; height: 100px;">
-                                    <p>115 X 100</p>
-                                </div>
-                                <div class="bg-success text-white text-center d-flex align-items-center justify-content-center"
-                                    style="width: 115px; height: 100px;">
-                                    <p>115 X 100</p>
-                                </div>
-                                <div class="bg-info text-white text-center d-flex align-items-center justify-content-center"
-                                    style="width: 120px; height: 100px;">
-                                    <p>120 X 100</p>
-                                </div>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-12">
@@ -52,6 +34,24 @@
                                         จองกิจกรรม
                                     </a>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 px-2 py-2">
+                            <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
+                                style="width: 115px; height: 100px;">
+                                <p>115 X 100</p>
+                            </div>
+                            <div class="bg-warning text-white text-center d-flex align-items-center justify-content-center"
+                                style="width: 115px; height: 100px;">
+                                <p>115 X 100</p>
+                            </div>
+                            <div class="bg-success text-white text-center d-flex align-items-center justify-content-center"
+                                style="width: 115px; height: 100px;">
+                                <p>115 X 100</p>
+                            </div>
+                            <div class="bg-info text-white text-center d-flex align-items-center justify-content-center"
+                                style="width: 120px; height: 100px;">
+                                <p>120 X 100</p>
                             </div>
                         </div>
                     </div>

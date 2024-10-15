@@ -38,5 +38,41 @@ class ActivitySeeder extends Seeder
             'adult_price' => 80,
             'max_capacity' => 500,
         ]);
+        Activity::create([
+            'activity_type_id' => 2,
+            'activity_name' => 'ONE DAY CAMP กิจกรรมค่ายวิทยาศาสตร์ 1 วัน',
+            'description' => 'กิจกรรมค่ายวิทยาสตร์ รูปแบบการเรียนรู้ทางด้านทฤษฎีและปฏิบัติ ในเรื่องของธรรมชาติ และวิทยาศาสตร์ สนุกกับการเรียนรู้จากหัวข้อต่างๆภายใน 1 วัน',
+            'children_price' => 499,
+            'student_price' => 499,
+            'adult_price' => 499,
+            'max_capacity' => null,
+        ]);
+        Activity::create([
+            'activity_type_id' => 2,
+            'activity_name' => 'TWO DAYS CAMP กิจกรรมค่ายวิทยาศาสตร์ 2 วัน',
+            'description' => 'กิจกรรมค่ายวิทยาสตร์ รูปแบบการเรียนรู้ทางด้านทฤษฎีและปฏิบัติ ในเรื่องของธรรมชาติ และวิทยาศาสตร์ สนุกกับการเรียนรู้จากหัวข้อต่างๆภายใน 1 วัน',
+            'children_price' => 1999,
+            'student_price' => 1999,
+            'adult_price' => 1999,
+            'max_capacity' => null,
+        ]);
+        Activity::create([
+            'activity_type_id' => 2,
+            'activity_name' => 'SCIENCE WALK RALLY กิจกรรมฐานวิทยาศาสตร์',
+            'description' => 'กิจกรรมฐานการเรียนรู้วิทยาศาสตร์ และธรรมชาติ ที่จะต้องผ่านแต่ละฐาน โดยมีแบบฝึกหัดบันทึกกิจกรรม ผู้เข้าร่วมจะได้ฝึกทักษะ การสังเกต การใช้ประสาทสัมผัส และการทำงานเป็นกลุ่ม',
+            'children_price' => 150,
+            'student_price' => 150,
+            'adult_price' => 150,
+            'max_capacity' => null,
+        ]);
+        Activity::create([
+            'activity_type_id' => 2,
+            'activity_name' => 'SCIENCE SHOW การแสดงทางวิทยาศาสตร์',
+            'description' => 'กิจกรรมทางวิทยาศาสตร์ โดยใช้เทคนิคการเล่นกลทางวิทยาศาสตร์ อธิบายหลักการทางวิทยาศาสตร์ให้สนุกเพลิดเพลิน และตื่นตาตื่นใจ',
+            'children_price' => 2000,
+            'student_price' => 2000,
+            'adult_price' => 2000,
+            'max_capacity' => null,
+        ]);
     }
 }

@@ -17,6 +17,7 @@ class Activity extends Model
         'student_price',
         'adult_price',
         'image',
+        'max_capacity',
     ];
 
     public function activityType()

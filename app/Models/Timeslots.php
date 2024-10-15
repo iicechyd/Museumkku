@@ -10,7 +10,7 @@ class Timeslots extends Model
     protected $primaryKey = 'timeslots_id';
 
     use HasFactory;
-    protected $fillable = ['activity_id', 'start_time', 'end_time', 'max_capacity'];
+    protected $fillable = ['activity_id', 'start_time', 'end_time'];
 
 
     public function activity()

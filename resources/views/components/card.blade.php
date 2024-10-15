@@ -1,7 +1,7 @@
 @props(['title', 'text', 'image', 'detail', 'booking'])
 
 
-<div class="card" style="width: 18rem; min-height: 28rem; display: flex; flex-direction: column;">
+<div class="card" style="width: 18rem; min-height: 29rem; display: flex; flex-direction: column;">
     <img src="{{ $image }}" class="card-img-top card-img " style="border-radius: 0;" alt="card-img">
     <div class="card-body">
         <h5 class="card-title">{{ $title }}</h5>

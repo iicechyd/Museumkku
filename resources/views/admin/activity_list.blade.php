@@ -255,7 +255,9 @@
                                 accept="image/*" required>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">บันทึก</button>
+                        <div class="pt-2">
+                            <button type="submit" class="btn btn-primary">บันทึก</button>
+                        </div>
                     </form>
                 </div>
             </div>

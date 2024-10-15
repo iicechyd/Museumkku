@@ -24,10 +24,19 @@
         body {
             display: flex;
             flex-direction: column;
+            padding-top: 70px;
+
         }
 
         .container {
             flex: 1;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
         }
 
         .footer {

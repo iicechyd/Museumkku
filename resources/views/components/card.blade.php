@@ -2,7 +2,8 @@
 
 
 <div class="card" style="width: 18rem; min-height: 29rem; display: flex; flex-direction: column;">
-    <img src="{{ $image }}" class="card-img-top card-img " style="border-radius: 0;" alt="card-img">
+    <img src="{{ $image }}" class="card-img-top card-img "
+        style="border-radius: 0; max-height: 100%; max-width: 100%; object-fit: cover;" alt="card-img">
     <div class="card-body">
         <h5 class="card-title">{{ $title }}</h5>
         <p class="card-text">{{ $text }}</p>

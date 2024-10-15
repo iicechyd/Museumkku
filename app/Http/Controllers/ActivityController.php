@@ -35,7 +35,7 @@ class ActivityController extends Controller
 
     function showListActivity()
     {
-        $requestListActivity = Activity::with('activityType')->paginate(5);
+        $requestListActivity = Activity::with('activityType')->paginate(4);
         $activityTypes = ActivityType::all();
 
         return view('admin.activity_list', compact('requestListActivity', 'activityTypes'));
@@ -82,11 +82,16 @@ class ActivityController extends Controller
         $activity->activity_type_id = $request->activity_type_id;
 
         // จัดการการอัปโหลดรูปภาพ
+        // if ($request->hasFile('image')) {
+        //     $imageName = time() . '.' . $request->image->extension();
+        //     $request->image->move(public_path('images'), $imageName);
+        //     $activity->image = $imageName;
+        // }
         if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images'), $imageName);
+            $imageName = $request->image->store('images', 'public');
             $activity->image = $imageName;
         }
+
         $activity->save();
         return redirect('/admin/activity_list')->with('success', 'เพิ่มกิจกรรมเรียบร้อยแล้ว!');
     }
@@ -99,17 +104,17 @@ class ActivityController extends Controller
             return redirect()->back()->with('error', 'ไม่พบกิจกรรมที่ต้องการแก้ไข');
         }
 
+        $activity->activity_type_id = $request->activity_type_id;
         $activity->activity_name = $request->activity_name;
         $activity->description = $request->description;
         $activity->children_price = $request->children_price;
         $activity->student_price = $request->student_price;
         $activity->adult_price = $request->adult_price;
-        $activity->activity_type_id = $request->activity_type_id;
+        $activity->max_capacity = $request->max_capacity;
 
         // จัดการการอัปโหลดรูปภาพ
         if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images'), $imageName);
+            $imageName = $request->image->store('images', 'public');
             $activity->image = $imageName;
         }
 

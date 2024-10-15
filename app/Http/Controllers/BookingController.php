@@ -173,7 +173,17 @@ class BookingController extends Controller
         $request->validate(
             [
                 'fk_activity_id' => 'required|exists:activities,activity_id',
-                'fk_timeslots_id' => 'required|exists:timeslots,timeslots_id',
+                // 'fk_timeslots_id' => 'required|exists:timeslots,timeslots_id',
+                'fk_timeslots_id' => [
+                    'nullable',
+                    'exists:timeslots,timeslots_id',
+                    function ($attribute, $value, $fail) use ($request) {
+                        // หาก activity_id ไม่ใช่กิจกรรมที่ไม่ต้องมี timeslot (เช่น activity_id 1 และ 2 ต้องมีรอบการเข้าชม)
+                        if (in_array($request->input('fk_activity_id'), [1, 2]) && !$value) {
+                            $fail('กรุณาเลือกรอบการเข้าชม');
+                        }
+                    }
+                ],
                 'booking_date' => 'required',
                 'instituteName' => 'required',
                 'instituteAddress' => 'required',

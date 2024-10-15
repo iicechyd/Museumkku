@@ -12,10 +12,18 @@
             <div class="col-lg-12 col-md-12">
                 <div class="card">
                     <div class="row g-0">
-                        <div class="col-lg-6 col-md-12 px-2 py-2">
+                        {{-- <div class="col-lg-6 col-md-12 px-2 py-2">
                             <div class="image">
                                 <img src="{{ asset('images/' . $activity->image) }}" class="card-img-top "
                                     style="max-height: 380px; object-fit: cover;" alt="{{ $activity->activity_name }}">
+                            </div>
+                        </div> --}}
+                        <div class="col-lg-6 col-md-12 px-2 py-2">
+                            <div class="image"
+                                style="width: 100%; height: 380px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                                <img src="{{ asset('storage/' . $activity->image) }}" class="card-img-top"
+                                    style="max-height: 100%; max-width: 100%; object-fit: contain;"
+                                    alt="{{ $activity->activity_name }}">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-12">

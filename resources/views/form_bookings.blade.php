@@ -24,25 +24,25 @@
                         <option value="{{ $activity_id }}">{{ $selectedActivity->activity_name }}</option>
                     </select>
                 </div>
-                <div class="form-group col-5">
-                    <label for="fk_timeslots_id">รอบการเข้าชม:</label>
-                    <select id="fk_timeslots_id" class="form-select @error('fk_timeslots_id') is-invalid @enderror"
-                        name="fk_timeslots_id">
-                        <option value="">เลือกรอบการเข้าชม</option>
-                        @foreach ($timeslots as $timeslot)
-                            <option value="{{ $timeslot->timeslots_id }}">
-                                {{ $timeslot->start_time }} - {{ $timeslot->end_time }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('fk_timeslots_id')
-                        <div class="my-2">
-                            <span class="text-danger">{{ $message }}</span>
-                        </div>
-                    @enderror
-                </div>
-
-
+                @if ($timeslots->isNotEmpty())
+                    <div class="form-group col-5">
+                        <label for="fk_timeslots_id">รอบการเข้าชม:</label>
+                        <select id="fk_timeslots_id" class="form-select @error('fk_timeslots_id') is-invalid @enderror"
+                            name="fk_timeslots_id">
+                            <option value="">เลือกรอบการเข้าชม</option>
+                            @foreach ($timeslots as $timeslot)
+                                <option value="{{ $timeslot->timeslots_id }}">
+                                    {{ $timeslot->start_time }} - {{ $timeslot->end_time }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('fk_timeslots_id')
+                            <div class="my-2">
+                                <span class="text-danger">{{ $message }}</span>
+                            </div>
+                        @enderror
+                    </div>
+                @endif
                 <div class="form-group col-5">
                     <label for="booking_date">วันที่จอง:</label>
                     <input type="date" class="form-control" id="booking_date" name="booking_date"

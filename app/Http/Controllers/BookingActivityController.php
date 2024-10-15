@@ -141,10 +141,4 @@ class BookingActivityController extends Controller
 
         return redirect()->back()->with('success', 'ลบรอบการเข้าชมสำเร็จ');
     }
-
-    // public function showActivityBookingForm()
-    // {
-    //     $activities = Activity::where('activity_type_id', 2)->get(); // ดึงกิจกรรมที่มี activity_type_id = 2
-    //     return view('form_bookings', ['activities' => $activities]);
-    // }
 }

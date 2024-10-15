@@ -2,6 +2,7 @@ $(document).ready(function () {
     $(".edit-activity-btn").on("click", function () {
         // ดึงค่าที่เก็บใน data-* attribute ของปุ่ม
         var activityId = $(this).data("id");
+        var activityTypeId = $(this).data("activity_type_id");
         var activityName = $(this).data("name");
         var activityDescription = $(this).data("description");
         var activityChildrenPrice = $(this).data("children_price");
@@ -9,8 +10,10 @@ $(document).ready(function () {
         var activityAdultPrice = $(this).data("adult_price");
         var activityMaxCapacity = $(this).data("max_capacity");
         var activityImage = $(this).data("image");
+
         // ใส่ข้อมูลลงใน modal
         $("#edit_activity_id").val(activityId);
+        $("#edit_activity_type_id").val(activityTypeId);
         $("#edit_activity_name").val(activityName);
         $("#edit_description").val(activityDescription);
         $("#edit_childrenprice").val(activityChildrenPrice);
@@ -49,30 +52,22 @@ const onMouseMove = (e) =>
         const width =
             horizontalScrollOffset + e.clientX - headerBeingResized.offsetLeft;
 
-        // Update the column object with the new size value
         const column = columns.find(
             ({ header }) => header === headerBeingResized
         );
-        column.size = Math.max(min, width) + "px"; // Enforce our minimum
+        column.size = Math.max(min, width) + "px";
 
-        // For the other headers which don't have a set width, fix it to their computed width
         columns.forEach((column) => {
             if (column.size.startsWith("minmax")) {
-                // isn't fixed yet (it would be a pixel value otherwise)
                 column.size = parseInt(column.header.clientWidth, 10) + "px";
             }
         });
 
-        /* 
-    Update the column sizes
-    Reminder: grid-template-columns sets the width for all columns in one value
-  */
         table.style.gridTemplateColumns = columns
             .map(({ header, size }) => size)
             .join(" ");
     });
 
-// Clean up event listeners, classes, etc.
 const onMouseUp = () => {
     console.log("onMouseUp");
 
@@ -92,12 +87,10 @@ const initResize = ({ target }) => {
     headerBeingResized.classList.add("header--being-resized");
 };
 
-// Let's populate that columns array and add listeners to the resize handles
 document.querySelectorAll("th").forEach((header) => {
     const max = columnTypeToRatioMap[header.dataset.type] + "fr";
     columns.push({
         header,
-        // The initial size value for grid-template-columns:
         size: `minmax(${min}px, ${max})`,
     });
     header

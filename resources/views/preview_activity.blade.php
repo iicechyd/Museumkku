@@ -20,7 +20,7 @@
                 <div class="col-md-3 mb-4">
                     <x-card-group>
                         <x-card title="{{ $item->activity_name }}" text="{{ $item->description }}"
-                            image="{{ asset('images/' . $item->image) }}"
+                            image="{{ asset('storage/' . $item->image) }}"
                             detail="{{ route('activity_detail', ['activity_id' => $item->activity_id]) }}"
                             booking="{{ route('form_bookings.activity', ['activity_id' => $item->activity_id]) }}" />
                     </x-card-group>

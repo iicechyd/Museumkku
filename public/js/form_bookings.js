@@ -190,9 +190,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // กำหนดค่าที่ต้องการให้ autofill ในฟิลด์ต่าง ๆ
     document.getElementById("booking_date").value = "2024-10-20";
     document.getElementById("instituteName").value = "โรงเรียนเด่นดี";
-    document.getElementById("instituteAddress").value = "123/45 ถนนทดสอบ";
-    document.getElementById("visitorName").value = "นายทดสอบ ผู้ประสานงาน";
-    document.getElementById("visitorEmail").value = "test@example.com";
+    document.getElementById("instituteAddress").value =
+        "123/45 หมู่ 2 บ้านหมีน้อย";
+    document.getElementById("visitorName").value = "นางสาวแก้วกานต์ แก่นดี";
+    document.getElementById("visitorEmail").value = "kaewkarn@gmail.com";
     document.getElementById("tel").value = "0812345678";
     document.getElementById("children_qty").checked = true;
     document.getElementById("childrenInput").disabled = false;
@@ -202,8 +203,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("studentInput").value = 20;
     document.getElementById("adults_qty").checked = true;
     document.getElementById("adultsInput").disabled = false;
-    document.getElementById("adultsInput").value = 5; // จำนวนครู 5 คน
-
-    // เรียกใช้ฟังก์ชัน calculateTotal เพื่อคำนวณจำนวนคนและราคารวม
+    document.getElementById("adultsInput").value = 5;
     calculateTotal();
 });

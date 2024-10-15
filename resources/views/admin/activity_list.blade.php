@@ -56,7 +56,7 @@
                                 <td class="long-cell">{{ $item->description }}</td>
                                 <td>
                                     @if ($item->image)
-                                        <img src="{{ asset('images/' . $item->image) }}"
+                                        <img src="{{ asset('storage/' . $item->image) }}"
                                             alt="Image of {{ $item->activity_name }}" width="150">
                                     @else
                                         <p>ไม่มีรูปภาพ</p>
@@ -65,7 +65,13 @@
                                 <td>{{ $item->children_price }} บาท</td>
                                 <td>{{ $item->student_price }} บาท</td>
                                 <td>{{ $item->adult_price }} บาท</td>
-                                <td>{{ $item->max_capacity }} คน / รอบ</td>
+                                <td>
+                                    @if ($item->max_capacity === null)
+                                        ไม่จำกัดจำนวนคน
+                                    @else
+                                        {{ $item->max_capacity }} คน / รอบ
+                                    @endif
+                                </td>
                                 <td>
                                     <ul class="list-inline m-0">
                                         {{-- <li class="list-inline-item">
@@ -78,11 +84,13 @@
                                         <li class="list-inline-item">
                                             <button class="btn btn-success btn-sm rounded-0 edit-activity-btn"
                                                 type="button" data-toggle="modal" data-target="#EditActivityModal"
+                                                data-activity_type_id="{{ $item->activity_type_id }}"
                                                 data-id="{{ $item->activity_id }}" data-name="{{ $item->activity_name }}"
                                                 data-description="{{ $item->description }}"
                                                 data-children_price="{{ $item->children_price }}"
                                                 data-student_price="{{ $item->student_price }}"
                                                 data-adult_price="{{ $item->adult_price }}"
+                                                data-max_capacity="{{ $item->max_capacity }}"
                                                 data-image="{{ asset('storage/' . $item->image) }}">
                                                 <i class="fa fa-edit"></i>
                                             </button>
@@ -238,7 +246,7 @@
                         </div>
                         <div class="form-group">
                             <label for="edit_max_capacity">ความจุคนต่อรอบการเข้าชม</label>
-                            <input type="number" class="form-control" id="max_capacity" name="max_capacity"
+                            <input type="number" class="form-control" id="edit_max_capacity" name="max_capacity"
                                 min="0" required>
                         </div>
                         <div class="form-group">

@@ -62,7 +62,7 @@ class BookingController extends Controller
                 ->sum(DB::raw('children_qty + students_qty + adults_qty'));
 
             // For approved bookings, adjust the remaining capacity
-            $item->remaining_capacity = $item->timeslot->max_capacity - $totalApproved;
+            $item->remaining_capacity = $item->activity->max_capacity - $totalApproved;
 
             // Calculate total price
             $childrenPrice = $item->children_qty * $item->activity->children_price;
@@ -93,7 +93,7 @@ class BookingController extends Controller
                 ->sum(DB::raw('children_qty + students_qty + adults_qty'));
 
             // Set remaining capacity initially, subtract approved bookings
-            $item->remaining_capacity = $item->timeslot->max_capacity - $totalApproved;
+            $item->remaining_capacity = $item->actvity->max_capacity - $totalApproved;
 
             // Since the status is 2 (canceled), add back the visitors of this booking to remaining capacity
             $item->remaining_capacity += $item->children_qty + $item->students_qty + $item->adults_qty;

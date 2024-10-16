@@ -122,6 +122,17 @@ class ActivityController extends Controller
         return redirect()->back()->with('success', 'แก้ไขกิจกรรมเรียบร้อยแล้ว');
     }
 
+    public function editActivity($activity_id)
+    {
+        $item = Activity::find($activity_id);
+
+        return view('activity_list', [
+            'activity' => $item,
+            'image_url' => asset('storage/' . $item->image) // ดึง URL ของภาพ
+        ]);
+    }
+
+
     public function store(Request $request)
     {
         $request->validate([
@@ -134,23 +145,5 @@ class ActivityController extends Controller
 
         return redirect()->back()->with('success', 'เพิ่มประเภทกิจกรรมเรียบร้อยแล้ว');
     }
-
-    // public function createBookingForm()
-    // {
-    //     $activities = Activity::all();
-
-    //     return view('form_bookings', compact('activities'));
-    // }
-
-    // public function getActivityPrice($activity_id)
-    // {
-    //     $activity = Activity::find($activity_id);
-
-    //     return response()->json([
-    //         'children_price' => $activity->children_price,
-    //         'student_price' => $activity->student_price,
-    //         'adult_price' => $activity->adult_price
-    //     ]);
-    // }
 
 }

@@ -50,6 +50,7 @@
                     <tbody>
                         @foreach ($requestListActivity as $item)
                             <tr>
+
                                 <td>{{ $item->activity_id }}</td>
                                 <td class="long-cell">{{ $item->activity_name }}</td>
                                 <td>{{ $item->activityType ? $item->activityType->type_name : 'N/A' }}</td>
@@ -253,6 +254,10 @@
                             <label for="image">รูปภาพ</label>
                             <input type="file" class="form-control-file" id="image" name="image"
                                 accept="image/*" required>
+                            {{-- <img id="current_image" src="#" alt="รูปภาพปัจจุบัน"
+                                style="display: none; max-width: 100px;">
+                            <small id="current_image_name" class="form-text text-muted"
+                                style="display: none;">ไม่มีรูปภาพ</small> --}}
                         </div>
 
                         <div class="pt-2">

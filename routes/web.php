@@ -97,5 +97,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/request_bookings/activity', [BookingActivityController::class, 'showBookingsActivity'])->name('request_bookings.activity');
     Route::get('/admin/approved_bookings/activity', [BookingActivityController::class, 'showApprovedActivity'])->name('approved_bookings');
     Route::get('/admin/except_cases_bookings/activity', [BookingActivityController::class, 'showExceptActivity'])->name('except_bookings');
+
     // Route::post('/admin/request_bookings/update-status/{booking_id}', [BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
 });

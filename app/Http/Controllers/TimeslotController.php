@@ -53,7 +53,6 @@ class TimeslotController extends Controller
         $timeslot = Timeslots::findOrFail($id);
         $timeslot->start_time = $request->input('start_time');
         $timeslot->end_time = $request->input('end_time');
-        $timeslot->max_capacity = $request->input('max_capacity');
         $timeslot->save();
 
         return redirect()->back()->with('success', 'แก้ไขรอบการเข้าชมเรียบร้อยแล้ว!');
@@ -65,14 +64,12 @@ class TimeslotController extends Controller
             'activity_id' => 'required|exists:activities,activity_id',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|after:start_time',
-            'max_capacity' => 'required|integer|min:1',
         ]);
 
         $timeslot = new Timeslots();
         $timeslot->activity_id = $request->input('activity_id');
         $timeslot->start_time = $request->input('start_time');
         $timeslot->end_time = $request->input('end_time');
-        $timeslot->max_capacity = $request->input('max_capacity');
         $timeslot->save();
 
         return redirect()->back()->with('success', 'เพิ่มรอบการเข้าชมเรียบร้อยแล้ว');

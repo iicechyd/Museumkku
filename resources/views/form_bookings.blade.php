@@ -26,7 +26,7 @@
                 </div>
                 @if ($timeslots->isNotEmpty())
                     <div class="form-group col-5">
-                        <label for="fk_timeslots_id">รอบการเข้าชม:</label>
+                        <label for="fk_timeslots_id" class="form-label">รอบการเข้าชม:</label>
                         <select id="fk_timeslots_id" class="form-select @error('fk_timeslots_id') is-invalid @enderror"
                             name="fk_timeslots_id">
                             <option value="">เลือกรอบการเข้าชม</option>

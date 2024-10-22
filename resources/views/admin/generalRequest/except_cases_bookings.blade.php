@@ -35,16 +35,16 @@
                         <td>{{ \Carbon\Carbon::parse($item->timeslot->start_time)->format('H:i') }} น. -
                             {{ \Carbon\Carbon::parse($item->timeslot->end_time)->format('H:i') }} น.
                         </td>
-                        <td class="long-cell">{{ $item->instituteName }}</td>
-                        <td class="long-cell">{{ $item->instituteAddress }} {{ $item->province }}
-                            {{ $item->subdistrict }} {{ $item->zip }}</td>
-                        <td>{{ $item->visitorName }}</td>
-                        <td>{{ $item->visitorEmail }}</td>
-                        <td>{{ $item->tel }}</td>
-                        <td>{{ $item->children_qty }} คน</td>
-                        <td>{{ $item->students_qty }} คน</td>
-                        <td>{{ $item->adults_qty }} คน</td>
-                        <td>{{ $item->children_qty + $item->students_qty + $item->adults_qty }} คน</td>
+                        <td class="long-cell">{{ $item->institute->instituteName }}</td>
+                        <td class="long-cell">{{ $item->institute->instituteAddress }} {{ $item->institute->province }}
+                            {{ $item->institute->subdistrict }} {{ $item->institute->zipcode }}</td>
+                        <td>{{ $item->visitor->visitorName }}</td>
+                        <td>{{ $item->visitor->visitorEmail }}</td>
+                        <td>{{ $item->visitor->tel }}</td>
+                        <td>{{ $item->children_qty > 0 ? $item->children_qty . ' คน' : '-' }}</td>
+                        <td>{{ $item->students_qty > 0 ? $item->students_qty . ' คน' : '-' }}</td>
+                        <td>{{ $item->adults_qty > 0 ? $item->adults_qty . ' คน' : '-' }}</td>
+                        <td>{{ $item->totalVisitors > 0 ? $item->totalVisitors . ' คน' : '-' }}</td>
                         <td>
                             @switch($item->status)
                                 @case(0)

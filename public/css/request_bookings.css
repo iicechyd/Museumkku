@@ -106,7 +106,6 @@ table {
     flex: 1;
     display: grid;
     border-collapse: collapse;
-    /* These are just initial values which are overriden using JavaScript when a column is resized */
     grid-template-columns:
         minmax(100px, 1fr)
         minmax(400px, 1.67fr)
@@ -115,7 +114,7 @@ table {
         minmax(250px, 1.67fr)
         minmax(250px, 3.33fr)
         minmax(230px, 3fr)
-        minmax(190px, 1.67fr)
+        minmax(250px, 2fr)
         minmax(170px, 1.67fr)
         minmax(130px, 1fr)
         minmax(150px, 1fr)
@@ -125,7 +124,7 @@ table {
         minmax(200px, 1fr)
         minmax(150px, 1fr)
         minmax(230px, 1fr)
-        minmax(250px, 1fr);
+        minmax(270px, 1fr);
 }
 
 thead,

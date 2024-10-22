@@ -38,14 +38,14 @@ table {
         minmax(250px, 1.67fr)
         minmax(250px, 3.33fr)
         minmax(230px, 2fr)
-        minmax(190px, 1.67fr)
+        minmax(250px, 2fr)
         minmax(170px, 1.67fr)
         minmax(130px, 1fr)
         minmax(150px, 1fr)
         minmax(200px, 1fr)
         minmax(230px, 1fr)
         minmax(200px, 1fr)
-        minmax(230px, 1fr)
+        minmax(270px, 1fr)
         minmax(230px, 1fr)
         minmax(230px, 1fr);
 }

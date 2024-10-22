@@ -119,11 +119,11 @@
                 </div>
 
                 <div class="col-md-2">
-                    <label for="zip" class="form-label">รหัสไปรษณีย์</label>
-                    <input type="text" class="form-control @error('zip') is-invalid @enderror" id="zip"
-                        name="zip" placeholder="กรอกรหัสไปรษณีย์" value="{{ old('zip') }}" pattern="\d{5}"
+                    <label for="zipcode" class="form-label">รหัสไปรษณีย์</label>
+                    <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode"
+                        name="zipcode" placeholder="กรอกรหัสไปรษณีย์" value="{{ old('zipcode') }}" pattern="\d{5}"
                         maxlength="5" minlength="5" inputmode="numeric" required>
-                    @error('zip')
+                    @error('zipcode')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
                         </div>

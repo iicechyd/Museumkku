@@ -30,20 +30,31 @@
                             {{ \Carbon\Carbon::parse($item->booking_date)->locale('th')->translatedFormat('j F') }}
                             {{ \Carbon\Carbon::parse($item->booking_date)->addYears(543)->year }}
                         </td>
-                        <td>{{ \Carbon\Carbon::parse($item->timeslot->start_time)->format('H:i') }} -
-                            {{ \Carbon\Carbon::parse($item->timeslot->end_time)->format('H:i') }}
+                        <td>
+                            @if ($item->timeslot)
+                                {{ \Carbon\Carbon::parse($item->timeslot->start_time)->format('H:i') }} น. -
+                                {{ \Carbon\Carbon::parse($item->timeslot->end_time)->format('H:i') }} น.
+                            @else
+                                ไม่มีรอบการเข้าชม
+                            @endif
                         </td>
-                        <td class="long-cell">{{ $item->instituteName }}</td>
-                        <td class="long-cell">{{ $item->instituteAddress }} {{ $item->province }}
-                            {{ $item->subdistrict }} {{ $item->zip }}</td>
-                        <td>{{ $item->visitorName }}</td>
-                        <td>{{ $item->visitorEmail }}</td>
-                        <td>{{ $item->tel }}</td>
-                        <td>{{ $item->children_qty }} คน</td>
-                        <td>{{ $item->students_qty }} คน</td>
-                        <td>{{ $item->adults_qty }} คน</td>
-                        <td>{{ $item->children_qty + $item->students_qty + $item->adults_qty }} คน</td>
-                        <td>{{ $item->remaining_capacity }} / {{ $item->timeslot->max_capacity }} คน</td>
+                        <td>{{ $item->institute->instituteName }}</td>
+                        <td class="long-cell">{{ $item->institute->Address }} {{ $item->institute->province }}
+                            {{ $item->institute->subdistrict }} {{ $item->institute->zipcode }}</td>
+                        <td>{{ $item->visitor->visitorName }}</td>
+                        <td>{{ $item->visitor->visitorEmail }}</td>
+                        <td>{{ $item->visitor->tel }}</td>
+                        <td>{{ $item->children_qty > 0 ? $item->children_qty . ' คน' : '-' }}</td>
+                        <td>{{ $item->students_qty > 0 ? $item->students_qty . ' คน' : '-' }}</td>
+                        <td>{{ $item->adults_qty > 0 ? $item->adults_qty . ' คน' : '-' }}</td>
+                        <td>{{ $item->totalVisitors > 0 ? $item->totalVisitors . ' คน' : '-' }}</td>
+                        <td>
+                            @if (is_string($item->remaining_capacity))
+                                {{ $item->remaining_capacity }}
+                            @else
+                                {{ $item->remaining_capacity }} / {{ $item->activity->max_capacity }} คน
+                            @endif
+                        </td>
                         <td>
                             @switch($item->status)
                                 @case(0)
@@ -67,7 +78,6 @@
                                     <select name="status" id="statusSelect_{{ $item->booking_id }}"
                                         onchange="toggleCommentsField({{ $item->booking_id }})"
                                         class="bg-gray-100 border border-gray-300 rounded-lg p-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                        {{-- <option value="pending" {{ $item->status == 0 ? 'selected' : '' }}>รออนุมัติ</option> --}}
                                         <option value="approve" {{ $item->status == 1 ? 'selected' : '' }}>อนุมัติ</option>
                                         <option value="cancel" {{ $item->status == 2 ? 'selected' : '' }}>ยกเลิก</option>
                                     </select>
@@ -79,14 +89,16 @@
                                             class="bg-gray-100 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                                     </div>
 
-                                    <!-- ปุ่มอัปเดตสถานะจะแสดงตลอดเวลา -->
                                     <button type="submit" class="button-custom">
                                         อัปเดตสถานะ
                                     </button>
                                 </div>
                             </form>
                         </td>
-                        <td>{{ $item->latestStatusChange->updated_at ?? 'N/A' }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
+                            {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->year + 543 }} เวลา
+                            {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->format('H:i') }} น.
+                        </td>
                         <td>{{ $item->latestStatusChange->changed_by ?? 'N/A' }}</td>
                     </tr>
                 @endforeach

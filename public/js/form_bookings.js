@@ -161,10 +161,10 @@ function showZipcode() {
         .then((result) => {
             console.log(result);
             // UPDATE ZIPCODE
-            let input_zip = document.querySelector("#zip");
-            input_zip.value = "";
+            let input_zipcode = document.querySelector("#zipcode");
+            input_zipcode.value = "";
             for (let item of result) {
-                input_zip.value = item.zipcode;
+                input_zipcode.value = item.zipcode;
                 break;
             }
         });
@@ -186,9 +186,9 @@ document.querySelector("#subdistrict").addEventListener("change", (event) => {
 // เรียกใช้ฟังก์ชันเพื่อโหลดจังหวัดเมื่อเริ่มต้น
 showProvinces();
 
+// กำหนดค่าที่ต้องการให้ autofill ในฟิลด์ต่าง ๆ
 document.addEventListener("DOMContentLoaded", function () {
-    // กำหนดค่าที่ต้องการให้ autofill ในฟิลด์ต่าง ๆ
-    document.getElementById("booking_date").value = "2024-10-20";
+    document.getElementById("booking_date").value = "2024-10-29";
     document.getElementById("instituteName").value = "โรงเรียนเด่นดี";
     document.getElementById("instituteAddress").value =
         "123/45 หมู่ 2 บ้านหมีน้อย";

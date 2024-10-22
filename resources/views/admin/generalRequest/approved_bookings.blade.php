@@ -33,12 +33,12 @@
                         <td>{{ \Carbon\Carbon::parse($item->timeslot->start_time)->format('H:i') }} -
                             {{ \Carbon\Carbon::parse($item->timeslot->end_time)->format('H:i') }}
                         </td>
-                        <td class="long-cell">{{ $item->instituteName }}</td>
-                        <td class="long-cell">{{ $item->instituteAddress }} {{ $item->province }}
-                            {{ $item->subdistrict }} {{ $item->zip }}</td>
-                        <td>{{ $item->visitorName }}</td>
-                        <td>{{ $item->visitorEmail }}</td>
-                        <td>{{ $item->tel }}</td>
+                        <td>{{ $item->institute->instituteName }}</td>
+                        <td class="long-cell">{{ $item->institute->instituteAddress }} {{ $item->institute->province }}
+                            {{ $item->institute->subdistrict }} {{ $item->institute->zipcode }}</td>
+                        <td>{{ $item->visitor->visitorName }}</td>
+                        <td>{{ $item->visitor->visitorEmail }}</td>
+                        <td>{{ $item->visitor->tel }}</td>
                         <td>{{ $item->children_qty }} คน</td>
                         <td>{{ $item->students_qty }} คน</td>
                         <td>{{ $item->adults_qty }} คน</td>

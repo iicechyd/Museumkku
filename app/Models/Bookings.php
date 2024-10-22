@@ -14,21 +14,21 @@ class Bookings extends Model
         'booking_date',
         'activity_id',
         'timeslots_id',
-        'instituteName',
-        'instituteAddress',
-        'province',
-        'district',
-        'subdistrict',
-        'zip',
-        'visitorName',
-        'visitorEmail',
-        'tel',
         'children_qty',
         'students_qty',
         'adults_qty',
         'status'
     ];
 
+    public function visitor()
+    {
+        return $this->belongsTo(Visitors::class, 'visitor_id');
+    }
+
+    public function institute()
+    {
+        return $this->belongsTo(Institutes::class, 'institute_id');
+    }
     public function activity()
     {
         return $this->belongsTo(Activity::class, 'activity_id');

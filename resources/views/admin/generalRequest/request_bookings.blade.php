@@ -35,17 +35,19 @@
                         <td>{{ \Carbon\Carbon::parse($item->timeslot->start_time)->format('H:i') }} น. -
                             {{ \Carbon\Carbon::parse($item->timeslot->end_time)->format('H:i') }} น.
                         </td>
-                        <td class="long-cell">{{ $item->instituteName }}</td>
-                        <td class="long-cell">{{ $item->instituteAddress }} &nbsp;{{ $item->subdistrict }}
-                            &nbsp;{{ $item->district }}&nbsp; {{ $item->province }}&nbsp;
-                            {{ $item->zip }}</td>
-                        <td>{{ $item->visitorName }}</td>
-                        <td>{{ $item->visitorEmail }}</td>
-                        <td>{{ $item->tel }}</td>
-                        <td>{{ $item->children_qty }} คน</td>
-                        <td>{{ $item->students_qty }} คน</td>
-                        <td>{{ $item->adults_qty }} คน</td>
-                        <td>{{ $item->totalVisitors }} คน</td>
+                        <td>{{ $item->institute->instituteName }}</td>
+                        <td class="long-cell">{{ $item->institute->instituteAddress }}
+                            &nbsp;{{ $item->institute->subdistrict }}
+                            &nbsp;{{ $item->institute->district }}&nbsp; {{ $item->institute->province }}&nbsp;
+                            {{ $item->institute->zipcode }}</td>
+                        <td>{{ $item->visitor->visitorName }}</td>
+                        <td>{{ $item->visitor->visitorEmail }}</td>
+                        <td>{{ $item->visitor->tel }}</td>
+                        <td>{{ $item->children_qty > 0 ? $item->children_qty . ' คน' : '-' }}</td>
+                        <td>{{ $item->students_qty > 0 ? $item->students_qty . ' คน' : '-' }}</td>
+                        <td>{{ $item->adults_qty > 0 ? $item->adults_qty . ' คน' : '-' }}</td>
+                        <td>{{ $item->totalVisitors > 0 ? $item->totalVisitors . ' คน' : '-' }}</td>
+
                         <td>{{ $item->remaining_capacity }} / {{ $item->activity->max_capacity }} คน</td>
                         <td>{{ number_format($item->totalPrice, 2) }} บาท</td>
 
@@ -91,7 +93,9 @@
                                 </div>
                             </form>
                         </td>
-                        <td>{{ $item->created_at }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->created_at)->locale('th')->translatedFormat('j F') }}
+                            {{ \Carbon\Carbon::parse($item->created_at)->year + 543 }} เวลา
+                            {{ \Carbon\Carbon::parse($item->created_at)->format('H:i') }} น.
                         </td>
                     </tr>
                 @endforeach

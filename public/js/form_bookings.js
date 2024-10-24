@@ -198,11 +198,11 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("children_qty").checked = true;
     document.getElementById("childrenInput").disabled = false;
     document.getElementById("childrenInput").value = 10;
-    document.getElementById("students_qty").checked = true;
-    document.getElementById("studentInput").disabled = false;
-    document.getElementById("studentInput").value = 20;
-    document.getElementById("adults_qty").checked = true;
-    document.getElementById("adultsInput").disabled = false;
-    document.getElementById("adultsInput").value = 5;
+    // document.getElementById("students_qty").checked = true;
+    // document.getElementById("studentInput").disabled = false;
+    // document.getElementById("studentInput").value = 20;
+    // document.getElementById("adults_qty").checked = true;
+    // document.getElementById("adultsInput").disabled = false;
+    // document.getElementById("adultsInput").value = 5;
     calculateTotal();
 });

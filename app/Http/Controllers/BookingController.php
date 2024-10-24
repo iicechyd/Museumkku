@@ -26,13 +26,11 @@ class BookingController extends Controller
             ->paginate(5);
 
         foreach ($requestBookings as $item) {
-            // Calculate total approved bookings for the same booking_date and timeslot
             $totalApproved = Bookings::where('booking_date', $item->booking_date)
                 ->where('timeslots_id', $item->timeslot->timeslots_id)
                 ->where('status', 1)
                 ->sum(DB::raw('children_qty + students_qty + adults_qty'));
 
-            // For unapproved bookings, keep max_capacity without adjustments
             $item->remaining_capacity = $item->activity->max_capacity - $totalApproved;
 
             $childrenPrice = $item->children_qty * $item->activity->children_price;
@@ -40,7 +38,6 @@ class BookingController extends Controller
             $adultPrice = $item->adults_qty * $item->activity->adult_price;
             $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
 
-            // Calculate total visitors
             $item->totalVisitors = $item->children_qty + $item->students_qty + $item->adults_qty;
         }
 
@@ -50,18 +47,19 @@ class BookingController extends Controller
     function showApproved()
     {
         $approvedBookings = Bookings::with('activity', 'timeslot', 'visitor', 'institute')
+            ->whereHas('activity', function ($query) {
+                $query->where('activity_type_id', 1);
+            })
             ->where('status', 1)
             ->paginate(5);
 
         foreach ($approvedBookings as $item) {
             $totalApproved = Bookings::where('booking_date', $item->booking_date)
-                ->where('timeslots_id', $item->timeslot->timeslots_id)
+                ->where('activity_id', $item->activity_id) // ตรวจสอบกิจกรรมเดียวกัน
                 ->where('status', 1)
                 ->sum(DB::raw('children_qty + students_qty + adults_qty'));
 
-            // ตรวจสอบว่า item นี้มี timeslot หรือไม่
             if ($item->timeslot && $item->timeslot->timeslots_id) {
-                // หากมี timeslot ให้เพิ่มเงื่อนไขการตรวจสอบ timeslots_id
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('activity_id', $item->activity_id)
                     ->where('timeslots_id', $item->timeslot->timeslots_id) // คำนวณตาม timeslot
@@ -69,23 +67,17 @@ class BookingController extends Controller
                     ->sum(DB::raw('children_qty + students_qty + adults_qty'));
             }
 
-            // คำนวณ remaining capacity โดยลบจำนวนการจองออกจาก max capacity
             if ($item->activity->max_capacity !== null) {
                 $item->remaining_capacity = $item->activity->max_capacity - $totalApproved;
             } else {
-                // ถ้าไม่มี max capacity แสดงว่าไม่จำกัดจำนวนคน
                 $item->remaining_capacity = 'ไม่จำกัดจำนวนคน';
             }
 
-            // Calculate total price
             $childrenPrice = $item->children_qty * $item->activity->children_price;
             $studentPrice = $item->students_qty * $item->activity->student_price;
             $adultPrice = $item->adults_qty * $item->activity->adult_price;
 
-            // Calculate total price
             $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
-
-            // Calculate total visitors
             $item->totalVisitors = $item->children_qty + $item->students_qty + $item->adults_qty;
         }
 
@@ -95,30 +87,34 @@ class BookingController extends Controller
     function showExcept()
     {
         $exceptBookings = Bookings::with('activity', 'timeslot', 'visitor', 'institute')
+            ->whereHas('activity', function ($query) {
+                $query->where('activity_type_id', 1);
+            })
             ->where('status', 2)
             ->paginate(5);
 
         foreach ($exceptBookings as $item) {
-            $totalApproved = Bookings::where('booking_date', $item->booking_date)
-                ->where('timeslots_id', $item->timeslot->timeslots_id)
-                ->where('status', 1)
-                ->sum(DB::raw('children_qty + students_qty + adults_qty'));
+            $totalApproved = 0;
+            if ($item->timeslot) {
+                $totalApproved = Bookings::where('booking_date', $item->booking_date)
+                    ->where('timeslots_id', $item->timeslot->timeslots_id)
+                    ->where('status', 1)
+                    ->sum(DB::raw('children_qty + students_qty + adults_qty'));
+            }
+            if ($item->activity) {
+                $item->remaining_capacity = $item->activity->max_capacity - $totalApproved;
 
-            // Since the status is 2 (canceled), add back the visitors of this booking to remaining capacity
-            $item->remaining_capacity += $item->children_qty + $item->students_qty + $item->adults_qty;
-
-            // Calculate total price (for reference or auditing purposes)
+                $item->remaining_capacity += $item->children_qty + $item->students_qty + $item->adults_qty;
+            } else {
+                $item->remaining_capacity = 'N/A';
+            }
             $childrenPrice = $item->children_qty * $item->activity->children_price;
             $studentPrice = $item->students_qty * $item->activity->student_price;
             $adultPrice = $item->adults_qty * $item->activity->adult_price;
 
-            // Calculate total price
             $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
-
-            // Calculate total visitors
             $item->totalVisitors = $item->children_qty + $item->students_qty + $item->adults_qty;
         }
-
         return view('admin.generalRequest.except_cases_bookings', compact('exceptBookings'));
     }
 
@@ -130,10 +126,8 @@ class BookingController extends Controller
 
         $booking = Bookings::where('booking_id', $booking_id)->firstOrFail();
 
-        // Store the old status before changing
         $oldStatus = $booking->status;
 
-        // Map status values to database values
         switch ($request->status) {
             case 'pending':
                 $newStatus = 0;
@@ -218,10 +212,10 @@ class BookingController extends Controller
         if ($request->filled('fk_timeslots_id')) {
             $timeslot = Timeslots::find($request->input('fk_timeslots_id'));
 
-            // คำนวณจำนวนที่จองทั้งหมดสำหรับวันที่และช่วงเวลาที่เลือก (ยกเว้นสถานะที่ถูกยกเลิก)
+            // คำนวณจำนวนที่จองทั้งหมดสำหรับวันที่และช่วงเวลาที่เลือก (เฉพาะสถานะที่อนุมัติ)
             $totalBooked = Bookings::where('booking_date', $request->booking_date)
                 ->where('timeslots_id', $timeslot->timeslots_id)
-                ->where('status', '!=', 2) // ไม่รวมการจองที่ถูกยกเลิก
+                ->where('status', 1) // สถานะอนุมัติเท่านั้น
                 ->sum(DB::raw('children_qty + students_qty + adults_qty'));
 
             $totalToBook = $request->children_qty + $request->students_qty + $request->adults_qty;
@@ -242,7 +236,7 @@ class BookingController extends Controller
                             ->whereTime('end_time', '>', $timeslot->start_time);
                     });
                 })
-                ->where('status', '!=', 2)
+                ->where('status', 1) // สถานะอนุมัติเท่านั้น
                 ->exists();
 
             // หากมีกิจกรรม activity_id = 3 ที่ถูกจองไว้ในช่วงเวลาที่ใกล้เคียงกัน จะไม่อนุญาตให้จองกิจกรรมใหม่
@@ -259,7 +253,7 @@ class BookingController extends Controller
                 // ถ้า max_capacity มีค่า (กรณีที่มีกิจกรรมที่มีความจุ) ให้ตรวจสอบ
                 $totalBooked = Bookings::where('booking_date', $request->booking_date)
                     ->whereNull('timeslots_id') // Consider bookings without timeslots
-                    ->where('status', '!=', 2) // ไม่รวมการจองที่ถูกยกเลิก
+                    ->where('status', 1) // สถานะอนุมัติเท่านั้น
                     ->sum(DB::raw('children_qty + students_qty + adults_qty'));
 
                 if ($totalBooked + $totalToBook > $activity->max_capacity) {
@@ -306,7 +300,6 @@ class BookingController extends Controller
 
         return redirect()->back()->with('success', 'จองเข้าชมพิพิธภัณฑ์เรียบร้อยแล้ว');
     }
-
 
     public function showBookingForm($activity_id)
     {

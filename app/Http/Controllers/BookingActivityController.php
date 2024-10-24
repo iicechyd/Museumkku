@@ -123,7 +123,7 @@ class BookingActivityController extends Controller
             if ($item->timeslot) {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('timeslots_id', $item->timeslot->timeslots_id)
-                    ->where('status', 1) // Only count approved bookings
+                    ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty'));
             }
             // ตรวจสอบว่า activity มีค่า ก่อนเข้าถึง max_capacity

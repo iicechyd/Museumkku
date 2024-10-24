@@ -52,7 +52,11 @@
                             @if (is_string($item->remaining_capacity))
                                 {{ $item->remaining_capacity }}
                             @else
-                                {{ $item->remaining_capacity }} / {{ $item->activity->max_capacity }} คน
+                                @if ($item->remaining_capacity == 0)
+                                    รอบการเข้าชมรอบนี้เต็มแล้ว
+                                @else
+                                    {{ $item->remaining_capacity }} / {{ $item->activity->max_capacity }} คน
+                                @endif
                             @endif
                         </td>
                         <td>

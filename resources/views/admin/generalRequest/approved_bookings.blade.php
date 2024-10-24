@@ -30,8 +30,13 @@
                             {{ \Carbon\Carbon::parse($item->booking_date)->locale('th')->translatedFormat('j F') }}
                             {{ \Carbon\Carbon::parse($item->booking_date)->addYears(543)->year }}
                         </td>
-                        <td>{{ \Carbon\Carbon::parse($item->timeslot->start_time)->format('H:i') }} -
-                            {{ \Carbon\Carbon::parse($item->timeslot->end_time)->format('H:i') }}
+                        <td>
+                            @if ($item->timeslot)
+                                {{ \Carbon\Carbon::parse($item->timeslot->start_time)->format('H:i') }} น. -
+                                {{ \Carbon\Carbon::parse($item->timeslot->end_time)->format('H:i') }} น.
+                            @else
+                                ไม่มีรอบการเข้าชม
+                            @endif
                         </td>
                         <td>{{ $item->institute->instituteName }}</td>
                         <td class="long-cell">{{ $item->institute->instituteAddress }} {{ $item->institute->province }}
@@ -43,7 +48,13 @@
                         <td>{{ $item->students_qty }} คน</td>
                         <td>{{ $item->adults_qty }} คน</td>
                         <td>{{ $item->children_qty + $item->students_qty + $item->adults_qty }} คน</td>
-                        <td>{{ $item->remaining_capacity }} / {{ $item->activity->max_capacity }} คน</td>
+                        <td>
+                            @if ($item->remaining_capacity == 0)
+                                รอบการเข้าชมรอบนี้เต็มแล้ว
+                            @else
+                                {{ $item->remaining_capacity }} / {{ $item->activity->max_capacity }} คน
+                            @endif
+                        </td>
                         <td>
                             @switch($item->status)
                                 @case(0)

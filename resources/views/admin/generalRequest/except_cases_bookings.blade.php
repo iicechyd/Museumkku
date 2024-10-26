@@ -20,7 +20,7 @@
             <a href="{{ url('/admin/except_cases_bookings/general') }}" class="btn-except">กรณีพิเศษ</a>
         </div>
         @if (count($exceptBookings) > 0)
-            <h1 class="table-heading text-center">การจองกรณีพิเศษ</h1>
+            <h1 class="table-heading text-center">กรณีพิเศษ</h1>
             {{ $exceptBookings->links() }}
 
             @component('components.table_except_cases_bookings')

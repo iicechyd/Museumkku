@@ -80,6 +80,17 @@
                     @enderror
                 </div>
 
+                <div class="col-md-2">
+                    <label for="zipcode" class="form-label">รหัสไปรษณีย์</label>
+                    <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode"
+                        name="zipcode" placeholder="กรอกรหัสไปรษณีย์" value="{{ old('zipcode') }}" pattern="\d{5}"
+                        maxlength="5" minlength="5" inputmode="numeric" required>
+                    @error('zipcode')
+                        <div class="my-2">
+                            <span class="text-danger">{{ $message }}</span>
+                        </div>
+                    @enderror
+                </div>
                 <div class="col-md-4">
                     <label for="province" class="form-label">จังหวัด</label>
                     <select id="province" class="form-select @error('province') is-invalid @enderror" name="province">
@@ -93,7 +104,7 @@
                     @enderror
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-">
                     <label for="district" class="form-label">เขต/อำเภอ</label>
                     <select id="district" class="form-select @error('district') is-invalid @enderror" name="district">
                         <option value="">เลือกเขต/อำเภอ</option>
@@ -118,7 +129,7 @@
                     @enderror
                 </div>
 
-                <div class="col-md-2">
+                {{-- <div class="col-md-2">
                     <label for="zipcode" class="form-label">รหัสไปรษณีย์</label>
                     <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode"
                         name="zipcode" placeholder="กรอกรหัสไปรษณีย์" value="{{ old('zipcode') }}" pattern="\d{5}"
@@ -128,7 +139,7 @@
                             <span class="text-danger">{{ $message }}</span>
                         </div>
                     @enderror
-                </div>
+                </div> --}}
 
                 <div class="col-md-6">
                     <label for="visitorName" class="form-label">ชื่อผู้ประสานงาน</label>

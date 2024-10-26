@@ -13,7 +13,7 @@
 
     @if (count($requestListActivity) > 0)
         <div>
-            <h1 class="table-heading text-center">แก้ไขรายละเอียดกิจกรรม</h1>
+            <h1 class="table-heading text-center">รายละเอียดกิจกรรม</h1>
             {{-- <button type="button" class="btn my-3"
                 style="background-color: rgb(100, 149, 237); border-color: rgb(100, 149, 237); color: white;"
                 data-toggle="modal" data-target="#InsertActivityTypeModal">

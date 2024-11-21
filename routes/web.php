@@ -85,6 +85,10 @@ Route::post('/InsertTimeslots', [TimeslotController::class, 'InsertTimeslots'])-
 Route::delete('/timeslots/{timeslots_id}', [TimeslotController::class, 'destroy'])->name('timeslots.destroy');
 Route::put('timeslots/{id}', [TimeslotController::class, 'update'])->name('timeslots.update');
 
+Route::get('/showBookingStatus', [BookingController::class, 'showBookingStatus'])->name('showBookingStatus');
+Route::get('/checkBookingStatus', [BookingController::class, 'checkBookingStatus'])->name('checkBookingStatus');
+Route::post('/checkBookingStatus', [BookingController::class, 'searchBookingByEmail'])->name('searchBookingByEmail');
+
 //Middleware routes
 Auth::routes();
 Route::group(['middleware' => 'auth'], function () {

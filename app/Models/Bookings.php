@@ -27,7 +27,7 @@ class Bookings extends Model
 
     public function institute()
     {
-        return $this->belongsTo(Institutes::class, 'institute_id');
+        return $this->belongsTo(Institutes::class, 'institute_id', 'institute_id');
     }
     public function activity()
     {
@@ -47,7 +47,11 @@ class Bookings extends Model
     {
         return $this->hasOne(StatusChanges::class, 'booking_id', 'booking_id')
             ->orderBy('changed_id', 'desc'); // ใช้ changed_id แทน id
-
     }
-
+    
+    public function getTotalVisitorsAttribute()
+    {
+        return $this->children_qty + $this->students_qty + $this->adults_qty;
+    }
+    
 }

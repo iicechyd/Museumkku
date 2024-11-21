@@ -32,8 +32,13 @@
                             {{ \Carbon\Carbon::parse($item->booking_date)->locale('th')->translatedFormat('j F') }}
                             {{ \Carbon\Carbon::parse($item->booking_date)->addYears(543)->year }}
                         </td>
-                        <td>{{ \Carbon\Carbon::parse($item->timeslot->start_time)->format('H:i') }} น. -
+                        <td>
+                            @if ($item->timeslot)
+                            {{ \Carbon\Carbon::parse($item->timeslot->start_time)->format('H:i') }} น. -
                             {{ \Carbon\Carbon::parse($item->timeslot->end_time)->format('H:i') }} น.
+                            @else
+                            ไม่มีรอบการเข้าชม
+                        @endif
                         </td>
                         <td>{{ $item->institute->instituteName }}</td>
                         <td class="long-cell">{{ $item->institute->instituteAddress }}

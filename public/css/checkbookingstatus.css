@@ -1,0 +1,35 @@
+.status-btn-approved {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #18ab56;
+    color: #ffffff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    border: 2px solid #18ab56;
+}
+
+.status-btn-request {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #ffbc10;
+    color: #ffffff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    border: 2px solid #ffbc10;
+}
+
+.status-btn-except {
+    display: inline-block;
+    padding: 7px 12px;
+    background-color: #df3139;
+    color: #ffffff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    border: 2px solid #df3139;
+}

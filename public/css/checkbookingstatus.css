@@ -1,35 +1,83 @@
-.status-btn-approved {
-    display: inline-block;
-    padding: 8px 12px;
-    background-color: #18ab56;
-    color: #ffffff;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    border: 2px solid #18ab56;
+.container {
+    font-family: 'Noto Sans Thai', sans-serif;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.table {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table th {
+    background-color: #489085;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+
+.table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table-bordered {
+    border: 2px solid #489085;
 }
 
 .status-btn-request {
-    display: inline-block;
-    padding: 8px 12px;
-    background-color: #ffbc10;
-    color: #ffffff;
+    background-color: #FFA500;
+    color: white;
+    border: none;
     border-radius: 5px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    border: 2px solid #ffbc10;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.status-btn-approved {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .status-btn-except {
-    display: inline-block;
-    padding: 7px 12px;
-    background-color: #df3139;
-    color: #ffffff;
+    background-color: #FF6347;
+    color: white;
+    border: none;
     border-radius: 5px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    border: 2px solid #df3139;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.alert {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.custom-btn {
+    background-color: #489085;
+    color: white;
+    border: none;
+}
+
+.custom-btn:hover {
+    background-color: #387a6b;
+    color: #f0f0f0;
 }

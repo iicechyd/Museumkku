@@ -165,7 +165,6 @@ class BookingController extends Controller
                 break;
         }
 
-        // Update booking status
         $booking->status = $newStatus;
         $booking->save();
 
@@ -205,8 +204,12 @@ class BookingController extends Controller
                     'nullable',
                     'exists:timeslots,timeslots_id',
                     function ($attribute, $value, $fail) use ($request) {
-                        if (in_array($request->input('fk_activity_id'), [1, 2]) && !$value) {
-                            $fail('กรุณาเลือกรอบการเข้าชม');
+                        $activity = Activity::with('activityType')->find($request->input('fk_activity_id'));
+                
+                        if (!$activity) {
+                            $fail('ไม่พบกิจกรรมที่เลือกในฐานข้อมูล');
+                        } elseif ($activity->activityType->activity_type_id == 1 && !$value) {
+                            $fail('กรุณาเลือกรอบการเข้าชมสำหรับกิจกรรมประเภทนี้');
                         }
                     }
                 ],
@@ -231,6 +234,14 @@ class BookingController extends Controller
                 'adults_qty' => 'nullable|integer|min:0',
             ]
         );
+
+         // ตรวจสอบ timeslot เมื่อ activity_type_id = 1
+        $activity = Activity::find($request->input('fk_activity_id'));
+        if ($activity && $activity->activityType->activity_type_id == 1) {
+            if (is_null($request->input('fk_timeslots_id'))) {
+                return back()->with('error', 'กรุณาเลือกรอบการเข้าชมสำหรับกิจกรรมประเภทนี้');
+            }
+        }
 
         $activity = Activity::find($request->input('fk_activity_id'));
 

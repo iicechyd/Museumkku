@@ -13,4 +13,9 @@ class ActivityType extends Model
     protected $fillable = [
         'type_name'
     ];
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class, 'activity_type_id', 'activity_type_id');
+    }
 }

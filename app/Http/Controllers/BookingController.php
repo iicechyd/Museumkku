@@ -25,46 +25,46 @@ class BookingController extends Controller
             ->where('status', 0)
             ->paginate(5);
 
-            foreach ($requestBookings as $item) {
-                $totalApproved = 0;
-    
-                // ตรวจสอบว่า activity มี timeslot หรือไม่
-                if ($item->timeslot) {
-                    // หากมี timeslot คำนวณจำนวนคนที่จองใน timeslot นั้น
-                    $totalApproved = Bookings::where('booking_date', $item->booking_date)
-                        ->where('timeslots_id', $item->timeslot->timeslots_id)
-                        ->where('status', 1)
-                        ->sum(DB::raw('children_qty + students_qty + adults_qty'));
-                } else {
-                    // หากไม่มี timeslot คำนวณจำนวนคนที่จองในวันเดียวกันและกิจกรรมเดียวกัน
-                    $totalApproved = Bookings::where('booking_date', $item->booking_date)
-                        ->where('activity_id', $item->activity_id)
-                        ->where('status', 1) // เฉพาะการจองที่อนุมัติแล้ว
-                        ->sum(DB::raw('children_qty + students_qty + adults_qty'));
-                }
-    
-                // ดึงค่าความจุสูงสุดจาก activity
-                $maxCapacity = $item->activity->max_capacity;
-    
-                // คำนวณความจุคงเหลือ
-                if ($maxCapacity === null) {
-                    $item->remaining_capacity = 'ไม่จำกัดจำนวนคน';
-                } else {
-                    // คำนวณความจุคงเหลือโดยลบจากการจองที่อนุมัติแล้ว
-                    $item->remaining_capacity = $maxCapacity - $totalApproved;
-                }
-    
-                // คำนวณราคาทั้งหมด
-                $childrenPrice = $item->children_qty * $item->activity->children_price;
-                $studentPrice = $item->students_qty * $item->activity->student_price;
-                $adultPrice = $item->adults_qty * $item->activity->adult_price;
-    
-                // คำนวณราคาทั้งหมด
-                $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
-    
-                // คำนวณจำนวนผู้เข้าชมทั้งหมด
-                $item->totalVisitors = $item->children_qty + $item->students_qty + $item->adults_qty;
+        foreach ($requestBookings as $item) {
+            $totalApproved = 0;
+
+            // ตรวจสอบว่า activity มี timeslot หรือไม่
+            if ($item->timeslot) {
+                // หากมี timeslot คำนวณจำนวนคนที่จองใน timeslot นั้น
+                $totalApproved = Bookings::where('booking_date', $item->booking_date)
+                    ->where('timeslots_id', $item->timeslot->timeslots_id)
+                    ->where('status', 1)
+                    ->sum(DB::raw('children_qty + students_qty + adults_qty'));
+            } else {
+                // หากไม่มี timeslot คำนวณจำนวนคนที่จองในวันเดียวกันและกิจกรรมเดียวกัน
+                $totalApproved = Bookings::where('booking_date', $item->booking_date)
+                    ->where('activity_id', $item->activity_id)
+                    ->where('status', 1) // เฉพาะการจองที่อนุมัติแล้ว
+                    ->sum(DB::raw('children_qty + students_qty + adults_qty'));
             }
+
+            // ดึงค่าความจุสูงสุดจาก activity
+            $maxCapacity = $item->activity->max_capacity;
+
+            // คำนวณความจุคงเหลือ
+            if ($maxCapacity === null) {
+                $item->remaining_capacity = 'ไม่จำกัดจำนวนคน';
+            } else {
+                // คำนวณความจุคงเหลือโดยลบจากการจองที่อนุมัติแล้ว
+                $item->remaining_capacity = $maxCapacity - $totalApproved;
+            }
+
+            // คำนวณราคาทั้งหมด
+            $childrenPrice = $item->children_qty * $item->activity->children_price;
+            $studentPrice = $item->students_qty * $item->activity->student_price;
+            $adultPrice = $item->adults_qty * $item->activity->adult_price;
+
+            // คำนวณราคาทั้งหมด
+            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
+
+            // คำนวณจำนวนผู้เข้าชมทั้งหมด
+            $item->totalVisitors = $item->children_qty + $item->students_qty + $item->adults_qty;
+        }
 
         return view('admin.generalRequest.request_bookings', compact('requestBookings'));
     }
@@ -205,7 +205,7 @@ class BookingController extends Controller
                     'exists:timeslots,timeslots_id',
                     function ($attribute, $value, $fail) use ($request) {
                         $activity = Activity::with('activityType')->find($request->input('fk_activity_id'));
-                
+
                         if (!$activity) {
                             $fail('ไม่พบกิจกรรมที่เลือกในฐานข้อมูล');
                         } elseif ($activity->activityType->activity_type_id == 1 && !$value) {
@@ -235,7 +235,7 @@ class BookingController extends Controller
             ]
         );
 
-         // ตรวจสอบ timeslot เมื่อ activity_type_id = 1
+        // ตรวจสอบ timeslot เมื่อ activity_type_id = 1
         $activity = Activity::find($request->input('fk_activity_id'));
         if ($activity && $activity->activityType->activity_type_id == 1) {
             if (is_null($request->input('fk_timeslots_id'))) {
@@ -279,7 +279,6 @@ class BookingController extends Controller
             if ($conflictingBookingForActivity3 && $request->input('fk_activity_id') != 3) {
                 return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้เนื่องจากมีกิจกรรมที่จองไว้ก่อนหน้านี้ในช่วงเวลาที่ใกล้เคียงกัน');
             }
-
         } else {
             // หากไม่มี timeslot ให้ข้ามการตรวจสอบความจุ
             $totalToBook = $request->children_qty + $request->students_qty + $request->adults_qty;
@@ -336,14 +335,13 @@ class BookingController extends Controller
 
         // return redirect()->back()->with('success', 'จองเข้าชมพิพิธภัณฑ์เรียบร้อยแล้ว');
         return redirect()->route('showBookingStatus', ['bookingId' => $booking->booking_id]);
-
     }
 
     public function showBookingStatus(Request $request)
     {
         $bookingId = $request->query('bookingId');
         $visitorEmail = $request->query('visitorEmail');
-    
+
         if ($bookingId) {
             // ค้นหาข้อมูลการจองโดยใช้ bookingId
             $booking = Bookings::find($bookingId);
@@ -354,14 +352,14 @@ class BookingController extends Controller
             // หากไม่ได้ส่งข้อมูลมาทั้ง bookingId หรือ visitorEmail
             $booking = null;
         }
-    
+
         if ($booking) {
             return view('showBookingStatus', compact('booking'));
         } else {
             return redirect()->route('home')->with('error', 'ไม่พบข้อมูลการจอง');
         }
     }
-    
+
 
     public function showBookingForm($activity_id)
     {
@@ -374,34 +372,34 @@ class BookingController extends Controller
         ]);
     }
 
-        public function showGeneralBookingForm()
+    public function showGeneralBookingForm()
     {
         $activities = Activity::where('activity_type_id', 1)->get(); // ดึงกิจกรรมที่มี activity_type_id = 1
         return view('form_bookings', ['activities' => $activities]);
     }
 
-public function searchBookingByEmail(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email', 
-    ]);
+    public function searchBookingByEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
 
-    $email = $request->input('email');
-    $bookings = Bookings::whereHas('visitor', function ($query) use ($email) {
-        $query->where('visitorEmail', $email);
-    })->get();
-    
-    if ($bookings->isEmpty()) {
-        return redirect()->route('checkBookingStatus')
-            ->with('error', 'ไม่พบข้อมูลการจองในระบบสำหรับอีเมลนี้');
+        $email = $request->input('email');
+        $bookings = Bookings::whereHas('visitor', function ($query) use ($email) {
+            $query->where('visitorEmail', $email);
+        })->get();
+
+        if ($bookings->isEmpty()) {
+            return redirect()->route('checkBookingStatus')
+                ->with('error', 'ไม่พบข้อมูลการจองในระบบสำหรับอีเมลนี้');
+        }
+
+        return view('checkBookingStatus', compact('bookings', 'email'));
     }
 
-    return view('checkBookingStatus', compact('bookings', 'email'));
-}
-
-public function checkBookingStatus()
-{
-    return view('checkBookingStatus');
-}
+    public function checkBookingStatus()
+    {
+        return view('checkBookingStatus');
+    }
 
 }

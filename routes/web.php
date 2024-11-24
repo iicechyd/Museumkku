@@ -5,11 +5,11 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BookingActivityController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\TimeslotController;
+use App\Http\Controllers\CalendarController;
 
 Route::get('/', function () {
     return view('welcome');
 });
-
 Route::get('/', [ActivityController::class, 'index'])->name('index');
 
 Route::get('/activity/{activity_id}', [ActivityController::class, 'showDetail'])->name('activity_detail');
@@ -23,12 +23,11 @@ Route::get('/admin/dashboard', function () {
     return view('admin.dashboard');
 });
 
-Route::get('/mbd', function () {
-    return view('mbd');
-});
 
-Route::get('/calendar', [BookingController::class, 'showCalendar'])->name('calendar');
-Route::get('/calendar/bookings', [BookingController::class, 'getApprovedBookings']);
+Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
+Route::get('/calendar/events', [CalendarController::class, 'getEvents'])->name('calendar.events');
+Route::get('/bookings/{booking}', [CalendarController::class, 'show'])->name('bookings.show');
+
 
 Route::get('/', [ActivityController::class, 'index']);
 Route::get('/preview', function () {
@@ -37,7 +36,6 @@ Route::get('/preview', function () {
 
 Route::get('/preview_activity', [ActivityController::class, 'previewActivity'])->name('preview_activity');
 Route::get('/preview_general', [ActivityController::class, 'previewGeneral'])->name('preview_general');
-
 Route::get('/admin/activity_list', [ActivityController::class, 'showListActivity']);
 
 

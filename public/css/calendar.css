@@ -1,79 +1,8 @@
-/* styles/calendar.css */
-
-/* ปรับแต่ง container ของปฏิทิน */
-.container {
-    max-width: 1200px; /* กำหนดความกว้างสูงสุด */
-    margin: 20px auto; /* จัดกลาง */
-    padding: 20px;
-    background-color: #f9f9f9; /* สีพื้นหลัง */
-    border-radius: 8px; /* มุมโค้ง */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* เงา */
+.fc-day-grid-event {
+    overflow: auto;
+    max-height: 150px;
 }
-
-/* ปรับแต่งหัวเรื่อง */
-h1 {
-    font-family: "Noto Sans Thai", sans-serif; /* ใช้ฟอนต์ที่คุณตั้งใจ */
-    color: #333; /* สีตัวอักษร */
-}
-
-/* ปรับแต่งปฏิทิน */
-#calendar {
-    background-color: white; /* สีพื้นหลังของปฏิทิน */
-    border: 1px solid #e1e1e1; /* ขอบของปฏิทิน */
-    border-radius: 8px; /* มุมโค้ง */
-}
-
-/* ปรับแต่งเหตุการณ์ในปฏิทิน */
-.fc-event {
-    border-radius: 5px; /* มุมโค้ง */
-    padding: 5px; /* ช่องว่างภายใน */
-    color: white; /* สีตัวอักษรของเหตุการณ์ */
-    text-align: center; /* จัดกลางข้อความ */
-}
-
-/* ปรับแต่งสีของเหตุการณ์ */
-.fc-event[data-status="approve"] {
-    background-color: #28a745; /* สีเขียวสำหรับอนุมัติ */
-}
-
-.fc-event[data-status="pending"] {
-    background-color: #ffc107; /* สีเหลืองสำหรับรออนุมัติ */
-}
-
-.fc-event[data-status="cancel"] {
-    background-color: #dc3545; /* สีแดงสำหรับยกเลิก */
-}
-
-/* ปรับแต่งปฏิทินเมื่อ hover */
-.fc-event:hover {
-    opacity: 0.8; /* ลดความโปร่งแสงเมื่อ hover */
-    cursor: pointer; /* เปลี่ยนเคอร์เซอร์ */
-}
-
-/* ปรับแต่งปฏิทินของ FullCalendar */
-.fc {
-    font-family: "Noto Sans Thai", sans-serif; /* ฟอนต์ของปฏิทิน */
-}
-
-/* ปรับแต่งปุ่มนำทาง */
-.fc-toolbar {
-    margin-bottom: 20px; /* ช่องว่างด้านล่าง */
-}
-
-.fc-prev-button,
-.fc-next-button,
-.fc-today-button {
-    background-color: #007bff; /* สีพื้นหลังปุ่ม */
-    color: white; /* สีตัวอักษร */
-    border: none; /* ไม่มีขอบ */
-    border-radius: 5px; /* มุมโค้ง */
-    padding: 10px 15px; /* ช่องว่างภายใน */
-    cursor: pointer; /* เปลี่ยนเคอร์เซอร์ */
-}
-
-/* ปรับแต่งปุ่มเมื่อ hover */
-.fc-prev-button:hover,
-.fc-next-button:hover,
-.fc-today-button:hover {
-    background-color: #0056b3; /* เปลี่ยนสีเมื่อ hover */
+/* เอาเส้นใต้ของแต่ละวันในปฏิทินออก */
+.fc-daygrid-day-number {
+    text-decoration: none !important; /* เอาเส้นใต้ของตัวเลขวันออก */
 }

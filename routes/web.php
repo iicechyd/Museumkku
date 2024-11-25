@@ -1,11 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BookingActivityController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\TimeslotController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\SuperAdminController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ExecutiveController;
+use App\Http\Middleware\RoleMiddleware;
 
 Route::get('/', function () {
     return view('welcome');
@@ -89,6 +94,7 @@ Route::post('/checkBookingStatus', [BookingController::class, 'searchBookingByEm
 
 //Middleware routes
 Auth::routes();
+
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');

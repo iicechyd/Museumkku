@@ -22,7 +22,7 @@ class CalendarController extends Controller
         $endTime = $booking->timeslot ? $booking->timeslot->end_time : '23:59:59';
         
         return [
-            'title' => $booking->activity->activity_name . " (สถานะ: " . $this->getStatusText($booking->status) . ")",
+            'title' => $booking->activity->activity_name . " (สถานะการจอง: " . $this->getStatusText($booking->status) . ")",
             'start' => $booking->booking_date . ' ' . $startTime,
             'end' => $booking->booking_date . ' ' . $endTime,
             'color' => $this->getStatusColor($booking->status),

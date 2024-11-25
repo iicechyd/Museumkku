@@ -4,6 +4,8 @@
 
     <head>
         <link rel="stylesheet" href="{{ asset('css/activity_list.css') }}">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
     </head>
     @if (session('success'))
         <div class="alert alert-success">
@@ -14,11 +16,6 @@
     @if (count($requestListActivity) > 0)
         <div>
             <h1 class="table-heading text-center">รายละเอียดกิจกรรม</h1>
-            {{-- <button type="button" class="btn my-3"
-                style="background-color: rgb(100, 149, 237); border-color: rgb(100, 149, 237); color: white;"
-                data-toggle="modal" data-target="#InsertActivityTypeModal">
-                + ประเภทกิจกรรม
-            </button> --}}
             <button type="button" class="btn my-3"
                 style="background-color: rgb(249, 100, 100); border-color: rgb(249, 100, 100); color: white;"
                 data-toggle="modal" data-target="#InsertActivityModal">
@@ -75,13 +72,6 @@
                                 </td>
                                 <td>
                                     <ul class="list-inline m-0">
-                                        {{-- <li class="list-inline-item">
-                                            <a href="/" data-toggle="tooltip" data-placement="top" title="Add">
-                                                <button class="btn btn-primary btn-sm rounded-0" type="button">
-                                                    <i class="fa fa-table"></i>
-                                                </button>
-                                            </a>
-                                        </li> --}}
                                         <li class="list-inline-item">
                                             <button class="btn btn-success btn-sm rounded-0 edit-activity-btn"
                                                 type="button" data-toggle="modal" data-target="#EditActivityModal"
@@ -114,12 +104,6 @@
         </div>
     @else
         <h1 class="text text-center py-5 ">ไม่พบข้อมูลในระบบ</h1>
-        {{-- <button type="button" class="btn my-3"
-            style="background-color: rgb(100, 149, 237); border-color: rgb(100, 149, 237); color: white;"
-            data-toggle="modal" data-target="#InsertActivityTypeModal">
-            + ประเภทกิจกรรม
-        </button> --}}
-
         <button type="button" class="btn my-3"
             style="background-color: rgb(249, 100, 100); border-color: rgb(249, 100, 100); color: white;"
             data-toggle="modal" data-target="#InsertActivityModal">
@@ -254,10 +238,6 @@
                             <label for="image">รูปภาพ</label>
                             <input type="file" class="form-control-file" id="image" name="image"
                                 accept="image/*" required>
-                            {{-- <img id="current_image" src="#" alt="รูปภาพปัจจุบัน"
-                                style="display: none; max-width: 100px;">
-                            <small id="current_image_name" class="form-text text-muted"
-                                style="display: none;">ไม่มีรูปภาพ</small> --}}
                         </div>
 
                         <div class="pt-2">

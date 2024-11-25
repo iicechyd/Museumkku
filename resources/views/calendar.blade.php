@@ -3,14 +3,17 @@
 @section('content')
 
 <head>
+    <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/th.global.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 
-    <div class="container pt-5">
+    <div class="container pt-4">
         <div class="title">
-            <h1 class="text-center">ปฏิทินการจอง</h1>
+            <h1 class="text-center" style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);">ปฏิทินการจอง</h1>
             <div id="calendar"></div>
         </div>
     </div>
@@ -25,9 +28,8 @@
             </div>
             <div class="modal-body">
                 <h4 id="eventTitle"></h4>
-                <p id="eventDescription"></p>
+                <p id="eventStatus"></p>
                 <p><strong>รอบการเข้าชม:</strong> <span id="eventTimeslot"></span></p>
-                <!-- Additional details like time, location can go here -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
@@ -41,11 +43,19 @@ document.addEventListener('DOMContentLoaded', function () {
     var calendarEl = document.getElementById('calendar');
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'th',
         events: '/calendar/events',
+        eventLimit: true,
+        dayMaxEventRows: 3, 
+        contentHeight: 'auto',
+        aspectRatio: 2,
+        height: 'auto',
+
         eventClick: function (info) {
             info.jsEvent.preventDefault();
 
-            document.getElementById('eventTitle').innerText = info.event.title;            
+            document.getElementById('eventTitle').innerText = info.event.title;
+          
             var timeslot = info.event.extendedProps.start_time + " - " + info.event.extendedProps.end_time;
             document.getElementById('eventTimeslot').innerText = timeslot;
 

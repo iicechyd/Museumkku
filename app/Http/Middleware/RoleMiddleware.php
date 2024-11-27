@@ -20,7 +20,6 @@ class RoleMiddleware
         if ($user && $user->role && $user->role->role_name == 'Super Admin') {
             return $next($request);
         }
-        // If the user is not a Super Admin, abort with a 401 Unauthorized
         abort(401, 'Unauthorized');
     }
 }

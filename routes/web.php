@@ -14,7 +14,9 @@ use App\Http\Middleware\RoleMiddleware;
 
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/pending_users', [SuperAdminController::class, 'index'])->name('pending_users')->middleware('TypeSuperAdmin');
+Route::get('/pending_users', [SuperAdminController::class, 'showPendingUsers'])->name('pending_users')->middleware('TypeSuperAdmin');
+Route::post('/approve_user/{user_id}', [SuperAdminController::class, 'approveUsers'])->name('superadmin.approve_users')->middleware('TypeSuperAdmin');
+Route::get('/all_users', [SuperAdminController::class, 'showAllUsers'])->name('all_users')->middleware('TypeSuperAdmin');
 
 
 Route::get('/', function () {
@@ -33,6 +35,9 @@ Route::get('/admin/dashboard', function () {
     return view('admin.dashboard');
 });
 
+Route::get('/super_admin/dashboard', function () {
+    return view('superadmin.dashboard');
+});
 
 Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
 Route::get('/calendar/events', [CalendarController::class, 'getEvents'])->name('calendar.events');

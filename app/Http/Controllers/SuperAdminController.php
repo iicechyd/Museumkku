@@ -16,17 +16,20 @@ class SuperAdminController extends Controller
         return view('superadmin.pending_users', compact('users', 'roles'));
     }
 
-    public function approveUsers(Request $request, $id)
+    public function approveUsers(Request $request, $user_id)
     {
-        $user = User::findOrFail($id);
+        $user = User::find($user_id);
         $user->is_approved = true;
         $user->role_id = $request->role_id;
         $user->save();
 
-        return redirect()->back()->with('success', 'User approved successfully.');
+        return redirect()->route('pending_users')->with('success', 'User approved successfully.');
     }
 
-    public function index(){
-        return view('superadmin.pending_users');
+    public function showAllUsers()
+    {
+        $users = User::with('role')->get();
+
+        return view('superadmin.all_users', compact('users'));
     }
 }

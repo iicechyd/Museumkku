@@ -35,7 +35,7 @@
                         <h3 class="text-center">ยินดีต้อนรับ {{ Auth::user()->name }}</h3>
                     </li>
                     <li class="sidebar-item">
-                        <a href="{{ url('/admin/dashboard') }}" class="sidebar-link">
+                        <a href="{{ url('/super_admin/dashboard') }}" class="sidebar-link">
                             <i class="fa-solid fa-list pe-2"></i>
                             แดชบอร์ด
                         </a>
@@ -48,12 +48,7 @@
                         </a>
                         <ul id="dashboard" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                                <a href="/admin/activity_list" class="sidebar-link">รายชื่อบัญชีผู้ใช้งาน</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="{{ url('/admin/timeslots_list') }}" class="sidebar-link">
-                                    แก้ไขบัญชีผู้ใช้งาน
-                                </a>
+                                <a href="{{ url('/all_users') }}" class="sidebar-link">รายชื่อบัญชีผู้ใช้งาน</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="#" class="sidebar-link">ประวัติการใช้งาน</a>

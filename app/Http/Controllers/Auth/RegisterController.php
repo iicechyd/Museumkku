@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request; // Add this line to import the Request class
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -47,7 +47,6 @@ class RegisterController extends Controller
 
         $this->create($request->all());
 
-        // redirect to a specific page after registration without logging in
-        return redirect('/')->with('success', 'Registration successful! Please log in.');
+        return redirect('/register')->with('success', 'สมัครสมาชิกเสร็จสิ้น กรุณารอการตรวจสอบและอนุมัติจากผู้ดูแลระบบ');
     }
 }

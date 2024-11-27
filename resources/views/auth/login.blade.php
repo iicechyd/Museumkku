@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="css/style.css" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    {{-- <title>@yield('title')</title> --}}
     <title>เข้าสู่ระบบ | สำหรับเจ้าหน้าที่</title>
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>

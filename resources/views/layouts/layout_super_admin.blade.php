@@ -15,7 +15,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('css/admin_page.css') }}">
-    <title>ระบบจองเข้าชมพิพิธภัณฑ์ | สำหรับเจ้าหน้าที่</title>
+    <title>ระบบจองเข้าชมพิพิธภัณฑ์ | สำหรับผู้ดูแลระบบ</title>
 </head>
 
 <body>
@@ -42,55 +42,21 @@
                     </li>
                     <li class="sidebar-item">
                         <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"
-                            data-bs-target="#multi" aria-expanded="false" aria-controls="multi">
-                            <i class="fa-regular fa-file-lines pe-2"></i>
-                            จัดการการจอง
-                        </a>
-
-                        <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item">
-                                <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"
-                                    data-bs-target="#multi-two" aria-expanded="false" aria-controls="multi-two">
-                                    สถานะการจอง
-                                </a>
-                                <ul id="multi-two" class="sidebar-dropdown list-unstyled collapse">
-                                    <li class="sidebar-item">
-                                        <a href="{{ route('request_bookings.general') }}"
-                                            class="sidebar-link">การจองเข้าชมทั่วไป</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="{{ route('request_bookings.activity') }}"
-                                            class="sidebar-link">การจองเข้าร่วมกิจกรรม</a>
-                                    </li>
-                                    {{-- <li class="sidebar-item">
-                                        <a href="/admin/approved_bookings" class="sidebar-link">อนุมัติการจองเข้าชม</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/admin/except_cases_bookings" class="sidebar-link">กรณีพิเศษ</a>
-                                    </li> --}}
-                                </ul>
-
-                            </li>
-
-                        </ul>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"
                             data-bs-target="#dashboard" aria-expanded="false" aria-controls="dashboard">
                             <i class="fa-solid fa-sliders pe-2"></i>
-                            จัดการพิพิธภัณฑ์
+                            จัดการบัญชีผู้ใช้งาน
                         </a>
                         <ul id="dashboard" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                                <a href="/admin/activity_list" class="sidebar-link">แก้ไขรายละเอียดกิจกรรม</a>
+                                <a href="/admin/activity_list" class="sidebar-link">รายชื่อบัญชีผู้ใช้งาน</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="{{ url('/admin/timeslots_list') }}" class="sidebar-link">
-                                    แก้ไขรอบการเข้าชม
+                                    แก้ไขบัญชีผู้ใช้งาน
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="#" class="sidebar-link">แก้ไขข้อมูลพิพิธภัณฑ์</a>
+                                <a href="#" class="sidebar-link">ประวัติการใช้งาน</a>
                             </li>
                         </ul>
                     </li>

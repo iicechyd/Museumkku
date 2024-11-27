@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,6 +16,11 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        $user = Auth::user();
+        if ($user && $user->role && $user->role->role_name == 'Super Admin') {
+            return $next($request);
+        }
+        // If the user is not a Super Admin, abort with a 401 Unauthorized
+        abort(401, 'Unauthorized');
     }
 }

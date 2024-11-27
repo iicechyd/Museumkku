@@ -2,15 +2,20 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BookingActivityController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\TimeslotController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\SuperAdminController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ExecutiveController;
 use App\Http\Middleware\RoleMiddleware;
+
+Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::get('/pending_users', [SuperAdminController::class, 'index'])->name('pending_users')->middleware('TypeSuperAdmin');
+
 
 Route::get('/', function () {
     return view('welcome');

@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->integer('student_price')->nullable()->default(0);
             $table->integer('adult_price')->nullable()->default(0);
             $table->integer('max_capacity')->nullable();
+            $table->string('status')->default('active');
             $table->string('image')->nullable();
 
             $table->timestamps();

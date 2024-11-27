@@ -97,3 +97,36 @@ document.querySelectorAll("th").forEach((header) => {
         .querySelector(".resize-handle")
         .addEventListener("mousedown", initResize);
 });
+
+$(document).on('click', '.toggle-status', function() {
+    var button = $(this);
+    var activityId = button.data('id'); // ดึง id ของกิจกรรม
+    var currentStatus = button.data('status'); // ดึงสถานะปัจจุบันของกิจกรรม
+
+    // ส่งคำขอ Ajax ไปยังเซิร์ฟเวอร์เพื่อเปลี่ยนสถานะ
+    $.ajax({
+        url: '/toggle-status/' + activityId, // ใช้ URL ที่มีการเปลี่ยนสถานะ
+        type: 'POST',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'), // ส่ง CSRF token ไปด้วย
+        },
+        success: function(response) {
+            // อัปเดตไอคอนและสถานะในหน้าเว็บ
+            if(response.status === 'active') {
+                button.find('i').removeClass('fa-toggle-off text-secondary')
+                              .addClass('fa-toggle-on text-success')
+                              .attr('title', 'Active');
+                button.data('status', 'active'); // อัปเดตข้อมูลสถานะใน data-status
+            } else {
+                button.find('i').removeClass('fa-toggle-on text-success')
+                              .addClass('fa-toggle-off text-secondary')
+                              .attr('title', 'Inactive');
+                button.data('status', 'inactive'); // อัปเดตข้อมูลสถานะใน data-status
+            }
+            alert(response.message); // แสดงข้อความแจ้งเตือนเมื่อเปลี่ยนสถานะสำเร็จ
+        },
+        error: function(xhr, status, error) {
+            alert('เกิดข้อผิดพลาดในการเปลี่ยนสถานะ');
+        }
+    });
+});

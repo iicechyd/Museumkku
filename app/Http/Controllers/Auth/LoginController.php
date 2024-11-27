@@ -28,7 +28,7 @@ class LoginController extends Controller
          }
  
          if ($user->role && $user->role->role_name === 'Super Admin') {
-             return redirect('pending_users');
+             return redirect('super_admin/dashboard');
          } elseif ($user->role && $user->role->role_name === 'Admin') {
              return redirect('admin/dashboard');
          } elseif ($user->role && $user->role->role_name === 'Executive') {

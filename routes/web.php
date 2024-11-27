@@ -17,7 +17,14 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/pending_users', [SuperAdminController::class, 'showPendingUsers'])->name('pending_users')->middleware('TypeSuperAdmin');
 Route::post('/approve_user/{user_id}', [SuperAdminController::class, 'approveUsers'])->name('superadmin.approve_users')->middleware('TypeSuperAdmin');
 Route::get('/all_users', [SuperAdminController::class, 'showAllUsers'])->name('all_users')->middleware('TypeSuperAdmin');
+Route::get('/super_admin/dashboard', function () {
+    return view('superadmin.dashboard');
+});
 
+
+Route::get('/admin/dashboard', function () {
+    return view('admin.dashboard');
+});
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,14 +36,6 @@ Route::get('/activity/{activity_id}', [ActivityController::class, 'showDetail'])
 
 Route::get('/form_bookings', function () {
     return view('form_bookings');
-});
-
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard');
-});
-
-Route::get('/super_admin/dashboard', function () {
-    return view('superadmin.dashboard');
 });
 
 Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
@@ -86,8 +85,8 @@ Route::get('delete/{activity_id}', [ActivityController::class, 'delete'])->name(
 Route::post('/UpdateActivity', [ActivityController::class, 'updateActivity'])->name('updateActivity');
 Route::get('/getActivityPrice/{activity_id}', [ActivityController::class, 'getActivityPrice']);
 
-//เพิ่มประเภทกิจกรรม
-// Route::post('/insert-activity-type', [ActivityController::class, 'store'])->name('insert.activityType');
+Route::get('/toggle-status/{id}', [ActivityController::class, 'toggleStatus'])->name('toggle.status');
+Route::post('/toggle-status/{id}', [ActivityController::class, 'toggleStatus'])->name('toggle.status');
 
 //UpdateStutus
 Route::post('/bookings/{booking_id}/updateStatus', [BookingController::class, 'updateStatus'])->name('bookings.updateStatus');

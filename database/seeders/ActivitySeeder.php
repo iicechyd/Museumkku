@@ -19,6 +19,7 @@ class ActivitySeeder extends Seeder
             'student_price' => 30,
             'adult_price' => 50,
             'max_capacity' => 250,
+            'status'=> 'active',
         ]);
         Activity::create([
             'activity_type_id' => 1,
@@ -28,6 +29,7 @@ class ActivitySeeder extends Seeder
             'student_price' => 30,
             'adult_price' => 50,
             'max_capacity' => 250,
+            'status'=> 'active',
         ]);
         Activity::create([
             'activity_type_id' => 1,
@@ -37,6 +39,7 @@ class ActivitySeeder extends Seeder
             'student_price' => 50,
             'adult_price' => 80,
             'max_capacity' => 500,
+            'status'=> 'active',
         ]);
         Activity::create([
             'activity_type_id' => 2,
@@ -46,6 +49,7 @@ class ActivitySeeder extends Seeder
             'student_price' => 499,
             'adult_price' => 499,
             'max_capacity' => null,
+            'status'=> 'active',
         ]);
         Activity::create([
             'activity_type_id' => 2,
@@ -55,6 +59,7 @@ class ActivitySeeder extends Seeder
             'student_price' => 1999,
             'adult_price' => 1999,
             'max_capacity' => null,
+            'status'=> 'active',
         ]);
         Activity::create([
             'activity_type_id' => 2,
@@ -64,6 +69,7 @@ class ActivitySeeder extends Seeder
             'student_price' => 150,
             'adult_price' => 150,
             'max_capacity' => null,
+            'status'=> 'active',
         ]);
         Activity::create([
             'activity_type_id' => 2,
@@ -73,6 +79,7 @@ class ActivitySeeder extends Seeder
             'student_price' => 2000,
             'adult_price' => 2000,
             'max_capacity' => null,
+            'status'=> 'active',
         ]);
     }
 }

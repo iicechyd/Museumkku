@@ -23,13 +23,17 @@ class ActivityController extends Controller
 
     public function previewActivity()
     {
-        $activities = Activity::where('activity_type_id', 2)->get();
+        $activities = Activity::where('activity_type_id', 2)
+            ->where('status', 'active')
+            ->get();
         return view('preview_activity', compact('activities'));
     }
 
     public function previewGeneral()
     {
-        $activities = Activity::where('activity_type_id', 1)->get();
+        $activities = Activity::where('activity_type_id', 1)
+            ->where('status', 'active')
+            ->get();
         return view('preview_general', compact('activities'));
     }
 
@@ -81,12 +85,6 @@ class ActivityController extends Controller
         $activity->max_capacity = $request->max_capacity;
         $activity->activity_type_id = $request->activity_type_id;
 
-        // จัดการการอัปโหลดรูปภาพ
-        // if ($request->hasFile('image')) {
-        //     $imageName = time() . '.' . $request->image->extension();
-        //     $request->image->move(public_path('images'), $imageName);
-        //     $activity->image = $imageName;
-        // }
         if ($request->hasFile('image')) {
             $imageName = $request->image->store('images', 'public');
             $activity->image = $imageName;
@@ -98,7 +96,6 @@ class ActivityController extends Controller
 
     public function updateActivity(Request $request)
     {
-        // ค้นหากิจกรรมตาม activity_id ที่ส่งมา
         $activity = Activity::find($request->activity_id);
         if (!$activity) {
             return redirect()->back()->with('error', 'ไม่พบกิจกรรมที่ต้องการแก้ไข');
@@ -128,22 +125,20 @@ class ActivityController extends Controller
 
         return view('activity_list', [
             'activity' => $item,
-            'image_url' => asset('storage/' . $item->image) // ดึง URL ของภาพ
+            'image_url' => asset('storage/' . $item->image)
         ]);
     }
 
-
-    public function store(Request $request)
+    public function toggleStatus($id)
     {
-        $request->validate([
-            'type_name' => 'required|string|max:255',
-        ]);
+        $activity = Activity::findOrFail($id);
+        $activity->status = ($activity->status === 'active') ? 'inactive' : 'active';
+        $activity->save();
 
-        ActivityType::create([
-            'type_name' => $request->type_name,
+        // ส่งข้อมูลกลับเป็น JSON
+        return response()->json([
+            'status' => $activity->status,
+            'message' => 'สถานะของกิจกรรมถูกเปลี่ยนเรียบร้อยแล้ว'
         ]);
-
-        return redirect()->back()->with('success', 'เพิ่มประเภทกิจกรรมเรียบร้อยแล้ว');
     }
-
 }

@@ -46,6 +46,7 @@ table {
         minmax(190px, 1.67fr)
         minmax(190px, 1.67fr)
         minmax(190px, 1.67fr)
+        minmax(190px, 1.67fr)
         minmax(190px, 1.67fr);
 }
 
@@ -136,4 +137,14 @@ td.custom-td {
     overflow: visible;
     text-overflow: clip;
     text-align: left;
+}
+
+.fa-toggle-on {
+    cursor: pointer;
+    color: #28a745;
+}
+
+.fa-toggle-off {
+    cursor: pointer;
+    color: #6c757d;
 }

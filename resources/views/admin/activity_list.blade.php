@@ -5,8 +5,9 @@
     <head>
         <link rel="stylesheet" href="{{ asset('css/activity_list.css') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
+        <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
+
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -42,6 +43,7 @@
                             <th data-type="numeric">ราคา ผู้ใหญ่ (คน)<span class="resize-handle"></span></th>
                             <th data-type="numeric">ความจุคนต่อรอบ<span class="resize-handle"></span></th>
                             <th data-type="text-short">แก้ไขรายละเอียด<span class="resize-handle"></span></th>
+                            <th data-type="text-short">สถานะการใช้งาน<span class="resize-handle"></span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -93,9 +95,23 @@
                                                 <button class="btn btn-danger btn-sm rounded-0" type="button">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
+                                            </a>
                                         </li>
                                     </ul>
                                 </td>
+                                <td class="text-center">
+                                    <a href="javascript:void(0);" 
+                                       class="toggle-status" 
+                                       data-id="{{ $item->activity_id }}" 
+                                       data-status="{{ $item->status }}" 
+                                       onclick="return confirm('คุณต้องการเปลี่ยนสถานะของ {{ $item->activity_name }} หรือไม่?')">
+                                        @if($item->status === 'active')
+                                            <i class="fas fa-toggle-on text-success" style="font-size: 24px;" title="Active"></i>
+                                        @else
+                                            <i class="fas fa-toggle-off text-secondary" style="font-size: 24px;" title="Inactive"></i>
+                                        @endif
+                                    </a>
+                                </td>                                          
                             </tr>
                         @endforeach
                     </tbody>
@@ -249,8 +265,9 @@
         </div>
     </div>
     <!-- Include Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/activity_list.js') }}"></script>
+    
 @endsection

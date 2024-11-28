@@ -170,7 +170,6 @@ function showZipcode() {
         });
 }
 
-// EVENTS
 document.querySelector("#province").addEventListener("change", (event) => {
     showAmphoes();
 });
@@ -183,10 +182,8 @@ document.querySelector("#subdistrict").addEventListener("change", (event) => {
     showZipcode();
 });
 
-// เรียกใช้ฟังก์ชันเพื่อโหลดจังหวัดเมื่อเริ่มต้น
 showProvinces();
 
-// กำหนดค่าที่ต้องการให้ autofill ในฟิลด์ต่าง ๆ
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("booking_date").value = "2024-11-30";
     document.getElementById("instituteName").value = "โรงเรียนเด่นดี";
@@ -198,11 +195,5 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("children_qty").checked = true;
     document.getElementById("childrenInput").disabled = false;
     document.getElementById("childrenInput").value = 10;
-    // document.getElementById("students_qty").checked = true;
-    // document.getElementById("studentInput").disabled = false;
-    // document.getElementById("studentInput").value = 20;
-    // document.getElementById("adults_qty").checked = true;
-    // document.getElementById("adultsInput").disabled = false;
-    // document.getElementById("adultsInput").value = 5;
     calculateTotal();
 });

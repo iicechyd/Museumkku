@@ -24,8 +24,21 @@
                         <option value="{{ $activity_id }}">{{ $selectedActivity->activity_name }}</option>
                     </select>
                 </div>
+
+                <div class="form-group col-4">
+                    <label for="booking_date"  class="form-label">วันที่จอง:</label>
+                    <input type="date" class="form-control" id="booking_date" name="booking_date"
+                        value="{{ old('booking_date') }}" min="{{ date('Y-m-d', strtotime('+3 days')) }}" required>
+                    @error('booking_date')
+                        <div class="my-2">
+                            <span class="text-danger">{{ $message }}</span>
+                        </div>
+                    @enderror
+                    <p>*หมายเหตุ กรุณาเลือกวันที่ต้องการจองล่วงหน้า 3 วัน</p>
+                </div>
+                
                 @if ($timeslots->isNotEmpty())
-                    <div class="form-group col-5">
+                    <div class="form-group col-4">
                         <label for="fk_timeslots_id" class="form-label">รอบการเข้าชม:</label>
                         <select id="fk_timeslots_id" class="form-select @error('fk_timeslots_id') is-invalid @enderror"
                             name="fk_timeslots_id">
@@ -43,19 +56,7 @@
                         @enderror
                     </div>
                 @endif
-                <div class="form-group col-5">
-                    <label for="booking_date">วันที่จอง:</label>
-                    <input type="date" class="form-control" id="booking_date" name="booking_date"
-                        value="{{ old('booking_date') }}" min="{{ date('Y-m-d', strtotime('+3 days')) }}" required>
-                    @error('booking_date')
-                        <div class="my-2">
-                            <span class="text-danger">{{ $message }}</span>
-                        </div>
-                    @enderror
-                    <p>*หมายเหตุ กรุณาเลือกวันที่ต้องการจองล่วงหน้า 3 วัน</p>
-                </div>
-
-
+                
                 <div class="col-12">
                     <label for="instituteName">ชื่อหน่วยงาน</label>
                     <input type="text" class="form-control @error('instituteName') is-invalid @enderror"

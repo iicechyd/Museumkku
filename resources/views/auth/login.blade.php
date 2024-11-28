@@ -13,6 +13,12 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
+@if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
 <body>
     @section('content')
         <section class="ftco-section">

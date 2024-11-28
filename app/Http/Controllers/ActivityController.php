@@ -86,8 +86,13 @@ class ActivityController extends Controller
         $activity->activity_type_id = $request->activity_type_id;
 
         if ($request->hasFile('image')) {
-            $imageName = $request->image->store('images', 'public');
-            $activity->image = $imageName;
+            $timestamp = now()->format('Ymd_His'); 
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $newFileName = "activity_{$timestamp}." . $extension;
+
+            $imagePath = $request->file('image')->storeAs('images', $newFileName, 'public');
+
+            $activity->image = $imagePath;
         }
 
         $activity->save();
@@ -109,13 +114,18 @@ class ActivityController extends Controller
         $activity->adult_price = $request->adult_price;
         $activity->max_capacity = $request->max_capacity;
 
-        // จัดการการอัปโหลดรูปภาพ
         if ($request->hasFile('image')) {
-            $imageName = $request->image->store('images', 'public');
-            $activity->image = $imageName;
+            $timestamp = now()->format('Ymd_His'); 
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $newFileName = "activity_{$timestamp}." . $extension;
+
+            $imagePath = $request->file('image')->storeAs('images', $newFileName, 'public');
+
+            $activity->image = $imagePath;
         }
 
         $activity->save();
+
         return redirect()->back()->with('success', 'แก้ไขกิจกรรมเรียบร้อยแล้ว');
     }
 

@@ -99,12 +99,11 @@
                                         </li>
                                     </ul>
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center" data-name="{{ $item->activity_name }}">
                                     <a href="javascript:void(0);" 
                                        class="toggle-status" 
                                        data-id="{{ $item->activity_id }}" 
-                                       data-status="{{ $item->status }}" 
-                                       onclick="return confirm('คุณต้องการเปลี่ยนสถานะของ {{ $item->activity_name }} หรือไม่?')">
+                                       data-status="{{ $item->status }}">
                                         @if($item->status === 'active')
                                             <i class="fas fa-toggle-on text-success" style="font-size: 24px;" title="Active"></i>
                                         @else

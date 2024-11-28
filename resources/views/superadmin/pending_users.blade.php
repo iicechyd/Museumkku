@@ -9,7 +9,7 @@
     @endif
 
     <div class="text-right mb-3">
-        <a href="{{ route('all_users') }}" class="btn btn-warning">
+        <a href="{{ route('all_users') }}" class="btn btn-primary">
             <i class="fas fa-clock"></i> รายชื่อบัญชีผู้ใช้งาน
         </a>
     </div>

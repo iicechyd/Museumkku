@@ -11,7 +11,6 @@ class TimeslotController extends Controller
 {
     public function showTimeslots()
     {
-        // Retrieve all activities along with their related timeslots
         $activities = Activity::with('timeslots')->get();
 
         return view('admin.timeslots_list', compact('activities'));
@@ -74,4 +73,17 @@ class TimeslotController extends Controller
 
         return redirect()->back()->with('success', 'เพิ่มรอบการเข้าชมเรียบร้อยแล้ว');
     }
+
+    public function toggleStatus($id)
+{
+    $timeslot = Timeslots::findOrFail($id);
+    $timeslot->status = ($timeslot->status === 'active') ? 'inactive' : 'active';
+    $timeslot->save();
+
+    // ส่งข้อมูลกลับเป็น JSON
+    return response()->json([
+        'status' => $timeslot->status,
+        'message' => 'สถานะของกิจกรรมถูกเปลี่ยนเรียบร้อยแล้ว'
+    ]);
+}
 }

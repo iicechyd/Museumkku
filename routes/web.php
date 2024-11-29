@@ -97,6 +97,9 @@ Route::post('/InsertTimeslots', [TimeslotController::class, 'InsertTimeslots'])-
 Route::delete('/timeslots/{timeslots_id}', [TimeslotController::class, 'destroy'])->name('timeslots.destroy');
 Route::put('timeslots/{id}', [TimeslotController::class, 'update'])->name('timeslots.update');
 
+Route::get('/toggle-status/{id}', [TimeslotController::class, 'toggleStatus'])->name('toggle.status');
+Route::post('/toggle-status/{id}', [TimeslotController::class, 'toggleStatus'])->name('toggle.status');
+
 Route::get('/showBookingStatus', [BookingController::class, 'showBookingStatus'])->name('showBookingStatus');
 Route::get('/checkBookingStatus', [BookingController::class, 'checkBookingStatus'])->name('checkBookingStatus');
 Route::post('/checkBookingStatus', [BookingController::class, 'searchBookingByEmail'])->name('searchBookingByEmail');

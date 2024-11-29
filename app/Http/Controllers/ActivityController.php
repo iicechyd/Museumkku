@@ -12,7 +12,7 @@ class ActivityController extends Controller
     public function showDetail($activity_id)
     {
         $activity = Activity::findOrFail($activity_id);
-        return view('activity_detail', compact('activity')); // Pass the single activity
+        return view('activity_detail', compact('activity'));
     }
 
     public function index()
@@ -60,7 +60,7 @@ class ActivityController extends Controller
                 'children_price' => 'required',
                 'student_price' => 'required',
                 'adult_price' => 'required',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // ตรวจสอบรูปภาพ
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
 
 
             ],

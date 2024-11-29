@@ -9,10 +9,11 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('timeslots', function (Blueprint $table) {
-            $table->id('timeslots_id'); // Primary Key
+            $table->id('timeslots_id');
             $table->foreignId('activity_id')->constrained('activities', 'activity_id')->onDelete('cascade'); // Foreign Key
             $table->time('start_time');
             $table->time('end_time');
+            $table->string('status')->default('active');
 
             $table->timestamps();
         });

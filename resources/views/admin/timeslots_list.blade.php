@@ -5,7 +5,9 @@
     <head>
         <link rel="stylesheet" href="{{ asset('css/timeslots_list.css') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
+
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -32,8 +34,8 @@
                             <th data-type="text-long">ชื่อกิจกรรม<span class="resize-handle"></span></th>
                             <th data-type="text-short">รอบที่<span class="resize-handle"></span></th>
                             <th data-type="text-short">รอบการเข้าชม<span class="resize-handle"></span></th>
-                            {{-- <th data-type="text-long">ความจุต่อรอบเข้าชม<span class="resize-handle"></span></th> --}}
-                            <th data-type="text-short">แก้ไขรอบการเข้าชม<span class="resize-handle"></span></th>
+                            <th data-type="text-short">แก้ไขเวลา<span class="resize-handle"></span></th>
+                            <th data-type="text-short">สถานะ<span class="resize-handle"></span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,7 +46,6 @@
                             @foreach ($activity->timeslots as $index => $timeslot)
                                 <tr>
                                     @if ($index == 0)
-                                        <!-- แสดงชื่อกิจกรรมในบรรทัดแรก และใช้ rowspan -->
                                         <td rowspan="{{ $rowspan }}">{{ $activity->activity_name }}</td>
                                     @endif
                                     <td>{{ $index + 1 }}</td>
@@ -53,13 +54,6 @@
                                         {{ \Carbon\Carbon::parse($timeslot->end_time)->format('H:i') }} น.</td>
                                     <td>
                                         <ul class="list-inline m-0">
-                                            {{-- <li class="list-inline-item">
-                                                <a href="/" data-toggle="tooltip" data-placement="top" title="Add">
-                                                    <button class="btn btn-primary btn-sm rounded-0" type="button">
-                                                        <i class="fa fa-table"></i>
-                                                    </button>
-                                                </a>
-                                            </li> --}}
                                             <li class="list-inline-item">
                                                 <button class="btn btn-success btn-sm rounded-0" type="button"
                                                     data-toggle="modal"
@@ -80,6 +74,19 @@
                                             </li> --}}
                                         </ul>
                                     </td>
+                                    <td class="text-center"> 
+                                        <a href="javascript:void(0);" 
+                                           class="toggle-status" 
+                                           data-id="{{ $timeslot->timeslots_id }}" 
+                                           data-status="{{ $timeslot->status }}">
+                                            @if($timeslot->status === 'active')
+                                                <i class="fas fa-toggle-on text-success" style="font-size: 24px;" title="Active"></i>
+                                            @else
+                                                <i class="fas fa-toggle-off text-secondary" style="font-size: 24px;" title="Inactive"></i>
+                                            @endif
+                                        </a>
+                                    </td>
+                                    
                                 </tr>
                                 <!-- Modal สำหรับการแก้ไขรอบการเข้าชม -->
                                 <div class="modal fade" id="EditTimeslotModal{{ $timeslot->timeslots_id }}" tabindex="-1"
@@ -117,12 +124,6 @@
                                                             value="{{ \Carbon\Carbon::parse($timeslot->end_time)->format('H:i') }}"
                                                             required>
                                                     </div>
-                                                    {{-- <div class="form-group">
-                                                        <label for="max_capacity">ความจุสูงสุดต่อรอบ</label>
-                                                        <input type="number" name="max_capacity" id="max_capacity"
-                                                            class="form-control" value="{{ $timeslot->max_capacity }}"
-                                                            required>
-                                                    </div> --}}
                                                     <div class="pt-2">
                                                         <button type="submit"
                                                             class="btn btn-primary">บันทึกการเปลี่ยนแปลง</button>
@@ -185,7 +186,7 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/timeslots_list.js') }}"></script>

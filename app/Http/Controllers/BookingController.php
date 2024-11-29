@@ -337,19 +337,17 @@ class BookingController extends Controller
         return redirect()->route('showBookingStatus', ['bookingId' => $booking->booking_id]);
     }
 
+    //ฟอร์มตรวจสอบก่อนส่ง
     public function showBookingStatus(Request $request)
     {
         $bookingId = $request->query('bookingId');
         $visitorEmail = $request->query('visitorEmail');
 
         if ($bookingId) {
-            // ค้นหาข้อมูลการจองโดยใช้ bookingId
             $booking = Bookings::find($bookingId);
         } elseif ($visitorEmail) {
-            // ค้นหาข้อมูลการจองโดยใช้ email ของผู้จอง
             $booking = Bookings::where('visitorEmail', $visitorEmail)->latest()->first();
         } else {
-            // หากไม่ได้ส่งข้อมูลมาทั้ง bookingId หรือ visitorEmail
             $booking = null;
         }
 
@@ -363,10 +361,8 @@ class BookingController extends Controller
 
     public function showBookingForm($activity_id)
     {
-        // ดึงราคาของกิจกรรมจากฐานข้อมูล
         $activity = DB::table('activities')->where('activity_id', $activity_id)->first();
 
-        // ส่งข้อมูลราคากิจกรรมไปยัง view
         return view('form_bookings', [
             'activity' => $activity
         ]);

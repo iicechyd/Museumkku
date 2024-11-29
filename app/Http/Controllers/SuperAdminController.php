@@ -8,12 +8,9 @@ use App\Models\Role;
 
 class SuperAdminController extends Controller
 {
-    public function showPendingUsers()
+    public function showDashboard()
     {
-        $users = User::where('is_approved', false)->get();
-        $roles = Role::all();
-
-        return view('superadmin.pending_users', compact('users', 'roles'));
+        return view('superadmin.dashboard');
     }
 
     public function approveUsers(Request $request, $user_id)
@@ -23,13 +20,14 @@ class SuperAdminController extends Controller
         $user->role_id = $request->role_id;
         $user->save();
 
-        return redirect()->route('pending_users')->with('success', 'User approved successfully.');
+        return redirect()->route('showAllUsers')->with('success', 'User approved successfully.');
     }
 
     public function showAllUsers()
     {
         $users = User::with('role')->get();
+        $roles = Role::all();
 
-        return view('superadmin.all_users', compact('users'));
+        return view('superadmin.all_users', compact('users', 'roles'));
     }
 }

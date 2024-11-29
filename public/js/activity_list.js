@@ -99,21 +99,21 @@ document.querySelectorAll("th").forEach((header) => {
 });
 
 $(document).on('click', '.toggle-status', function(e) {
-    e.preventDefault(); // ป้องกันการทำงานดีฟอลต์ของลิงก์
+    e.preventDefault();
 
     var button = $(this);
-    var activityId = button.data('id'); // ดึง id ของกิจกรรม
-    var activityName = button.closest('td').data('name'); // ดึงชื่อกิจกรรม
-    var currentStatus = button.data('status'); // ดึงสถานะปัจจุบันของกิจกรรม
+    var activityId = button.data('id');
+    var activityName = button.closest('td').data('name');
+    var currentStatus = button.data('status');
 
     // ยืนยันก่อนเปลี่ยนสถานะ
     if (!confirm('คุณต้องการเปลี่ยนสถานะของ ' + activityName + ' หรือไม่?')) {
-        return false; // หยุดการทำงานหากผู้ใช้กด "Cancel"
+        return false;
     }
 
     // ส่งคำขอ Ajax ไปยังเซิร์ฟเวอร์เพื่อเปลี่ยนสถานะ
     $.ajax({
-        url: '/toggle-status/' + activityId, // ใช้ URL ที่มีการเปลี่ยนสถานะ
+        url: '/activity/toggle-status/' + activityId, // ใช้ URL ที่มีการเปลี่ยนสถานะ
         type: 'POST',
         data: {
             _token: $('meta[name="csrf-token"]').attr('content'), // ส่ง CSRF token ไปด้วย

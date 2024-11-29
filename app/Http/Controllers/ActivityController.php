@@ -15,12 +15,6 @@ class ActivityController extends Controller
         return view('activity_detail', compact('activity'));
     }
 
-    public function index()
-    {
-        $activities = Activity::all();
-        return view('welcome', compact('activities'));
-    }
-
     public function previewActivity()
     {
         $activities = Activity::where('activity_type_id', 2)
@@ -84,6 +78,7 @@ class ActivityController extends Controller
         $activity->adult_price = $request->adult_price;
         $activity->max_capacity = $request->max_capacity;
         $activity->activity_type_id = $request->activity_type_id;
+        $activity->status = 'inactive';
 
         if ($request->hasFile('image')) {
             $timestamp = now()->format('Ymd_His'); 

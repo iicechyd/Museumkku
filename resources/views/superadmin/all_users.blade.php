@@ -8,11 +8,11 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <div class="text-right mb-3">
+    {{-- <div class="text-right mb-3">
         <a href="{{ route('pending_users') }}" class="btn btn-warning">
             <i class="fas fa-clock"></i> บัญชีที่รออนุมัติ
         </a>
-    </div>
+    </div> --}}
 
     <table class="table table-striped table-bordered">
         <thead class="thead-dark">
@@ -21,6 +21,8 @@
                 <th>อีเมลของผู้ใช้งาน</th>
                 <th>ประเภทผู้ใช้งาน</th>
                 <th>สถานะบัญชีผู้ใช้งาน</th>
+                <th>กำหนดสิทธิ์</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -33,6 +35,19 @@
                         <span class="badge {{ $user->is_approved ? 'bg-success' : 'bg-warning' }}">
                             {{ $user->is_approved ? 'Approved' : 'Pending' }}
                         </span>
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ route('superadmin.approve_users', $user->user_id) }}">
+                            @csrf
+                            <select name="role_id" class="form-control">
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->role_id }}">{{ $role->role_name }}</option>
+                                @endforeach
+                            </select>
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-success">Approve</button>
+                        </form>
                     </td>
                 </tr>
             @endforeach

@@ -58,10 +58,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">หน้าหลัก</a>
+                        <a class="nav-link" href="{{ route('showPreview') }}">หน้าหลัก</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="calendar">ปฏิทินพิพิธภัณฑ์</a>
+                        <a class="nav-link" href="{{ route('calendar.index') }}">ปฏิทินพิพิธภัณฑ์</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="info">ข้อมูลพิพิธภัณฑ์</a>

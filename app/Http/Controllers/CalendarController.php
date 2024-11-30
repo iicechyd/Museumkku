@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Bookings;
+use Carbon\Carbon;
 
 class CalendarController extends Controller
 {
@@ -18,8 +19,8 @@ class CalendarController extends Controller
         ->get();
 
     $events = $bookings->map(function ($booking) {
-        $startTime = $booking->timeslot ? $booking->timeslot->start_time : '00:00:00';
-        $endTime = $booking->timeslot ? $booking->timeslot->end_time : '23:59:59';
+        $startTime = $booking->timeslot ? Carbon::createFromFormat('H:i:s', $booking->timeslot->start_time)->format('H:i') : '00:00';
+        $endTime = $booking->timeslot ? Carbon::createFromFormat('H:i:s', $booking->timeslot->end_time)->format('H:i') : '23:59';
         
         return [
             'title' => $booking->activity->activity_name . " (สถานะการจอง: " . $this->getStatusText($booking->status) . ")",

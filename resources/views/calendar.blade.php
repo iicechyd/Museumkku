@@ -11,9 +11,9 @@
 
 </head>
 
-    <div class="container pt-4">
+    <div class="container pt-4 pb-5">
         <div class="title">
-            <h1 class="text-center" style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);">ปฏิทินการจอง</h1>
+            <h1 class="text-center" style="color: #489085; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);">ปฏิทินการจอง</h1>
             <div id="calendar"></div>
         </div>
     </div>
@@ -50,6 +50,19 @@ document.addEventListener('DOMContentLoaded', function () {
         contentHeight: 'auto',
         aspectRatio: 2,
         height: 'auto',
+
+        // ปรับแต่งข้อความในปฏิทิน
+        eventContent: function (eventInfo) {
+            // ดึงเวลาเริ่มต้นและชื่อกิจกรรม
+            var startTime = eventInfo.event.extendedProps.start_time || '';
+            var endTime = eventInfo.event.extendedProps.end_time || '';
+            var title = eventInfo.event.title || '';
+            
+            // กำหนดข้อความที่จะแสดง
+            return {
+                html: `<div>${startTime} น. - ${endTime} น. ${title}</div>`
+            };
+        },
 
         eventClick: function (info) {
             info.jsEvent.preventDefault();

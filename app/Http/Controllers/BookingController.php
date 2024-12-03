@@ -28,44 +28,31 @@ class BookingController extends Controller
         foreach ($requestBookings as $item) {
             $totalApproved = 0;
 
-            // ตรวจสอบว่า activity มี timeslot หรือไม่
             if ($item->timeslot) {
-                // หากมี timeslot คำนวณจำนวนคนที่จองใน timeslot นั้น
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('timeslots_id', $item->timeslot->timeslots_id)
                     ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty'));
             } else {
-                // หากไม่มี timeslot คำนวณจำนวนคนที่จองในวันเดียวกันและกิจกรรมเดียวกัน
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('activity_id', $item->activity_id)
                     ->where('status', 1) // เฉพาะการจองที่อนุมัติแล้ว
                     ->sum(DB::raw('children_qty + students_qty + adults_qty'));
             }
-
-            // ดึงค่าความจุสูงสุดจาก activity
             $maxCapacity = $item->activity->max_capacity;
 
-            // คำนวณความจุคงเหลือ
             if ($maxCapacity === null) {
                 $item->remaining_capacity = 'ไม่จำกัดจำนวนคน';
             } else {
-                // คำนวณความจุคงเหลือโดยลบจากการจองที่อนุมัติแล้ว
                 $item->remaining_capacity = $maxCapacity - $totalApproved;
             }
-
-            // คำนวณราคาทั้งหมด
             $childrenPrice = $item->children_qty * $item->activity->children_price;
             $studentPrice = $item->students_qty * $item->activity->student_price;
             $adultPrice = $item->adults_qty * $item->activity->adult_price;
 
-            // คำนวณราคาทั้งหมด
             $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
-
-            // คำนวณจำนวนผู้เข้าชมทั้งหมด
             $item->totalVisitors = $item->children_qty + $item->students_qty + $item->adults_qty;
         }
-
         return view('admin.generalRequest.request_bookings', compact('requestBookings'));
     }
 
@@ -80,14 +67,14 @@ class BookingController extends Controller
 
         foreach ($approvedBookings as $item) {
             $totalApproved = Bookings::where('booking_date', $item->booking_date)
-                ->where('activity_id', $item->activity_id) // ตรวจสอบกิจกรรมเดียวกัน
+                ->where('activity_id', $item->activity_id)
                 ->where('status', 1)
                 ->sum(DB::raw('children_qty + students_qty + adults_qty'));
 
             if ($item->timeslot && $item->timeslot->timeslots_id) {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('activity_id', $item->activity_id)
-                    ->where('timeslots_id', $item->timeslot->timeslots_id) // คำนวณตาม timeslot
+                    ->where('timeslots_id', $item->timeslot->timeslots_id)
                     ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty'));
             }
@@ -168,7 +155,6 @@ class BookingController extends Controller
         $booking->status = $newStatus;
         $booking->save();
 
-        // หา status_change ของ booking_id เดิมที่มีอยู่ในฐานข้อมูล
         $statusChange = StatusChanges::where('booking_id', $booking_id)->first();
 
         if ($statusChange) {
@@ -178,7 +164,6 @@ class BookingController extends Controller
             $statusChange->changed_by = Auth::user()->name;
             $statusChange->save();
         } else {
-            // ถ้าไม่พบ ให้สร้างรายการใหม่
             StatusChanges::create([
                 'booking_id' => $booking->booking_id,
                 'old_status' => $oldStatus,
@@ -188,11 +173,6 @@ class BookingController extends Controller
             ]);
         }
         return redirect()->back()->with('success', 'สถานะการจองถูกอัปเดตแล้ว');
-    }
-
-    public function showCalendar()
-    {
-        return view('calendar'); // ส่ง view ของปฏิทิน
     }
 
     function InsertBooking(Request $request)
@@ -248,22 +228,19 @@ class BookingController extends Controller
         if ($request->filled('fk_timeslots_id')) {
             $timeslot = Timeslots::find($request->input('fk_timeslots_id'));
 
-            // คำนวณจำนวนที่จองทั้งหมดสำหรับวันที่และช่วงเวลาที่เลือก (เฉพาะสถานะที่อนุมัติ)
             $totalBooked = Bookings::where('booking_date', $request->booking_date)
                 ->where('timeslots_id', $timeslot->timeslots_id)
-                ->where('status', 1) // สถานะอนุมัติเท่านั้น
+                ->where('status', 1)
                 ->sum(DB::raw('children_qty + students_qty + adults_qty'));
 
             $totalToBook = $request->children_qty + $request->students_qty + $request->adults_qty;
 
-            // ตรวจสอบความจุเฉพาะเมื่อมีกิจกรรมที่มี max_capacity
             if ($activity->max_capacity !== null) {
                 if ($totalBooked + $totalToBook > $activity->max_capacity) {
                     return back()->with('error', 'รอบการเข้าชมนี้เต็มแล้วหรือเกินความจุสูงสุด');
                 }
             }
 
-            // ตรวจสอบว่ามีกิจกรรม activity_id = 3 ที่ถูกจองไว้ในช่วงเวลาที่ใกล้เคียงกัน
             $conflictingBookingForActivity3 = Bookings::where('booking_date', $request->booking_date)
                 ->where('activity_id', 3)
                 ->whereHas('timeslot', function ($query) use ($timeslot) {
@@ -272,23 +249,19 @@ class BookingController extends Controller
                             ->whereTime('end_time', '>', $timeslot->start_time);
                     });
                 })
-                ->where('status', 1) // สถานะอนุมัติเท่านั้น
+                ->where('status', 1)
                 ->exists();
 
-            // หากมีกิจกรรม activity_id = 3 ที่ถูกจองไว้ในช่วงเวลาที่ใกล้เคียงกัน จะไม่อนุญาตให้จองกิจกรรมใหม่
             if ($conflictingBookingForActivity3 && $request->input('fk_activity_id') != 3) {
                 return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้เนื่องจากมีกิจกรรมที่จองไว้ก่อนหน้านี้ในช่วงเวลาที่ใกล้เคียงกัน');
             }
         } else {
-            // หากไม่มี timeslot ให้ข้ามการตรวจสอบความจุ
             $totalToBook = $request->children_qty + $request->students_qty + $request->adults_qty;
 
-            // เช็คว่า activity มี max_capacity หรือไม่
             if ($activity->max_capacity !== null) {
-                // ถ้า max_capacity มีค่า (กรณีที่มีกิจกรรมที่มีความจุ) ให้ตรวจสอบ
                 $totalBooked = Bookings::where('booking_date', $request->booking_date)
-                    ->whereNull('timeslots_id') // Consider bookings without timeslots
-                    ->where('status', 1) // สถานะอนุมัติเท่านั้น
+                    ->whereNull('timeslots_id')
+                    ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty'));
 
                 if ($totalBooked + $totalToBook > $activity->max_capacity) {
@@ -297,7 +270,6 @@ class BookingController extends Controller
             }
         }
 
-        // Create or find the institute
         $institute = Institutes::firstOrCreate(
             [
                 'instituteName' => $request->instituteName,
@@ -319,7 +291,6 @@ class BookingController extends Controller
         $visitor->institute_id = $institute->institute_id;
         $visitor->save();
 
-        // บันทึกการจองใหม่
         $booking = new Bookings();
         $booking->activity_id = $request->input('fk_activity_id');
         $booking->timeslots_id = $request->input('fk_timeslots_id') ?? null;
@@ -333,11 +304,9 @@ class BookingController extends Controller
 
         $booking->save();
 
-        // return redirect()->back()->with('success', 'จองเข้าชมพิพิธภัณฑ์เรียบร้อยแล้ว');
         return redirect()->route('showBookingStatus', ['bookingId' => $booking->booking_id]);
     }
 
-    //ฟอร์มตรวจสอบก่อนส่ง
     public function showBookingStatus(Request $request)
     {
         $bookingId = $request->query('bookingId');

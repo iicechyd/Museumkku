@@ -19,4 +19,8 @@ class HomeController extends Controller
     {
         return view('preview');
     }
+    public function showCalendar()
+    {
+        return view('calendar');
+    }
 }

@@ -8,11 +8,6 @@ use Carbon\Carbon;
 
 class CalendarController extends Controller
 {
-    public function index()
-    {
-        return view('calendar');
-    }
-
     public function getEvents(Request $request)
     {
         $bookings = Bookings::with('activity', 'timeslot')

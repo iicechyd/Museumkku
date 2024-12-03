@@ -40,7 +40,7 @@ Route::get('/preview', [HomeController::class, 'showPreview'])->name('showPrevie
 Route::get('/preview_activity', [ActivityController::class, 'previewActivity'])->name('preview_activity');
 Route::get('/preview_general', [ActivityController::class, 'previewGeneral'])->name('preview_general');
 Route::get('/activity/{activity_id}', [ActivityController::class, 'showDetail'])->name('activity_detail');
-Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
+Route::get('/calendar', [HomeController::class, 'showCalendar'])->name('calendar.showCalendar');
 
 //ดึงeventที่ได้รับการจองมาแสดงบนปฏิทิน
 Route::get('/calendar/events', [CalendarController::class, 'getEvents'])->name('calendar.events');

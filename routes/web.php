@@ -14,6 +14,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ExecutiveController;
 use App\Http\Middleware\RoleMiddleware;
 
+Route::get('/admin/manage-closed-dates', [TimeslotController::class, 'showClosedDates'])->name('admin.manageClosedDates');
+Route::post('/admin/manage-closed-dates', [TimeslotController::class, 'saveClosedDates'])->name('admin.saveClosedDates');
+Route::post('/admin/get-timeslots', [TimeslotController::class, 'getTimeslotsByActivity'])->name('admin.getTimeslots');
 //Middleware routes
 Auth::routes();
 Route::middleware([RoleMiddleware::class . ':Super Admin'])->group(function () {

@@ -12,7 +12,7 @@ class TimeslotsSeeder extends Seeder
     public function run(): void
     {
         $timeslots = [
-            '1' => [
+            1 => [
                 ['start_time' => '09:30:00', 'end_time' => '10:00:00'],
                 ['start_time' => '10:00:00', 'end_time' => '10:30:00'],
                 ['start_time' => '10:30:00', 'end_time' => '11:00:00'],

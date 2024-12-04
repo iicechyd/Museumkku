@@ -21,7 +21,9 @@
             data-target="#InsertTimeslotsModal">
             เพิ่มรอบการเข้าชม
         </button>
-
+        <a href="{{ url('/admin/manage-closed-dates') }}" class="btn"
+        style="background-color: rgb(85, 88, 218); border-color: rgb(85, 88, 218); color: white;">
+                    ปิดรอบการเข้าชม</a>
         <div class="table-responsive">
             @if ($activities->isEmpty() || $activities->every(fn($activity) => $activity->timeslots->isEmpty()))
                 <div class="text-center mt-4">

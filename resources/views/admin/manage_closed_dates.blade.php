@@ -30,7 +30,6 @@
             <select id="timeslots_id" name="timeslots_id" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" disabled>
                 <option value="">-- เลือกรอบการเข้าชม --</option>
                 <option value="all">ปิดทุกรอบ</option>
-
             </select>
             @error('timeslots_id')
                 <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -60,38 +59,51 @@
             </tr>
         </thead>
         <tbody>
-            <!-- แสดงรายการวันที่ปิด -->
+            @foreach($closedDates as $closed)
+                <tr>
+                    <td class="px-4 py-2">{{ $closed->activity_name }}</td>
+                    <td class="px-4 py-2">
+                        {{ $closed->start_time && $closed->end_time ? $closed->start_time . ' - ' . $closed->end_time : 'ปิดทุกรอบ' }}
+                    </td>
+                    <td class="px-4 py-2">{{ $closed->closed_on }}</td>
+                </tr>
+            @endforeach
         </tbody>
+        
     </table>
 </div>
 
 <script>
-   document.getElementById('activity_id').addEventListener('change', function () {
-    const activityId = this.value;
-    const timeslotsDropdown = document.getElementById('timeslots_id');
+    document.getElementById('activity_id').addEventListener('change', function () {
+        const activityId = this.value;
+        const timeslotsDropdown = document.getElementById('timeslots_id');
 
-    if (activityId) {
-        fetch("{{ route('admin.getTimeslots') }}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': "{{ csrf_token() }}",
-            },
-            body: JSON.stringify({ activity_id: activityId }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            timeslotsDropdown.innerHTML = '<option value="">-- เลือกรอบการเข้าชม --</option>';
-            timeslotsDropdown.innerHTML += '<option value="all">ปิดทุกรอบ</option>';
-            data.forEach(timeslot => {
-                timeslotsDropdown.innerHTML += `<option value="${timeslot.timeslots_id}">${timeslot.start_time} - ${timeslot.end_time}</option>`;
+        if (activityId) {
+            fetch("{{ route('admin.getTimeslots') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                },
+                body: JSON.stringify({ activity_id: activityId }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                timeslotsDropdown.innerHTML = '<option value="">-- เลือกรอบการเข้าชม --</option>';
+                timeslotsDropdown.innerHTML += '<option value="all">ปิดทุกรอบ</option>';
+                data.forEach(timeslot => {
+                    timeslotsDropdown.innerHTML += `<option value="${timeslot.timeslots_id}">${timeslot.start_time} - ${timeslot.end_time}</option>`;
+                });
+                timeslotsDropdown.disabled = false;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('ไม่สามารถโหลดข้อมูลรอบการเข้าชมได้');
             });
-            timeslotsDropdown.disabled = false;
-        });
-    } else {
-        timeslotsDropdown.innerHTML = '<option value="">-- เลือกรอบการเข้าชม --</option>';
-        timeslotsDropdown.disabled = true;
-    }
-});
+        } else {
+            timeslotsDropdown.innerHTML = '<option value="">-- เลือกรอบการเข้าชม --</option>';
+            timeslotsDropdown.disabled = true;
+        }
+    });
 </script>
 @endsection

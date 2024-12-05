@@ -17,4 +17,9 @@ class Timeslots extends Model
     {
         return $this->belongsTo(Activity::class, 'activity_id', 'activity_id');
     }
+    public function closedTimeslots()
+{
+    return $this->hasMany(ClosedTimeslots::class, 'timeslot_id');
+}
+
 }

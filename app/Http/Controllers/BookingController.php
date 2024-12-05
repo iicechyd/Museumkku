@@ -229,9 +229,16 @@ class BookingController extends Controller
         if ($request->filled('fk_timeslots_id')) {
             $timeslot = Timeslots::find($request->input('fk_timeslots_id'));
 
-        if ($timeslot->closed_on && $timeslot->closed_on == $request->input('booking_date')) {
-            return back()->with('error', 'รอบการเข้าชมนี้ถูกปิดในวันที่เลือก');
-        }
+            // ตรวจสอบว่ารอบการเข้าชมถูกปิดในวันที่เลือกหรือไม่
+            $isClosed = DB::table('closed_timeslots')
+                ->where('timeslots_id', $timeslot->timeslots_id)
+                ->where('closed_on', $request->input('booking_date'))
+                ->exists();
+
+            if ($isClosed) {
+                return back()->with('error', 'รอบการเข้าชมนี้ถูกปิดในวันที่เลือก');
+            }
+
             $totalBooked = Bookings::where('booking_date', $request->booking_date)
                 ->where('timeslots_id', $timeslot->timeslots_id)
                 ->where('status', 1)
@@ -271,6 +278,17 @@ class BookingController extends Controller
                 if ($totalBooked + $totalToBook > $activity->max_capacity) {
                     return back()->with('error', 'จำนวนการจองในวันนี้เต็มแล้วหรือเกินความจุสูงสุด');
                 }
+            }
+
+            // ตรวจสอบว่าไม่มีการปิดรอบทั้งหมดในวันที่เลือก
+            $isAllClosed = DB::table('closed_timeslots')
+                ->whereNull('timeslots_id')
+                ->where('activity_id', $activity->activity_id)
+                ->where('closed_on', $request->input('booking_date'))
+                ->exists();
+
+            if ($isAllClosed) {
+                return back()->with('error', 'ไม่สามารถจองได้เนื่องจากรอบการเข้าชมถูกปิดในวันที่เลือก');
             }
         }
 

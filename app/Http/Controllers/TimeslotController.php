@@ -15,22 +15,23 @@ class TimeslotController extends Controller
 
         return view('admin.timeslots_list', compact('activities'));
     }
-    // public function getTimeslots($activity_id)
-    // {
-    //     $timeslots = Timeslots::where('activity_id', $activity_id)->get();
-    //     return response()->json($timeslots);
-    // }
 
     public function fetchTimeslots(Request $request)
     {
         $activityId = $request->input('fk_activity_id');
         $bookingDate = $request->input('booking_date');
 
+        if (!$activityId || !$bookingDate) {
+            return response()->json(['error' => 'กรุณาระบุ activity_id และ booking_date'], 400);
+        }
+        
         // Fetch available timeslots with remaining capacity
         $timeslots = Timeslots::where('activity_id', $activityId)
-            ->where('date', $bookingDate)
-            ->where('max_capacity', '>', DB::raw('booked'))
-            ->get();
+        ->whereDoesntHave('closedTimeslots', function ($query) use ($bookingDate) {
+            $query->where('closed_on', $bookingDate);
+        })
+        ->where('max_capacity', '>', DB::raw('booked'))
+        ->get();
 
         return response()->json($timeslots);
     }
@@ -81,12 +82,11 @@ public function getTimeslots(Request $request)
     $bookingDate = $request->input('booking_date');
 
     $timeslots = Timeslots::where('activity_id', $activityId)
-        ->where(function ($query) use ($bookingDate) {
-            $query->whereNull('closed_on')
-                ->orWhere('closed_on', '!=', $bookingDate);
-        })
-        ->where('status', 'active')
-        ->get();
+    ->whereDoesntHave('closedTimeslots', function ($query) use ($bookingDate) {
+        $query->where('closed_on', $bookingDate);
+    })
+    ->where('status', 'active')
+    ->get();
 
     return response()->json($timeslots);
 }
@@ -97,17 +97,33 @@ public function closeTimeslot(Request $request, $timeslotId)
         'closed_on' => 'required|date',
     ]);
 
-    $timeslot = Timeslots::findOrFail($timeslotId);
-    $timeslot->closed_on = $request->input('closed_on');
-    $timeslot->save();
+    DB::table('closed_timeslots')->insert([
+        'timeslot_id' => $timeslotId,
+        'closed_on' => $request->input('closed_on'),
+    ]);
 
-    return redirect()->back()->with('success', 'Timeslot closed successfully.');
+    return redirect()->back()->with('success', 'ปิดรอบการเข้าชมสำเร็จแล้ว');
 }
 public function showClosedDates()
 {
     $activities = Activity::all(); // ดึงข้อมูลกิจกรรมทั้งหมด
-    return view('admin.manage_closed_dates', compact('activities'));
+
+    // ดึงข้อมูลวันที่ปิดรอบจากตาราง closed_timeslots
+    $closedDates = DB::table('closed_timeslots')
+        ->join('activities', 'closed_timeslots.activity_id', '=', 'activities.activity_id')
+        ->leftJoin('timeslots', 'closed_timeslots.timeslots_id', '=', 'timeslots.timeslots_id')
+        ->select(
+            'activities.activity_name',
+            'timeslots.start_time',
+            'timeslots.end_time',
+            'closed_timeslots.closed_on'
+        )
+        ->orderBy('closed_on', 'desc')
+        ->get();
+
+    return view('admin.manage_closed_dates', compact('activities', 'closedDates'));
 }
+
 
 public function getTimeslotsByActivity(Request $request)
 {
@@ -130,15 +146,24 @@ public function getTimeslotsByActivity(Request $request)
     
         if ($timeslotsId === 'all') {
             // ปิดทุกรอบของกิจกรรมในวันนั้น
-            Timeslots::where('activity_id', $activityId)
-                ->update(['closed_on' => $closedOn, 'status' => 'closed']);
+            $timeslots = Timeslots::where('activity_id', $activityId)->pluck('timeslots_id');
+
+            foreach ($timeslots as $id) {
+                DB::table('closed_timeslots')->insert([
+                    'activity_id' => $activityId,
+                    'timeslots_id' => $id,
+                    'closed_on' => $closedOn,
+                ]);
+            }
         } else {
-            // ปิดเฉพาะรอบที่เลือก
-            Timeslots::where('timeslots_id', $timeslotsId)
-                ->update(['closed_on' => $closedOn, 'status' => 'closed']);
+            DB::table('closed_timeslots')->insert([
+                'activity_id' => $activityId,
+                'timeslots_id' => $timeslotsId,
+                'closed_on' => $closedOn,
+            ]);
         }
     
-        return back()->with('success', 'บันทึกข้อมูลการปิดรอบเรียบร้อยแล้ว');
+        return redirect()->back()->with('success', 'บันทึกข้อมูลการปิดรอบเรียบร้อยแล้ว');
     }
     
 }

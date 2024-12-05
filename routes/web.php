@@ -83,3 +83,6 @@ Route::delete('/timeslots/{timeslots_id}', [TimeslotController::class, 'destroy'
 Route::put('timeslots/{id}', [TimeslotController::class, 'update'])->name('timeslots.update');
 Route::get('/toggle-status/{id}', [TimeslotController::class, 'toggleStatus'])->name('toggle.status');
 Route::post('/toggle-status/{id}', [TimeslotController::class, 'toggleStatus'])->name('toggle.status');
+
+Route::delete('/admin/closed-timeslots/{id}', [TimeslotController::class, 'destroy'])->name('admin.closedTimeslots.destroy');
+Route::put('/admin/closed-timeslots/{id}', [TimeslotController::class, 'update'])->name('admin.closedTimeslots.update');

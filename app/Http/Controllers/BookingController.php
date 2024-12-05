@@ -227,18 +227,11 @@ class BookingController extends Controller
         $activity = Activity::find($request->input('fk_activity_id'));
 
         if ($request->filled('fk_timeslots_id')) {
-            $timeslot = Timeslots::where('timeslots_id', $request->input('fk_timeslots_id'))
-                ->where(function ($query) use ($request) {
-                    $query->whereNull('closed_on')
-                        ->orWhere('closed_on', '!=', $request->booking_date);
-                })
-                ->where('status', 'active')
-                ->first();
+            $timeslot = Timeslots::find($request->input('fk_timeslots_id'));
 
-            if (!$timeslot) {
-                return back()->with('error', 'รอบการเข้าชมนี้ถูกปิดในวันที่เลือก');
-            }
-
+        if ($timeslot->closed_on && $timeslot->closed_on == $request->input('booking_date')) {
+            return back()->with('error', 'รอบการเข้าชมนี้ถูกปิดในวันที่เลือก');
+        }
             $totalBooked = Bookings::where('booking_date', $request->booking_date)
                 ->where('timeslots_id', $timeslot->timeslots_id)
                 ->where('status', 1)

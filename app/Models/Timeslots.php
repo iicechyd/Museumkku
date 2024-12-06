@@ -10,7 +10,7 @@ class Timeslots extends Model
     protected $primaryKey = 'timeslots_id';
 
     use HasFactory;
-    protected $fillable = ['activity_id', 'start_time', 'end_time','status'];
+    protected $fillable = ['activity_id', 'start_time', 'end_time', 'status'];
 
 
     public function activity()
@@ -18,8 +18,7 @@ class Timeslots extends Model
         return $this->belongsTo(Activity::class, 'activity_id', 'activity_id');
     }
     public function closedTimeslots()
-{
-    return $this->hasMany(ClosedTimeslots::class, 'timeslot_id');
-}
-
+    {
+        return $this->hasMany(ClosedTimeslots::class, 'timeslot_id');
+    }
 }

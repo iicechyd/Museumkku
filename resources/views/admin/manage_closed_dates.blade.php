@@ -61,15 +61,21 @@
         <tbody>
             @foreach($closedDates as $closed)
                 <tr>
-                    <td class="px-4 py-2">{{ $closed->activity_name }}</td>
+                    <td class="px-4 py-2">{{ $closed->activity->activity_name }}</td>
                     <td class="px-4 py-2">
-                        {{ $closed->start_time && $closed->end_time ? $closed->start_time . ' - ' . $closed->end_time : 'ปิดทุกรอบ' }}
+                        {{ $closed->timeslot ? $closed->timeslot->start_time . ' - ' . $closed->timeslot->end_time : 'ปิดทุกรอบ' }}
                     </td>
                     <td class="px-4 py-2">{{ $closed->closed_on }}</td>
+                    <td class="px-4 py-2">
+                        <form action="{{ route('admin.deleteClosedDate', $closed->closed_timeslots_id) }}" method="POST" onsubmit="return confirm('ยืนยันการลบวันที่ปิดรอบนี้หรือไม่?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-600 hover:text-red-800">ลบ</button>
+                        </form>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
-        
     </table>
 </div>
 

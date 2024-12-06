@@ -71,6 +71,9 @@ $.Thailand({
     $amphoe: $('#subdistrict'),
     $province: $('#province'),
     $zipcode: $('#zipcode'),
+    onLoad: function () {
+        $('.tt-menu').addClass('dropdown-scrollable'); // เพิ่ม class
+    }
 });
 
 document.addEventListener("DOMContentLoaded", function () {

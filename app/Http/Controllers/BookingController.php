@@ -220,7 +220,7 @@ class BookingController extends Controller
         $activity = Activity::find($request->input('fk_activity_id'));
         if ($activity && $activity->activityType->activity_type_id == 1) {
             if (is_null($request->input('fk_timeslots_id'))) {
-                return back()->with('error', 'กรุณาเลือกรอบการเข้าชมสำหรับกิจกรรมประเภทนี้');
+                return back()->with('error', 'กรุณาเลือกรอบการเข้าชมสำหรับกิจกรรมประเภทนี้')->withInput();
             }
         }
 
@@ -236,7 +236,7 @@ class BookingController extends Controller
                 ->exists();
 
             if ($isClosed) {
-                return back()->with('error', 'รอบการเข้าชมนี้ถูกปิดในวันที่เลือก');
+                return back()->with('error', 'รอบการเข้าชมนี้ถูกปิดในวันที่เลือก')->withInput();
             }
 
             $totalBooked = Bookings::where('booking_date', $request->booking_date)
@@ -248,7 +248,7 @@ class BookingController extends Controller
 
             if ($activity->max_capacity !== null) {
                 if ($totalBooked + $totalToBook > $activity->max_capacity) {
-                    return back()->with('error', 'รอบการเข้าชมนี้เต็มแล้วหรือเกินความจุสูงสุด');
+                    return back()->with('error', 'รอบการเข้าชมนี้เต็มแล้วหรือเกินความจุสูงสุด')->withInput();
                 }
             }
 
@@ -264,7 +264,7 @@ class BookingController extends Controller
                 ->exists();
 
             if ($conflictingBookingForActivity3 && $request->input('fk_activity_id') != 3) {
-                return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้เนื่องจากมีกิจกรรมที่จองไว้ก่อนหน้านี้ในช่วงเวลาที่ใกล้เคียงกัน');
+                return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้เนื่องจากมีกิจกรรมที่จองไว้ก่อนหน้านี้ในช่วงเวลาที่ใกล้เคียงกัน')->withInput();
             }
         } else {
             $totalToBook = $request->children_qty + $request->students_qty + $request->adults_qty;
@@ -276,7 +276,7 @@ class BookingController extends Controller
                     ->sum(DB::raw('children_qty + students_qty + adults_qty'));
 
                 if ($totalBooked + $totalToBook > $activity->max_capacity) {
-                    return back()->with('error', 'จำนวนการจองในวันนี้เต็มแล้วหรือเกินความจุสูงสุด');
+                    return back()->with('error', 'จำนวนการจองในวันนี้เต็มแล้วหรือเกินความจุสูงสุด')->withInput();
                 }
             }
 
@@ -288,7 +288,7 @@ class BookingController extends Controller
                 ->exists();
 
             if ($isAllClosed) {
-                return back()->with('error', 'ไม่สามารถจองได้เนื่องจากรอบการเข้าชมถูกปิดในวันที่เลือก');
+                return back()->with('error', 'ไม่สามารถจองได้เนื่องจากรอบการเข้าชมถูกปิดในวันที่เลือก')->withInput();
             }
         }
 

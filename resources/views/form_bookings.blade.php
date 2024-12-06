@@ -10,9 +10,6 @@
     <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>    
 </head>
 
-
-
-
     <div class="container mt-5">
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -56,7 +53,7 @@
                             name="fk_timeslots_id">
                             <option value="">เลือกรอบการเข้าชม</option>
                             @foreach ($timeslots as $timeslot)
-                                <option value="{{ $timeslot->timeslots_id }}">
+                                <option value="{{ $timeslot->timeslots_id }}" {{ old('fk_timeslots_id') == $timeslot->timeslots_id ? 'selected' : '' }}>
                                     {{ $timeslot->start_time }} - {{ $timeslot->end_time }}
                                 </option>
                             @endforeach
@@ -108,7 +105,7 @@
                 <div class="col-md-2">
                     <label for="district" class="form-label">เขต/อำเภอ</label>
                     <input type="text" class="form-control @error('district') is-invalid @enderror" id="district"
-                    name="district" required>
+                    name="district" placeholder="กรอกเขต/อำเภอ" value="{{ old('district') }}" required>
                     @error('district')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -119,7 +116,7 @@
                 <div class="col-md-3">
                     <label for="subdistrict" class="form-label">แขวน/ตำบล</label>
                     <input type="text" class="form-control @error('subdistrict') is-invalid @enderror" id="subdistrict"
-                    name="subdistrict" required>
+                    name="subdistrict" placeholder="กรอกแขวน/ตำบล" value="{{ old('subdistrict') }}" required>
                     @error('subdistrict')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -129,7 +126,7 @@
                 <div class="col-md-2">
                     <label for="province" class="form-label">จังหวัด</label>
                     <input type="text" class="form-control @error('province') is-invalid @enderror" id="province"
-                    name="province" required>
+                    name="province" placeholder="กรอกจังหวัด" value="{{ old('province') }}" required>
                     @error('inputProvince')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>

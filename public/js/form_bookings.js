@@ -66,123 +66,12 @@ function fetchTimeslots() {
             });
         });
 }
-
-function showProvinces() {
-    let input_province = document.querySelector("#province");
-    let url = "https://ckartisan.com/api/provinces";
-    console.log(url);
-
-    fetch(url)
-        .then((response) => response.json())
-        .then((result) => {
-            console.log(result);
-            input_province.innerHTML =
-                '<option value="">กรุณาเลือกจังหวัด</option>';
-            for (let item of result) {
-                let option = document.createElement("option");
-                option.text = item.province;
-                option.value = item.province;
-                input_province.appendChild(option);
-            }
-            // QUERY AMPHOES
-            showAmphoes();
-        });
-}
-
-function showAmphoes() {
-    let input_province = document.querySelector("#province");
-    let url =
-        "https://ckartisan.com/api/amphoes?province=" + input_province.value;
-    console.log(url);
-
-    fetch(url)
-        .then((response) => response.json())
-        .then((result) => {
-            console.log(result);
-            // UPDATE SELECT OPTION
-            let input_district = document.querySelector("#district");
-            input_district.innerHTML =
-                '<option value="">กรุณาเลือกเขต/อำเภอ</option>';
-            for (let item of result) {
-                let option = document.createElement("option");
-                option.text = item.amphoe;
-                option.value = item.amphoe;
-                input_district.appendChild(option);
-            }
-            // QUERY TAMBONS
-            showTambons();
-        });
-}
-
-function showTambons() {
-    let input_province = document.querySelector("#province");
-    let input_district = document.querySelector("#district");
-    let url =
-        "https://ckartisan.com/api/tambons?province=" +
-        input_province.value +
-        "&amphoe=" +
-        input_district.value;
-    console.log(url);
-
-    fetch(url)
-        .then((response) => response.json())
-        .then((result) => {
-            console.log(result);
-            // UPDATE SELECT OPTION
-            let input_subdistrict = document.querySelector("#subdistrict");
-            input_subdistrict.innerHTML =
-                '<option value="">กรุณาเลือกแขวง/ตำบล</option>';
-            for (let item of result) {
-                let option = document.createElement("option");
-                option.text = item.tambon;
-                option.value = item.tambon;
-                input_subdistrict.appendChild(option);
-            }
-            // QUERY ZIPCODE
-            showZipcode();
-        });
-}
-
-function showZipcode() {
-    let input_province = document.querySelector("#province");
-    let input_district = document.querySelector("#district");
-    let input_subdistrict = document.querySelector("#subdistrict");
-    let url =
-        "https://ckartisan.com/api/zipcodes?province=" +
-        input_province.value +
-        "&amphoe=" +
-        input_district.value +
-        "&tambon=" +
-        input_subdistrict.value;
-    console.log(url);
-
-    fetch(url)
-        .then((response) => response.json())
-        .then((result) => {
-            console.log(result);
-            // UPDATE ZIPCODE
-            let input_zipcode = document.querySelector("#zipcode");
-            input_zipcode.value = "";
-            for (let item of result) {
-                input_zipcode.value = item.zipcode;
-                break;
-            }
-        });
-}
-
-document.querySelector("#province").addEventListener("change", (event) => {
-    showAmphoes();
+$.Thailand({
+    $district: $('#district'),
+    $amphoe: $('#subdistrict'),
+    $province: $('#province'),
+    $zipcode: $('#zipcode'),
 });
-
-document.querySelector("#district").addEventListener("change", (event) => {
-    showTambons();
-});
-
-document.querySelector("#subdistrict").addEventListener("change", (event) => {
-    showZipcode();
-});
-
-showProvinces();
 
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("booking_date").value = "2024-11-30";

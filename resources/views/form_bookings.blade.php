@@ -1,6 +1,18 @@
 @extends('layouts.layout')
 @section('title', 'กรอกข้อมูลเพื่อจองเข้าชมพิพิธภัณฑ์')
 @section('content')
+
+<head>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/JQL.min.js"></script>
+    <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/typeahead.bundle.js"></script>
+    <link rel="stylesheet" href="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.css">
+    <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>    
+</head>
+
+
+
+
     <div class="container mt-5">
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -17,7 +29,7 @@
         <div class="card shadow p-4">
             <form method="POST" action="/InsertBooking" class="row g-3" novalidate>
                 @csrf
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <label for="fk_activity_id" class="form-label">ประเภทเข้าชม</label>
                     <input type="hidden" id="fk_activity_id" name="fk_activity_id" value="{{ $activity_id }}">
                     <select class="form-select" disabled>
@@ -38,7 +50,7 @@
                 </div>
                 
                 @if ($timeslots->isNotEmpty())
-                    <div class="form-group col-4">
+                    <div class="form-group col-3">
                         <label for="fk_timeslots_id" class="form-label">รอบการเข้าชม:</label>
                         <select id="fk_timeslots_id" class="form-select @error('fk_timeslots_id') is-invalid @enderror"
                             name="fk_timeslots_id">
@@ -57,8 +69,8 @@
                     </div>
                 @endif
                 
-                <div class="col-12">
-                    <label for="instituteName">ชื่อหน่วยงาน</label>
+                <div class="col-4">
+                    <label for="instituteName" class="form-label">ชื่อหน่วยงาน</label>
                     <input type="text" class="form-control @error('instituteName') is-invalid @enderror"
                         id="instituteName" name="instituteName" placeholder="กรอกชื่อหน่วยงาน"
                         value="{{ old('instituteName') }}" required>
@@ -69,7 +81,7 @@
                     @enderror
                 </div>
 
-                <div class="col-6">
+                <div class="col-4">
                     <label for="instituteAddress" class="form-label">ที่อยู่หน่วยงาน</label>
                     <input type="text" class="form-control @error('instituteAddress') is-invalid @enderror"
                         id="instituteAddress" name="instituteAddress" placeholder="บ้านเลขที่, ซอย, หมู่, ถนน"
@@ -92,24 +104,11 @@
                         </div>
                     @enderror
                 </div>
-                <div class="col-md-4">
-                    <label for="province" class="form-label">จังหวัด</label>
-                    <select id="province" class="form-select @error('province') is-invalid @enderror" name="province">
-                        <option value="">เลือกจังหวัด</option>
 
-                    </select>
-                    @error('inputProvince')
-                        <div class="my-2">
-                            <span class="text-danger">{{ $message }}</span>
-                        </div>
-                    @enderror
-                </div>
-
-                <div class="col-md-">
+                <div class="col-md-2">
                     <label for="district" class="form-label">เขต/อำเภอ</label>
-                    <select id="district" class="form-select @error('district') is-invalid @enderror" name="district">
-                        <option value="">เลือกเขต/อำเภอ</option>
-                    </select>
+                    <input type="text" class="form-control @error('district') is-invalid @enderror" id="district"
+                    name="district" required>
                     @error('district')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -117,32 +116,27 @@
                     @enderror
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="subdistrict" class="form-label">แขวน/ตำบล</label>
-                    <select id="subdistrict" class="form-select @error('subdistrict') is-invalid @enderror"
-                        name="subdistrict">
-                        <option value="">เลือกแขวน/ตำบล</option>
-                    </select>
+                    <input type="text" class="form-control @error('subdistrict') is-invalid @enderror" id="subdistrict"
+                    name="subdistrict" required>
                     @error('subdistrict')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
                         </div>
                     @enderror
                 </div>
-
-                {{-- <div class="col-md-2">
-                    <label for="zipcode" class="form-label">รหัสไปรษณีย์</label>
-                    <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode"
-                        name="zipcode" placeholder="กรอกรหัสไปรษณีย์" value="{{ old('zipcode') }}" pattern="\d{5}"
-                        maxlength="5" minlength="5" inputmode="numeric" required>
-                    @error('zipcode')
+                <div class="col-md-2">
+                    <label for="province" class="form-label">จังหวัด</label>
+                    <input type="text" class="form-control @error('province') is-invalid @enderror" id="province"
+                    name="province" required>
+                    @error('inputProvince')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
                         </div>
                     @enderror
-                </div> --}}
-
-                <div class="col-md-6">
+                </div>
+                <div class="col-md-3">
                     <label for="visitorName" class="form-label">ชื่อผู้ประสานงาน</label>
                     <input type="text" class="form-control @error('visitorName') is-invalid @enderror"
                         id="visitorName" name="visitorName" placeholder="ชื่อ-นามสกุล"
@@ -154,7 +148,7 @@
                     @enderror
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-2">
                     <label for="visitorEmail" class="form-label">อีเมล์ผู้ประสานงาน</label>
                     <input type="email" class="form-control @error('visitorEmail') is-invalid @enderror"
                         id="visitorEmail" name="visitorEmail" placeholder="Test@email.com"
@@ -166,7 +160,7 @@
                     @enderror
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-2">
                     <label for="tel" class="form-label">เบอร์โทรผู้ประสานงาน</label>
                     <input type="text" class="form-control @error('tel') is-invalid @enderror" id="tel"
                         name="tel" placeholder="หมายเลขโทรศัพท์" value="{{ old('tel') }}" pattern="\d{10}"

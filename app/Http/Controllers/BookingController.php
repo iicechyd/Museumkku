@@ -12,7 +12,6 @@ use App\Models\Activity;
 use App\Models\Institutes;
 use App\Models\Visitors;
 use App\Models\StatusChanges;
-
 use Carbon\Carbon;
 
 class BookingController extends Controller
@@ -181,35 +180,17 @@ class BookingController extends Controller
         $request->validate(
             [
                 'fk_activity_id' => 'required|exists:activities,activity_id',
-                'fk_timeslots_id' => [
-                    'nullable',
-                    'exists:timeslots,timeslots_id',
-                    function ($attribute, $value, $fail) use ($request) {
-                        $activity = Activity::with('activityType')->find($request->input('fk_activity_id'));
-
-                        if (!$activity) {
-                            $fail('ไม่พบกิจกรรมที่เลือกในฐานข้อมูล');
-                        } elseif ($activity->activityType->activity_type_id == 1 && !$value) {
-                            $fail('กรุณาเลือกรอบการเข้าชมสำหรับกิจกรรมประเภทนี้');
-                        }
-                    }
-                ],
+                'fk_timeslots_id' => 'nullable|exists:timeslots,timeslots_id',
                 'booking_date' => 'required',
                 'instituteName' => 'required',
                 'instituteAddress' => 'required',
                 'province' => 'required',
                 'district' => 'required',
                 'subdistrict' => 'required',
-                'zipcode' => [
-                    'required',
-                    'regex:/^[0-9]{5}$/'
-                ],
+                'zipcode' => ['required','regex:/^[0-9]{5}$/'],
                 'visitorName' => 'required',
                 'visitorEmail' => 'required|email',
-                'tel' => [
-                    'required',
-                    'regex:/^[0-9]{10}$/'
-                ],
+                'tel' => ['required','regex:/^[0-9]{10}$/'],
                 'children_qty' => 'nullable|integer|min:0',
                 'students_qty' => 'nullable|integer|min:0',
                 'adults_qty' => 'nullable|integer|min:0',
@@ -217,15 +198,16 @@ class BookingController extends Controller
         );
 
         // ตรวจสอบ timeslot เมื่อ activity_type_id = 1
-        $activity = Activity::find($request->input('fk_activity_id'));
+        $activity = Activity::with('activityType')->find($request->input('fk_activity_id'));
         if ($activity && $activity->activityType->activity_type_id == 1) {
             if (is_null($request->input('fk_timeslots_id'))) {
-                return back()->with('error', 'กรุณาเลือกรอบการเข้าชมสำหรับกิจกรรมประเภทนี้')->withInput();
+                return back()
+                    ->with('error', 'กรุณาเลือกรอบการเข้าชมสำหรับกิจกรรมประเภทนี้')
+                    ->withInput();
             }
         }
 
         $activity = Activity::find($request->input('fk_activity_id'));
-
         if ($request->filled('fk_timeslots_id')) {
             $timeslot = Timeslots::find($request->input('fk_timeslots_id'));
 

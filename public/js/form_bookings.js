@@ -72,7 +72,7 @@ $.Thailand({
     $province: $('#province'),
     $zipcode: $('#zipcode'),
     onLoad: function () {
-        $('.tt-menu').addClass('dropdown-scrollable'); // เพิ่ม class
+        $('.tt-menu').addClass('dropdown-scrollable');
     }
 });
 

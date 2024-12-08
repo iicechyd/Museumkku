@@ -62,7 +62,6 @@
     <div class="container mx-auto px-4 py-6">
         <h2 class="font-weight-bold mt-5">รายการวันที่ปิด</h2>
         <div class="table-wrapper">
-
         <table class="table  table-bordered mt-4 shadow-sm">
             <thead class="thead-light">
                 <tr>

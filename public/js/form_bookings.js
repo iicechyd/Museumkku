@@ -77,7 +77,7 @@ $.Thailand({
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("booking_date").value = "2024-11-30";
+    // document.getElementById("booking_date").value = "2024-11-30";
     document.getElementById("instituteName").value = "โรงเรียนเด่นดี";
     document.getElementById("instituteAddress").value =
         "123/45 หมู่ 2 บ้านหมีน้อย";

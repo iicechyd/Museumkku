@@ -23,6 +23,7 @@ class ActivitySeeder extends Seeder
                 'max_capacity' => 250,
                 'status' => 'active',
                 'image' => 'activity_20241128_150258.jpg',
+                'duration_days' => 1,
             ],
             [
                 'activity_id' => 2,
@@ -35,7 +36,7 @@ class ActivitySeeder extends Seeder
                 'max_capacity' => 250,
                 'status' => 'active',
                 'image' => 'activity_20241128_150304.jpg',
-
+                'duration_days' => 1,
             ],
             [
                 'activity_id' => 3,
@@ -48,7 +49,7 @@ class ActivitySeeder extends Seeder
                 'max_capacity' => 500,
                 'status' => 'active',
                 'image' => 'activity_20241128_150311.jpg',
-
+                'duration_days' => 1,
             ],
             [
                 'activity_id' => 4,
@@ -61,7 +62,7 @@ class ActivitySeeder extends Seeder
                 'max_capacity' => null,
                 'status' => 'active',
                 'image' => 'activity_20241128_150321.jpg',
-
+                'duration_days' => 1,
             ],
             [
                 'activity_id' => 5,
@@ -74,7 +75,7 @@ class ActivitySeeder extends Seeder
                 'max_capacity' => null,
                 'status' => 'active',
                 'image' => 'activity_20241128_150329.jpg',
-
+                'duration_days' => 2,
             ],
             [
                 'activity_id' => 6,
@@ -87,7 +88,7 @@ class ActivitySeeder extends Seeder
                 'max_capacity' => null,
                 'status' => 'active',
                 'image' => 'activity_20241128_150336.jpg',
-
+                'duration_days' => 1,
             ],
             [
                 'activity_id' => 7,
@@ -100,7 +101,7 @@ class ActivitySeeder extends Seeder
                 'max_capacity' => null,
                 'status' => 'active',
                 'image' => 'activity_20241128_150343.jpg',
-
+                'duration_days' => 1,
             ],
         ];
         foreach ($activity as $item) {
@@ -121,6 +122,7 @@ if (!Storage::disk('public')->exists($filePath)) {
                 'max_capacity' => $item['max_capacity'],
                 'status' => $item['status'],
                 'image' => 'images/' . $item['image'],
+                'duration_days' => $item['duration_days'],
             ]);
         }
 

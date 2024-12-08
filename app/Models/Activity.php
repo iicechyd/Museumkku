@@ -18,7 +18,8 @@ class Activity extends Model
         'adult_price',
         'image',
         'max_capacity',
-        'status'
+        'status',
+        'duration_days',
     ];
 
     public function activityType()
@@ -32,9 +33,5 @@ class Activity extends Model
     public function closedTimeslots()
     {
         return $this->hasMany(ClosedTimeslots::class, 'activity_id');
-    }
-    public function duration()
-    {
-        return $this->hasOne(ActivityDuration::class, 'activity_id');
     }
 }

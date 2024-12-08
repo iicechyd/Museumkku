@@ -197,7 +197,6 @@ class BookingController extends Controller
             ]
         );
 
-        // ตรวจสอบ timeslot เมื่อ activity_type_id = 1
         $activity = Activity::with('activityType')->find($request->input('fk_activity_id'));
         if ($activity && $activity->activityType->activity_type_id == 1) {
             if (is_null($request->input('fk_timeslots_id'))) {
@@ -207,7 +206,6 @@ class BookingController extends Controller
             }
         }
 
-        $activity = Activity::find($request->input('fk_activity_id'));
         if ($request->filled('fk_timeslots_id')) {
             $timeslot = Timeslots::find($request->input('fk_timeslots_id'));
 

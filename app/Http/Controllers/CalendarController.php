@@ -9,51 +9,54 @@ use Carbon\Carbon;
 class CalendarController extends Controller
 {
     public function getEvents(Request $request)
-    {
-        $bookings = Bookings::with('activity', 'timeslot')
-        ->get();
+{
+    $bookings = Bookings::with('activity', 'timeslot')->get();
 
     $events = $bookings->map(function ($booking) {
-        $startTime = $booking->timeslot ? Carbon::createFromFormat('H:i:s', $booking->timeslot->start_time)->format('H:i') : '00:00';
-        $endTime = $booking->timeslot ? Carbon::createFromFormat('H:i:s', $booking->timeslot->end_time)->format('H:i') : '23:59';
-        
+        $startTime = $booking->timeslot ? Carbon::createFromFormat('H:i:s', $booking->timeslot->start_time)->format('H:i') : null;
+        $endTime = $booking->timeslot ? Carbon::createFromFormat('H:i:s', $booking->timeslot->end_time)->format('H:i') : null;
+
+        // ตรวจสอบวันที่สิ้นสุด และเพิ่ม 1 วันหากเป็นช่วงเวลาหลายวัน
+        $endDate = $booking->end_date ?? $booking->booking_date;
+        if ($endDate !== $booking->booking_date) {
+            $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->addDay()->format('Y-m-d');
+        }
+
         return [
             'title' => $booking->activity->activity_name . " (สถานะการจอง: " . $this->getStatusText($booking->status) . ")",
-            'start' => $booking->booking_date . ' ' . $startTime,
-            'end' => $booking->booking_date . ' ' . $endTime,
+            'start' => $booking->booking_date . ($startTime ? " $startTime" : ''),
+            'end'   => $endDate . ($endTime ? " $endTime" : ''),
             'color' => $this->getStatusColor($booking->status),
             'extendedProps' => [
-                    'description' => $booking->activity->description,
-                    'start_time' => $startTime,
-                    'end_time' => $endTime,
-                    'status' => $booking->status,
-                ]
+                'description' => $booking->activity->description,
+                'start_time'  => $startTime,
+                'end_time'    => $endTime,
+                'status'      => $booking->status,
+            ]
         ];
     });
-        return response()->json($events);
-    }
 
-    private function getStatusColor($status)
-    {
-        switch ($status) {
-            case 0:
-                return '#ffc107';
-            case 1:
-                return '#28a745';
-            case 2:
-                return '#dc3545';
-        }
-    }
+    return response()->json($events);
+}
 
-    private function getStatusText($status)
-    {
-        switch ($status) {
-            case 0:
-                return 'รออนุมัติ';
-            case 1:
-                return 'อนุมัติ';
-            case 2:
-                return 'ยกเลิก';
-        }
-    }
+private function getStatusColor($status)
+{
+    return match ($status) {
+        0 => '#ffc107',   // รออนุมัติ
+        1 => '#28a745',   // อนุมัติ
+        2 => '#dc3545',   // ยกเลิก
+        default => '#000000',
+    };
+}
+
+private function getStatusText($status)
+{
+    return match ($status) {
+        0 => 'รออนุมัติ',
+        1 => 'อนุมัติ',
+        2 => 'ยกเลิก',
+        default => 'ไม่ทราบสถานะ',
+    };
+}
+
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Bookings extends Model
 {
@@ -19,7 +20,19 @@ class Bookings extends Model
         'adults_qty',
         'status'
     ];
+    protected $appends = ['end_date'];
+    public function getEndDateAttribute()
+    {
+        $activity = Activity::find($this->activity_id);
 
+        // คำนวณ end_date ตาม duration ของกิจกรรม
+        if ($activity && $activity->duration_days) {
+            return Carbon::parse($this->booking_date)->addDays($activity->duration_days - 1)->toDateString();
+        }
+
+        // ถ้าไม่มี duration ให้ใช้ booking_date
+        return $this->booking_date;
+    }
     public function visitor()
     {
         return $this->belongsTo(Visitors::class, 'visitor_id');

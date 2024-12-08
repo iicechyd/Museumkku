@@ -136,15 +136,11 @@ class TimeslotController extends Controller
         $closedOn = $request->input('closed_on');
 
         if ($timeslotsId === 'all') {
-            $timeslots = Timeslots::where('activity_id', $activityId)->get();
-
-            foreach ($timeslots as $timeslot) {
-                ClosedTimeslots::create([
-                    'activity_id' => $activityId,
-                    'timeslots_id' => $timeslot->timeslots_id,
-                    'closed_on' => $closedOn,
-                ]);
-            }
+            ClosedTimeslots::create([
+                'activity_id' => $activityId,
+                'timeslots_id' => null,
+                'closed_on' => $closedOn,
+            ]);
         } else {
             ClosedTimeslots::create([
                 'activity_id' => $activityId,

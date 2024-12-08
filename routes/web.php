@@ -44,6 +44,7 @@ Route::get('/preview_activity', [ActivityController::class, 'previewActivity'])-
 Route::get('/preview_general', [ActivityController::class, 'previewGeneral'])->name('preview_general');
 Route::get('/activity/{activity_id}', [ActivityController::class, 'showDetail'])->name('activity_detail');
 Route::get('/calendar', [HomeController::class, 'showCalendar'])->name('calendar.showCalendar');
+Route::get('/admin/admin_calendar', [HomeController::class, 'showAdminCalendar'])->name('calendar.showAdminCalendar');
 
 //ดึงeventที่ได้รับการจองมาแสดงบนปฏิทิน
 Route::get('/calendar/events', [CalendarController::class, 'getEvents'])->name('calendar.events');

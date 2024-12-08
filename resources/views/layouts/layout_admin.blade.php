@@ -48,6 +48,9 @@
 
                         <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
+                                <li class="sidebar-item">
+                                    <a href="/admin/admin_calendar" class="sidebar-link">ปฏิทินพิพิธภัณฑ์</a>
+                                </li>
                                 <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"
                                     data-bs-target="#multi-two" aria-expanded="false" aria-controls="multi-two">
                                     สถานะการจอง

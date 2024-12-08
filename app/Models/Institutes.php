@@ -17,4 +17,8 @@ class Institutes extends Model
         'subdistrict',
         'zipcode',
     ];
+    public function bookings()
+    {
+        return $this->hasMany(Bookings::class, 'institute_id', 'institute_id');
+    }
 }

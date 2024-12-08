@@ -67,8 +67,8 @@ function fetchTimeslots() {
         });
 }
 $.Thailand({
-    $district: $('#district'),
-    $amphoe: $('#subdistrict'),
+    $district: $('#subdistrict'),
+    $amphoe: $('#district'),
     $province: $('#province'),
     $zipcode: $('#zipcode'),
     onLoad: function () {

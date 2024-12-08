@@ -104,6 +104,17 @@
                 </div>
 
                 <div class="col-md-2">
+                    <label for="subdistrict" class="form-label">แขวน/ตำบล</label>
+                    <input type="text" class="form-control @error('subdistrict') is-invalid @enderror" id="subdistrict"
+                    name="subdistrict" placeholder="กรอกแขวน/ตำบล" value="{{ old('subdistrict') }}" required>
+                    @error('subdistrict')
+                        <div class="my-2">
+                            <span class="text-danger">{{ $message }}</span>
+                        </div>
+                    @enderror
+                </div>
+
+                <div class="col-md-3">
                     <label for="district" class="form-label">เขต/อำเภอ</label>
                     <input type="text" class="form-control @error('district') is-invalid @enderror" id="district"
                     name="district" placeholder="กรอกเขต/อำเภอ" value="{{ old('district') }}" required>
@@ -114,16 +125,6 @@
                     @enderror
                 </div>
 
-                <div class="col-md-3">
-                    <label for="subdistrict" class="form-label">แขวน/ตำบล</label>
-                    <input type="text" class="form-control @error('subdistrict') is-invalid @enderror" id="subdistrict"
-                    name="subdistrict" placeholder="กรอกแขวน/ตำบล" value="{{ old('subdistrict') }}" required>
-                    @error('subdistrict')
-                        <div class="my-2">
-                            <span class="text-danger">{{ $message }}</span>
-                        </div>
-                    @enderror
-                </div>
                 <div class="col-md-2">
                     <label for="province" class="form-label">จังหวัด</label>
                     <input type="text" class="form-control @error('province') is-invalid @enderror" id="province"

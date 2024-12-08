@@ -3,9 +3,8 @@
 @section('content')
 
     <head>
+        <link rel="stylesheet" href="{{ asset('css/closed_date.css') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
     @php
@@ -21,7 +20,7 @@
 
 
     <div class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold mb-4">จัดการวันปิดรอบการเข้าชม</h1>
+        <h1 class="table-heading text-center">จัดการวันปิดรอบการเข้าชม</h1>
         <div class="card shadow p-4">
             <form action="{{ route('admin.saveClosedDates') }}" class="row g-3" method="POST">
                 @csrf
@@ -54,13 +53,16 @@
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
-                <div class="text-right">
+                <div class="d-flex justify-content-end mt-4">
                     <button type="submit" class="btn btn-primary w-40 px-5">บันทึก</button>
                 </div>
             </form>
         </div>
-
+    </div>
+    <div class="container mx-auto px-4 py-6">
         <h2 class="font-weight-bold mt-5">รายการวันที่ปิด</h2>
+        <div class="table-wrapper">
+
         <table class="table  table-bordered mt-4 shadow-sm">
             <thead class="thead-light">
                 <tr>
@@ -97,7 +99,7 @@
                     </tr>
                 @endforeach
             </tbody>
-        </table>
+        </table></div>
     </div>
     <script>
         document.getElementById('activity_id').addEventListener('change', function() {
@@ -137,4 +139,4 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-@endsection
+    @endsection

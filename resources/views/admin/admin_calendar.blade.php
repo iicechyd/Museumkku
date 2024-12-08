@@ -31,6 +31,9 @@
                 <p id="eventStatus"></p>
                 <p><strong id="eventTimeslotLabel">รอบการเข้าชม:</strong> <span id="eventTimeslot"></span></p>
                 <p><strong>ผู้จอง:</strong> <span id="eventVisitor"></span></p>
+                <p><strong>เบอร์โทรศัพท์:</strong> <span id="eventTel"></span></p>
+                <p><strong>อีเมล:</strong> <span id="eventvisitorEmail"></span></p>
+                
                 <p><strong>หน่วยงาน:</strong> <span id="eventInstitute"></span></p>
                 <p><strong>ที่อยู่หน่วยงาน:</strong> <span id="eventSubdistrict"></span> <span id="eventDistrict"></span> <span id="eventProvince"></span> <span id="eventZipcode"></span></p>
                 <p><strong>จำนวนผู้เข้าชมทั้งหมด:</strong> <span id="eventTotalQty"></span> คน</p>

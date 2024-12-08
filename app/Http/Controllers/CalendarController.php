@@ -37,14 +37,13 @@ class CalendarController extends Controller
                     'duration_days' => $durationDays,
                     'status'      => $booking->status,
                     'visitor_name'  => $booking->visitor->visitorName ?? 'ไม่ระบุ',
+                    'visitorEmail'=> $booking->visitor->visitorEmail ?? 'ไม่ระบุ',
+                    'tel'=> $booking->visitor->tel ?? 'ไม่ระบุ',
                     'institute_name'=> $booking->institute->instituteName ?? 'ไม่ระบุ',
                     'province'=>$booking->institute->province,
                     'district'=>$booking->institute->district,
                     'subdistrict'=>$booking->institute->subdistrict,
                     'zipcode'=>$booking->institute->zipcode,
-                    'children_qty'  => $booking->children_qty,
-                    'students_qty'  => $booking->students_qty,
-                    'adults_qty'    => $booking->adults_qty,
                     'total_qty'     => $booking->children_qty + $booking->students_qty + $booking->adults_qty,
                 ]
             ];

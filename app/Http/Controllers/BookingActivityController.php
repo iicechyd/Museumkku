@@ -152,24 +152,6 @@ class BookingActivityController extends Controller
         return view('admin.activityRequest.except_cases_bookings', compact('exceptBookings'));
     }
 
-    // ฟังก์ชันแสดงฟอร์มจองเข้าร่วมกิจกรรม (เฉพาะ activity_type_id = 2)
-    public function showActivityBookingForm($activity_id)
-    {
-        $selectedActivity = Activity::find($activity_id); // Find the selected activity
-        if (!$selectedActivity) {
-            return redirect()->back()->with('error', 'Activity not found.');
-        }
-        // Fetch timeslots related to the selected activity
-        $timeslots = Timeslots::where('activity_id', $activity_id)->get();
-
-        return view('form_bookings', [
-            'activity_id' => $activity_id,
-            'selectedActivity' => $selectedActivity,
-            'timeslots' => $timeslots,
-        ]);
-
-    }
-
     public function deleteTimeslots($id)
     {
         $timeslot = Timeslots::findOrFail($id);

@@ -332,10 +332,17 @@ class BookingController extends Controller
 
     public function showBookingForm($activity_id)
     {
-        $activity = DB::table('activities')->where('activity_id', $activity_id)->first();
+        $selectedActivity = Activity::find($activity_id);
+        if (!$selectedActivity) {
+            return redirect()->back()->with('error', 'Activity not found.');
+        }
+
+        $timeslots = Timeslots::where('activity_id', $activity_id)->get();
 
         return view('form_bookings', [
-            'activity' => $activity
+            'activity_id' => $activity_id,
+            'selectedActivity' => $selectedActivity,
+            'timeslots' => $timeslots,
         ]);
     }
 

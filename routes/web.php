@@ -51,7 +51,7 @@ Route::get('/calendar/events', [CalendarController::class, 'getEvents'])->name('
 Route::get('/bookings/{booking}', [CalendarController::class, 'show'])->name('bookings.show');
 
  //ฟอร์มสำหรับจองกิจกรรมของแต่ละกิจกรรม
- Route::get('/form_bookings/activity/{activity_id}', [BookingActivityController::class, 'showActivityBookingForm'])->name('form_bookings.activity');
+ Route::get('/form_bookings/activity/{activity_id}', [BookingController::class, 'showBookingForm'])->name('form_bookings.activity');
 
  //แสดงสถานะการจองให้ผู้จองเข้าชม
 Route::get('/showBookingStatus', [BookingController::class, 'showBookingStatus'])->name('showBookingStatus');

@@ -176,7 +176,7 @@
                 <div class="col-3">
                     <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"
                         onclick="toggleInput('childrenInput')">
-                    <label class="form-check-label" for="children_qty">เด็ก</label>
+                    <label class="form-check-label" for="children_qty">เด็ก : {{ $selectedActivity->children_price }} บาท/คน</label>
                     <input type="number" class="form-control mt-2" id="childrenInput" name="children_qty"
                         min="0" disabled oninput="calculateTotal()">
                 </div>
@@ -185,7 +185,7 @@
                 <div class="col-3">
                     <input class="form-check-input" type="checkbox" id="students_qty" name="students_qty"
                         onclick="toggleInput('studentInput')">
-                    <label class="form-check-label" for="students_qty">นักเรียน/นักศึกษา</label>
+                    <label class="form-check-label" for="students_qty">นักเรียน/นักศึกษา : {{ $selectedActivity->student_price }} บาท/คน</label>
                     <input type="number" class="form-control mt-2" id="studentInput" name="students_qty"
                         min="0" disabled oninput="calculateTotal()">
                 </div>
@@ -194,7 +194,7 @@
                 <div class="col-3">
                     <input class="form-check-input" type="checkbox" id="adults_qty" name="adults_qty"
                         onclick="toggleInput('adultsInput')">
-                    <label class="form-check-label" for="adults_qty">ครู / อาจารย์</label>
+                    <label class="form-check-label" for="adults_qty">ครู/อาจารย์ : {{ $selectedActivity->adult_price }} บาท/คน</label>
                     <input type="number" class="form-control mt-2" id="adultsInput" name="adults_qty" min="0"
                         disabled oninput="calculateTotal()">
                 </div>

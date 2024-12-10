@@ -54,9 +54,11 @@ class ActivityController extends Controller
                 'children_price' => 'required',
                 'student_price' => 'required',
                 'adult_price' => 'required',
+                'disabled_price' => 'required',
+                'elderly_price' => 'required',
+                'monk_price' => 'required',
+
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-
-
             ],
             [
                 'activity_name.required' => 'กรุณาป้อนชื่อกิจกรรม',
@@ -64,9 +66,11 @@ class ActivityController extends Controller
                 'children_price.required' => 'กรุณาป้อนราคาเด็ก',
                 'student_price.required' => 'กรุณาป้อนราคานร/นศ',
                 'adult_price.required' => 'กรุณาป้อนราคาผู้ใหญ่',
+                'disabled_price.required' => 'กรุณาป้อนราคาผู้พิการ',
+                'elderly_price.required' => 'กรุณาป้อนราคาผู้สูงอายุ',
+                'monk_price.required' => 'กรุณาป้อนราคาพระภิกษุสงฆ์ /สามเณร',
                 'image.image' => 'ไฟล์ที่อัปโหลดต้องเป็นรูปภาพ',
                 'image.mimes' => 'รูปภาพต้องเป็นไฟล์ชนิด jpeg, png, jpg, หรือ gif',
-
             ]
         );
 
@@ -76,6 +80,9 @@ class ActivityController extends Controller
         $activity->children_price = $request->children_price;
         $activity->student_price = $request->student_price;
         $activity->adult_price = $request->adult_price;
+        $activity->disabled_price = $request->disabled_price;
+        $activity->elderly_price = $request->elderly_price;
+        $activity->monk_price = $request->monk_price;
         $activity->max_capacity = $request->max_capacity;
         $activity->activity_type_id = $request->activity_type_id;
         $activity->status = 'inactive';
@@ -86,7 +93,6 @@ class ActivityController extends Controller
             $newFileName = "activity_{$timestamp}." . $extension;
 
             $imagePath = $request->file('image')->storeAs('images', $newFileName, 'public');
-
             $activity->image = $imagePath;
         }
 
@@ -100,13 +106,15 @@ class ActivityController extends Controller
         if (!$activity) {
             return redirect()->back()->with('error', 'ไม่พบกิจกรรมที่ต้องการแก้ไข');
         }
-
         $activity->activity_type_id = $request->activity_type_id;
         $activity->activity_name = $request->activity_name;
         $activity->description = $request->description;
         $activity->children_price = $request->children_price;
         $activity->student_price = $request->student_price;
         $activity->adult_price = $request->adult_price;
+        $activity->disabled_price = $request->disabled_price;
+        $activity->elderly_price = $request->elderly_price;
+        $activity->monk_price = $request->monk_price;
         $activity->max_capacity = $request->max_capacity;
 
         if ($request->hasFile('image')) {
@@ -115,19 +123,15 @@ class ActivityController extends Controller
             $newFileName = "activity_{$timestamp}." . $extension;
 
             $imagePath = $request->file('image')->storeAs('images', $newFileName, 'public');
-
             $activity->image = $imagePath;
         }
-
         $activity->save();
-
         return redirect()->back()->with('success', 'แก้ไขกิจกรรมเรียบร้อยแล้ว');
     }
 
     public function editActivity($activity_id)
     {
         $item = Activity::find($activity_id);
-
         return view('activity_list', [
             'activity' => $item,
             'image_url' => asset('storage/' . $item->image)
@@ -139,8 +143,6 @@ class ActivityController extends Controller
         $activity = Activity::findOrFail($id);
         $activity->status = ($activity->status === 'active') ? 'inactive' : 'active';
         $activity->save();
-
-        // ส่งข้อมูลกลับเป็น JSON
         return response()->json([
             'status' => $activity->status,
             'message' => 'สถานะของกิจกรรมถูกเปลี่ยนเรียบร้อยแล้ว'

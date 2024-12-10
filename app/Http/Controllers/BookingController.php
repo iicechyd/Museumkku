@@ -194,6 +194,9 @@ class BookingController extends Controller
                 'children_qty' => 'nullable|integer|min:0',
                 'students_qty' => 'nullable|integer|min:0',
                 'adults_qty' => 'nullable|integer|min:0',
+                'disabled_qty' => 'nullable|integer|min:0',
+                'elderly_qty' => 'nullable|integer|min:0',
+                'monk_qty' => 'nullable|integer|min:0',
             ]
         );
 
@@ -302,8 +305,10 @@ class BookingController extends Controller
         $booking->children_qty = $request->children_qty ?? 0;
         $booking->students_qty = $request->students_qty ?? 0;
         $booking->adults_qty = $request->adults_qty ?? 0;
+        $booking->disabled_qty = $request->disabled_qty ?? 0;
+        $booking->elderly_qty = $request->elderly_qty ?? 0;
+        $booking->monk_qty = $request->monk_qty ?? 0;
         $booking->status = false;
-
         $booking->save();
 
         return redirect()->route('showBookingStatus', ['bookingId' => $booking->booking_id]);

@@ -18,6 +18,9 @@ class Bookings extends Model
         'children_qty',
         'students_qty',
         'adults_qty',
+        'disabled_qty',
+        'elderly_qty',
+        'monk_qty',
         'status'
     ];
     protected $appends = ['end_date'];

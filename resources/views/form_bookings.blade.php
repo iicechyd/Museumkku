@@ -199,6 +199,33 @@
                         disabled oninput="calculateTotal()">
                 </div>
 
+                <!-- ผู้พิการ -->
+                <div class="col-3">
+                    <input class="form-check-input" type="checkbox" id="disabled_qty" name="disabled_qty"
+                        onclick="toggleInput('disabledInput')">
+                    <label class="form-check-label" for="disabled_qty">ผู้พิการ : ฟรี</label>
+                    <input type="number" class="form-control mt-2" id="disabledInput" name="disabled_qty" min="0"
+                        disabled oninput="calculateTotal()">
+                </div>
+
+                 <!-- ผู้สูงอายุ -->
+                 <div class="col-3">
+                    <input class="form-check-input" type="checkbox" id="elderly_qty" name="elderly_qty"
+                        onclick="toggleInput('elderlyInput')">
+                    <label class="form-check-label" for="elderly_qty">ผู้สูงอายุ : ฟรี</label>
+                    <input type="number" class="form-control mt-2" id="elderlyInput" name="elderly_qty" min="0"
+                        disabled oninput="calculateTotal()">
+                </div>
+
+                <!-- พระภิกษุสงฆ์ /สามเณร -->
+                <div class="col-3">
+                    <input class="form-check-input" type="checkbox" id="monk_qty" name="monk_qty"
+                        onclick="toggleInput('monkInput')">
+                    <label class="form-check-label" for="monk_qty">พระภิกษุสงฆ์ /สามเณร : ฟรี</label>
+                    <input type="number" class="form-control mt-2" id="monkInput" name="monk_qty" min="0"
+                        disabled oninput="calculateTotal()">
+                </div>
+
                 <!-- จำนวนผู้เข้าร่วมกิจกรรม -->
                 <div class="col-12 mt-4">
                     <h5>จำนวนผู้เข้าร่วมกิจกรรม: <span id="totalVisitors">0</span> คน</h5>
@@ -209,8 +236,14 @@
                     value="{{ $selectedActivity->children_price }}">
                 <input type="hidden" id="student_price" name="student_price"
                     value="{{ $selectedActivity->student_price }}">
-                <input type="hidden" id="adult_price" name="adult_price" value="{{ $selectedActivity->adult_price }}">
-
+                <input type="hidden" id="adult_price" name="adult_price" 
+                    value="{{ $selectedActivity->adult_price }}">
+                <input type="hidden" id="disabled_price" name="disabled_price" 
+                    value="{{ $selectedActivity->disabled_price }}">
+                <input type="hidden" id="elderly_price" name="elderly_price" 
+                    value="{{ $selectedActivity->elderly_price }}">
+                <input type="hidden" id="monk_price" name="monk_price" 
+                    value="{{ $selectedActivity->monk_price }}">
 
                 <div class="col-12 d-flex justify-content-center py-4">
                     <button type="submit" class="btn btn-primary btn-lg ms-2">

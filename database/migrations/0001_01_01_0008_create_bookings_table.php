@@ -18,6 +18,10 @@ return new class extends Migration {
             $table->integer('children_qty')->default(0);
             $table->integer('students_qty')->default(0);
             $table->integer('adults_qty')->default(0);
+            $table->integer('disabled_qty')->default(0);
+            $table->integer('elderly_qty')->default(0);
+            $table->integer('monk_qty')->default(0);
+
             $table->tinyInteger('status')->default(0);
 
             $table->foreign('activity_id')->references('activity_id')->on('activities')->onDelete('cascade');

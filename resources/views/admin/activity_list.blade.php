@@ -41,6 +41,9 @@
                             <th data-type="numeric">ราคา เด็ก (คน)<span class="resize-handle"></span></th>
                             <th data-type="numeric">ราคา นร/นศ (คน)<span class="resize-handle"></span></th>
                             <th data-type="numeric">ราคา ผู้ใหญ่ (คน)<span class="resize-handle"></span></th>
+                            <th data-type="numeric">ราคา ผู้พิการ (คน)<span class="resize-handle"></span></th>
+                            <th data-type="numeric">ราคา ผู้สูงอายุ (คน)<span class="resize-handle"></span></th>
+                            <th data-type="numeric">ราคา พระภิกษุสงฆ์ /สามเณร (คน)<span class="resize-handle"></span></th>
                             <th data-type="numeric">ความจุคนต่อรอบ<span class="resize-handle"></span></th>
                             <th data-type="text-short">แก้ไขรายละเอียด<span class="resize-handle"></span></th>
                             <th data-type="text-short">สถานะการใช้งาน<span class="resize-handle"></span></th>
@@ -65,6 +68,10 @@
                                 <td>{{ $item->children_price }} บาท</td>
                                 <td>{{ $item->student_price }} บาท</td>
                                 <td>{{ $item->adult_price }} บาท</td>
+                                <td>{{ $item->disabled_price }} บาท</td>
+                                <td>{{ $item->elderly_price }} บาท</td>
+                                <td>{{ $item->monk_price }} บาท</td>
+
                                 <td>
                                     @if ($item->max_capacity === null)
                                         ไม่จำกัดจำนวนคน
@@ -83,6 +90,9 @@
                                                 data-children_price="{{ $item->children_price }}"
                                                 data-student_price="{{ $item->student_price }}"
                                                 data-adult_price="{{ $item->adult_price }}"
+                                                data-disabled_price="{{ $item->disabled_price }}"
+                                                data-elderly_price="{{ $item->elderly_price }}"
+                                                data-monk_price="{{ $item->monk_price }}"
                                                 data-max_capacity="{{ $item->max_capacity }}"
                                                 data-image="{{ asset('storage/' . $item->image) }}">
                                                 <i class="fa fa-edit"></i>
@@ -174,7 +184,19 @@
                             <input type="number" class="form-control" id="adult_price" name="adult_price"
                                 min="0" required>
                         </div>
-
+                        <div class="form-group">
+                            <label for="disabled_price">ราคาผู้พิการ</label>
+                            <input type="number" class="form-control" id="disabled_price" name="disabled_price"
+                                min="0" required>
+                        </div><div class="form-group">
+                            <label for="elderly_price">ราคาผู้สูงอายุ</label>
+                            <input type="number" class="form-control" id="elderly_price" name="elderly_price"
+                                min="0" required>
+                        </div><div class="form-group">
+                            <label for="monk_price">ราคาพระภิกษุสงฆ์ /สามเณร</label>
+                            <input type="number" class="form-control" id="monk_price" name="monk_price"
+                                min="0" required>
+                        </div>
                         <div class="form-group">
                             <label for="max_capacity">ความจุคนต่อรอบการเข้าชม</label>
                             <input type="number" class="form-control" id="max_capacity" name="max_capacity"
@@ -242,6 +264,21 @@
                         <div class="form-group">
                             <label for="edit_adultprice">ราคาผู้ใหญ่</label>
                             <input type="number" class="form-control" id="edit_adultprice" name="adult_price"
+                                min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_disabledprice">ราคาผู้พิการ</label>
+                            <input type="number" class="form-control" id="edit_disabledprice" name="disabled_price"
+                                min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_elderlyprice">ราคาผู้สูงอายุ</label>
+                            <input type="number" class="form-control" id="edit_elderlyprice" name="elderly_price"
+                                min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_monkprice">ราคาพระภิกษุสงฆ์ /สามเณร</label>
+                            <input type="number" class="form-control" id="edit_monkprice" name="monk_price"
                                 min="0" required>
                         </div>
                         <div class="form-group">

@@ -38,15 +38,15 @@ class CalendarController extends Controller
             $totalApproved = Bookings::where('booking_date', $booking->booking_date)
                 ->where('activity_id', $booking->activity_id)
                 ->where('status', 1)
-                ->sum(DB::raw('children_qty + students_qty + adults_qty'));
+                ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty +  monk_qty'));
             // ถ้ามี timeslot ก็ให้คำนวณตาม timeslot
             if ($booking->timeslot && $booking->timeslot->timeslots_id) {
                 $totalApproved = Bookings::where('booking_date', $booking->booking_date)
                     ->where('activity_id', $booking->activity_id)
                     ->where('timeslots_id', $booking->timeslot->timeslots_id)
                     ->where('status', 1)
-                    ->sum(DB::raw('children_qty + students_qty + adults_qty'));
-            }
+                    ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty +  monk_qty'));
+                }
             // คำนวณจำนวนคงเหลือจาก max_capacity
             if ($booking->activity->max_capacity !== null) {
                 $remainingCapacity = $booking->activity->max_capacity - $totalApproved;
@@ -72,8 +72,7 @@ class CalendarController extends Controller
                     'subdistrict' => $booking->institute->subdistrict,
                     'zipcode' => $booking->institute->zipcode,
                     'total_qty'     => $booking->children_qty + $booking->students_qty + $booking->adults_qty + $booking->disabled_qty + $booking->elderly_qty + $booking->monk_qty,
-                    'remaining_capacity' => $remainingCapacity, // จำนวนคงเหลือ
-
+                    'remaining_capacity' => $remainingCapacity,
                 ]
             ];
         });
@@ -84,9 +83,9 @@ class CalendarController extends Controller
     private function getStatusColor($status)
     {
         return match ($status) {
-            0 => '#ffc107',   // รออนุมัติ
-            1 => '#28a745',   // อนุมัติ
-            2 => '#dc3545',   // ยกเลิก
+            0 => '#ffc107',
+            1 => '#28a745',
+            2 => '#dc3545',
             default => '#000000',
         };
     }

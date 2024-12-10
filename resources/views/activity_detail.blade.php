@@ -26,8 +26,16 @@
                                 <p class="card-text text-muted">{{ $activity->description }}</p>
                                 <div class="mt-3">
                                     <p>ราคา </p>
-                                    <p>เด็ก: {{ $activity->children_price }} บาท | นักเรียน/นักศึกษา:
-                                        {{ $activity->student_price }} บาท | ผู้ใหญ่: {{ $activity->adult_price }} บาท</p>
+                                    <p>
+                                        เด็ก: {{ $activity->children_price > 0 ? $activity->children_price . ' บาท' : 'ฟรี' }} | 
+                                        นักเรียน/นักศึกษา: {{ $activity->student_price > 0 ? $activity->student_price . ' บาท' : 'ฟรี' }} | 
+                                        ผู้ใหญ่: {{ $activity->adult_price > 0 ? $activity->adult_price . ' บาท' : 'ฟรี' }}
+                                    </p>
+                                    <p>
+                                        ผู้พิการ: {{ $activity->disabled_price > 0 ? $activity->disabled_price . ' บาท' : 'ฟรี' }} | 
+                                        ผู้สูงอายุ: {{ $activity->elderly_price > 0 ? $activity->elderly_price . ' บาท' : 'ฟรี' }} | 
+                                        พระภิกษุสงฆ์ /สามเณร: {{ $activity->monk_price > 0 ? $activity->monk_price . ' บาท' : 'ฟรี' }}
+                                    </p>                                    
                                 </div>
                                 <div class="mt-4">
                                     <a href="{{ route('form_bookings.activity', ['activity_id' => $activity->activity_id]) }}"

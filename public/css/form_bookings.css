@@ -1,6 +1,11 @@
 .btn {
     font-family: "Noto Sans Thai", sans-serif;
 }
+
+body, .container, .form-group, .form-label, .form-select, .form-control {
+    font-family: "Noto Sans Thai", sans-serif;
+}
+
 .modal-dialog {
     display: flex;
     align-items: center;

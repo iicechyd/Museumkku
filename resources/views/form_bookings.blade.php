@@ -4,14 +4,19 @@
 
 <head>
     <link rel="stylesheet" href="{{ asset('css/form_bookings.css') }}">
+    <link rel="stylesheet" href="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/th.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/JQL.min.js"></script>
     <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/typeahead.bundle.js"></script>
-    <link rel="stylesheet" href="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.css">
     <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
-    <div class="container mt-5">
+    <div class="container mt-4 pb-5">
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
@@ -23,6 +28,7 @@
                 {{ session('error') }}
             </div>
         @endif
+        
         <h2 class="text-center py-3">แบบฟอร์มจองเข้าชมพิพิธภัณฑ์</h2>
         <div class="card shadow p-4">
             <form method="POST" action="/InsertBooking" class="row g-3" novalidate>
@@ -36,9 +42,17 @@
                 </div>
 
                 <div class="form-group col-4">
-                    <label for="booking_date"  class="form-label">วันที่จอง:</label>
-                    <input type="date" class="form-control" id="booking_date" name="booking_date"
-                        value="{{ old('booking_date') }}" min="{{ date('Y-m-d', strtotime('+3 days')) }}" required>
+                    <label for="booking_date" class="form-label">วันที่จอง:</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="booking_date" name="booking_date"
+                               value="{{ old('booking_date') }}" min="{{ date('Y-m-d', strtotime('+3 days')) }}" required
+                               placeholder="กรุณาเลือกวันที่ต้องการจอง (วัน/เดือน/ปี)">
+                        <div class="input-group-append">
+                            <label for="booking_date" class="input-group-text" style="cursor: pointer;">
+                                <i class="fas fa-calendar-alt" style="font-size: 1.5rem;"></i>
+                            </label>
+                        </div>
+                    </div>
                     @error('booking_date')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -46,7 +60,6 @@
                     @enderror
                     <p>*หมายเหตุ กรุณาเลือกวันที่ต้องการจองล่วงหน้า 3 วัน</p>
                 </div>
-                
                 @if ($timeslots->isNotEmpty())
                     <div class="form-group col-3">
                         <label for="fk_timeslots_id" class="form-label">รอบการเข้าชม:</label>
@@ -245,7 +258,7 @@
                 <input type="hidden" id="monk_price" name="monk_price" 
                     value="{{ $selectedActivity->monk_price }}">
 
-                <div class="col-12 d-flex justify-content-center py-4">
+                <div class="col-12 d-flex justify-content-center pt-2">
                     <button type="submit" class="btn btn-primary btn-lg ms-2">
                         ยืนยันข้อมูล
                     </button>
@@ -256,6 +269,4 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/form_bookings.js') }}"></script>
-
-
 @endsection

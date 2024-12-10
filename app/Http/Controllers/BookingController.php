@@ -12,7 +12,7 @@ use App\Models\Activity;
 use App\Models\Institutes;
 use App\Models\Visitors;
 use App\Models\StatusChanges;
-use Carbon\Carbon;
+use DateTime;
 
 class BookingController extends Controller
 {
@@ -211,11 +211,15 @@ class BookingController extends Controller
             }
         }
 
+        $bookingDate = $request->input('booking_date');
+        $date = DateTime::createFromFormat('d/m/Y', $bookingDate);
+        $formattedDate = $date->format('Y-m-d');  // ผลลัพธ์: '2024-12-27'
+
          // ตรวจสอบว่าไม่มีการปิดรอบทั้งหมดในวันที่เลือก
          $isAllClosed = DB::table('closed_timeslots')
          ->whereNull('timeslots_id')
          ->where('activity_id', $activity->activity_id)
-         ->where('closed_on', $request->input('booking_date'))
+         ->where('closed_on', $formattedDate)
          ->exists();
 
      if ($isAllClosed) {
@@ -303,7 +307,7 @@ class BookingController extends Controller
         $booking->timeslots_id = $request->input('fk_timeslots_id') ?? null;
         $booking->institute_id = $institute->institute_id;
         $booking->visitor_id = $visitor->visitor_id;
-        $booking->booking_date = $request->booking_date;
+        $booking->booking_date = $formattedDate;
         $booking->children_qty = $request->children_qty ?? 0;
         $booking->students_qty = $request->students_qty ?? 0;
         $booking->adults_qty = $request->adults_qty ?? 0;
@@ -313,29 +317,9 @@ class BookingController extends Controller
         $booking->status = false;
         $booking->save();
 
-        return redirect()->route('showBookingStatus', ['bookingId' => $booking->booking_id]);
+        return back()->with('showSuccessModal', true);
+
     }
-
-    public function showBookingStatus(Request $request)
-    {
-        $bookingId = $request->query('bookingId');
-        $visitorEmail = $request->query('visitorEmail');
-
-        if ($bookingId) {
-            $booking = Bookings::find($bookingId);
-        } elseif ($visitorEmail) {
-            $booking = Bookings::where('visitorEmail', $visitorEmail)->latest()->first();
-        } else {
-            $booking = null;
-        }
-
-        if ($booking) {
-            return view('showBookingStatus', compact('booking'));
-        } else {
-            return redirect()->route('home')->with('error', 'ไม่พบข้อมูลการจอง');
-        }
-    }
-
 
     public function showBookingForm($activity_id)
     {

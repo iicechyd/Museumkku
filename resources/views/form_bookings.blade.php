@@ -2,19 +2,23 @@
 @section('title', 'กรอกข้อมูลเพื่อจองเข้าชมพิพิธภัณฑ์')
 @section('content')
 
-<head>
-    <link rel="stylesheet" href="{{ asset('css/form_bookings.css') }}">
-    <link rel="stylesheet" href="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/th.js"></script>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/JQL.min.js"></script>
-    <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/typeahead.bundle.js"></script>
-    <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>    
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
-</head>
+    <head>
+        <link rel="stylesheet" href="{{ asset('css/form_bookings.css') }}">
+        <link rel="stylesheet"
+            href="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/th.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript"
+            src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/JQL.min.js"></script>
+        <script type="text/javascript"
+            src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/typeahead.bundle.js"></script>
+        <script type="text/javascript"
+            src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
+    </head>
 
     <div class="container mt-4 pb-5">
         @if (session('success'))
@@ -28,7 +32,7 @@
                 {{ session('error') }}
             </div>
         @endif
-        
+
         <h2 class="text-center py-3">แบบฟอร์มจองเข้าชมพิพิธภัณฑ์</h2>
         <div class="card shadow p-4">
             <form method="POST" action="/InsertBooking" class="row g-3" novalidate>
@@ -45,8 +49,8 @@
                     <label for="booking_date" class="form-label">วันที่จอง:</label>
                     <div class="input-group">
                         <input type="text" class="form-control" id="booking_date" name="booking_date"
-                               value="{{ old('booking_date') }}" min="{{ date('Y-m-d', strtotime('+3 days')) }}" required
-                               placeholder="กรุณาเลือกวันที่ต้องการจอง (วัน/เดือน/ปี)">
+                            value="{{ old('booking_date') }}" min="{{ date('Y-m-d', strtotime('+3 days')) }}" required
+                            placeholder="กรุณาเลือกวันที่ต้องการจอง (วัน/เดือน/ปี)">
                         <div class="input-group-append">
                             <label for="booking_date" class="input-group-text" style="cursor: pointer;">
                                 <i class="fas fa-calendar-alt" style="font-size: 1.5rem;"></i>
@@ -67,7 +71,8 @@
                             name="fk_timeslots_id">
                             <option value="">เลือกรอบการเข้าชม</option>
                             @foreach ($timeslots as $timeslot)
-                                <option value="{{ $timeslot->timeslots_id }}" {{ old('fk_timeslots_id') == $timeslot->timeslots_id ? 'selected' : '' }}>
+                                <option value="{{ $timeslot->timeslots_id }}"
+                                    {{ old('fk_timeslots_id') == $timeslot->timeslots_id ? 'selected' : '' }}>
                                     {{ $timeslot->start_time }} - {{ $timeslot->end_time }}
                                 </option>
                             @endforeach
@@ -79,7 +84,7 @@
                         @enderror
                     </div>
                 @endif
-                
+
                 <div class="col-4">
                     <label for="instituteName" class="form-label">ชื่อหน่วยงาน</label>
                     <input type="text" class="form-control @error('instituteName') is-invalid @enderror"
@@ -118,8 +123,9 @@
 
                 <div class="col-md-2">
                     <label for="subdistrict" class="form-label">แขวน/ตำบล</label>
-                    <input type="text" class="form-control @error('subdistrict') is-invalid @enderror" id="subdistrict"
-                    name="subdistrict" placeholder="กรอกแขวน/ตำบล" value="{{ old('subdistrict') }}" required>
+                    <input type="text" class="form-control @error('subdistrict') is-invalid @enderror"
+                        id="subdistrict" name="subdistrict" placeholder="กรอกแขวน/ตำบล"
+                        value="{{ old('subdistrict') }}" required>
                     @error('subdistrict')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -130,7 +136,7 @@
                 <div class="col-md-3">
                     <label for="district" class="form-label">เขต/อำเภอ</label>
                     <input type="text" class="form-control @error('district') is-invalid @enderror" id="district"
-                    name="district" placeholder="กรอกเขต/อำเภอ" value="{{ old('district') }}" required>
+                        name="district" placeholder="กรอกเขต/อำเภอ" value="{{ old('district') }}" required>
                     @error('district')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -141,7 +147,7 @@
                 <div class="col-md-2">
                     <label for="province" class="form-label">จังหวัด</label>
                     <input type="text" class="form-control @error('province') is-invalid @enderror" id="province"
-                    name="province" placeholder="กรอกจังหวัด" value="{{ old('province') }}" required>
+                        name="province" placeholder="กรอกจังหวัด" value="{{ old('province') }}" required>
                     @error('inputProvince')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -189,7 +195,8 @@
                 <div class="col-3">
                     <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"
                         onclick="toggleInput('childrenInput')">
-                    <label class="form-check-label" for="children_qty">เด็ก : {{ $selectedActivity->children_price }} บาท/คน</label>
+                    <label class="form-check-label" for="children_qty">เด็ก : {{ $selectedActivity->children_price }}
+                        บาท/คน</label>
                     <input type="number" class="form-control mt-2" id="childrenInput" name="children_qty"
                         min="0" disabled oninput="calculateTotal()">
                 </div>
@@ -198,7 +205,8 @@
                 <div class="col-3">
                     <input class="form-check-input" type="checkbox" id="students_qty" name="students_qty"
                         onclick="toggleInput('studentInput')">
-                    <label class="form-check-label" for="students_qty">นักเรียน/นักศึกษา : {{ $selectedActivity->student_price }} บาท/คน</label>
+                    <label class="form-check-label" for="students_qty">นักเรียน/นักศึกษา :
+                        {{ $selectedActivity->student_price }} บาท/คน</label>
                     <input type="number" class="form-control mt-2" id="studentInput" name="students_qty"
                         min="0" disabled oninput="calculateTotal()">
                 </div>
@@ -207,7 +215,8 @@
                 <div class="col-3">
                     <input class="form-check-input" type="checkbox" id="adults_qty" name="adults_qty"
                         onclick="toggleInput('adultsInput')">
-                    <label class="form-check-label" for="adults_qty">ผู้ใหญ่ / คุณครู : {{ $selectedActivity->adult_price }} บาท/คน</label>
+                    <label class="form-check-label" for="adults_qty">ผู้ใหญ่ / คุณครู :
+                        {{ $selectedActivity->adult_price }} บาท/คน</label>
                     <input type="number" class="form-control mt-2" id="adultsInput" name="adults_qty" min="0"
                         disabled oninput="calculateTotal()">
                 </div>
@@ -217,12 +226,12 @@
                     <input class="form-check-input" type="checkbox" id="disabled_qty" name="disabled_qty"
                         onclick="toggleInput('disabledInput')">
                     <label class="form-check-label" for="disabled_qty">ผู้พิการ : ฟรี</label>
-                    <input type="number" class="form-control mt-2" id="disabledInput" name="disabled_qty" min="0"
-                        disabled oninput="calculateTotal()">
+                    <input type="number" class="form-control mt-2" id="disabledInput" name="disabled_qty"
+                        min="0" disabled oninput="calculateTotal()">
                 </div>
 
-                 <!-- ผู้สูงอายุ -->
-                 <div class="col-3">
+                <!-- ผู้สูงอายุ -->
+                <div class="col-3">
                     <input class="form-check-input" type="checkbox" id="elderly_qty" name="elderly_qty"
                         onclick="toggleInput('elderlyInput')">
                     <label class="form-check-label" for="elderly_qty">ผู้สูงอายุ : ฟรี</label>
@@ -249,23 +258,50 @@
                     value="{{ $selectedActivity->children_price }}">
                 <input type="hidden" id="student_price" name="student_price"
                     value="{{ $selectedActivity->student_price }}">
-                <input type="hidden" id="adult_price" name="adult_price" 
-                    value="{{ $selectedActivity->adult_price }}">
-                <input type="hidden" id="disabled_price" name="disabled_price" 
+                <input type="hidden" id="adult_price" name="adult_price" value="{{ $selectedActivity->adult_price }}">
+                <input type="hidden" id="disabled_price" name="disabled_price"
                     value="{{ $selectedActivity->disabled_price }}">
-                <input type="hidden" id="elderly_price" name="elderly_price" 
+                <input type="hidden" id="elderly_price" name="elderly_price"
                     value="{{ $selectedActivity->elderly_price }}">
-                <input type="hidden" id="monk_price" name="monk_price" 
-                    value="{{ $selectedActivity->monk_price }}">
+                <input type="hidden" id="monk_price" name="monk_price" value="{{ $selectedActivity->monk_price }}">
 
                 <div class="col-12 d-flex justify-content-center pt-2">
-                    <button type="submit" class="btn btn-primary btn-lg ms-2">
+                    <button type="button" class="btn btn-primary btn-lg ms-2" onclick="confirmSubmission()">
                         ยืนยันข้อมูล
                     </button>
                 </div>
             </form>
+            <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="successModalLabel">ส่งข้อมูลสำเร็จ</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body text-center">
+                            กรุณารอการติดต่อกลับจากเจ้าหน้าที่ทางอีเมล ภายใน 24 ชั่วโมง
+                        </div>
+                        <div class="modal-footer">
+                            <a href="/checkBookingStatus" class="btn btn-primary">ตรวจสอบสถานะการจอง</a>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    @if(session('showSuccessModal'))
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+            successModal.show();
+        });
+    </script>
+    @endif
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/form_bookings.js') }}"></script>

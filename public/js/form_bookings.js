@@ -107,3 +107,10 @@ flatpickr("#booking_date", {
     dateFormat: "d/m/Y",
     minDate: new Date().fp_incr(3),
 });
+
+function confirmSubmission() {
+    const isConfirmed = confirm("คุณต้องการยืนยันการส่งข้อมูลใช่หรือไม่?");
+    if (isConfirmed) {
+        document.querySelector('form').submit();
+    }
+}

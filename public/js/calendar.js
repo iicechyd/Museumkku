@@ -42,19 +42,29 @@ document.addEventListener('DOMContentLoaded', function () {
             var timeslotText = '';
             var timeslotLabel = 'รอบการเข้าชม:';
             if (info.event.extendedProps.start_time && info.event.extendedProps.end_time) {
-                timeslotText = `${info.event.extendedProps.start_time} - ${info.event.extendedProps.end_time}`;
+                timeslotText = `${info.event.extendedProps.start_time} น. - ${info.event.extendedProps.end_time} น.`;
             } else {
                 // ถ้าไม่มี timeslot, แสดงระยะเวลากิจกรรม
-                var startDate = new Date(info.event.start);
-                var endDate = new Date(info.event.end);
-                var durationDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+                var durationDays = info.event.extendedProps.duration_days || 'ไม่ระบุ';
                 timeslotLabel = 'ระยะเวลากิจกรรม:';
                 timeslotText = `${durationDays} วัน`;
+
             }
         
-            document.getElementById('eventTimeslotLabel').innerText = timeslotLabel;  // เปลี่ยนข้อความ label
+            document.getElementById('eventTimeslotLabel').innerText = timeslotLabel;
             document.getElementById('eventTimeslot').innerText = timeslotText;
-        
+
+            var remainingCapacity = info.event.extendedProps.remaining_capacity;
+            var remainingText = 'ไม่จำกัดจำนวนคน';
+
+            if (remainingCapacity === 0) {
+                remainingText = 'เต็ม';
+            } else if (remainingCapacity > 0) {
+                remainingText = `${remainingCapacity} คน`;
+            }        
+            
+        document.getElementById('eventRemainingCapacity').innerText = remainingText;
+
             var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
             myModal.show();
         },

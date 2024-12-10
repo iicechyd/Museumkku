@@ -230,12 +230,12 @@ class BookingController extends Controller
                 return back()->with('error', 'รอบการเข้าชมนี้ถูกปิดในวันที่เลือก')->withInput();
             }
 
+            $totalToBook = $request->children_qty + $request->students_qty + $request->adults_qty;
             $totalBooked = Bookings::where('booking_date', $request->booking_date)
                 ->where('timeslots_id', $timeslot->timeslots_id)
                 ->where('status', 1)
                 ->sum(DB::raw('children_qty + students_qty + adults_qty'));
 
-            $totalToBook = $request->children_qty + $request->students_qty + $request->adults_qty;
 
             if ($activity->max_capacity !== null) {
                 if ($totalBooked + $totalToBook > $activity->max_capacity) {

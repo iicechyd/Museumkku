@@ -54,7 +54,6 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('eventDistrict').innerText = info.event.extendedProps.district || 'ไม่ระบุ';
             document.getElementById('eventSubdistrict').innerText = info.event.extendedProps.subdistrict || 'ไม่ระบุ';
             document.getElementById('eventZipcode').innerText = info.event.extendedProps.zipcode || 'ไม่ระบุ';
-            
             document.getElementById('eventTotalQty').innerText = info.event.extendedProps.total_qty || 'ไม่ระบุ';
         
             var myModal = new bootstrap.Modal(document.getElementById('eventModal'));

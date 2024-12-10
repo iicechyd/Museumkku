@@ -27,6 +27,7 @@ class LoginController extends Controller
             Auth::logout();
             return redirect('/login')->with('error', 'บัญชีของคุณยังไม่ได้รับการอนุมัติเข้าใช้งาน');
         }
+        session(['is_admin' => $user->role && $user->role->role_name === 'Admin']);
 
         if ($user->role && $user->role->role_name === 'Super Admin') {
             return redirect('super_admin/dashboard');

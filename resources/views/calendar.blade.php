@@ -30,6 +30,8 @@
                 <h4 id="eventTitle"></h4>
                 <p id="eventStatus"></p>
                 <p><strong id="eventTimeslotLabel">รอบการเข้าชม:</strong> <span id="eventTimeslot"></span></p>
+                <p><strong id="eventTimeslotLabel">จำนวนที่นั่งคงเหลือ:</strong> <span id="eventRemainingCapacity"></span></p>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>

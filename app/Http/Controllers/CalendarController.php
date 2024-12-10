@@ -71,7 +71,7 @@ class CalendarController extends Controller
                     'district' => $booking->institute->district,
                     'subdistrict' => $booking->institute->subdistrict,
                     'zipcode' => $booking->institute->zipcode,
-                    'total_qty'     => $booking->children_qty + $booking->students_qty + $booking->adults_qty,
+                    'total_qty'     => $booking->children_qty + $booking->students_qty + $booking->adults_qty + $booking->disabled_qty + $booking->elderly_qty + $booking->monk_qty,
                     'remaining_capacity' => $remainingCapacity, // จำนวนคงเหลือ
 
                 ]

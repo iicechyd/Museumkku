@@ -194,7 +194,7 @@
                 <div class="col-3">
                     <input class="form-check-input" type="checkbox" id="adults_qty" name="adults_qty"
                         onclick="toggleInput('adultsInput')">
-                    <label class="form-check-label" for="adults_qty">ครู/อาจารย์ : {{ $selectedActivity->adult_price }} บาท/คน</label>
+                    <label class="form-check-label" for="adults_qty">ผู้ใหญ่ / คุณครู : {{ $selectedActivity->adult_price }} บาท/คน</label>
                     <input type="number" class="form-control mt-2" id="adultsInput" name="adults_qty" min="0"
                         disabled oninput="calculateTotal()">
                 </div>

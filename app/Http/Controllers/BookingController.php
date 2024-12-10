@@ -32,12 +32,12 @@ class BookingController extends Controller
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('timeslots_id', $item->timeslot->timeslots_id)
                     ->where('status', 1)
-                    ->sum(DB::raw('children_qty + students_qty + adults_qty'));
+                    ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty +  monk_qty'));
             } else {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('activity_id', $item->activity_id)
-                    ->where('status', 1) // เฉพาะการจองที่อนุมัติแล้ว
-                    ->sum(DB::raw('children_qty + students_qty + adults_qty'));
+                    ->where('status', 1) 
+                    ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
             $maxCapacity = $item->activity->max_capacity;
 
@@ -49,9 +49,10 @@ class BookingController extends Controller
             $childrenPrice = $item->children_qty * $item->activity->children_price;
             $studentPrice = $item->students_qty * $item->activity->student_price;
             $adultPrice = $item->adults_qty * $item->activity->adult_price;
-
-            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
-            $item->totalVisitors = $item->children_qty + $item->students_qty + $item->adults_qty;
+            $disabledPrice = $item->disabled_qty * $item->activity->disabled_price;
+            $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
+            $monkPrice = $item->monk_qty * $item->activity->monk_price;
+            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice + $disabledPrice + $elderlyPrice + $monkPrice;
         }
         return view('admin.generalRequest.request_bookings', compact('requestBookings'));
     }
@@ -69,14 +70,14 @@ class BookingController extends Controller
             $totalApproved = Bookings::where('booking_date', $item->booking_date)
                 ->where('activity_id', $item->activity_id)
                 ->where('status', 1)
-                ->sum(DB::raw('children_qty + students_qty + adults_qty'));
+                ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty +  monk_qty'));
 
             if ($item->timeslot && $item->timeslot->timeslots_id) {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('activity_id', $item->activity_id)
                     ->where('timeslots_id', $item->timeslot->timeslots_id)
                     ->where('status', 1)
-                    ->sum(DB::raw('children_qty + students_qty + adults_qty'));
+                    ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
 
             if ($item->activity->max_capacity !== null) {
@@ -88,9 +89,10 @@ class BookingController extends Controller
             $childrenPrice = $item->children_qty * $item->activity->children_price;
             $studentPrice = $item->students_qty * $item->activity->student_price;
             $adultPrice = $item->adults_qty * $item->activity->adult_price;
-
+            $disabledPrice = $item->disabled_qty * $item->activity->disabled_price;
+            $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
+            $monkPrice = $item->monk_qty * $item->activity->monk_price;
             $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
-            $item->totalVisitors = $item->children_qty + $item->students_qty + $item->adults_qty;
         }
 
         return view('admin.generalRequest.approved_bookings', compact('approvedBookings'));
@@ -111,21 +113,21 @@ class BookingController extends Controller
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('timeslots_id', $item->timeslot->timeslots_id)
                     ->where('status', 1)
-                    ->sum(DB::raw('children_qty + students_qty + adults_qty'));
+                    ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
             if ($item->activity) {
                 $item->remaining_capacity = $item->activity->max_capacity - $totalApproved;
-
-                $item->remaining_capacity += $item->children_qty + $item->students_qty + $item->adults_qty;
+                $item->remaining_capacity += $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty;
             } else {
                 $item->remaining_capacity = 'N/A';
             }
             $childrenPrice = $item->children_qty * $item->activity->children_price;
             $studentPrice = $item->students_qty * $item->activity->student_price;
             $adultPrice = $item->adults_qty * $item->activity->adult_price;
-
+            $disabledPrice = $item->disabled_qty * $item->activity->disabled_price;
+            $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
+            $monkPrice = $item->monk_qty * $item->activity->monk_price;
             $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
-            $item->totalVisitors = $item->children_qty + $item->students_qty + $item->adults_qty;
         }
         return view('admin.generalRequest.except_cases_bookings', compact('exceptBookings'));
     }

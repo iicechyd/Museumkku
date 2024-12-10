@@ -47,7 +47,10 @@
                         <td>{{ $item->children_qty }} คน</td>
                         <td>{{ $item->students_qty }} คน</td>
                         <td>{{ $item->adults_qty }} คน</td>
-                        <td>{{ $item->children_qty + $item->students_qty + $item->adults_qty }} คน</td>
+                        <td>{{ $item->disabled_qty > 0 ? $item->disabled_qty . ' คน' : '-' }}</td>
+                        <td>{{ $item->elderly_qty > 0 ? $item->elderly_qty . ' คน' : '-' }}</td>
+                        <td>{{ $item->monk_qty > 0 ? $item->monk_qty . ' รูป' : '-' }}</td>
+                        <td>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty}} คน</td>
                         <td>
                             @if ($item->remaining_capacity == 0)
                                 รอบการเข้าชมรอบนี้เต็มแล้ว

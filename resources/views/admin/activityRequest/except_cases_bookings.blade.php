@@ -49,7 +49,10 @@
                         <td>{{ $item->children_qty > 0 ? $item->children_qty . ' คน' : '-' }}</td>
                         <td>{{ $item->students_qty > 0 ? $item->students_qty . ' คน' : '-' }}</td>
                         <td>{{ $item->adults_qty > 0 ? $item->adults_qty . ' คน' : '-' }}</td>
-                        <td>{{ $item->totalVisitors > 0 ? $item->totalVisitors . ' คน' : '-' }}</td>
+                        <td>{{ $item->disabled_qty > 0 ? $item->disabled_qty . ' คน' : '-' }}</td>
+                        <td>{{ $item->elderly_qty > 0 ? $item->elderly_qty . ' คน' : '-' }}</td>
+                        <td>{{ $item->monk_qty > 0 ? $item->monk_qty . ' รูป' : '-' }}</td>
+                        <td>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty}} คน</td>
                         <td>
                             @switch($item->status)
                                 @case(0)

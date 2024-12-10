@@ -14,9 +14,11 @@
                 <th data-type="numeric">เด็ก (คน)<span class="resize-handle"></span></th>
                 <th data-type="numeric">นร / นศ (คน)<span class="resize-handle"></span></th>
                 <th data-type="numeric">ผู้ใหญ่ / คุณครู (คน)<span class="resize-handle"></span></th>
+                <th data-type="numeric">ผู้พิการ (คน)<span class="resize-handle"></span></th>
+                <th data-type="numeric">ผู้สูงอายุ (คน)<span class="resize-handle"></span></th>
+                <th data-type="numeric">พระภิกษุสงฆ์ /สามเณร (รูป)<span class="resize-handle"></span></th>
                 <th data-type="numeric">จำนวนคนทั้งหมด<span class="resize-handle"></span></th>
                 <th data-type="text-short">สถานะการจอง<span class="resize-handle"></span></th>
-                {{-- <th data-type="text-short">แก้ไขสถานะ<span class="resize-handle"></span></th> --}}
                 <th data-type="text-short">เวลาที่แก้ไขสถานะ<span class="resize-handle"></span></th>
                 <th data-type="text-short">เปลี่ยนแปลงโดย<span class="resize-handle"></span></th>
                 <th data-type="text-short">ยกเลิกเนื่องจาก<span class="resize-handle"></span></th>

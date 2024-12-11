@@ -12,6 +12,7 @@ use App\Models\Activity;
 use App\Models\Institutes;
 use App\Models\Visitors;
 use App\Models\StatusChanges;
+use App\Models\closedTimeslots;
 use DateTime;
 
 class BookingController extends Controller
@@ -36,7 +37,7 @@ class BookingController extends Controller
             } else {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('activity_id', $item->activity_id)
-                    ->where('status', 1) 
+                    ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
             $maxCapacity = $item->activity->max_capacity;
@@ -183,16 +184,16 @@ class BookingController extends Controller
             [
                 'fk_activity_id' => 'required|exists:activities,activity_id',
                 'fk_timeslots_id' => 'nullable|exists:timeslots,timeslots_id',
-                'booking_date' => 'required',
+                'booking_date' => 'required|date_format:d/m/Y',
                 'instituteName' => 'required',
                 'instituteAddress' => 'required',
                 'province' => 'required',
                 'district' => 'required',
                 'subdistrict' => 'required',
-                'zipcode' => ['required','regex:/^[0-9]{5}$/'],
+                'zipcode' => ['required', 'regex:/^[0-9]{5}$/'],
                 'visitorName' => 'required',
                 'visitorEmail' => 'required|email',
-                'tel' => ['required','regex:/^[0-9]{10}$/'],
+                'tel' => ['required', 'regex:/^[0-9]{10}$/'],
                 'children_qty' => 'nullable|integer|min:0',
                 'students_qty' => 'nullable|integer|min:0',
                 'adults_qty' => 'nullable|integer|min:0',
@@ -202,109 +203,89 @@ class BookingController extends Controller
             ]
         );
 
-        $activity = Activity::with('activityType')->find($request->input('fk_activity_id'));
-        if ($activity && $activity->activityType->activity_type_id == 1) {
-            if (is_null($request->input('fk_timeslots_id'))) {
-                return back()
-                    ->with('error', 'กรุณาเลือกรอบการเข้าชมสำหรับกิจกรรมประเภทนี้')
-                    ->withInput();
-            }
+        $activity = Activity::with('activityType')->find($request->fk_activity_id);
+        if (!$activity) {
+            return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
         }
 
-        $bookingDate = $request->input('booking_date');
-        $date = DateTime::createFromFormat('d/m/Y', $bookingDate);
-        $formattedDate = $date->format('Y-m-d');  // ผลลัพธ์: '2024-12-27'
+        $bookingDate = DateTime::createFromFormat('d/m/Y', $request->booking_date);
+        if (!$bookingDate) {
+            return back()->with('error', 'รูปแบบวันที่ไม่ถูกต้อง')->withInput();
+        }
+        $formattedDate = $bookingDate->format('Y-m-d');
 
-         // ตรวจสอบว่าไม่มีการปิดรอบทั้งหมดในวันที่เลือก
-         $isAllClosed = DB::table('closed_timeslots')
-         ->whereNull('timeslots_id')
-         ->where('activity_id', $activity->activity_id)
-         ->where('closed_on', $formattedDate)
-         ->exists();
+        $isAllClosed = ClosedTimeslots::whereNull('timeslots_id')
+            ->where('activity_id', $activity->activity_id)
+            ->where('closed_on', $formattedDate)
+            ->exists();
 
-     if ($isAllClosed) {
-         return back()->with('error', 'ไม่สามารถจองได้เนื่องจากรอบการเข้าชมถูกปิดในวันที่เลือก')->withInput();
-     }
+        if ($isAllClosed) {
+            return back()->with('error', 'ไม่สามารถจองได้เนื่องจากรอบการเข้าชมถูกปิด')->withInput();
+        }
 
         if ($request->filled('fk_timeslots_id')) {
-            $timeslot = Timeslots::find($request->input('fk_timeslots_id'));
+            $timeslot = Timeslots::find($request->fk_timeslots_id);
+            if (!$timeslot) {
+                return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
+            }
 
-            // ตรวจสอบว่ารอบการเข้าชมถูกปิดในวันที่เลือกหรือไม่
-            $isClosed = DB::table('closed_timeslots')
-                ->where('timeslots_id', $timeslot->timeslots_id)
-                ->where('closed_on', $request->input('booking_date'))
+            $isClosed = ClosedTimeslots::where('timeslots_id', $timeslot->timeslots_id)
+                ->where('closed_on', $formattedDate)
                 ->exists();
 
             if ($isClosed) {
-                return back()->with('error', 'รอบการเข้าชมนี้ถูกปิดในวันที่เลือก')->withInput();
+                return back()->with('error', 'รอบการเข้าชมนี้ถูกปิด')->withInput();
             }
 
-            $totalToBook = $request->children_qty + $request->students_qty + $request->adults_qty;
-            $totalBooked = Bookings::where('booking_date', $request->booking_date)
+            if ($activity->activity_id == 3) {
+                if ($request->filled('fk_timeslots_id')) {
+                    $timeslot = Timeslots::find($request->fk_timeslots_id);
+                    if (!$timeslot) {
+                        return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
+                    }
+                    $conflictingBooking = Bookings::join('timeslots', 'bookings.timeslots_id', '=', 'timeslots.timeslots_id')
+                        ->whereIn('bookings.activity_id', [1, 2])
+                        ->where('bookings.booking_date', $formattedDate)
+                        ->where(function ($query) use ($timeslot) {
+                            $query->whereBetween('timeslots.start_time', [$timeslot->start_time, $timeslot->end_time])
+                                ->orWhereBetween('timeslots.end_time', [$timeslot->start_time, $timeslot->end_time]);
+                        })
+                        ->exists();
+
+                    if ($conflictingBooking) {
+                        return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีกิจกรรมที่จองในช่วงเวลาใกล้เคียงกันจากกิจกรรมอื่น')->withInput();
+                    }
+                }
+            }
+            $totalToBook = ($request->children_qty ?? 0) + ($request->students_qty ?? 0) + ($request->adults_qty ?? 0);
+            $totalBooked = Bookings::where('booking_date', $formattedDate)
                 ->where('timeslots_id', $timeslot->timeslots_id)
                 ->where('status', 1)
                 ->sum(DB::raw('children_qty + students_qty + adults_qty'));
-
-
-            if ($activity->max_capacity !== null) {
-                if ($totalBooked + $totalToBook > $activity->max_capacity) {
-                    return back()->with('error', 'รอบการเข้าชมนี้เต็มแล้วหรือเกินความจุสูงสุด')->withInput();
-                }
-            }
-
-            $conflictingBookingForActivity3 = Bookings::where('booking_date', $request->booking_date)
-                ->where('activity_id', 3)
-                ->whereHas('timeslot', function ($query) use ($timeslot) {
-                    $query->where(function ($q) use ($timeslot) {
-                        $q->whereTime('start_time', '<', $timeslot->end_time)
-                            ->whereTime('end_time', '>', $timeslot->start_time);
-                    });
-                })
-                ->where('status', 1)
-                ->exists();
-
-            if ($conflictingBookingForActivity3 && $request->input('fk_activity_id') != 3) {
-                return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้เนื่องจากมีกิจกรรมที่จองไว้ก่อนหน้านี้ในช่วงเวลาที่ใกล้เคียงกัน')->withInput();
-            }
-        } else {
-            $totalToBook = $request->children_qty + $request->students_qty + $request->adults_qty;
-
-            if ($activity->max_capacity !== null) {
-                $totalBooked = Bookings::where('booking_date', $request->booking_date)
-                    ->whereNull('timeslots_id')
-                    ->where('status', 1)
-                    ->sum(DB::raw('children_qty + students_qty + adults_qty'));
-
-                if ($totalBooked + $totalToBook > $activity->max_capacity) {
-                    return back()->with('error', 'จำนวนการจองในวันนี้เต็มแล้วหรือเกินความจุสูงสุด')->withInput();
-                }
+            if ($activity->max_capacity !== null && $totalBooked + $totalToBook > $activity->max_capacity) {
+                return back()->with('error', 'รอบการเข้าชมเต็มแล้ว')->withInput();
             }
         }
 
-        $institute = Institutes::firstOrCreate(
-            [
-                'instituteName' => $request->instituteName,
-                'instituteAddress' => $request->instituteAddress,
-                'province' => $request->province,
-                'district' => $request->district,
-                'subdistrict' => $request->subdistrict,
-                'zipcode' => $request->zipcode,
-            ]
-        );
-
-        $visitor = Visitors::firstOrCreate(
-            [
-                'visitorName' => $request->visitorName,
-                'visitorEmail' => $request->visitorEmail,
-                'tel' => $request->tel,
-            ]
-        );
-        $visitor->institute_id = $institute->institute_id;
-        $visitor->save();
+        $institute = Institutes::firstOrCreate([
+            'instituteName' => $request->instituteName,
+            'instituteAddress' => $request->instituteAddress,
+            'province' => $request->province,
+            'district' => $request->district,
+            'subdistrict' => $request->subdistrict,
+            'zipcode' => $request->zipcode,
+        ]);
+        $visitor = Visitors::firstOrCreate([
+            'visitorName' => $request->visitorName,
+            'visitorEmail' => $request->visitorEmail,
+            'tel' => $request->tel,
+        ], [
+            'institute_id' => $institute->institute_id,
+        ]);
 
         $booking = new Bookings();
-        $booking->activity_id = $request->input('fk_activity_id');
-        $booking->timeslots_id = $request->input('fk_timeslots_id') ?? null;
+        $booking->activity_id = $request->fk_activity_id;
+        $booking->timeslots_id = $request->fk_timeslots_id ?? null;
         $booking->institute_id = $institute->institute_id;
         $booking->visitor_id = $visitor->visitor_id;
         $booking->booking_date = $formattedDate;
@@ -318,7 +299,6 @@ class BookingController extends Controller
         $booking->save();
 
         return back()->with('showSuccessModal', true);
-
     }
 
     public function showBookingForm($activity_id)

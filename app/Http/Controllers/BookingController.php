@@ -202,7 +202,41 @@ class BookingController extends Controller
                 'monk_qty' => 'nullable|integer|min:0',
             ]
         );
+    if (in_array($request->fk_activity_id, [1, 2, 3])) {
+        $rules['fk_timeslots_id'] = 'required|exists:timeslots,timeslots_id';
+    } else {
+        $rules['fk_timeslots_id'] = 'nullable|exists:timeslots,timeslots_id';
+    }
+    $messages = [
+        'fk_timeslots_id.required' => 'กรุณาเลือกรอบการเข้าชม',
+        'at_least_one_quantity.required' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท',
+    ];
 
+    $request->validate($rules, $messages);
+
+    $quantityFields = [
+        'children_qty',
+        'students_qty',
+        'adults_qty',
+        'disabled_qty',
+        'elderly_qty',
+        'monk_qty'
+    ];
+
+    $isAtLeastOneQuantityFilled = false;
+    foreach ($quantityFields as $field) {
+        if ($request->$field > 0) {
+            $isAtLeastOneQuantityFilled = true;
+            break;
+        }
+    }
+
+    if (!$isAtLeastOneQuantityFilled) {
+        return back()->withErrors([
+            'at_least_one_quantity' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท'
+        ])->withInput();
+    }
+    
         $activity = Activity::with('activityType')->find($request->fk_activity_id);
         if (!$activity) {
             return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
@@ -308,7 +342,34 @@ class BookingController extends Controller
             return redirect()->back()->with('error', 'Activity not found.');
         }
 
-        $timeslots = Timeslots::where('activity_id', $activity_id)->get();
+      
+    $timeslots = DB::table('timeslots')
+        ->leftJoin('bookings', function ($join) use ($activity_id) {
+            $join->on('timeslots.timeslots_id', '=', 'bookings.timeslots_id')
+                ->where('bookings.activity_id', '=', $activity_id)
+                ->where('bookings.status', '=', 1); // อนุมัติแล้ว
+        })
+        ->join('activities', 'timeslots.activity_id', '=', 'activities.activity_id')
+        ->where('timeslots.activity_id', $activity_id)
+        ->select(
+            'timeslots.timeslots_id',
+            'timeslots.start_time',
+            'timeslots.end_time',
+            DB::raw("
+                CASE 
+                    WHEN activities.max_capacity IS NULL THEN 'ไม่จำกัดจำนวนคน'
+                    ELSE activities.max_capacity - IFNULL(
+                        SUM(
+                            bookings.children_qty + bookings.students_qty + bookings.adults_qty + 
+                            bookings.disabled_qty + bookings.elderly_qty + bookings.monk_qty
+                        ), 0
+                    ) 
+                END as remaining_capacity
+            ")
+        )
+        ->groupBy('timeslots.timeslots_id', 'timeslots.start_time', 'timeslots.end_time', 'activities.max_capacity')
+        ->get();
+
 
         return view('form_bookings', [
             'activity_id' => $activity_id,

@@ -26,7 +26,6 @@ class TimeslotController extends Controller
             return response()->json(['error' => 'กรุณาระบุ activity_id และ booking_date'], 400);
         }
 
-        // Fetch available timeslots with remaining capacity
         $timeslots = Timeslots::where('activity_id', $activityId)
             ->whereDoesntHave('closedTimeslots', function ($query) use ($bookingDate) {
                 $query->where('closed_on', $bookingDate);
@@ -87,6 +86,7 @@ class TimeslotController extends Controller
                 $query->where('closed_on', $bookingDate);
             })
             ->where('status', 'active')
+            ->select('timeslots_id', 'start_time', 'end_time', 'remaining_capacity')
             ->get();
 
         return response()->json($timeslots);
@@ -119,7 +119,7 @@ class TimeslotController extends Controller
 
     public function getTimeslotsByActivity(Request $request)
     {
-        $timeslots = Timeslots::where('activity_id', $request->activity_id)->get(); // ดึง Timeslots ที่เกี่ยวข้องกับกิจกรรม
+        $timeslots = Timeslots::where('activity_id', $request->activity_id)->get();
         return response()->json($timeslots);
     }
 

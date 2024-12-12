@@ -49,7 +49,8 @@
                     <label for="booking_date" class="form-label">วันที่จอง:</label>
                     <div class="input-group">
                         <input type="text" class="form-control" id="booking_date" name="booking_date"
-                            value="{{ old('booking_date') }}" min="{{ date('Y-m-d', strtotime('+3 days')) }}" required
+                        value="{{ old('booking_date', $booking_date ?? '') }}" 
+                        min="{{ date('Y-m-d', strtotime('+3 days')) }}" required
                             placeholder="กรุณาเลือกวันที่ต้องการจอง (วัน/เดือน/ปี)">
                         <div class="input-group-append">
                             <label for="booking_date" class="input-group-text" style="cursor: pointer;">
@@ -74,6 +75,7 @@
                                 <option value="{{ $timeslot->timeslots_id }}"
                                     {{ old('fk_timeslots_id') == $timeslot->timeslots_id ? 'selected' : '' }}>
                                     {{ $timeslot->start_time }} - {{ $timeslot->end_time }}
+                                    (ยอดคงเหลือ {{ $timeslot->remaining_capacity }} คน)
                                 </option>
                             @endforeach
                         </select>
@@ -191,6 +193,8 @@
                 </div>
 
                 <label for="text-center p-5">ระบุจำนวนผู้เข้าชม</label>
+                <div id="errorMessage" style="color: red; display: none;"></div>
+
                 <!-- เนอสเซอรี่ - อนุบาล -->
                 <div class="col-3">
                     <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"

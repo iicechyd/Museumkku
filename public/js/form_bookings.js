@@ -54,7 +54,12 @@ function calculateTotal() {
         parseFloat(document.getElementById("monk_price").value) || 0;
 
     const totalVisitors =
-        parseInt(childrenQty) + parseInt(studentsQty) + parseInt(adultsQty) + parseInt(disabledQty) + parseInt(elderlyQty) + parseInt(monkQty);
+        parseInt(childrenQty) + 
+        parseInt(studentsQty) + 
+        parseInt(adultsQty) + 
+        parseInt(disabledQty) + 
+        parseInt(elderlyQty) + 
+        parseInt(monkQty);
     const totalPrice =
         childrenQty * childrenPrice +
         studentsQty * studentPrice +
@@ -69,6 +74,7 @@ function calculateTotal() {
 
 function fetchTimeslots() {
     const activityId = document.getElementById("fk_activity_id").value;
+    
     fetch(`/timeslots/${activityId}`)
         .then((response) => response.json())
         .then((data) => {
@@ -109,6 +115,30 @@ flatpickr("#booking_date", {
 });
 
 function confirmSubmission() {
+    const childrenQty = document.getElementById("childrenInput").value || 0;
+    const studentsQty = document.getElementById("studentInput").value || 0;
+    const adultsQty = document.getElementById("adultsInput").value || 0;
+    const disabledQty = document.getElementById("disabledInput").value || 0;
+    const elderlyQty = document.getElementById("elderlyInput").value || 0;
+    const monkQty = document.getElementById("monkInput").value || 0;
+
+    // ตรวจสอบว่าผู้ใช้ไม่ได้กรอกข้อมูลในฟิลด์ใด ๆ
+    if (
+        childrenQty == 0 &&
+        studentsQty == 0 &&
+        adultsQty == 0 &&
+        disabledQty == 0 &&
+        elderlyQty == 0 &&
+        monkQty == 0
+    ) {
+        // แสดงข้อความแจ้งเตือนเมื่อไม่ได้กรอกจำนวน
+        document.getElementById("errorMessage").innerText = "*กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท";
+        document.getElementById("errorMessage").style.display = "block";
+        return; // หยุดการทำงานถ้ายังไม่ได้กรอกข้อมูล
+    } else {
+        // ซ่อนข้อความแจ้งเตือนเมื่อกรอกข้อมูลครบ
+        document.getElementById("errorMessage").style.display = "none";
+    }
     const isConfirmed = confirm("คุณต้องการยืนยันการส่งข้อมูลใช่หรือไม่?");
     if (isConfirmed) {
         document.querySelector('form').submit();

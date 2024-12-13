@@ -22,7 +22,6 @@ class ActivitySeeder extends Seeder
                 'adult_price' => 50,
                 'max_capacity' => 250,
                 'status' => 'active',
-                'image' => 'activity_20241128_150258.jpg',
                 'duration_days' => 1,
             ],
             [
@@ -35,7 +34,6 @@ class ActivitySeeder extends Seeder
                 'adult_price' => 50,
                 'max_capacity' => 250,
                 'status' => 'active',
-                'image' => 'activity_20241128_150304.jpg',
                 'duration_days' => 1,
             ],
             [
@@ -48,7 +46,6 @@ class ActivitySeeder extends Seeder
                 'adult_price' => 80,
                 'max_capacity' => 500,
                 'status' => 'active',
-                'image' => 'activity_20241128_150311.jpg',
                 'duration_days' => 1,
             ],
             [
@@ -61,7 +58,6 @@ class ActivitySeeder extends Seeder
                 'adult_price' => 499,
                 'max_capacity' => null,
                 'status' => 'active',
-                'image' => 'activity_20241128_150321.jpg',
                 'duration_days' => 1,
             ],
             [
@@ -74,7 +70,6 @@ class ActivitySeeder extends Seeder
                 'adult_price' => 1999,
                 'max_capacity' => null,
                 'status' => 'active',
-                'image' => 'activity_20241128_150329.jpg',
                 'duration_days' => 2,
             ],
             [
@@ -87,7 +82,6 @@ class ActivitySeeder extends Seeder
                 'adult_price' => 150,
                 'max_capacity' => null,
                 'status' => 'active',
-                'image' => 'activity_20241128_150336.jpg',
                 'duration_days' => 1,
             ],
             [
@@ -100,17 +94,16 @@ class ActivitySeeder extends Seeder
                 'adult_price' => 2000,
                 'max_capacity' => null,
                 'status' => 'active',
-                'image' => 'activity_20241128_150343.jpg',
+                // 'image' => 'activity_20241128_150343.jpg',
                 'duration_days' => 1,
             ],
         ];
         foreach ($activity as $item) {
-            $filePath = 'images/' . $item['image'];
-if (!Storage::disk('public')->exists($filePath)) {
-    $this->command->warn("ไม่พบไฟล์: {$item['image']}");
-    continue;
-}
-
+//             $filePath = 'images/' . $item['image'];
+// if (!Storage::disk('public')->exists($filePath)) {
+//     $this->command->warn("ไม่พบไฟล์: {$item['image']}");
+//     continue;
+// }
 
             Activity::create([
                 'activity_type_id' => $item['activity_type_id'],
@@ -121,11 +114,10 @@ if (!Storage::disk('public')->exists($filePath)) {
                 'adult_price' => $item['adult_price'],
                 'max_capacity' => $item['max_capacity'],
                 'status' => $item['status'],
-                'image' => 'images/' . $item['image'],
+                // 'image' => 'images/' . $item['image'],
                 'duration_days' => $item['duration_days'],
             ]);
         }
-
-        $this->command->info('สร้างข้อมูลกิจกรรมพร้อมรูปภาพสำเร็จ');
+        $this->command->info('สร้างข้อมูลกิจกรรมสำเร็จ');
     }
 }

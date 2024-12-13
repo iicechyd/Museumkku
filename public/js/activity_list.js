@@ -22,7 +22,7 @@ $(document).ready(function () {
         $("#edit_childrenprice").val(activityChildrenPrice);
         $("#edit_studentprice").val(activityStudentPrice);
         $("#edit_adultprice").val(activityAdultPrice);
-        $("#edit_disabledprice").val(activityDisableDPrice);
+        $("#edit_disabledprice").val(activityDisabledPrice);
         $("#edit_elderlyprice").val(activityElderlyPrice);
         $("#edit_monkprice").val(activityMonkPrice);
         $("#edit_max_capacity").val(activityMaxCapacity);

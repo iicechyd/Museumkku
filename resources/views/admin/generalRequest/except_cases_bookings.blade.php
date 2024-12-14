@@ -17,10 +17,10 @@
         <div class="button pb-2">
             <a href="{{ url('/admin/request_bookings/general') }}" class="btn-request-outline">รออนุมัติ</a>
             <a href="{{ url('/admin/approved_bookings/general') }}" class="btn-approved-outline">อนุมัติ</a>
-            <a href="{{ url('/admin/except_cases_bookings/general') }}" class="btn-except">กรณีพิเศษ</a>
+            <a href="{{ url('/admin/except_cases_bookings/general') }}" class="btn-except">ยกเลิก</a>
         </div>
         @if (count($exceptBookings) > 0)
-            <h1 class="table-heading text-center">กรณีพิเศษ</h1>
+            <h1 class="table-heading text-center">ยกเลิก</h1>
             {{ $exceptBookings->links() }}
 
             @component('components.table_except_cases_bookings')
@@ -35,19 +35,12 @@
                         <td>{{ \Carbon\Carbon::parse($item->timeslot->start_time)->format('H:i') }} น. -
                             {{ \Carbon\Carbon::parse($item->timeslot->end_time)->format('H:i') }} น.
                         </td>
-                        <td class="long-cell">{{ $item->institute->instituteName }}</td>
-                        <td class="long-cell">{{ $item->institute->instituteAddress }} {{ $item->institute->province }}
-                            {{ $item->institute->subdistrict }} {{ $item->institute->zipcode }}</td>
-                        <td>{{ $item->visitor->visitorName }}</td>
-                        <td>{{ $item->visitor->visitorEmail }}</td>
-                        <td>{{ $item->visitor->tel }}</td>
-                        <td>{{ $item->children_qty > 0 ? $item->children_qty . ' คน' : '-' }}</td>
-                        <td>{{ $item->students_qty > 0 ? $item->students_qty . ' คน' : '-' }}</td>
-                        <td>{{ $item->adults_qty > 0 ? $item->adults_qty . ' คน' : '-' }}</td>
-                        <td>{{ $item->disabled_qty > 0 ? $item->disabled_qty . ' คน' : '-' }}</td>
-                        <td>{{ $item->elderly_qty > 0 ? $item->elderly_qty . ' คน' : '-' }}</td>
-                        <td>{{ $item->monk_qty > 0 ? $item->monk_qty . ' รูป' : '-' }}</td>
-                        <td>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty}} คน</td>
+                        <td>
+                            <button type="button" class="btn btn-info text-white" data-toggle="modal"
+                                data-target="#detailsModal_{{ $item->booking_id }}">
+                                รายละเอียด
+                            </button>
+                        </td>
                         <td>
                             @switch($item->status)
                                 @case(0)
@@ -63,21 +56,75 @@
                                 @break
                             @endswitch
                         </td>
-                        <td>{{ $item->latestStatusChange->updated_at ?? 'N/A' }}</td>
-                        <td>{{ $item->latestStatusChange->changed_by ?? 'N/A' }}</td>
                         <td>{{ $item->latestStatusChange->comments ?? 'ไม่มีความคิดเห็น' }}</td>
+                        <td>
+                            @if ($item->latestStatusChange)
+                                {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
+                                {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->year + 543 }} เวลา
+                                {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->format('H:i') }} น.
+                                แก้ไขโดยเจ้าหน้าที่: {{ $item->latestStatusChange->changed_by ?? 'N/A' }}
+                            @else
+                                ไม่พบข้อมูลการเปลี่ยนแปลงสถานะ
+                            @endif
+                        </td>
+                        <!-- Modal สำหรับแสดงรายละเอียด -->
+                        <div class="modal fade" id="detailsModal_{{ $item->booking_id }}" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">รายละเอียดการจอง -
+                                            {{ $item->activity->activity_name }}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>วันเวลาที่จองเข้ามา:
+                                            </strong>{{ \Carbon\Carbon::parse($item->created_at)->locale('th')->translatedFormat('j F') }}
+                                            {{ \Carbon\Carbon::parse($item->created_at)->year + 543 }} เวลา
+                                            {{ \Carbon\Carbon::parse($item->created_at)->format('H:i') }} น.</p>
+                                        <p><strong>ชื่อหน่วยงาน: </strong>{{ $item->institute->instituteName }}</p>
+                                        <p><strong>ที่อยู่หน่วยงาน: </strong>{{ $item->institute->instituteAddress }}
+                                            {{ $item->institute->subdistrict }} {{ $item->institute->district }}
+                                            {{ $item->institute->inputProvince }} {{ $item->institute->zipcode }}</p>
+                                        <p><strong>ชื่อผู้ประสานงาน: </strong>{{ $item->visitor->visitorName }}</p>
+                                        <p><strong>อีเมลผู้ประสานงาน: </strong>{{ $item->visitor->visitorEmail }}</p>
+                                        <p><strong>เบอร์โทรศัพท์: </strong>{{ $item->visitor->tel }}</p>
+                                        <p><strong>เด็ก (คน):
+                                            </strong>{{ $item->children_qty > 0 ? $item->children_qty . ' คน' : '-' }}</p>
+                                        <p><strong>นร / นศ (คน):
+                                            </strong>{{ $item->students_qty > 0 ? $item->students_qty . ' คน' : '-' }}</p>
+                                        <p><strong>ผู้ใหญ่ / คุณครู (คน):
+                                            </strong>{{ $item->adults_qty > 0 ? $item->adults_qty . ' คน' : '-' }}</p>
+                                        <p><strong>ผู้พิการ (คน):
+                                            </strong>{{ $item->disabled_qty > 0 ? $item->disabled_qty . ' คน' : '-' }}</p>
+                                        <p><strong>ผู้สูงอายุ (คน):
+                                            </strong>{{ $item->elderly_qty > 0 ? $item->elderly_qty . ' คน' : '-' }}</p>
+                                        <p><strong>พระภิกษุสงฆ์ / สามเณร (คน):
+                                            </strong>{{ $item->monk_qty > 0 ? $item->monk_qty . ' รูป' : '-' }}</p>
+                                        <p><strong>จำนวนคนทั้งหมด:
+                                            </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
+                                            คน</p>
+                                        <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </tr>
                 @endforeach
             @endcomponent
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/except_cases_bookings.js') }}"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var exceptBookings = @json($exceptBookings->pluck('booking_id'));
-
-            // เรียกใช้ toggleCommentsField สำหรับแต่ละ booking_id
             exceptBookings.forEach(function(booking_id) {
                 toggleCommentsField(booking_id);
             });
@@ -86,12 +133,10 @@
         function toggleCommentsField(booking_id) {
             var status = document.getElementById("statusSelect_" + booking_id).value;
             var commentsField = document.getElementById("commentsField_" + booking_id);
-
-            // แสดงฟิลด์คอมเม้นต์เมื่อสถานะเป็น 'cancel'
             if (status === "cancel") {
-                commentsField.style.display = "block"; // แสดงฟิลด์คอมเม้นต์
+                commentsField.style.display = "block";
             } else {
-                commentsField.style.display = "none"; // ซ่อนฟิลด์คอมเม้นต์
+                commentsField.style.display = "none";
             }
         }
     </script>

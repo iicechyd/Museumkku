@@ -3,12 +3,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'th',
-        events: '/calendar/events',
+        // events: '/calendar/events',
         eventLimit: true,
         dayMaxEventRows: 3,
         contentHeight: 'auto',
         aspectRatio: 2,
         height: 'auto',
+        eventSources: [
+            {
+                url: '/calendar/events',
+            },
+            {
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    let closedDays = [];
+                    let start = new Date(fetchInfo.start);
+                    let end = new Date(fetchInfo.end);
+    
+                    while (start <= end) {
+                        if (start.getDay() === 2) {
+                            closedDays.push({
+                                title: 'ปิดให้บริการ',
+                                start: start.toISOString().split('T')[0],
+                                allDay: true,
+                                color: '#dc3545'
+                            });
+                        }
+                        start.setDate(start.getDate() + 1);
+                    }
+                    successCallback(closedDays);
+                }
+            }
+        ],
 
         // ปรับแต่งข้อความในปฏิทิน
         eventContent: function (eventInfo) {
@@ -36,6 +61,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         eventClick: function (info) {
             info.jsEvent.preventDefault();
+
+            if (info.event.title === 'ปิดให้บริการ') {
+                return;
+            }
 
             document.getElementById('eventTitle').innerText = info.event.title;
 

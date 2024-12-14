@@ -36,21 +36,9 @@ table {
         minmax(200px, 1.67fr)
         minmax(170px, 1.67fr)
         minmax(250px, 1.67fr)
-        minmax(250px, 3.33fr)
-        minmax(230px, 2fr)
-        minmax(250px, 2fr)
-        minmax(170px, 1.67fr)
-        minmax(130px, 1fr)
-        minmax(150px, 1fr)
         minmax(200px, 1fr)
         minmax(230px, 1fr)
-        minmax(230px, 1fr)
-        minmax(250px, 1.67fr)
-        minmax(230px, 1fr)
-        minmax(200px, 1fr)
-        minmax(270px, 1fr)
-        minmax(230px, 1fr)
-        minmax(230px, 1fr);
+        minmax(270px, 1fr);
 }
 
 thead,
@@ -59,8 +47,7 @@ tr {
     display: contents;
 }
 
-th,
-td {
+th,td {
     padding: 15px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -106,6 +93,8 @@ td {
     padding-top: 10px;
     padding-bottom: 10px;
     color: #808080;
+    word-wrap: break-word;
+    white-space: normal;
 }
 
 tr:nth-child(even) td {

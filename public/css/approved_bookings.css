@@ -30,29 +30,16 @@ table {
     flex: 1;
     display: grid;
     border-collapse: collapse;
-    /* These are just initial values which are overriden using JavaScript when a column is resized */
     grid-template-columns:
         minmax(100px, 1fr)
         minmax(400px, 1.67fr)
         minmax(200px, 1.67fr)
         minmax(170px, 1.67fr)
-        minmax(250px, 1.67fr)
-        minmax(300px, 3.33fr)
-        minmax(230px, 2fr)
-        minmax(250px, 2fr)
-        minmax(170px, 1.67fr)
-        minmax(130px, 1fr)
-        minmax(150px, 1fr)
-        minmax(200px, 1fr)
-        minmax(230px, 1fr)
-        minmax(230px, 1fr)
-        minmax(250px, 1.67fr)
-        minmax(230px, 1fr)
         minmax(230px, 1fr)
         minmax(200px, 1fr)
+        minmax(170px, 1fr)
         minmax(230px, 1fr)
-        minmax(270px, 1fr)
-        minmax(250px, 1fr);
+        minmax(270px, 1fr);
 }
 
 thead,
@@ -61,21 +48,19 @@ tr {
     display: contents;
 }
 
-th,
-td {
+th,td {
     padding: 15px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    text-align: center; /* จัดข้อความให้อยู่ตรงกลางในแนวนอน */
-    vertical-align: middle; /* จัดข้อความให้อยู่ตรงกลางในแนวตั้ง */
+    text-align: center;
+    vertical-align: middle;
 }
 
 th {
     position: sticky;
     top: 0;
     background: #f9f9f9;
-    /* text-align: left; */
     font-weight: semibold;
     font-size: 1.1rem;
     color: black;
@@ -96,9 +81,7 @@ th:last-child {
     cursor: col-resize;
 }
 
-.resize-handle:hover,
-  /* The following selector is needed so the handle is visible during resize even if the mouse isn't over the handle anymore */
-  .header--being-resized .resize-handle {
+.resize-handle:hover, .header--being-resized .resize-handle {
     opacity: 0.5;
 }
 
@@ -110,13 +93,14 @@ td {
     padding-top: 10px;
     padding-bottom: 10px;
     color: #808080;
+    word-wrap: break-word;
+    white-space: normal;
 }
 
 tr:nth-child(even) td {
     background: #f8f6ff;
 }
 
-/* ปุ่มสถานะ */
 .status-btn {
     display: inline-block;
     padding: 8px 12px;

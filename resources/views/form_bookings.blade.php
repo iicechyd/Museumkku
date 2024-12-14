@@ -18,6 +18,11 @@
         <script type="text/javascript"
             src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/th.global.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>    
     </head>
 
     <div class="container mt-4 pb-5">
@@ -33,8 +38,17 @@
             </div>
         @endif
 
-        <h2 class="text-center py-3">แบบฟอร์มจองเข้าชมพิพิธภัณฑ์</h2>
+        <h2 class="text-center py-3" style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); ">แบบฟอร์มจองเข้าชมพิพิธภัณฑ์</h2>
         <div class="card shadow p-4">
+            <div class="pb-3">
+                <button id="toggleButton" type="button" class="toggle-btn" onclick="toggleCalendar()">
+                  <span id="toggleText">แสดงปฏิทินการจอง</span>
+                  <span id="arrowIcon" class="arrow">&#9660;</span>
+                </button>
+                <div id="calendar" class="calendar hidden">
+                </div>
+            </div>   
+
             <form method="POST" action="/InsertBooking" class="row g-3" novalidate>
                 @csrf
                 <div class="col-md-5">
@@ -44,7 +58,7 @@
                         <option value="{{ $activity_id }}">{{ $selectedActivity->activity_name }}</option>
                     </select>
                 </div>
-
+                
                 <div class="form-group col-4">
                     <label for="booking_date" class="form-label">วันที่จอง:</label>
                     <div class="input-group">
@@ -65,17 +79,17 @@
                     @enderror
                     <p>*หมายเหตุ กรุณาเลือกวันที่ต้องการจองล่วงหน้า 3 วัน</p>
                 </div>
+                
                 @if ($timeslots->isNotEmpty())
                     <div class="form-group col-3">
                         <label for="fk_timeslots_id" class="form-label">รอบการเข้าชม:</label>
                         <select id="fk_timeslots_id" class="form-select @error('fk_timeslots_id') is-invalid @enderror"
                             name="fk_timeslots_id">
                             <option value="">เลือกรอบการเข้าชม</option>
-                            @foreach ($timeslots as $timeslot)
+                            @foreach ($timeslots as $index => $timeslot)
                                 <option value="{{ $timeslot->timeslots_id }}"
                                     {{ old('fk_timeslots_id') == $timeslot->timeslots_id ? 'selected' : '' }}>
-                                    {{ $timeslot->start_time }} - {{ $timeslot->end_time }}
-                                    (ยอดคงเหลือ {{ $timeslot->remaining_capacity }} คน)
+                                    รอบที่ {{ $index + 1 }}  {{ \Carbon\Carbon::parse($timeslot->start_time)->format('H:i') }} น. - {{ \Carbon\Carbon::parse($timeslot->end_time)->format('H:i') }} น. 
                                 </option>
                             @endforeach
                         </select>
@@ -297,6 +311,27 @@
             </div>
         </div>
     </div>
+  <!-- Modal -->
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel">รายละเอียดการจอง</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h4 id="eventTitle"></h4>
+                <p id="eventStatus"></p>
+                <p><strong id="eventTimeslotLabel">รอบการเข้าชม:</strong> <span id="eventTimeslot"></span></p>
+                <p><strong id="eventTimeslotLabel">จำนวนที่นั่งคงเหลือ:</strong> <span id="eventRemainingCapacity"></span></p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>
 
     @if(session('showSuccessModal'))
     <script>

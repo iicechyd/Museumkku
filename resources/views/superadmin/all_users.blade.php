@@ -22,7 +22,7 @@
                 <th>ประเภทผู้ใช้งาน</th>
                 <th>สถานะบัญชีผู้ใช้งาน</th>
                 <th>กำหนดสิทธิ์</th>
-                <th>Action</th>
+                <th>อนุมัติการใช้งาน</th>
             </tr>
         </thead>
         <tbody>
@@ -33,20 +33,26 @@
                     <td>{{ $user->role->role_name ?? 'No Role' }}</td>
                     <td>
                         <span class="badge {{ $user->is_approved ? 'bg-success' : 'bg-warning' }}">
-                            {{ $user->is_approved ? 'Approved' : 'Pending' }}
+                            {{ $user->is_approved ? 'ใช้งาน' : 'รออนุมัติ' }}
                         </span>
                     </td>
                     <td>
                         <form method="POST" action="{{ route('superadmin.approve_users', $user->user_id) }}">
                             @csrf
+                            @if($user->role_id !== 1) <!-- ตรวจสอบว่าไม่ใช่ superadmin -->
                             <select name="role_id" class="form-control">
                                 @foreach($roles as $role)
                                     <option value="{{ $role->role_id }}">{{ $role->role_name }}</option>
                                 @endforeach
                             </select>
+                            @else
+                            <select name="role_id" class="form-control" disabled>
+                                <option value="{{ $user->role_id }}" selected>{{ $user->role->role_name }}</option>
+                            </select>
+                        @endif
                     </td>
                     <td>
-                        <button type="submit" class="btn btn-success">Approve</button>
+                        <button type="submit" class="btn btn-success">อนุมัติ</button>
                         </form>
                     </td>
                 </tr>

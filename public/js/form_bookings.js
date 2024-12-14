@@ -144,3 +144,100 @@ function confirmSubmission() {
         document.querySelector('form').submit();
     }
 }
+
+let calendar; // ตัวแปรโกลบอล
+
+document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+
+    calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'th',
+        events: '/calendar/events',
+        eventLimit: true,
+        dayMaxEventRows: 3,
+        aspectRatio: 2,
+
+        eventContent: function (eventInfo) {
+            var startTime = eventInfo.event.extendedProps.start_time || '';
+            var endTime = eventInfo.event.extendedProps.end_time || '';
+            var title = eventInfo.event.title || '';
+
+            var contentHtml = title;
+            if (startTime && endTime) {
+                contentHtml = `
+                    <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">
+                        ${startTime} น. - ${endTime} น. ${title}
+                    </div>
+                `;
+            }
+            return { html: contentHtml };
+        },
+
+        eventClick: function (info) {
+            info.jsEvent.preventDefault();
+            document.getElementById('eventTitle').innerText = info.event.title;
+
+            var timeslotText = '';
+            var timeslotLabel = 'รอบการเข้าชม:';
+            if (info.event.extendedProps.start_time && info.event.extendedProps.end_time) {
+                timeslotText = `${info.event.extendedProps.start_time} น. - ${info.event.extendedProps.end_time} น.`;
+            } else {
+                var durationDays = info.event.extendedProps.duration_days || 'ไม่ระบุ';
+                timeslotLabel = 'ระยะเวลากิจกรรม:';
+                timeslotText = `${durationDays} วัน`;
+            }
+
+            document.getElementById('eventTimeslotLabel').innerText = timeslotLabel;
+            document.getElementById('eventTimeslot').innerText = timeslotText;
+
+            var remainingCapacity = info.event.extendedProps.remaining_capacity;
+            var remainingText = 'ไม่จำกัดจำนวนคน';
+
+            if (remainingCapacity === 0) {
+                remainingText = 'เต็ม';
+            } else if (remainingCapacity > 0) {
+                remainingText = `${remainingCapacity} คน`;
+            }
+
+            document.getElementById('eventRemainingCapacity').innerText = remainingText;
+
+            var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
+            myModal.show();
+        },
+
+        eventDidMount: function (info) {
+            var status = info.event.extendedProps.status;
+            if (status === 0) {
+                info.el.style.backgroundColor = '#ffc107';
+                info.el.style.color = '#ffffff';
+            } else if (status === 1) {
+                info.el.style.backgroundColor = '#28a745';
+                info.el.style.color = '#ffffff';
+            } else if (status === 2) {
+                info.el.style.backgroundColor = '#dc3545';
+                info.el.style.color = '#ffffff';
+            }
+        },
+    });
+
+    calendar.render();
+});
+
+function toggleCalendar() {
+    const calendarContainer = document.getElementById('calendar');
+    const toggleText = document.getElementById('toggleText');
+    const arrowIcon = document.getElementById('arrowIcon');
+
+    if (calendarContainer.classList.contains('hidden')) {
+        calendarContainer.classList.remove('hidden');
+        toggleText.innerText = "ซ่อนปฏิทินการจอง";
+        arrowIcon.innerHTML = "&#9650;"; // ลูกศรขึ้น
+
+        // บังคับให้ปฏิทินคำนวณขนาดใหม่เมื่อแสดง
+        calendar.updateSize();
+    } else {
+        calendarContainer.classList.add('hidden');
+        toggleText.innerText = "แสดงปฏิทินการจอง";
+        arrowIcon.innerHTML = "&#9660;"; // ลูกศรลง
+    }
+}

@@ -25,7 +25,7 @@ class BookingActivityController extends Controller
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('timeslots_id', $item->timeslot->timeslots_id)
                     ->where('status', 1)
-                    ->sum(DB::raw('children_qty + students_qty + adults_qty'));
+                    ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
             } else {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('activity_id', $item->activity_id)
@@ -63,12 +63,12 @@ class BookingActivityController extends Controller
             $totalApproved = Bookings::where('booking_date', $item->booking_date)
                 ->where('activity_id', $item->activity_id) 
                 ->where('status', 1)
-                ->sum(DB::raw('children_qty + students_qty + adults_qty'));
+                ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
 
             if ($item->timeslot && $item->timeslot->timeslots_id) {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('activity_id', $item->activity_id)
-                    ->where('timeslots_id', $item->timeslot->timeslots_id) // คำนวณตาม timeslot
+                    ->where('timeslots_id', $item->timeslot->timeslots_id)
                     ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty +  monk_qty'));
             }

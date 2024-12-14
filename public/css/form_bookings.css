@@ -23,3 +23,40 @@ max-height: 300px;
 overflow-y: auto;
 overflow-x: hidden;
 }
+
+/* การจัดรูปแบบทั่วไป */
+.form-container {
+    padding: 20px;
+  }
+  
+  .toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .toggle-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .arrow {
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+  }
+  
+  .hidden {
+    display: none !important;
+}
+
+#calendar {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+

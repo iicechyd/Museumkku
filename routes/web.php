@@ -14,9 +14,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ExecutiveController;
 use App\Http\Middleware\RoleMiddleware;
 
-Route::get('/admin/manage-closed-dates', [TimeslotController::class, 'showClosedDates'])->name('admin.manageClosedDates');
-Route::post('/admin/manage-closed-dates', [TimeslotController::class, 'saveClosedDates'])->name('admin.saveClosedDates');
-Route::post('/admin/get-timeslots', [TimeslotController::class, 'getTimeslotsByActivity'])->name('admin.getTimeslots');
 //Middleware routes
 Auth::routes();
 Route::middleware([RoleMiddleware::class . ':Super Admin'])->group(function () {
@@ -26,6 +23,8 @@ Route::middleware([RoleMiddleware::class . ':Super Admin'])->group(function () {
 Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'showDashboard'])->name('showDashboard');
     Route::get('/admin/activity_list', [ActivityController::class, 'showListActivity']);
+    Route::get('/admin/admin_calendar', [HomeController::class, 'showAdminCalendar'])->name('calendar.showAdminCalendar');
+    
     // Route ตรวจการจองทั่วไป
     Route::get('/admin/request_bookings/general', [BookingController::class, 'showBookings'])->name('request_bookings.general');
     Route::get('/admin/approved_bookings/general', [BookingController::class, 'showApproved'])->name('approved_bookings');
@@ -44,7 +43,6 @@ Route::get('/preview_activity', [ActivityController::class, 'previewActivity'])-
 Route::get('/preview_general', [ActivityController::class, 'previewGeneral'])->name('preview_general');
 Route::get('/activity/{activity_id}', [ActivityController::class, 'showDetail'])->name('activity_detail');
 Route::get('/calendar', [HomeController::class, 'showCalendar'])->name('calendar.showCalendar');
-Route::get('/admin/admin_calendar', [HomeController::class, 'showAdminCalendar'])->name('calendar.showAdminCalendar');
 
 //ดึงeventที่ได้รับการจองมาแสดงบนปฏิทิน
 Route::get('/calendar/events', [CalendarController::class, 'getEvents'])->name('calendar.events');
@@ -86,3 +84,6 @@ Route::get('/toggle-status/{id}', [TimeslotController::class, 'toggleStatus'])->
 Route::post('/toggle-status/{id}', [TimeslotController::class, 'toggleStatus'])->name('toggle.status');
 
 Route::delete('admin/closed-dates/{id}', [TimeslotController::class, 'deleteClosedDate'])->name('admin.deleteClosedDate');
+Route::get('/admin/manage-closed-dates', [TimeslotController::class, 'showClosedDates'])->name('admin.manageClosedDates');
+Route::post('/admin/manage-closed-dates', [TimeslotController::class, 'saveClosedDates'])->name('admin.saveClosedDates');
+Route::post('/admin/get-timeslots', [TimeslotController::class, 'getTimeslotsByActivity'])->name('admin.getTimeslots');

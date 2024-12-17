@@ -73,7 +73,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (info.event.extendedProps.start_time && info.event.extendedProps.end_time) {
                 timeslotText = `${info.event.extendedProps.start_time} น. - ${info.event.extendedProps.end_time} น.`;
             } else {
-                // ถ้าไม่มี timeslot, แสดงระยะเวลากิจกรรม
                 var durationDays = info.event.extendedProps.duration_days || 'ไม่ระบุ';
                 timeslotLabel = 'ระยะเวลากิจกรรม:';
                 timeslotText = `${durationDays} วัน`;

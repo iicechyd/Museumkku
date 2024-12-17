@@ -3,3 +3,10 @@
 p {
     font-family: "Noto Sans Thai", sans-serif;
 }
+.custom-gray-text {
+    color: gray;
+}
+
+  .new-line {
+    display: block;
+  }

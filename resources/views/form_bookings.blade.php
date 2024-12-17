@@ -62,7 +62,7 @@
                 <div class="form-group col-4">
                     <label for="booking_date" class="form-label">วันที่จอง:</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="booking_date" name="booking_date"
+                        <input type="date" class="form-control" id="booking_date" name="booking_date"
                         value="{{ old('booking_date', $booking_date ?? '') }}" 
                         min="{{ date('Y-m-d', strtotime('+3 days')) }}" required
                             placeholder="กรุณาเลือกวันที่ต้องการจอง (วัน/เดือน/ปี)">
@@ -208,7 +208,11 @@
 
                 <label for="text-center p-5">ระบุจำนวนผู้เข้าชม</label>
                 <div id="errorMessage" style="color: red; display: none;"></div>
-
+                <label for="text-center" class="custom-gray-text">
+                    <span class="indent-line">จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $selectedActivity->max_capacity }} คน และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
+                    <span class="new-line">(หากผู้เข้าชมเกิน {{ $selectedActivity->max_capacity }} คน กรุณาติดต่อเจ้าหน้าที่ 0XX-XXXX )</span>
+                </label>
+                
                 <!-- เนอสเซอรี่ - อนุบาล -->
                 <div class="col-3">
                     <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"
@@ -243,7 +247,9 @@
                 <div class="col-3">
                     <input class="form-check-input" type="checkbox" id="disabled_qty" name="disabled_qty"
                         onclick="toggleInput('disabledInput')">
-                    <label class="form-check-label" for="disabled_qty">ผู้พิการ : ฟรี</label>
+                    <label class="form-check-label" for="disabled_qty">
+                        ผู้พิการ : {{ $selectedActivity->disabled_price > 0 ? $selectedActivity->disabled_price . ' บาท/คน' : 'ฟรี' }}
+                    </label>
                     <input type="number" class="form-control mt-2" id="disabledInput" name="disabled_qty"
                         min="0" disabled oninput="calculateTotal()">
                 </div>
@@ -252,7 +258,8 @@
                 <div class="col-3">
                     <input class="form-check-input" type="checkbox" id="elderly_qty" name="elderly_qty"
                         onclick="toggleInput('elderlyInput')">
-                    <label class="form-check-label" for="elderly_qty">ผู้สูงอายุ : ฟรี</label>
+                    <label class="form-check-label" for="elderly_qty">
+                        ผู้สูงอายุ : {{ $selectedActivity->elderly_price > 0 ? $selectedActivity->elderly_price . ' บาท/คน' : 'ฟรี' }}</label>
                     <input type="number" class="form-control mt-2" id="elderlyInput" name="elderly_qty" min="0"
                         disabled oninput="calculateTotal()">
                 </div>
@@ -261,7 +268,8 @@
                 <div class="col-3">
                     <input class="form-check-input" type="checkbox" id="monk_qty" name="monk_qty"
                         onclick="toggleInput('monkInput')">
-                    <label class="form-check-label" for="monk_qty">พระภิกษุสงฆ์ /สามเณร : ฟรี</label>
+                    <label class="form-check-label" for="monk_qty">
+                        พระภิกษุสงฆ์ /สามเณร : {{ $selectedActivity->monk_price > 0 ? $selectedActivity->monk_price . ' บาท/รูป' : 'ฟรี' }}</label>
                     <input type="number" class="form-control mt-2" id="monkInput" name="monk_qty" min="0"
                         disabled oninput="calculateTotal()">
                 </div>
@@ -300,7 +308,7 @@
                             </button>
                         </div>
                         <div class="modal-body text-center">
-                            กรุณารอการติดต่อกลับจากเจ้าหน้าที่ทางอีเมล ภายใน 24 ชั่วโมง
+                            กรุณารอการติดต่อกลับจากเจ้าหน้าที่ทางอีเมล ภายใน 24 ชั่วโมง หากมีข้อสงสัยติดต่อ 096-XXX-XXXX
                         </div>
                         <div class="modal-footer">
                             <a href="/checkBookingStatus" class="btn btn-primary">ตรวจสอบสถานะการจอง</a>
@@ -324,7 +332,6 @@
                 <p id="eventStatus"></p>
                 <p><strong id="eventTimeslotLabel">รอบการเข้าชม:</strong> <span id="eventTimeslot"></span></p>
                 <p><strong id="eventTimeslotLabel">จำนวนที่นั่งคงเหลือ:</strong> <span id="eventRemainingCapacity"></span></p>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>

@@ -59,4 +59,20 @@ overflow-x: hidden;
     max-width: 900px;
     margin: 0 auto;
 }
+.flatpickr-day.disabled-day {
+  color: #ddb1b1  !important;
+  opacity: 0.5 !important;
+  font-weight: bold !important; 
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
 
+.custom-gray-text {
+  color: gray;
+}
+.new-line {
+  display: block;
+}
+.indent-line {
+  margin-left: 1em;
+}

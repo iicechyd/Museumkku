@@ -112,6 +112,21 @@ document.addEventListener("DOMContentLoaded", function () {
 flatpickr("#booking_date", {
     dateFormat: "d/m/Y",
     minDate: new Date().fp_incr(3),
+    disable: [
+        function(date) {
+            return date.getDay() === 1;
+        }
+    ],
+    onDayCreate: function(dObj, dStr, fp, dayElem) {
+        if (dayElem.dateObj.getDay() === 1) {
+            dayElem.classList.add("disabled-day");
+        }
+    },
+    onReady: function() {
+        document.querySelector('.input-group-text').addEventListener('click', () => {
+            document.querySelector("#booking_date")._flatpickr.open();
+        });
+    }
 });
 
 function confirmSubmission() {
@@ -122,7 +137,6 @@ function confirmSubmission() {
     const elderlyQty = document.getElementById("elderlyInput").value || 0;
     const monkQty = document.getElementById("monkInput").value || 0;
 
-    // ตรวจสอบว่าผู้ใช้ไม่ได้กรอกข้อมูลในฟิลด์ใด ๆ
     if (
         childrenQty == 0 &&
         studentsQty == 0 &&
@@ -131,12 +145,10 @@ function confirmSubmission() {
         elderlyQty == 0 &&
         monkQty == 0
     ) {
-        // แสดงข้อความแจ้งเตือนเมื่อไม่ได้กรอกจำนวน
         document.getElementById("errorMessage").innerText = "*กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท";
         document.getElementById("errorMessage").style.display = "block";
-        return; // หยุดการทำงานถ้ายังไม่ได้กรอกข้อมูล
+        return;
     } else {
-        // ซ่อนข้อความแจ้งเตือนเมื่อกรอกข้อมูลครบ
         document.getElementById("errorMessage").style.display = "none";
     }
     const isConfirmed = confirm("คุณต้องการยืนยันการส่งข้อมูลใช่หรือไม่?");
@@ -145,18 +157,41 @@ function confirmSubmission() {
     }
 }
 
-let calendar; // ตัวแปรโกลบอล
+let calendar;
 
 document.addEventListener('DOMContentLoaded', function () {
     var calendarEl = document.getElementById('calendar');
 
     calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'th',
-        events: '/calendar/events',
         eventLimit: true,
         dayMaxEventRows: 3,
         aspectRatio: 2,
-
+        eventSources: [
+            {
+                url: '/calendar/events',
+            },
+            {
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    let closedDays = [];
+                    let start = new Date(fetchInfo.start);
+                    let end = new Date(fetchInfo.end);
+    
+                    while (start <= end) {
+                        if (start.getDay() === 2) {
+                            closedDays.push({
+                                title: 'ปิดให้บริการ',
+                                start: start.toISOString().split('T')[0],
+                                allDay: true,
+                                color: '#dc3545'
+                            });
+                        }
+                        start.setDate(start.getDate() + 1);
+                    }
+                    successCallback(closedDays);
+                }
+            }
+        ],
         eventContent: function (eventInfo) {
             var startTime = eventInfo.event.extendedProps.start_time || '';
             var endTime = eventInfo.event.extendedProps.end_time || '';
@@ -175,6 +210,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         eventClick: function (info) {
             info.jsEvent.preventDefault();
+
+            if (info.event.title === 'ปิดให้บริการ') {
+                return;
+            }
             document.getElementById('eventTitle').innerText = info.event.title;
 
             var timeslotText = '';
@@ -213,9 +252,6 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (status === 1) {
                 info.el.style.backgroundColor = '#28a745';
                 info.el.style.color = '#ffffff';
-            } else if (status === 2) {
-                info.el.style.backgroundColor = '#dc3545';
-                info.el.style.color = '#ffffff';
             }
         },
     });
@@ -231,13 +267,12 @@ function toggleCalendar() {
     if (calendarContainer.classList.contains('hidden')) {
         calendarContainer.classList.remove('hidden');
         toggleText.innerText = "ซ่อนปฏิทินการจอง";
-        arrowIcon.innerHTML = "&#9650;"; // ลูกศรขึ้น
+        arrowIcon.innerHTML = "&#9650;";
 
-        // บังคับให้ปฏิทินคำนวณขนาดใหม่เมื่อแสดง
         calendar.updateSize();
     } else {
         calendarContainer.classList.add('hidden');
         toggleText.innerText = "แสดงปฏิทินการจอง";
-        arrowIcon.innerHTML = "&#9660;"; // ลูกศรลง
+        arrowIcon.innerHTML = "&#9660;";
     }
 }

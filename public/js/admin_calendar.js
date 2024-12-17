@@ -3,13 +3,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'th',
-        events: '/calendar/events',
         eventLimit: true,
         dayMaxEventRows: 3,
         contentHeight: 'auto',
         aspectRatio: 2,
         height: 'auto',
-
+        eventSources: [
+            {
+                url: '/calendar/events',
+            },
+            {
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    let closedDays = [];
+                    let start = new Date(fetchInfo.start);
+                    let end = new Date(fetchInfo.end);
+    
+                    while (start <= end) {
+                        if (start.getDay() === 2) {
+                            closedDays.push({
+                                title: 'ปิดให้บริการ',
+                                start: start.toISOString().split('T')[0],
+                                allDay: true,
+                                color: '#dc3545'
+                            });
+                        }
+                        start.setDate(start.getDate() + 1);
+                    }
+                    successCallback(closedDays);
+                }
+            }
+        ],
         eventContent: function (eventInfo) {
             var startTime = eventInfo.event.extendedProps.start_time || '';
             var endTime = eventInfo.event.extendedProps.end_time || '';
@@ -34,6 +57,9 @@ document.addEventListener('DOMContentLoaded', function () {
         eventClick: function (info) {
             info.jsEvent.preventDefault();
 
+            if (info.event.title === 'ปิดให้บริการ') {
+                return;
+            }
             var startTime = info.event.extendedProps.start_time || '';
             var endTime = info.event.extendedProps.end_time || '';
             var durationDays = info.event.extendedProps.duration_days || '';
@@ -68,9 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (status === 1) {
                 info.el.style.backgroundColor = '#28a745';
                 info.el.style.color = '#ffffff';
-            } else if (status === 2) {
-                info.el.style.backgroundColor = '#dc3545';
-                info.el.style.color = '#ffffff';
+
             }
         },
     });

@@ -69,7 +69,6 @@ class TimeslotController extends Controller
         $timeslot->status = ($timeslot->status === 'active') ? 'inactive' : 'active';
         $timeslot->save();
 
-        // ส่งข้อมูลกลับเป็น JSON
         return response()->json([
             'status' => $timeslot->status,
             'message' => 'สถานะของกิจกรรมถูกเปลี่ยนเรียบร้อยแล้ว'

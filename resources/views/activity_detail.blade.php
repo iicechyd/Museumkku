@@ -39,9 +39,13 @@
                                     </p>                                    
                                 </div>
                                 <p class="custom-gray-text">
-                                    <span>จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $activity->max_capacity }} คน และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
-                                    <span class="new-line">(หากผู้เข้าชมเกิน {{ $activity->max_capacity }} คน กรุณาติดต่อเจ้าหน้าที่ 0XX-XXXX )</span>
-                                </p>
+                                    @if($activity->max_capacity)
+                                        <span>จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $activity->max_capacity }} คน และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
+                                        <span class="new-line">(หากผู้เข้าชมเกิน {{ $activity->max_capacity }} คน กรุณาติดต่อเจ้าหน้าที่ 0XX-XXXX )</span>
+                                    @else
+                                        <span>ไม่จำกัดจำนวนผู้เข้าชม และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
+                                    @endif
+                                </p>                                
                                 <div class="mt-4">
                                     <a href="{{ route('form_bookings.activity', ['activity_id' => $activity->activity_id]) }}"
                                         class="btn text-white width:50%"

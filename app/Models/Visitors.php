@@ -14,6 +14,7 @@ class Visitors extends Model
         'visitorName',
         'visitorEmail',
         'tel',
+        'institute_id'
     ];
 
     public function institute()

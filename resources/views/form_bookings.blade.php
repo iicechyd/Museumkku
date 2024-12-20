@@ -209,10 +209,13 @@
                 <label for="text-center p-5">ระบุจำนวนผู้เข้าชม</label>
                 <div id="errorMessage" style="color: red; display: none;"></div>
                 <label for="text-center" class="custom-gray-text">
+                    @if($selectedActivity->max_capacity)
                     <span class="indent-line">จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $selectedActivity->max_capacity }} คน และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
                     <span class="new-line">(หากผู้เข้าชมเกิน {{ $selectedActivity->max_capacity }} คน กรุณาติดต่อเจ้าหน้าที่ 0XX-XXXX )</span>
+                    @else
+                    <span>ไม่จำกัดจำนวนผู้เข้าชม และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
+                    @endif
                 </label>
-                
                 <!-- เนอสเซอรี่ - อนุบาล -->
                 <div class="col-3">
                     <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"

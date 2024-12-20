@@ -27,13 +27,9 @@ class Bookings extends Model
     public function getEndDateAttribute()
     {
         $activity = Activity::find($this->activity_id);
-
-        // คำนวณ end_date ตาม duration ของกิจกรรม
         if ($activity && $activity->duration_days) {
             return Carbon::parse($this->booking_date)->addDays($activity->duration_days - 1)->toDateString();
         }
-
-        // ถ้าไม่มี duration ให้ใช้ booking_date
         return $this->booking_date;
     }
     public function visitor()
@@ -58,11 +54,10 @@ class Bookings extends Model
     {
         return $this->hasMany(StatusChanges::class, 'booking_id', 'booking_id');
     }
-    // Method สำหรับดึง statusChange ล่าสุด
     public function latestStatusChange()
     {
         return $this->hasOne(StatusChanges::class, 'booking_id', 'booking_id')
-            ->orderBy('changed_id', 'desc'); // ใช้ changed_id แทน id
+            ->orderBy('changed_id', 'desc');
     }
     
     public function getTotalVisitorsAttribute()

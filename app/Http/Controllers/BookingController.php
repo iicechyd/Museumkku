@@ -14,6 +14,9 @@ use App\Models\Visitors;
 use App\Models\StatusChanges;
 use App\Models\closedTimeslots;
 use DateTime;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\BookingApprovedMail;
+use Illuminate\Support\Facades\Log;
 
 class BookingController extends Controller
 {
@@ -175,9 +178,18 @@ class BookingController extends Controller
                 'changed_by' => Auth::user()->name,
             ]);
         }
-        return redirect()->back()->with('success', 'สถานะการจองถูกอัปเดตแล้ว');
+       // ดึงอีเมลจากตาราง visitors ผ่านความสัมพันธ์
+    $visitorEmail = $booking->visitor ? $booking->visitor->visitorEmail : null;
+
+    if ($newStatus === 1 && $visitorEmail) {
+        // ส่งอีเมลหากพบอีเมล
+        Mail::to($visitorEmail)->send(new BookingApprovedMail($booking));
+    } else {
+        Log::warning("ไม่พบอีเมลสำหรับการจองหมายเลข {$booking->booking_id}");
     }
 
+    return redirect()->back()->with('success', 'สถานะการจองถูกอัปเดตแล้ว');
+}
     function InsertBooking(Request $request)
     {
         $request->validate(
@@ -309,11 +321,12 @@ class BookingController extends Controller
             'subdistrict' => $request->subdistrict,
             'zipcode' => $request->zipcode,
         ]);
-        $visitor = Visitors::firstOrCreate([
-            'visitorName' => $request->visitorName,
+        $visitor = Visitors::updateOrCreate([
             'visitorEmail' => $request->visitorEmail,
+        ], 
+[
+            'visitorName' => $request->visitorName,
             'tel' => $request->tel,
-        ], [
             'institute_id' => $institute->institute_id,
         ]);
 

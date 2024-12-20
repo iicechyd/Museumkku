@@ -103,9 +103,9 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("instituteName").value = "โรงเรียนเด่นดี";
     document.getElementById("instituteAddress").value =
         "123/45 หมู่ 2 บ้านหมีน้อย";
-    document.getElementById("visitorName").value = "นางสาวแก้วกานต์ แก่นดี";
-    document.getElementById("visitorEmail").value = "kaewkarn@gmail.com";
-    document.getElementById("tel").value = "0812345678";
+    document.getElementById("visitorName").value = "นางสาวชญาดา วิชัยโย";
+    document.getElementById("visitorEmail").value = "iicechyd.gaming@gmail.com";
+    document.getElementById("tel").value = "0967121279";
     calculateTotal();
 });
 

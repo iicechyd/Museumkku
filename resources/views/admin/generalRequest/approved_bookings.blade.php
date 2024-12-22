@@ -38,18 +38,22 @@
                                 ไม่มีรอบการเข้าชม
                             @endif
                         </td>
-                            <td>
-                                <button type="button" class="btn btn-info text-white" data-toggle="modal"
-                                    data-target="#detailsModal_{{ $item->booking_id }}">
-                                    รายละเอียด
-                                </button>
-                            </td>
                         <td>
-                            @if ($item->remaining_capacity == 0)
-                                รอบการเข้าชมรอบนี้เต็มแล้ว
+                            @if ($item->activity->max_capacity !== null)
+                                @if ($item->remaining_capacity > 0)
+                                    {{ $item->remaining_capacity }} / {{ $item->activity->max_capacity }} คน
+                                @else
+                                    รอบการเข้าชมนี้เต็มแล้ว
+                                @endif
                             @else
-                                {{ $item->remaining_capacity }} / {{ $item->activity->max_capacity }} คน
+                                ไม่จำกัดจำนวนคน
                             @endif
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-info text-white" data-toggle="modal"
+                                data-target="#detailsModal_{{ $item->booking_id }}">
+                                รายละเอียด
+                            </button>
                         </td>
                         <td>
                             @switch($item->status)
@@ -97,7 +101,7 @@
                             @else
                                 ไม่พบข้อมูลการเปลี่ยนแปลงสถานะ
                             @endif
-                        </td>                        
+                        </td>
                         <!-- Modal สำหรับแสดงรายละเอียด -->
                         <div class="modal fade" id="detailsModal_{{ $item->booking_id }}" tabindex="-1" role="dialog"
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -149,7 +153,7 @@
                 @endforeach
             @endcomponent
     </div>
-    
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/approved_bookings.js') }}"></script>

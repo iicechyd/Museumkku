@@ -40,8 +40,17 @@
                                 ไม่มีรอบการเข้าชม
                             @endif
                         </td>
-
-                        <td>{{ $item->remaining_capacity }} / {{ $item->activity->max_capacity }} คน</td>
+                        <td>
+                            @if ($item->activity->max_capacity !== null)
+                                @if ($item->remaining_capacity > 0)
+                                    {{ $item->remaining_capacity }} / {{ $item->activity->max_capacity }} คน
+                                @else
+                                    รอบการเข้าชมนี้เต็มแล้ว
+                                @endif
+                            @else
+                                ไม่จำกัดจำนวนคน
+                            @endif
+                        </td>
                         <td>
                             <button type="button" class="btn btn-info text-white" data-toggle="modal"
                                 data-target="#detailsModal_{{ $item->booking_id }}">

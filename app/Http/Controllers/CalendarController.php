@@ -61,10 +61,15 @@ class CalendarController extends Controller
     {
         $startTime = $booking->timeslot ? Carbon::createFromFormat('H:i:s', $booking->timeslot->start_time)->format('H:i') : null;
         $endTime = $booking->timeslot ? Carbon::createFromFormat('H:i:s', $booking->timeslot->end_time)->format('H:i') : null;
-        
-        $startDate = Carbon::createFromFormat('Y-m-d', $booking->booking_date);
-        $durationDays = $booking->activity->duration_days ?? 1;
-        $endDate = $startDate->copy()->addDays($durationDays - 1)->format('Y-m-d');
+                
+            $startDate = Carbon::createFromFormat('Y-m-d', $booking->booking_date);
+            $durationDays = $booking->activity->duration_days; 
+            $endDate = date('Y-m-d', strtotime("+$durationDays days", strtotime($startDate)));
+    
+            $endDate = $booking->end_date ?? $booking->booking_date;
+            if ($endDate !== $booking->booking_date) {
+                $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->addDay()->format('Y-m-d');
+            }
 
         $remainingCapacity = $booking->activity->max_capacity !== null 
         ? max(0, $booking->activity->max_capacity - $totalApproved)

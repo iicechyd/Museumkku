@@ -9,8 +9,5 @@ use App\Models\Activity;
 
 class AdminController extends Controller
 {
-    public function showDashboard()
-    {
-        return view('admin.dashboard');
-    }
+//
 }

@@ -12,6 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    
 
     <link rel="stylesheet" href="{{ asset('css/admin_page.css') }}">
     <title>ระบบจองเข้าชมพิพิธภัณฑ์ | สำหรับเจ้าหน้าที่</title>
@@ -113,10 +114,10 @@
         </aside>
         <!-- Main Component -->
         <div class="main">
-            <nav class="navbar navbar-expand px-3 border-bottom">
+            <nav class="navbar-expand px-3 border-bottom">
                 <!-- Button for sidebar toggle -->
                 <button class="btn" type="button" data-bs-theme="dark">
-                    <span class="navbar-toggler-icon "></span>
+                    <span class="navbar-toggler-icon"></span>
                 </button>
             </nav>
             <main class="content px-3 py-2">

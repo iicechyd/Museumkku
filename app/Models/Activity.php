@@ -37,4 +37,9 @@ class Activity extends Model
     {
         return $this->hasMany(ClosedTimeslots::class, 'activity_id');
     }
+    public function bookings()
+    {
+        return $this->hasMany(Bookings::class, 'activity_id');
+    }
+
 }

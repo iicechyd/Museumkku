@@ -30,7 +30,7 @@ class LoginController extends Controller
         // session(['is_admin' => $user->role && $user->role->role_name === 'Admin']);
 
         if ($user->role && $user->role->role_name === 'Super Admin') {
-            return redirect('super_admin/dashboard');
+            return redirect('super_admin/all_users');
         } elseif ($user->role && $user->role->role_name === 'Admin') {
             return redirect('admin/dashboard');
         } elseif ($user->role && $user->role->role_name === 'Executive') {

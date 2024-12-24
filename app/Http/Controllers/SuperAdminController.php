@@ -36,4 +36,9 @@ class SuperAdminController extends Controller
 
         return view('superadmin.all_users', compact('users', 'roles'));
     }
+
+    public function showTable()
+    {
+        return view('pages.tables');
+    }
 }

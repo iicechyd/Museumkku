@@ -15,7 +15,7 @@
         <div class="button pb-2">
             <a href="{{ url('/admin/request_bookings/activity') }}" class="btn-request-outline">รออนุมัติ</a>
             <a href="{{ url('/admin/approved_bookings/activity') }}" class="btn btn-success">อนุมัติ</a>
-            <a href="{{ url('/admin/except_cases_bookings/activity') }}" class="btn-except-outline">กรณีพิเศษ</a>
+            <a href="{{ url('/admin/except_cases_bookings/activity') }}" class="btn-except-outline">ยกเลิก</a>
         </div>
         @if (count($approvedBookings) > 0)
             <h1 class="table-heading text-center">อนุมัติการจองเข้าชม</h1>

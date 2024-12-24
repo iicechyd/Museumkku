@@ -13,15 +13,16 @@ use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ExecutiveController;
 use App\Http\Middleware\RoleMiddleware;
+use App\Http\Controllers\DashboardController;
 
 //Middleware routes
 Auth::routes();
 Route::middleware([RoleMiddleware::class . ':Super Admin'])->group(function () {
-    Route::get('/all_users', [SuperAdminController::class, 'showAllUsers'])->name('showAllUsers');
-    Route::get('/super_admin/dashboard', [SuperAdminController::class, 'showDashboard'])->name('showDashboard');
+    Route::get('/super_admin/all_users', [SuperAdminController::class, 'showAllUsers'])->name('showAllUsers');
+
 });
 Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'showDashboard'])->name('showDashboard');
+    Route::get('/admin/dashboard', [DashboardController::class, 'showDashboard'])->name('showDashboard');
     Route::get('/admin/activity_list', [ActivityController::class, 'showListActivity']);
     Route::get('/admin/admin_calendar', [HomeController::class, 'showAdminCalendar'])->name('calendar.showAdminCalendar');
     

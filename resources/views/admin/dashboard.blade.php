@@ -1,4 +1,4 @@
-@extends('layouts.layout_admin')
+@extends(auth()->user()->role->role_name === 'Admin' ? 'layouts.layout_admin' : 'layouts.layout_executive')
 @section('title', 'Dashboard')
 @section('content')
 
@@ -10,7 +10,7 @@
     <title>Dashboard</title>
 
     <x-layout bodyClass>
-        <div class="container-fluid py-4">
+        <div class="container py-4">
             <div class="row">
                 <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
                     <div class="card">
@@ -100,12 +100,12 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <h6 class="mb-0 ">Website Views</h6>
-                            <p class="text-sm ">Last Campaign Performance</p>
+                            <h6 class="mb-0 ">ยอดจำนวนผู้เข้าชมทั้งหมดในสัปดาห์นี้</h6>
+                            <p class="text-sm">ผลการดำเนินงานล่าสุด</p>
                             <hr class="dark horizontal">
-                            <div class="d-flex ">
+                            <div class="d-flex">
                                 <i class="material-icons text-sm my-auto me-1">schedule</i>
-                                <p class="mb-0 text-sm"> campaign sent 2 days ago </p>
+                                <p class="mb-0 text-sm">รีเฟรชล่าสุดเมื่อ 2 วันที่แล้ว</p>
                             </div>
                         </div>
                     </div>
@@ -158,16 +158,11 @@
                         <div class="card-header pb-0">
                             <div class="row">
                                 <div class="col-lg-6 col-7">
-                                    <h6>Projects</h6>
-                                    <p class="text-sm mb-0">
-                                        <i class="fa fa-check text-info" aria-hidden="true"></i>
-                                        <span class="font-weight-bold ms-1">30 done</span> this month
-                                    </p>
+                                    <h6>จำนวนผู้เข้าร่วมกิจกรรมพิเศษ</h6>
                                 </div>
                                 <div class="col-lg-6 col-5 my-auto text-end">
                                     <div class="dropdown float-lg-end pe-4">
-                                        <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
+                                        <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown"aria-expanded="false">
                                             <i class="fa fa-ellipsis-v text-secondary"></i>
                                         </a>
                                         <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5"
@@ -188,110 +183,29 @@
                                 <table class="table align-items-center mb-0">
                                     <thead>
                                         <tr>
-                                            <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                กิจกรรมพิเศษ</th>
-                                            <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                จำนวนผู้เข้าร่วมกิจกรรม</th>
-                                            <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                ยอดรวมราคา</th>
-
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">กิจกรรมพิเศษ</th>
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">จำนวนผู้เข้าร่วมกิจกรรม</th>
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ยอดรวมราคา</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($specialActivities as $activity)
                                         <tr>
                                             <td>
                                                 <div class="d-flex px-2 py-1">
                                                     <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">กิจกรรมฐาน1</h6>
+                                                        <h6 class="mb-0 text-sm">{{ $activity->activity_name }}</h6>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> $14,000 </span>
+                                                <span class="text-xs font-weight-bold">{{ $activity->total_visitors }} คน</span>
                                             </td>
                                             <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> 500 บาท</span>
+                                                <span class="text-xs font-weight-bold">{{ number_format($activity->total_price, 2) }} บาท</span>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">กิจกรรม2</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> $3,000 </span>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> 500 บาท</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Fix Platform Errors</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> Not set </span>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> 500 บาท</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Launch our Mobile App</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> $20,500 </span>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> 500 บาท</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Add the New Pricing Page</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> 500 คน</span>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> 500 บาท</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Redesign New Online Shop</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> $2,000 </span>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> 500 บาท</span>
-                                            </td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -299,16 +213,14 @@
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
-                    <div class="card h-100">
+                    <div class="card">
                         <div class="card-header pb-0">
-                            <h6>Orders overview</h6>
-                            <p class="text-sm">
-                                <i class="fa fa-arrow-up text-success" aria-hidden="true"></i>
-                                <span class="font-weight-bold">24%</span> this month
-                            </p>
+                           <h6>สถิติประเภทผู้เข้าชม</h6>
                         </div>
-                        <div class="card-body p-3">
-                            //
+                    </div>
+                    <div class="card align-items-center">
+                        <div class="card-body p-3" style="width: 250px" height="250px">
+                            <canvas id="visitorPieChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -321,6 +233,14 @@
         @push('js')
             <script src="{{ asset('material/assets/js/plugins/chartjs.min.js') }}"></script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+            <script>
+                var children_qty = {{ $visitorStats->children_qty ?? 0 }};
+                var students_qty = {{ $visitorStats->students_qty ?? 0 }};
+                var adults_qty = {{ $visitorStats->adults_qty ?? 0 }};
+                var disabled_qty = {{ $visitorStats->disabled_qty ?? 0 }};
+                var elderly_qty = {{ $visitorStats->elderly_qty ?? 0 }};
+                var monk_qty = {{ $visitorStats->monk_qty ?? 0 }};
+            </script>
             <script src="{{ asset('js/dashboard.js') }}"></script>
         @endpush
     </x-layout>

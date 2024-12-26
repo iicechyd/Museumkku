@@ -34,7 +34,7 @@ class LoginController extends Controller
         } elseif ($user->role && $user->role->role_name === 'Admin') {
             return redirect('admin/dashboard');
         } elseif ($user->role && $user->role->role_name === 'Executive') {
-            return redirect('dashboard');
+            return redirect('executive/dashboard');
         }
 
         // Default redirection if no specific role is found

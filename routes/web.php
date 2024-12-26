@@ -35,6 +35,9 @@ Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {
     Route::get('/admin/approved_bookings/activity', [BookingActivityController::class, 'showApprovedActivity'])->name('approved_bookings');
     Route::get('/admin/except_cases_bookings/activity', [BookingActivityController::class, 'showExceptActivity'])->name('except_bookings');    
 });
+Route::middleware([RoleMiddleware::class . ':Executive'])->group(function () {
+    Route::get('/executive/dashboard', [DashboardController::class, 'showDashboard'])->name('showDashboard');
+});
 
 //Route หน้าเพจต่างๆ
 Route::get('/', [HomeController::class, 'showWelcome'])->name('showWelcome');

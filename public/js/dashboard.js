@@ -244,3 +244,41 @@ var ctx = document.getElementById("chart-bars").getContext("2d");
                 },
             });
     
+            document.addEventListener('DOMContentLoaded', function () {
+                var ctx = document.getElementById('visitorPieChart').getContext('2d');
+                var visitorPieChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['เด็ก', 'นักเรียน', 'ผู้ใหญ่', 'ผู้พิการ', 'ผู้สูงอายุ', 'พระสงฆ์'],
+                        datasets: [{
+                            label: 'จำนวนผู้เข้าชม',
+                            data: [
+                                children_qty,
+                                students_qty,
+                                adults_qty,
+                                disabled_qty,
+                                elderly_qty,
+                                monk_qty,
+                            ],
+                            backgroundColor: ['#FF6F61', '#6B5B95', '#88B04B', '#F1C40F', '#2980B9', '#8E44AD'],
+                            borderColor: '#fff',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        return tooltipItem.label + ': ' + tooltipItem.raw + ' คน';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            });

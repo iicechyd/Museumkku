@@ -53,18 +53,9 @@
           </div>
         </div>
       </div>
-      {{-- <div class="col-md-3">
-        <div class="card text-center">
-          <div class="card-body">
-            <h5>Organic</h5>
-            <h3 class="text-success">49,123</h3>
-          </div>
-        </div>
-      </div> --}}
     </div>
 
     <div class="row">
-      <!-- Daily Data -->
       <div class="col-md-6">
         <div class="card">
           <div class="card-body">
@@ -190,31 +181,6 @@
                 <div class="progress-bar yellow" style="width: 37%">37%</div>
               </div>
             </div>
-            {{-- <h6>Sources</h6>
-            <div class="mb-2">
-              <strong>Organic Search</strong>
-              <div class="progress">
-                <div class="progress-bar green" style="width: 56%">56%</div>
-              </div>
-            </div>
-            <div class="mb-2">
-              <strong>Facebook</strong>
-              <div class="progress">
-                <div class="progress-bar green" style="width: 15%">15%</div>
-              </div>
-            </div>
-            <div class="mb-2">
-              <strong>Twitter</strong>
-              <div class="progress">
-                <div class="progress-bar green" style="width: 11%">11%</div>
-              </div>
-            </div>
-            <div class="mb-2">
-              <strong>LinkedIn</strong>
-              <div class="progress">
-                <div class="progress-bar green" style="width: 8%">8%</div>
-              </div>
-            </div> --}}
           </div>
         </div>
       </div>

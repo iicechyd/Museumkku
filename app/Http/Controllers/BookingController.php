@@ -61,14 +61,21 @@ class BookingController extends Controller
         return view('admin.generalRequest.request_bookings', compact('requestBookings'));
     }
 
-    function showApproved()
+    function showApproved(Request $request)
     {
-        $approvedBookings = Bookings::with('activity', 'timeslot', 'visitor', 'institute')
+        $activities = Activity::where('activity_type_id', 1)->get();
+
+        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
-            ->where('status', 1)
-            ->paginate(5);
+            ->where('status', 1);
+
+        if ($request->filled('activity_id')) {
+            $query->where('activity_id', $request->activity_id);
+        }
+        $approvedBookings = $query->paginate(5);
+
 
         foreach ($approvedBookings as $item) {
             $totalApproved = Bookings::where('booking_date', $item->booking_date)
@@ -99,7 +106,7 @@ class BookingController extends Controller
             $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
         }
 
-        return view('admin.generalRequest.approved_bookings', compact('approvedBookings'));
+        return view('admin.generalRequest.approved_bookings', compact('approvedBookings', 'activities'));
     }
 
     function showExcept()
@@ -178,18 +185,18 @@ class BookingController extends Controller
                 'changed_by' => Auth::user()->name,
             ]);
         }
-       // ดึงอีเมลจากตาราง visitors ผ่านความสัมพันธ์
-    $visitorEmail = $booking->visitor ? $booking->visitor->visitorEmail : null;
+        // ดึงอีเมลจากตาราง visitors ผ่านความสัมพันธ์
+        $visitorEmail = $booking->visitor ? $booking->visitor->visitorEmail : null;
 
-    if ($newStatus === 1 && $visitorEmail) {
-        // ส่งอีเมลหากพบอีเมล
-        Mail::to($visitorEmail)->send(new BookingApprovedMail($booking));
-    } else {
-        Log::warning("ไม่พบอีเมลสำหรับการจองหมายเลข {$booking->booking_id}");
+        if ($newStatus === 1 && $visitorEmail) {
+            // ส่งอีเมลหากพบอีเมล
+            Mail::to($visitorEmail)->send(new BookingApprovedMail($booking));
+        } else {
+            Log::warning("ไม่พบอีเมลสำหรับการจองหมายเลข {$booking->booking_id}");
+        }
+
+        return redirect()->back()->with('success', 'สถานะการจองถูกอัปเดตแล้ว');
     }
-
-    return redirect()->back()->with('success', 'สถานะการจองถูกอัปเดตแล้ว');
-}
     function InsertBooking(Request $request)
     {
         $request->validate(
@@ -214,41 +221,41 @@ class BookingController extends Controller
                 'monk_qty' => 'nullable|integer|min:0',
             ]
         );
-    if (in_array($request->fk_activity_id, [1, 2, 3])) {
-        $rules['fk_timeslots_id'] = 'required|exists:timeslots,timeslots_id';
-    } else {
-        $rules['fk_timeslots_id'] = 'nullable|exists:timeslots,timeslots_id';
-    }
-    $messages = [
-        'fk_timeslots_id.required' => 'กรุณาเลือกรอบการเข้าชม',
-        'at_least_one_quantity.required' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท',
-    ];
-
-    $request->validate($rules, $messages);
-
-    $quantityFields = [
-        'children_qty',
-        'students_qty',
-        'adults_qty',
-        'disabled_qty',
-        'elderly_qty',
-        'monk_qty'
-    ];
-
-    $isAtLeastOneQuantityFilled = false;
-    foreach ($quantityFields as $field) {
-        if ($request->$field > 0) {
-            $isAtLeastOneQuantityFilled = true;
-            break;
+        if (in_array($request->fk_activity_id, [1, 2, 3])) {
+            $rules['fk_timeslots_id'] = 'required|exists:timeslots,timeslots_id';
+        } else {
+            $rules['fk_timeslots_id'] = 'nullable|exists:timeslots,timeslots_id';
         }
-    }
+        $messages = [
+            'fk_timeslots_id.required' => 'กรุณาเลือกรอบการเข้าชม',
+            'at_least_one_quantity.required' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท',
+        ];
 
-    if (!$isAtLeastOneQuantityFilled) {
-        return back()->withErrors([
-            'at_least_one_quantity' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท'
-        ])->withInput();
-    }
-    
+        $request->validate($rules, $messages);
+
+        $quantityFields = [
+            'children_qty',
+            'students_qty',
+            'adults_qty',
+            'disabled_qty',
+            'elderly_qty',
+            'monk_qty'
+        ];
+
+        $isAtLeastOneQuantityFilled = false;
+        foreach ($quantityFields as $field) {
+            if ($request->$field > 0) {
+                $isAtLeastOneQuantityFilled = true;
+                break;
+            }
+        }
+
+        if (!$isAtLeastOneQuantityFilled) {
+            return back()->withErrors([
+                'at_least_one_quantity' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท'
+            ])->withInput();
+        }
+
         $activity = Activity::with('activityType')->find($request->fk_activity_id);
         if (!$activity) {
             return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
@@ -321,14 +328,16 @@ class BookingController extends Controller
             'subdistrict' => $request->subdistrict,
             'zipcode' => $request->zipcode,
         ]);
-        $visitor = Visitors::updateOrCreate([
-            'visitorEmail' => $request->visitorEmail,
-        ], 
-[
-            'visitorName' => $request->visitorName,
-            'tel' => $request->tel,
-            'institute_id' => $institute->institute_id,
-        ]);
+        $visitor = Visitors::updateOrCreate(
+            [
+                'visitorEmail' => $request->visitorEmail,
+            ],
+            [
+                'visitorName' => $request->visitorName,
+                'tel' => $request->tel,
+                'institute_id' => $institute->institute_id,
+            ]
+        );
 
         $booking = new Bookings();
         $booking->activity_id = $request->fk_activity_id;

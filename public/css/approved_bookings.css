@@ -1,6 +1,4 @@
-body,
-.table-heading,
-.table-responsive table {
+body, .table-heading, .table-responsive table {
     font-family: "Noto Sans Thai", sans-serif;
 }
 
@@ -25,28 +23,14 @@ body,
 }
 
 table {
-    min-width: 100vw;
-    width: auto;
-    flex: 1;
-    display: grid;
-    border-collapse: collapse;
-    grid-template-columns:
-        minmax(100px, 1fr)
-        minmax(400px, 1.67fr)
-        minmax(200px, 1.67fr)
-        minmax(170px, 1.67fr)
-        minmax(230px, 1fr)
-        minmax(200px, 1fr)
-        minmax(170px, 1fr)
-        minmax(230px, 1fr)
-        minmax(270px, 1fr);
+    min-width: 100%;
+
 }
 
-thead,
-tbody,
-tr {
+/* thead, tbody, tr {
     display: contents;
-}
+} */
+
 
 th,td {
     padding: 15px;
@@ -54,7 +38,6 @@ th,td {
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: center;
-    vertical-align: middle;
 }
 
 th {

@@ -1,9 +1,10 @@
 @extends('layouts.layout_admin')
-@section('title', 'อนุมัติการจองเข้าชมพิพิธภัณฑ์')
+@section('title', 'จองเข้าชมพิพิธภัณฑ์')
 @section('content')
 
     <head>
-        <link rel="stylesheet" href="{{ asset('css/approved_bookings.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/request_bookings.css') }}">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
 
     @if (session('success'))
@@ -11,42 +12,23 @@
             {{ session('success') }}
         </div>
     @endif
-    
+
     <div class="container">
         <div class="button pb-2">
-            <a href="{{ url('/admin/request_bookings/activity') }}" class="btn-request-outline">รออนุมัติ</a>
-            <a href="{{ url('/admin/approved_bookings/activity') }}" class="btn btn-success">อนุมัติ</a>
-            <a href="{{ url('/admin/except_cases_bookings/activity') }}" class="btn-except-outline">ยกเลิก</a>
+            <a href="{{ url('/admin/request_bookings/general') }}" class="btn-request">รออนุมัติ</a>
+            <a href="{{ url('/admin/except_cases_bookings/general') }}" class="btn-except-outline">ตอบรับคำขออนุมัติ</a>
+            <a href="{{ url('/admin/approved_bookings/general') }}" class="btn-approved-outline">อนุมัติ</a>
+            <a href="{{ url('/admin/except_cases_bookings/general') }}" class="btn-except-outline">ยกเลิก</a>
         </div>
+        @if (count($rQequestBookings) > 0)
+            <h1 class="table-heading text-center">รออนุมัติการจองเข้าชม</h1>
+            {{ $requestBookings->links() }}
 
-        <div class="form col-6">
-            <form method="GET" action="{{ route('approved_bookings.activity') }}">
-                <label for="activity_id">เลือกกิจกรรม:</label>
-                <select name="activity_id" id="activity_id" class="form-select" onchange="this.form.submit()">
-                    <option value="">กรุณาเลือกประเภทการเข้าชม</option>
-                    @foreach ($activities as $activity)
-                        <option value="{{ $activity->activity_id }}"
-                            {{ request('activity_id') == $activity->activity_id ? 'selected' : '' }}>
-                            {{ $activity->activity_name }}
-                        </option>
-                    @endforeach
-                </select>
-            </form>
-        </div>
-
-        @if (request('activity_id'))
-            @php
-                $selectedActivityName =
-                    $activities->firstWhere('activity_id', request('activity_id'))->activity_name ?? null;
-            @endphp
-
-            <h1 class="table-heading text-center">{{ $selectedActivityName }}</h1>
-        @if (count($approvedBookings) > 0)
-        {{ $approvedBookings->appends(request()->query())->links() }}
-            @component('components.table_approved_bookings')
-                @foreach ($approvedBookings as $item)
+            @component('components.table_request_bookings')
+                @foreach ($requestBookings as $item)
                     <tr>
                         <td>{{ $item->booking_id }}</td>
+                        <td>{{ $item->activity->activity_name }}</td>
                         <td class="custom-td">
                             {{ \Carbon\Carbon::parse($item->booking_date)->locale('th')->translatedFormat('j F') }}
                             {{ \Carbon\Carbon::parse($item->booking_date)->addYears(543)->year }}
@@ -71,15 +53,23 @@
                             @endif
                         </td>
                         <td>
+                            <button type="button" class="btn btn-info text-white" data-toggle="modal"
+                                data-target="#detailsModal_{{ $item->booking_id }}">
+                                รายละเอียด
+                            </button>
+                        </td>
+                        <td>
                             @switch($item->status)
                                 @case(0)
-                                    <button type="button" class="btn btn-warning text-white">รออนุมัติ</button>
+                                    <button type="button" class="status-btn-request">รออนุมัติ</button>
                                 @break
+
                                 @case(1)
-                                    <button type="button" class="status-btn">อนุมัติ</button>
+                                    <button type="button" class="btn btn-success">อนุมัติ</button>
                                 @break
+
                                 @case(2)
-                                    <button type="button" class="status-btn-except">ยกเลิก</button>
+                                    <button type="button" class="btn btn-danger">ยกเลิก</button>
                                 @break
                             @endswitch
                         </td>
@@ -91,6 +81,7 @@
                                     <select name="status" id="statusSelect_{{ $item->booking_id }}"
                                         onchange="toggleCommentsField({{ $item->booking_id }})"
                                         class="bg-gray-100 border border-gray-300 rounded-lg p-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="pending" {{ $item->status == 0 ? 'selected' : '' }}>รออนุมัติ</option>
                                         <option value="approve" {{ $item->status == 1 ? 'selected' : '' }}>อนุมัติ</option>
                                         <option value="cancel" {{ $item->status == 2 ? 'selected' : '' }}>ยกเลิก</option>
                                     </select>
@@ -99,21 +90,14 @@
                                         <input type="text" name="comments" placeholder="กรอกความคิดเห็น"
                                             class="bg-gray-100 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                                     </div>
-
                                     <button type="submit" class="button-custom">
                                         อัปเดตสถานะ
                                     </button>
                                 </div>
                             </form>
                         </td>
-                        <td>
-                            <button type="button" class="btn btn-info text-white" data-toggle="modal"
-                                data-target="#detailsModal_{{ $item->booking_id }}">
-                                รายละเอียด
-                            </button>
-                        </td>
-                         <!-- Modal สำหรับแสดงรายละเอียด -->
-                         <div class="modal fade" id="detailsModal_{{ $item->booking_id }}" tabindex="-1" role="dialog"
+                        <!-- Modal สำหรับแสดงรายละเอียด -->
+                        <div class="modal fade" id="detailsModal_{{ $item->booking_id }}" tabindex="-1" role="dialog"
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -152,12 +136,6 @@
                                             </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
                                             คน</p>
                                         <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
-                                    <p><strong>เวลาที่แก้ไขสถานะ: </strong>
-                                        {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
-                                        {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->year + 543 }} เวลา
-                                        {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->format('H:i') }} น.
-                                        แก้ไขโดยเจ้าหน้าที่: {{ $item->latestStatusChange->changed_by ?? 'N/A' }}
-                                    </p>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
@@ -168,21 +146,16 @@
                     </tr>
                 @endforeach
             @endcomponent
-            @else
-                <h2 class="text-center py-5">ไม่พบข้อมูลการจองสำหรับกิจกรรมนี้</h2>
-            @endif
     </div>
-    @else
-    <h1 class="text text-center py-5 ">กรุณาเลือกกิจกรรมเพื่อตรวจสอบข้อมูล</h1>
-    @endif
-@endsection
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('js/approved_bookings.js') }}"></script>
+    <script src="{{ asset('js/request_bookings.js') }}"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            var approvedBookings = @json($approvedBookings->pluck('booking_id'));
-            approvedBookings.forEach(function(booking_id) {
+            var requestBookings = @json($requestBookings->pluck('booking_id'));
+            requestBookings.forEach(function(booking_id) {
                 toggleCommentsField(booking_id);
             });
         });
@@ -190,6 +163,7 @@
         function toggleCommentsField(booking_id) {
             var status = document.getElementById("statusSelect_" + booking_id).value;
             var commentsField = document.getElementById("commentsField_" + booking_id);
+
             if (status === "cancel") {
                 commentsField.style.display = "block";
             } else {
@@ -197,3 +171,8 @@
             }
         }
     </script>
+@else
+    <h1 class="text text-center py-5 ">ไม่พบข้อมูลในระบบ</h1>
+    @endif
+
+@endsection

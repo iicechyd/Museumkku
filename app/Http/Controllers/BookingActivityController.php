@@ -50,14 +50,20 @@ class BookingActivityController extends Controller
         return view('admin.activityRequest.request_bookings', compact('requestBookings'));
     }
 
-    function showApprovedActivity()
+    function showApprovedActivity(Request $request)
     {
-        $approvedBookings = Bookings::with('activity', 'timeslot')
+        $activities = Activity::where('activity_type_id', 2)->get();
+
+        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 2);
             })
-            ->where('status', 1)
-            ->paginate(5);
+            ->where('status', 1);
+
+        if ($request->filled('activity_id')) {
+            $query->where('activity_id', $request->activity_id);
+        }
+        $approvedBookings = $query->paginate(5);
 
         foreach ($approvedBookings as $item) {
             $totalApproved = Bookings::where('booking_date', $item->booking_date)
@@ -72,6 +78,7 @@ class BookingActivityController extends Controller
                     ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
+
             if ($item->activity->max_capacity !== null) {
                 $item->remaining_capacity = $item->activity->max_capacity - $totalApproved;
             } else {
@@ -85,7 +92,7 @@ class BookingActivityController extends Controller
             $monkPrice = $item->monk_qty * $item->activity->monk_price;
             $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
         }
-        return view('admin.activityRequest.approved_bookings', compact('approvedBookings'));
+        return view('admin.activityRequest.approved_bookings', compact('approvedBookings', 'activities'));
     }
 
     function showExceptActivity()

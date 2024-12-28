@@ -1,8 +1,6 @@
 const min = 150;
 const columnTypeToRatioMap = {
     numeric: 1,
-    "text-short": 1.67,
-    "text-long": 3.33,
 };
 
 const table = document.querySelector("table");

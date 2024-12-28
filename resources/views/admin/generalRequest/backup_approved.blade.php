@@ -17,30 +17,11 @@
             <a href="{{ url('/admin/approved_bookings/general') }}" class="btn btn-success">อนุมัติ</a>
             <a href="{{ url('/admin/except_cases_bookings/general') }}" class="btn-except-outline">ยกเลิก</a>
         </div>
-
-        <div class="form col-6">
-        <form method="GET" action="{{ route('approved_bookings.general') }}">
-            <label for="activity_id">เลือกกิจกรรม:</label>
-            <select name="activity_id" id="activity_id" class="form-select" onchange="this.form.submit()">
-                <option value="">กรุณาเลือกประเภทการเข้าชม</option>
-                @foreach ($activities as $activity)
-                    <option value="{{ $activity->activity_id }}"
-                        {{ request('activity_id') == $activity->activity_id ? 'selected' : '' }}>
-                        {{ $activity->activity_name }}
-                    </option>
-                @endforeach
-            </select>
-        </form>
-    </div>
-        @if (request('activity_id'))
-            @php
-                $selectedActivityName =
-                    $activities->firstWhere('activity_id', request('activity_id'))->activity_name ?? null;
-            @endphp
-            <h1 class="table-heading text-center">{{ $selectedActivityName }}</h1>
-            @if (count($approvedBookings) > 0)
-            {{ $approvedBookings->appends(request()->query())->links() }}
-            @component('components.table_approved_bookings')
+        @if (count($approvedBookingsByActivity) > 0)
+            @foreach ($approvedBookingsByActivity as $activityId => $approvedBookings)
+                <h1 class="table-heading text-center">{{ $approvedBookings->first()->activity->activity_name }}</h1>
+                {{-- {{ $approvedBookings->links() }} --}}
+                @component('components.table_approved_bookings')
                     @foreach ($approvedBookings as $item)
                         <tr>
                             <td>{{ $item->booking_id }}</td>
@@ -72,11 +53,9 @@
                                     @case(0)
                                         <button type="button" class="btn btn-warning text-white">รออนุมัติ</button>
                                     @break
-
                                     @case(1)
                                         <button type="button" class="status-btn">อนุมัติ</button>
                                     @break
-
                                     @case(2)
                                         <button type="button" class="status-btn-except">ยกเลิก</button>
                                     @break
@@ -150,14 +129,14 @@
                                                 </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
                                                 คน</p>
                                             <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
-                                            <p><strong>แก้ไขสถานะ:</strong>
+                                            <p><strong>เวลาที่แก้ไขสถานะ: </strong>
                                                 @if ($item->latestStatusChange)
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->year + 543 }}
                                                     เวลา
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->format('H:i') }}
                                                     น.
-                                                    โดยเจ้าหน้าที่: {{ $item->latestStatusChange->changed_by ?? 'N/A' }}
+                                                    แก้ไขโดยเจ้าหน้าที่: {{ $item->latestStatusChange->changed_by ?? 'N/A' }}
                                                 @else
                                                     ไม่พบข้อมูลการเปลี่ยนแปลงสถานะ
                                                 @endif
@@ -172,33 +151,32 @@
                         </tr>
                     @endforeach
                 @endcomponent
-            @else
-                <h2 class="text-center py-5">ไม่พบข้อมูลการจองสำหรับกิจกรรมนี้</h2>
-            @endif
+                @endforeach
+
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/approved_bookings.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var approvedBookings = @json($approvedBookings->pluck('booking_id'));
+            approvedBookings.forEach(function(booking_id) {
+                toggleCommentsField(booking_id);
+            });
+        });
+
+        function toggleCommentsField(booking_id) {
+            var status = document.getElementById("statusSelect_" + booking_id).value;
+            var commentsField = document.getElementById("commentsField_" + booking_id);
+            if (status === "cancel") {
+                commentsField.style.display = "block";
+            } else {
+                commentsField.style.display = "none";
+            }
+        }
+    </script>
 @else
-    <h1 class="text text-center py-5 ">กรุณาเลือกกิจกรรมเพื่อตรวจสอบข้อมูล</h1>
+    <h1 class="text text-center py-5 ">ไม่พบข้อมูลในระบบ</h1>
     @endif
 @endsection
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('js/approved_bookings.js') }}"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var approvedBookings = @json($approvedBookings->pluck('booking_id'));
-        approvedBookings.forEach(function(booking_id) {
-            toggleCommentsField(booking_id);
-        });
-    });
-
-    function toggleCommentsField(booking_id) {
-        var status = document.getElementById("statusSelect_" + booking_id).value;
-        var commentsField = document.getElementById("commentsField_" + booking_id);
-        if (status === "cancel") {
-            commentsField.style.display = "block";
-        } else {
-            commentsField.style.display = "none";
-        }
-    }
-</script>

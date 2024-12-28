@@ -28,11 +28,12 @@ Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {
     
     // Route ตรวจการจองทั่วไป
     Route::get('/admin/request_bookings/general', [BookingController::class, 'showBookings'])->name('request_bookings.general');
-    Route::get('/admin/approved_bookings/general', [BookingController::class, 'showApproved'])->name('approved_bookings');
+    Route::get('/admin/request_letter/general', [BookingController::class, 'showRequestLetter'])->name('request_letter');
+    Route::get('/admin/approved_bookings/general', [BookingController::class, 'showApproved'])->name('approved_bookings.general');
     Route::get('/admin/except_cases_bookings/general', [BookingController::class, 'showExcept'])->name('except_bookings');
     // Route ตรวจการจองกิจกรรม
     Route::get('/admin/request_bookings/activity', [BookingActivityController::class, 'showBookingsActivity'])->name('request_bookings.activity');
-    Route::get('/admin/approved_bookings/activity', [BookingActivityController::class, 'showApprovedActivity'])->name('approved_bookings');
+    Route::get('/admin/approved_bookings/activity', [BookingActivityController::class, 'showApprovedActivity'])->name('approved_bookings.activity');
     Route::get('/admin/except_cases_bookings/activity', [BookingActivityController::class, 'showExceptActivity'])->name('except_bookings');    
 });
 Route::middleware([RoleMiddleware::class . ':Executive'])->group(function () {

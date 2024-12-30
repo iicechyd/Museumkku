@@ -3,15 +3,16 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\SuperAdminController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ExecutiveController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BookingActivityController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\TimeslotController;
 use App\Http\Controllers\CalendarController;
-use App\Http\Controllers\SuperAdminController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\ExecutiveController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\DashboardController;
 
@@ -92,3 +93,6 @@ Route::delete('admin/closed-dates/{id}', [TimeslotController::class, 'deleteClos
 Route::get('/admin/manage-closed-dates', [TimeslotController::class, 'showClosedDates'])->name('admin.manageClosedDates');
 Route::post('/admin/manage-closed-dates', [TimeslotController::class, 'saveClosedDates'])->name('admin.saveClosedDates');
 Route::post('/admin/get-timeslots', [TimeslotController::class, 'getTimeslotsByActivity'])->name('admin.getTimeslots');
+
+Route::get('/documents/upload/{booking_id}', [DocumentController::class, 'showUploadForm'])->name('documents.upload');
+Route::post('/documents/upload/{booking_id}', [DocumentController::class, 'uploadDocument'])->name('documents.store');

@@ -71,7 +71,7 @@ class BookingController extends Controller
     {
         $activities = Activity::where('activity_type_id', 1)->get();
 
-        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute')
+        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'documents')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
@@ -202,11 +202,11 @@ class BookingController extends Controller
 
         if ($newStatus === 1 && $visitorEmail) {
             // ส่งอีเมลหากพบอีเมล
-            Mail::to($visitorEmail)->send(new BookingApprovedMail($booking));
+            $uploadLink = route('documents.upload', ['booking_id' => $booking->booking_id]);
+            Mail::to($visitorEmail)->send(new BookingApprovedMail($booking, $uploadLink));
         } else {
             Log::warning("ไม่พบอีเมลสำหรับการจองหมายเลข {$booking->booking_id}");
         }
-
         return redirect()->back()->with('success', 'สถานะการจองถูกอัปเดตแล้ว');
     }
     function InsertBooking(Request $request)

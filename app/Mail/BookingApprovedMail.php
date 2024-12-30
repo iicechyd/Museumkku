@@ -14,10 +14,12 @@ class BookingApprovedMail extends Mailable
     use Queueable, SerializesModels;
 
     public $booking;
+    public $uploadLink;
 
-    public function __construct($booking)
+    public function __construct($booking, $uploadLink)
     {
         $this->booking = $booking;
+        $this->uploadLink = $uploadLink;
     }
 
     public function build()
@@ -25,7 +27,8 @@ class BookingApprovedMail extends Mailable
         return $this->subject('การจองของคุณได้รับการอนุมัติแล้ว')
                     ->view('emails.bookingApproved')
                     ->with([
-                        'booking' => $this->booking
+                        'booking' => $this->booking,
+                        'uploadLink' => $this->uploadLink,
                     ]);
     }
 }

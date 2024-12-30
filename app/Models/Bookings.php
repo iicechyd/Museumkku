@@ -65,4 +65,9 @@ class Bookings extends Model
         return $this->children_qty + $this->students_qty + $this->adults_qty;
     }
     
+    public function documents()
+    {
+        return $this->hasMany(Documents::class, 'booking_id', 'booking_id');
+    }
+    
 }

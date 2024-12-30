@@ -39,7 +39,7 @@
             @endphp
 
             @if (count($approvedBookings) > 0)
-            <h1 class="table-heading text-center">{{ $selectedActivityName }}</h1>
+                <h1 class="table-heading text-center">{{ $selectedActivityName }}</h1>
 
                 {{ $approvedBookings->appends(request()->query())->links() }}
                 @component('components.table_approved_bookings')
@@ -112,6 +112,13 @@
                                     รายละเอียด
                                 </button>
                             </td>
+                            <td>
+                                @if ($item->documents->isNotEmpty())
+                                <p class="text-success">แนบไฟล์เรียบร้อย</p>
+                                @else
+                                <p class="text-danger">รอแนบเอกสาร</p>
+                                @endif
+                            </td>
                             <!-- Modal สำหรับแสดงรายละเอียด -->
                             <div class="modal fade" id="detailsModal_{{ $item->booking_id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -152,6 +159,16 @@
                                                 </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
                                                 คน</p>
                                             <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
+                                            <p><strong>แนบเอกสาร: </strong>
+                                                @foreach ($item->documents as $document)
+                                                    <li>
+                                                        <a href="{{ asset('storage/' . $document->file_path) }}"
+                                                            target="_blank">
+                                                            {{ $document->file_name }}
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </p>
                                             <p><strong>แก้ไขสถานะ:</strong>
                                                 @if ($item->latestStatusChange)
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}

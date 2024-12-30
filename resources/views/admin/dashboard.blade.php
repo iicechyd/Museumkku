@@ -12,22 +12,25 @@
     <x-layout bodyClass>
         <div class="container py-4">
             <div class="row">
+                @foreach ($activities as $activity)
+                @if ($activity->activity_id == 1)
                 <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
                     <div class="card">
                         <div class="card-header p-3 pt-2">
-                            <div
-                                class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-                                <i class="material-icons opacity-10">weekend</i>
-                            </div>
-                            <div class="text-end pt-1">
-                                <p class="text-sm mb-0 text-capitalize">จำนวนผู้เข้าชมวันนี้</p>
-                                <h4 class="mb-0">$53k</h4>
-                            </div>
+                                <div
+                                    class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                                    <i class="material-icons opacity-10">weekend</i>
+                                </div>
+                                <div class="text-end pt-1">
+                                    <p class="text-sm mb-0 text-capitalize"><strong>จำนวนผู้เข้าชมวันนี้</strong></p>
+                                    <p class="text-sm mb-0 text-capitalize">{{ $activity->activity_name }}</p>
+                                    <h4 class="mb-0">{{ $totalVisitorsToday[$activity->activity_id] ?? 0 }} คน</h4>
+                                </div>
                         </div>
                         <hr class="dark horizontal my-0">
                         <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+55% </span>than
-                                lask week</p>
+                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+55%
+                                </span>จากเมื่อวานนี้</p>
                         </div>
                     </div>
                 </div>
@@ -39,14 +42,16 @@
                                 <i class="material-icons opacity-10">person</i>
                             </div>
                             <div class="text-end pt-1">
-                                <p class="text-sm mb-0 text-capitalize">Today's Users</p>
-                                <h4 class="mb-0">2,300</h4>
+                                <p class="text-sm mb-0 text-capitalize"><strong>จำนวนผู้เข้าชมทั้งสัปดาห์</strong>
+                                </p>
+                                <p class="text-sm mb-0 text-capitalize">{{ $activity->activity_name }}</p>
+                                <h4 class="mb-0">{{ $totalVisitorsThisWeek[$activity->activity_id] ?? 0 }} คน</h4>
                             </div>
                         </div>
                         <hr class="dark horizontal my-0">
                         <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+3% </span>than
-                                lask month</p>
+                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+3%
+                                </span>จากสัปดาห์ที่แล้ว</p>
                         </div>
                     </div>
                 </div>
@@ -58,14 +63,16 @@
                                 <i class="material-icons opacity-10">person</i>
                             </div>
                             <div class="text-end pt-1">
-                                <p class="text-sm mb-0 text-capitalize">New Clients</p>
-                                <h4 class="mb-0">3,462</h4>
+                                <p class="text-sm mb-0 text-capitalize"><strong>จำนวนผู้เข้าชมทั้งเดือน</strong></p>
+                                <p class="text-sm mb-0 text-capitalize">{{ $activity->activity_name }}</p>
+                                <h4 class="mb-0">{{ $totalVisitorsThisMonth[$activity->activity_id] ?? 0 }} คน</h4>
                             </div>
+
                         </div>
                         <hr class="dark horizontal my-0">
                         <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-danger text-sm font-weight-bolder">-2%</span> than
-                                yesterday</p>
+                            <p class="mb-0"><span class="text-danger text-sm font-weight-bolder">-2%</span>
+                                จากเดือนที่แล้ว</p>
                         </div>
                     </div>
                 </div>
@@ -77,17 +84,15 @@
                                 <i class="material-icons opacity-10">weekend</i>
                             </div>
                             <div class="text-end pt-1">
-                                <p class="text-sm mb-0 text-capitalize">Sales</p>
-                                <h4 class="mb-0">$103,430</h4>
+                                <p class="text-sm mb-0 text-capitalize"><strong>ยอดผู้เข้าชมทั้งหมดตลอดปี</strong></p>
+                                <p class="text-sm mb-0 text-capitalize">กิจกรรมธรรมชาติวิทยา</p>
+                                <h4 class="mb-0">{{ $totalVisitorsThisYear[$activity->activity_id] ?? 0 }} คน</h4>
                             </div>
-                        </div>
-                        <hr class="dark horizontal my-0">
-                        <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+5% </span>than
-                                yesterday</p>
                         </div>
                     </div>
                 </div>
+                @endif
+                @endforeach
             </div>
             <div class="row mt-4">
                 <div class="col-lg-4 col-md-6 mt-4 mb-4">
@@ -162,7 +167,8 @@
                                 </div>
                                 <div class="col-lg-6 col-5 my-auto text-end">
                                     <div class="dropdown float-lg-end pe-4">
-                                        <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown"aria-expanded="false">
+                                        <a class="cursor-pointer" id="dropdownTable"
+                                            data-bs-toggle="dropdown"aria-expanded="false">
                                             <i class="fa fa-ellipsis-v text-secondary"></i>
                                         </a>
                                         <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5"
@@ -183,28 +189,37 @@
                                 <table class="table align-items-center mb-0">
                                     <thead>
                                         <tr>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">กิจกรรมพิเศษ</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">จำนวนผู้เข้าร่วมกิจกรรม</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ยอดรวมราคา</th>
+                                            <th
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                กิจกรรมพิเศษ</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                จำนวนผู้เข้าร่วมกิจกรรม</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                ยอดรวมราคา</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($specialActivities as $activity)
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">{{ $activity->activity_name }}</h6>
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex px-2 py-1">
+                                                        <div class="d-flex flex-column justify-content-center">
+                                                            <h6 class="mb-0 text-sm">{{ $activity->activity_name }}</h6>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold">{{ $activity->total_visitors }} คน</span>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold">{{ number_format($activity->total_price, 2) }} บาท</span>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                                <td class="align-middle text-center text-sm">
+                                                    <span class="text-xs font-weight-bold">{{ $activity->total_visitors }}
+                                                        คน</span>
+                                                </td>
+                                                <td class="align-middle text-center text-sm">
+                                                    <span
+                                                        class="text-xs font-weight-bold">{{ number_format($activity->total_price, 2) }}
+                                                        บาท</span>
+                                                </td>
+                                            </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -215,7 +230,7 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="card">
                         <div class="card-header pb-0">
-                           <h6>สถิติประเภทผู้เข้าชม</h6>
+                            <h6>สถิติประเภทผู้เข้าชม</h6>
                         </div>
                     </div>
                     <div class="card align-items-center">

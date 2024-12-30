@@ -19,28 +19,30 @@
         </div>
 
         <div class="form col-6">
-        <form method="GET" action="{{ route('approved_bookings.general') }}">
-            <label for="activity_id">เลือกกิจกรรม:</label>
-            <select name="activity_id" id="activity_id" class="form-select" onchange="this.form.submit()">
-                <option value="">กรุณาเลือกประเภทการเข้าชม</option>
-                @foreach ($activities as $activity)
-                    <option value="{{ $activity->activity_id }}"
-                        {{ request('activity_id') == $activity->activity_id ? 'selected' : '' }}>
-                        {{ $activity->activity_name }}
-                    </option>
-                @endforeach
-            </select>
-        </form>
-    </div>
+            <form method="GET" action="{{ route('approved_bookings.general') }}">
+                <label for="activity_id">เลือกกิจกรรม:</label>
+                <select name="activity_id" id="activity_id" class="form-select" onchange="this.form.submit()">
+                    <option value="">กรุณาเลือกประเภทการเข้าชม</option>
+                    @foreach ($activities as $activity)
+                        <option value="{{ $activity->activity_id }}"
+                            {{ request('activity_id') == $activity->activity_id ? 'selected' : '' }}>
+                            {{ $activity->activity_name }}
+                        </option>
+                    @endforeach
+                </select>
+            </form>
+        </div>
         @if (request('activity_id'))
             @php
                 $selectedActivityName =
                     $activities->firstWhere('activity_id', request('activity_id'))->activity_name ?? null;
             @endphp
-            <h1 class="table-heading text-center">{{ $selectedActivityName }}</h1>
+
             @if (count($approvedBookings) > 0)
-            {{ $approvedBookings->appends(request()->query())->links() }}
-            @component('components.table_approved_bookings')
+            <h1 class="table-heading text-center">{{ $selectedActivityName }}</h1>
+
+                {{ $approvedBookings->appends(request()->query())->links() }}
+                @component('components.table_approved_bookings')
                     @foreach ($approvedBookings as $item)
                         <tr>
                             <td>{{ $item->booking_id }}</td>

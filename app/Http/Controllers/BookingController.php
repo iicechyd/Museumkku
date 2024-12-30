@@ -20,14 +20,20 @@ use Illuminate\Support\Facades\Log;
 
 class BookingController extends Controller
 {
-    function showBookings()
+    function showBookings(Request $request)
     {
-        $requestBookings = Bookings::with(['activity', 'timeslot', 'visitor', 'institute'])
+        $activities = Activity::where('activity_type_id', 1)->get();
+
+        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
-            ->where('status', 0)
-            ->paginate(5);
+            ->where('status', 0);
+
+        if ($request->filled('activity_id')) {
+            $query->where('activity_id', $request->activity_id);
+        }
+        $requestBookings = $query->paginate(5);
 
         foreach ($requestBookings as $item) {
             $totalApproved = 0;
@@ -58,7 +64,7 @@ class BookingController extends Controller
             $monkPrice = $item->monk_qty * $item->activity->monk_price;
             $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice + $disabledPrice + $elderlyPrice + $monkPrice;
         }
-        return view('admin.generalRequest.request_bookings', compact('requestBookings'));
+        return view('admin.generalRequest.request_bookings', compact('requestBookings', 'activities'));
     }
 
     function showApproved(Request $request)
@@ -109,14 +115,20 @@ class BookingController extends Controller
         return view('admin.generalRequest.approved_bookings', compact('approvedBookings', 'activities'));
     }
 
-    function showExcept()
+    function showExcept(Request $request)
     {
-        $exceptBookings = Bookings::with('activity', 'timeslot', 'visitor', 'institute')
-            ->whereHas('activity', function ($query) {
-                $query->where('activity_type_id', 1);
-            })
-            ->where('status', 2)
-            ->paginate(5);
+        $activities = Activity::where('activity_type_id', 1)->get();
+
+        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute')
+        ->whereHas('activity', function ($query) {
+            $query->where('activity_type_id', 1);
+        })
+        ->where('status', 2);
+
+        if ($request->filled('activity_id')) {
+            $query->where('activity_id', $request->activity_id);
+        }
+        $exceptBookings = $query->paginate(5);
 
         foreach ($exceptBookings as $item) {
             $totalApproved = 0;
@@ -140,7 +152,7 @@ class BookingController extends Controller
             $monkPrice = $item->monk_qty * $item->activity->monk_price;
             $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
         }
-        return view('admin.generalRequest.except_cases_bookings', compact('exceptBookings'));
+        return view('admin.generalRequest.except_cases_bookings', compact('exceptBookings', 'activities'));
     }
 
     public function updateStatus(Request $request, $booking_id)

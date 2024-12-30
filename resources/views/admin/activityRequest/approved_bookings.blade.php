@@ -40,9 +40,10 @@
                     $activities->firstWhere('activity_id', request('activity_id'))->activity_name ?? null;
             @endphp
 
-            <h1 class="table-heading text-center">{{ $selectedActivityName }}</h1>
         @if (count($approvedBookings) > 0)
+        <h1 class="table-heading text-center">{{ $selectedActivityName }}</h1>
         {{ $approvedBookings->appends(request()->query())->links() }}
+        
             @component('components.table_approved_bookings')
                 @foreach ($approvedBookings as $item)
                     <tr>

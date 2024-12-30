@@ -160,14 +160,17 @@
                                                 คน</p>
                                             <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
                                             <p><strong>แนบเอกสาร: </strong>
+                                                @if ($item->documents->isNotEmpty())
                                                 @foreach ($item->documents as $document)
-                                                    <li>
-                                                        <a href="{{ asset('storage/' . $document->file_path) }}"
+                                                <span class="mr-2">
+                                                    <a href="{{ asset('storage/' . $document->file_path) }}"
                                                             target="_blank">
                                                             {{ $document->file_name }}
                                                         </a>
-                                                    </li>
                                                 @endforeach
+                                                @else
+                                                    <span class="text-danger">รอแนบเอกสาร</span>
+                                                @endif
                                             </p>
                                             <p><strong>แก้ไขสถานะ:</strong>
                                                 @if ($item->latestStatusChange)

@@ -58,7 +58,6 @@ Route::get('/bookings/{booking}', [CalendarController::class, 'show'])->name('bo
  Route::get('/form_bookings/activity/{activity_id}', [BookingController::class, 'showBookingForm'])->name('form_bookings.activity');
 
  //แสดงสถานะการจองให้ผู้จองเข้าชม
-Route::get('/showBookingStatus', [BookingController::class, 'showBookingStatus'])->name('showBookingStatus');
 Route::get('/checkBookingStatus', [BookingController::class, 'checkBookingStatus'])->name('checkBookingStatus');
 Route::post('/checkBookingStatus', [BookingController::class, 'searchBookingByEmail'])->name('searchBookingByEmail');
 
@@ -96,3 +95,4 @@ Route::post('/admin/get-timeslots', [TimeslotController::class, 'getTimeslotsByA
 
 Route::get('/documents/upload/{booking_id}', [DocumentController::class, 'showUploadForm'])->name('documents.upload');
 Route::post('/documents/upload/{booking_id}', [DocumentController::class, 'uploadDocument'])->name('documents.store');
+Route::put('/documents/{document_id}', [DocumentController::class, 'update'])->name('documents.update');

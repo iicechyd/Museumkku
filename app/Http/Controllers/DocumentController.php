@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Documents;
 use App\Models\Bookings;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
 {
@@ -32,6 +33,6 @@ class DocumentController extends Controller
             'file_name' => $fileName,
         ]);
 
-        return redirect()->route('checkBookingStatus')->with('success', 'เอกสารถูกอัปโหลดเรียบร้อยแล้ว');
+        return redirect()->route('documents.upload', ['booking_id' => $booking_id])->with('success', 'เอกสารถูกอัปโหลดเรียบร้อยแล้ว');
     }
 }

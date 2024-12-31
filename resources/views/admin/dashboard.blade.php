@@ -11,9 +11,9 @@
 
     <x-layout bodyClass>
         <div class="container py-4">
-            <div class="row">
+            <div class="row gy-4">
                 @foreach ($activities as $activity)
-                @if ($activity->activity_id == 1)
+                @if ($activity->activity_id == 1 || $activity->activity_id == 2)
                 <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
                     <div class="card">
                         <div class="card-header p-3 pt-2">
@@ -67,7 +67,6 @@
                                 <p class="text-sm mb-0 text-capitalize">{{ $activity->activity_name }}</p>
                                 <h4 class="mb-0">{{ $totalVisitorsThisMonth[$activity->activity_id] ?? 0 }} คน</h4>
                             </div>
-
                         </div>
                         <hr class="dark horizontal my-0">
                         <div class="card-footer p-3">
@@ -89,6 +88,11 @@
                                 <h4 class="mb-0">{{ $totalVisitorsThisYear[$activity->activity_id] ?? 0 }} คน</h4>
                             </div>
                         </div>
+                        <hr class="dark horizontal my-0">
+                        <div class="card-footer p-3">
+                            <p class="mb-0"><span class="text-danger text-sm font-weight-bolder">-2%</span>
+                                จากเดือนที่แล้ว</p>
+                        </div>
                     </div>
                 </div>
                 @endif
@@ -105,7 +109,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <h6 class="mb-0 ">ยอดจำนวนผู้เข้าชมทั้งหมดในสัปดาห์นี้</h6>
+                            <h6 class="mb-0 ">ยอดผู้เข้าชมทั้งหมดในสัปดาห์นี้</h6>
                             <p class="text-sm">ผลการดำเนินงานล่าสุด</p>
                             <hr class="dark horizontal">
                             <div class="d-flex">
@@ -125,13 +129,12 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <h6 class="mb-0 "> Daily Sales </h6>
-                            <p class="text-sm "> (<span class="font-weight-bolder">+15%</span>) increase in today
-                                sales. </p>
+                            <h6 class="mb-0 ">ยอดผู้เข้าชมทั้งหมดในปีนี้</h6>
+                            <p class="text-sm ">ตั้งแต่ มกราคม - ธันวาคม</p>
                             <hr class="dark horizontal">
                             <div class="d-flex ">
                                 <i class="material-icons text-sm my-auto me-1">schedule</i>
-                                <p class="mb-0 text-sm"> updated 4 min ago </p>
+                                <p class="mb-0 text-sm"> อัปเดตเมื่อ 4 นาทีที่ผ่านมา </p>
                             </div>
                         </div>
                     </div>
@@ -146,8 +149,8 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <h6 class="mb-0 ">Completed Tasks</h6>
-                            <p class="text-sm ">Last Campaign Performance</p>
+                            <h6 class="mb-0 ">ยอดการจัดกิจกรรมทั้งหมดในปีนี้</h6>
+                            <p class="text-sm ">ตั้งแต่ มกราคม - ธันวาคม </p>
                             <hr class="dark horizontal">
                             <div class="d-flex ">
                                 <i class="material-icons text-sm my-auto me-1">schedule</i>
@@ -197,7 +200,7 @@
                                                 จำนวนผู้เข้าร่วมกิจกรรม</th>
                                             <th
                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                ยอดรวมราคา</th>
+                                                จำนวนครั้ง</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -255,6 +258,11 @@
                 var disabled_qty = {{ $visitorStats->disabled_qty ?? 0 }};
                 var elderly_qty = {{ $visitorStats->elderly_qty ?? 0 }};
                 var monk_qty = {{ $visitorStats->monk_qty ?? 0 }};
+                var ctx = document.getElementById("chart-bars").getContext("2d");
+                var data = @json($totalVisitorsPerDayType1);
+                window.totalVisitorsPerDayType1 = @json($totalVisitorsPerDayType1);
+                var totalVisitorsPerMonthThisYear = @json($totalVisitorsPerMonthThisYear);
+                window.totalVisitorsPerMonthThisYear = @json($totalVisitorsPerMonthThisYear);
             </script>
             <script src="{{ asset('js/dashboard.js') }}"></script>
         @endpush

@@ -353,6 +353,7 @@ new Chart(ctx3, {
 
 document.addEventListener("DOMContentLoaded", function () {
     var ctx = document.getElementById("visitorPieChart").getContext("2d");
+    var total = children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty;
     var visitorPieChart = new Chart(ctx, {
         type: "pie",
         data: {
@@ -397,12 +398,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 tooltip: {
                     callbacks: {
                         label: function (tooltipItem) {
-                            return (
-                                tooltipItem.label +
-                                ": " +
-                                tooltipItem.raw +
-                                " คน"
-                            );
+                            let value = tooltipItem.raw;
+                            let percentage = ((value / total) * 100).toFixed(2);
+                            return `${tooltipItem.label}: ${value} คน (${percentage}%)`;
                         },
                     },
                 },

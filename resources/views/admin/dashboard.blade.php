@@ -166,7 +166,7 @@
                         <div class="card-header pb-0">
                             <div class="row">
                                 <div class="col-lg-6 col-7">
-                                    <h6>จำนวนผู้เข้าร่วมกิจกรรมพิเศษ</h6>
+                                    <h6>ยอดการจัดกิจกรรม และจำนวนผู้เข้าร่วม</h6>
                                 </div>
                                 <div class="col-lg-6 col-5 my-auto text-end">
                                     <div class="dropdown float-lg-end pe-4">
@@ -200,7 +200,7 @@
                                                 จำนวนผู้เข้าร่วมกิจกรรม</th>
                                             <th
                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                จำนวนครั้ง</th>
+                                                จำนวนครั้ง/ปี</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -214,13 +214,11 @@
                                                     </div>
                                                 </td>
                                                 <td class="align-middle text-center text-sm">
-                                                    <span class="text-xs font-weight-bold">{{ $activity->total_visitors }}
-                                                        คน</span>
+                                                    <span class="text-xs font-weight-bold">{{ $activity->total_visitors > 0 ? $activity->total_visitors . ' คน' : '-' }}</span>
                                                 </td>
                                                 <td class="align-middle text-center text-sm">
                                                     <span
-                                                        class="text-xs font-weight-bold">{{ number_format($activity->total_price, 2) }}
-                                                        บาท</span>
+                                                        class="text-xs font-weight-bold">{{ $activity->total_bookings > 0 ? $activity->total_bookings . ' ครั้ง' : '-' }}</span>
                                                 </td>
                                             </tr>
                                         @endforeach

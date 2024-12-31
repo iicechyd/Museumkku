@@ -84,45 +84,31 @@ class DashboardController extends Controller
             ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
     }
 
-        
-        $totalVisitors = [];
-        foreach ($activities as $activity) {
-            $totalVisitors[$activity->activity_id] = Bookings::where('activity_id', $activity->activity_id)
-                ->where('status', 1)
-                ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
-        }
+    $specialActivities = DB::table('activities')
+    ->leftJoin('activity_types', 'activities.activity_type_id', '=', 'activity_types.activity_type_id')
+    ->leftJoin('bookings', 'activities.activity_id', '=', 'bookings.activity_id')
+    ->select(
+        'activities.activity_id',
+        'activities.activity_name',
+        DB::raw('
+            COALESCE(SUM(bookings.children_qty + bookings.students_qty + bookings.adults_qty +
+            bookings.disabled_qty + bookings.elderly_qty + bookings.monk_qty), 0) as total_visitors
+        '),
+        DB::raw('COALESCE(COUNT(bookings.booking_id), 0) as total_bookings')
+    )
+    ->where('activities.activity_type_id', 2) // กรองเฉพาะ activity_type_id = 2
+    ->groupBy('activities.activity_id', 'activities.activity_name')
+    ->get();
 
-        $specialActivities = DB::table('activities')
-            ->join('activity_types', 'activities.activity_type_id', '=', 'activity_types.activity_type_id')
-            ->leftJoin('bookings', 'activities.activity_id', '=', 'bookings.activity_id')
-            ->select(
-                'activities.activity_name',
-                DB::raw('
-                SUM(
-                    COALESCE(bookings.children_qty, 0) +
-                    COALESCE(bookings.students_qty, 0) +
-                    COALESCE(bookings.adults_qty, 0) +
-                    COALESCE(bookings.disabled_qty, 0) +
-                    COALESCE(bookings.elderly_qty, 0) +
-                    COALESCE(bookings.monk_qty, 0)
-                ) as total_visitors
-            '),
-                DB::raw('
-                SUM(
-                    COALESCE(bookings.children_qty, 0) * COALESCE(activities.children_price, 0) +
-                    COALESCE(bookings.students_qty, 0) * COALESCE(activities.student_price, 0) +
-                    COALESCE(bookings.adults_qty, 0) * COALESCE(activities.adult_price, 0) +
-                    COALESCE(bookings.disabled_qty, 0) * COALESCE(activities.disabled_price, 0) +
-                    COALESCE(bookings.elderly_qty, 0) * COALESCE(activities.elderly_price, 0) +
-                    COALESCE(bookings.monk_qty, 0) * COALESCE(activities.monk_price, 0)
-                ) as total_price
-            ')
-            )
-            ->where('activity_types.activity_type_id', '=', 2)
-            ->groupBy('activities.activity_id', 'activities.activity_name')
-            ->get();
-
-        // ดึงข้อมูลจำนวนผู้เข้าชมทั้งหมด
+    $totalVisitors = [];
+    foreach ($activities as $activity) {
+        $totalVisitors[$activity->activity_id] = Bookings::whereHas('activity', function ($query) {
+                $query->where('activity_type_id', 1); // กรองเฉพาะ activity_type_id = 1
+            })
+            ->where('activity_id', $activity->activity_id)
+            ->where('status', 1)
+            ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
+    }    
         $visitorStats = Bookings::selectRaw('
         SUM(children_qty) as children_qty, 
         SUM(students_qty) as students_qty, 

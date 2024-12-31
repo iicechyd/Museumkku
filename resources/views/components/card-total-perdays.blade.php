@@ -59,87 +59,25 @@
       <div class="col-md-6">
         <div class="card">
           <div class="card-body">
-            <h6>รายสัปดาห์</h6>
+            <h5>ยอดการจัดกิจกรรมทั้งหมดในปีนี้</h5>
             <div class="mb-2">
-              <strong>วันจันทร์</strong>
+              <div class="d-flex justify-content-between">
+                <strong>กิจกรรมธรรมชาติวิทยา</strong>
+                <strong class="text-right">Goal: 12 ครั้ง/ปี</strong>
+              </div>
               <div class="progress">
-                <div class="progress-bar" style="width: 30%">30%</div>
+                <div class="progress-bar" style="width: 40%">40%</div>
                 <div class="progress-bar red" style="width: 60%">60%</div>
               </div>
               <div>
-                <span class="ml-2 text-sm text-info"> ธรรมชาติวิทยา 1,000 คน</span>
-                <span class="ml-2 text-sm text-danger"> วิทยาศาสตร์ 3,000 คน</span>
-              </div>
-            </div>
-            <div class="mb-2">
-              <strong>วันอังคาร</strong>
-              <div class="progress">
-                <div class="progress-bar" style="width: 70%">70%</div>
-                <div class="progress-bar red" style="width: 20%">20%</div>
-              </div>
-              <div>
-                <span class="ml-2 text-sm text-info"> ธรรมชาติวิทยา 1,000 คน</span>
-                <span class="ml-2 text-sm text-danger"> วิทยาศาสตร์ 3,000 คน</span>
-              </div>
-            </div>
-            <div class="mb-2">
-              <strong>วันพุธ</strong>
-              <div class="progress">
-                <div class="progress-bar" style="width: 20%">20%</div>
-                <div class="progress-bar red" style="width: 60%">60%</div>
-              </div>
-              <div>
-                <span class="ml-2 text-sm text-info"> ธรรมชาติวิทยา 1,000 คน</span>
-                <span class="ml-2 text-sm text-danger"> วิทยาศาสตร์ 3,000 คน</span>
-              </div>
-            </div>
-            <div class="mb-2">
-              <strong>วันพฤหัสบดี</strong>
-              <div class="progress">
-                <div class="progress-bar" style="width: 60%">60%</div>
-                <div class="progress-bar red" style="width: 30%">30%</div>
-              </div>
-              <div>
-                <span class="ml-2 text-sm text-info"> ธรรมชาติวิทยา 1,000 คน</span>
-                <span class="ml-2 text-sm text-danger"> วิทยาศาสตร์ 3,000 คน</span>
-              </div>
-            </div>
-            <div class="mb-2">
-              <strong>วันศุกร์</strong>
-              <div class="progress">
-                <div class="progress-bar" style="width: 20%">20%</div>
-                <div class="progress-bar red" style="width: 50%">50%</div>
-              </div>
-              <div>
-                <span class="ml-2 text-sm text-info"> ธรรมชาติวิทยา 1,000 คน</span>
-                <span class="ml-2 text-sm text-danger"> วิทยาศาสตร์ 3,000 คน</span>
-              </div>
-            </div>
-            <div class="mb-2">
-              <strong>วันเสาร์</strong>
-              <div class="progress">
-                <div class="progress-bar" style="width: 70%">70%</div>
-                <div class="progress-bar red" style="width: 20%">20%</div>
-              </div>
-              <div>
-                <span class="ml-2 text-sm text-info"> ธรรมชาติวิทยา 1,000 คน</span>
-                <span class="ml-2 text-sm text-danger"> วิทยาศาสตร์ 3,000 คน</span>
-              </div>
-            </div>
-            <div class="mb-2">
-              <strong>วันอาทิตย์</strong>
-              <div class="progress">
-                <div class="progress-bar" style="width: 30%">30%</div>
-                <div class="progress-bar red" style="width: 40%">40%</div>
-              </div>
-              <div>
-                <span class="ml-2 text-sm text-info"> ธรรมชาติวิทยา 1,000 คน</span>
-                <span class="ml-2 text-sm text-danger"> วิทยาศาสตร์ 3,000 คน</span>
+                <span class="ml-2 text-sm text-info"> สำเร็จ 4 ครั้ง </span>
+                <span class="ml-2 text-sm text-danger"> เป้าหมาย 8 ครั้ง</span>
               </div>
             </div>
           </div>
         </div>
       </div>
+      
 
       <div class="col-md-6">
         <div class="card">

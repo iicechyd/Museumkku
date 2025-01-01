@@ -13,12 +13,13 @@ class DashboardController extends Controller
     public function showDashboard()
     {
         $today = Carbon::today();
-        $weekStart = $today->copy()->startOfWeek();
-        $weekEnd = $today->copy()->endOfWeek();
-        $monthStart = $today->copy()->startOfMonth();
-        $monthEnd = $today->copy()->endOfMonth();
-        $yearStart = $today->copy()->startOfYear();
-        $yearEnd = $today->copy()->endOfYear();
+        $weekStart = Carbon::today()->startOfWeek();
+        $weekEnd = Carbon::today()->endOfWeek();
+        $monthStart = Carbon::today()->startOfMonth();
+        $monthEnd = Carbon::today()->endOfMonth();
+        $yearStart = Carbon::today()->startOfYear();
+        $yearEnd = Carbon::today()->endOfYear();
+        $currentYear = Carbon::now()->year;
 
         $activities = Activity::all();
 
@@ -57,33 +58,28 @@ class DashboardController extends Controller
         }
 
         $totalVisitorsPerDayType1 = [];
-        $daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']; // Labels for days of the week
-
+        $daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
         foreach ($daysOfWeek as $index => $day) {
-            // กำหนดวันที่เริ่มต้นและสิ้นสุดของวันในสัปดาห์นี้
             $startOfDay = $weekStart->copy()->addDays($index)->format('Y-m-d');
             $endOfDay = $weekStart->copy()->addDays($index)->format('Y-m-d');
-
-            // คำนวณจำนวนผู้เข้าชมสำหรับกิจกรรมประเภท 1 ในวันนั้นๆ
             $totalVisitorsPerDayType1[$day] = Bookings::whereHas('activity', function ($query) {
-                $query->where('activity_type_id', 1); // กรองเฉพาะกิจกรรมประเภท 1
+                $query->where('activity_type_id', 1);
             })
-                ->whereBetween('booking_date', [$startOfDay, $endOfDay]) // กรองตามวันที่ในช่วงเวลานั้น
-                ->where('status', 1) // กรองเฉพาะที่มีสถานะ '1'
+                ->whereBetween('booking_date', [$startOfDay, $endOfDay])
+                ->where('status', 1)
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty')); // คำนวณจำนวนผู้เข้าชมทั้งหมด
         }
+        
+        $totalVisitorsPerMonthThisYear = [];
+// คำนวณจำนวนผู้เข้าชมแต่ละเดือน
+for ($month = 1; $month <= 12; $month++) {
+    $startOfMonth = Carbon::createFromDate($currentYear, $month, 1)->startOfMonth();
+    $endOfMonth = Carbon::createFromDate($currentYear, $month, 1)->endOfMonth();
 
-        // ดึงจำนวนผู้เข้าชมทั้งหมดในปีนี้โดยแบ่งเป็นเดือน
-    $totalVisitorsPerMonthThisYear = [];
-    for ($month = 1; $month <= 12; $month++) {
-        $startOfMonth = Carbon::createFromFormat('Y-m-d', $yearStart->format('Y') . '-' . str_pad($month, 2, '0', STR_PAD_LEFT) . '-01');
-        $endOfMonth = $startOfMonth->copy()->endOfMonth();
-
-        $totalVisitorsPerMonthThisYear[$month] = Bookings::whereBetween('booking_date', [$startOfMonth, $endOfMonth])
-            ->where('status', 1)
-            ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
-    }
-
+    $totalVisitorsPerMonthThisYear[$month] = Bookings::whereBetween('booking_date', [$startOfMonth, $endOfMonth])
+        ->where('status', 1)
+        ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
+}
     $specialActivities = DB::table('activities')
     ->leftJoin('activity_types', 'activities.activity_type_id', '=', 'activity_types.activity_type_id')
     ->leftJoin('bookings', 'activities.activity_id', '=', 'bookings.activity_id')
@@ -96,14 +92,14 @@ class DashboardController extends Controller
         '),
         DB::raw('COALESCE(COUNT(bookings.booking_id), 0) as total_bookings')
     )
-    ->where('activities.activity_type_id', 2) // กรองเฉพาะ activity_type_id = 2
+    ->where('activities.activity_type_id', 2)
     ->groupBy('activities.activity_id', 'activities.activity_name')
     ->get();
 
     $totalVisitors = [];
     foreach ($activities as $activity) {
         $totalVisitors[$activity->activity_id] = Bookings::whereHas('activity', function ($query) {
-                $query->where('activity_type_id', 1); // กรองเฉพาะ activity_type_id = 1
+                $query->where('activity_type_id', 1);
             })
             ->where('activity_id', $activity->activity_id)
             ->where('status', 1)
@@ -117,7 +113,7 @@ class DashboardController extends Controller
         SUM(elderly_qty) as elderly_qty, 
         SUM(monk_qty) as monk_qty
     ')
-            ->first();
+        ->first();
 
         return view('admin.dashboard', compact(
             'activities',
@@ -129,7 +125,7 @@ class DashboardController extends Controller
             'specialActivities',
             'visitorStats',
             'totalVisitorsPerDayType1',
-            'totalVisitorsPerMonthThisYear', 
+            'totalVisitorsPerMonthThisYear',
         ));
     }
 }

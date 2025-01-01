@@ -62,16 +62,15 @@
             <h5>ยอดการจัดกิจกรรมทั้งหมดในปีนี้</h5>
             <div class="mb-2">
               <div class="d-flex justify-content-between">
-                <strong>กิจกรรมธรรมชาติวิทยา</strong>
+                <strong>ชื่อกิจกรรม</strong>
                 <strong class="text-right">Goal: 12 ครั้ง/ปี</strong>
               </div>
               <div class="progress">
-                <div class="progress-bar" style="width: 40%">40%</div>
-                <div class="progress-bar red" style="width: 60%">60%</div>
+                <div class="progress-bar" style="width:100%"></div>
               </div>
               <div>
                 <span class="ml-2 text-sm text-info"> สำเร็จ 4 ครั้ง </span>
-                <span class="ml-2 text-sm text-danger"> เป้าหมาย 8 ครั้ง</span>
+                <span class="ml-2 text-sm text-danger">เหลือ 9 ครั้ง</span>
               </div>
             </div>
           </div>

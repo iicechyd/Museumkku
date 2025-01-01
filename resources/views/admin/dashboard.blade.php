@@ -84,7 +84,7 @@
                             </div>
                             <div class="text-end pt-1">
                                 <p class="text-sm mb-0 text-capitalize"><strong>ยอดผู้เข้าชมทั้งหมดตลอดปี</strong></p>
-                                <p class="text-sm mb-0 text-capitalize">กิจกรรมธรรมชาติวิทยา</p>
+                                <p class="text-sm mb-0 text-capitalize">{{ $activity->activity_name }}</p>
                                 <h4 class="mb-0">{{ $totalVisitorsThisYear[$activity->activity_id] ?? 0 }} คน</h4>
                             </div>
                         </div>
@@ -259,8 +259,7 @@
                 var ctx = document.getElementById("chart-bars").getContext("2d");
                 var data = @json($totalVisitorsPerDayType1);
                 window.totalVisitorsPerDayType1 = @json($totalVisitorsPerDayType1);
-                var totalVisitorsPerMonthThisYear = @json($totalVisitorsPerMonthThisYear);
-                window.totalVisitorsPerMonthThisYear = @json($totalVisitorsPerMonthThisYear);
+                window.totalVisitorsPerMonthThisYear = @json(array_values($totalVisitorsPerMonthThisYear));
             </script>
             <script src="{{ asset('js/dashboard.js') }}"></script>
         @endpush

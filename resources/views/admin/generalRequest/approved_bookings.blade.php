@@ -92,12 +92,19 @@
                                         <select name="status" id="statusSelect_{{ $item->booking_id }}"
                                             onchange="toggleCommentsField({{ $item->booking_id }})"
                                             class="bg-gray-100 border border-gray-300 rounded-lg p-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                            <option value="approve" {{ $item->status == 1 ? 'selected' : '' }}>อนุมัติ</option>
-                                            <option value="cancel" {{ $item->status == 2 ? 'selected' : '' }}>ยกเลิก</option>
+                                            <option value="checkin" {{ $item->status == 2 ? 'selected' : '' }}>เข้าชม</option>
+                                            <option value="cancel" {{ $item->status == 3 ? 'selected' : '' }}>ยกเลิก</option>
                                         </select>
-                                        <div id="commentsField_{{ $item->booking_id }}" class="comments-field"
+                                        <!-- ฟิลด์จำนวนผู้เข้าชม -->
+                                        <div id="visitorsField_{{ $item->booking_id }}" class="visitors-field"
                                             style="display: {{ $item->status == 2 ? 'block' : 'none' }};">
-                                            <input type="text" name="comments" placeholder="กรอกความคิดเห็น"
+                                            <input type="number" name="number_of_visitors" placeholder="ระบุจำนวนผู้เข้าชม"
+                                                class="bg-gray-100 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                        </div>
+                                        <!-- ฟิลด์ความคิดเห็น -->
+                                        <div id="commentsField_{{ $item->booking_id }}" class="comments-field"
+                                            style="display: {{ $item->status == 3 ? 'block' : 'none' }};">
+                                            <input type="text" name="comments" placeholder="กรอกเหตุผล"
                                                 class="bg-gray-100 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                                         </div>
                                         <button type="submit" class="button-custom">
@@ -114,9 +121,9 @@
                             </td>
                             <td>
                                 @if ($item->documents->isNotEmpty())
-                                <p class="text-success">แนบไฟล์เรียบร้อย</p>
+                                    <p class="text-success">แนบไฟล์เรียบร้อย</p>
                                 @else
-                                <p class="text-danger">รอแนบเอกสาร</p>
+                                    <p class="text-danger">รอแนบเอกสาร</p>
                                 @endif
                             </td>
                             <!-- Modal สำหรับแสดงรายละเอียด -->
@@ -161,13 +168,13 @@
                                             <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
                                             <p><strong>แนบเอกสาร: </strong>
                                                 @if ($item->documents->isNotEmpty())
-                                                @foreach ($item->documents as $document)
-                                                <span class="mr-2">
-                                                    <a href="{{ asset('storage/' . $document->file_path) }}"
-                                                            target="_blank">
-                                                            {{ $document->file_name }}
-                                                        </a>
-                                                @endforeach
+                                                    @foreach ($item->documents as $document)
+                                                        <span class="mr-2">
+                                                            <a href="{{ asset('storage/' . $document->file_path) }}"
+                                                                target="_blank">
+                                                                {{ $document->file_name }}
+                                                            </a>
+                                                    @endforeach
                                                 @else
                                                     <span class="text-danger">รอแนบเอกสาร</span>
                                                 @endif
@@ -217,10 +224,17 @@
     function toggleCommentsField(booking_id) {
         var status = document.getElementById("statusSelect_" + booking_id).value;
         var commentsField = document.getElementById("commentsField_" + booking_id);
-        if (status === "cancel") {
-            commentsField.style.display = "block";
-        } else {
-            commentsField.style.display = "none";
-        }
+        var visitorsField = document.getElementById("visitorsField_" + booking_id);
+
+        if (status === "checkin") {
+        commentsField.style.display = "none";
+        visitorsField.style.display = "block";
+    } else if (status === "cancel") {
+        commentsField.style.display = "block";
+        visitorsField.style.display = "none";
+    } else {
+        commentsField.style.display = "none";
+        visitorsField.style.display = "none";
+    }
     }
 </script>

@@ -5,26 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StatusChanges extends Model
+class bookingHistory extends Model
 {
     use HasFactory;
-    protected $table = 'status_changes';
+    protected $primaryKey = 'history_id';
 
-    protected $primaryKey = 'changed_id';
-    public $incrementing = true;
-    protected $keyType = 'int';
     protected $fillable = [
         'booking_id',
-        'old_status',
-        'new_status',
-        'comments',
-        'number_of_visitors',
-        'changed_by',
+        'changed_id',
     ];
-
     public function booking()
     {
         return $this->belongsTo(Bookings::class, 'booking_id', 'booking_id');
     }
 
+    public function statusChange()
+    {
+        return $this->belongsTo(StatusChanges::class, 'changed_id', 'changed_id');
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DateTime;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -13,11 +13,11 @@ use App\Models\Institutes;
 use App\Models\Visitors;
 use App\Models\StatusChanges;
 use App\Models\closedTimeslots;
-use DateTime;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\BookingApprovedMail;
 use App\Mail\BookingCancelledMail;
 use Illuminate\Support\Facades\Log;
+use App\Models\bookingHistory;
 
 class BookingController extends Controller
 {
@@ -159,11 +159,12 @@ class BookingController extends Controller
     public function updateStatus(Request $request, $booking_id)
     {
         $request->validate([
-            'status' => 'required|in:pending,approve,cancel',
+            'status' => 'required|in:pending,approve,checkin,cancel',
+            'comments' => 'nullable|string',
+            'number_of_visitors' => 'nullable|integer|min:1',
         ]);
 
         $booking = Bookings::where('booking_id', $booking_id)->firstOrFail();
-
         $oldStatus = $booking->status;
 
         switch ($request->status) {
@@ -173,8 +174,11 @@ class BookingController extends Controller
             case 'approve':
                 $newStatus = 1;
                 break;
-            case 'cancel':
+            case 'checkin':
                 $newStatus = 2;
+                break;
+            case 'cancel':
+                $newStatus = 3;
                 break;
         }
 
@@ -187,24 +191,36 @@ class BookingController extends Controller
             $statusChange->old_status = $oldStatus;
             $statusChange->new_status = $newStatus;
             $statusChange->comments = $request->input('comments', $statusChange->comments);
+            $statusChange->number_of_visitors = $request->input('number_of_visitors', $statusChange->number_of_visitors);
             $statusChange->changed_by = Auth::user()->name;
             $statusChange->save();
         } else {
-            StatusChanges::create([
+            $statusChange = StatusChanges::create([
                 'booking_id' => $booking->booking_id,
                 'old_status' => $oldStatus,
                 'new_status' => $newStatus,
                 'comments' => $request->input('comments', null),
+                'number_of_visitors' => $request->input('number_of_visitors', null),
+
                 'changed_by' => Auth::user()->name,
             ]);
         }
+
+        if (in_array($newStatus, [2, 3])) {
+            BookingHistory::create([
+                'booking_id' => $booking->booking_id,
+                'changed_id' => $statusChange->changed_id,
+            ]);
+        }
+        
+
         $visitorEmail = $booking->visitor ? $booking->visitor->visitorEmail : null;
 
         if ($newStatus === 1 && $visitorEmail) {
             $uploadLink = route('documents.upload', ['booking_id' => $booking->booking_id]);
             Mail::to($visitorEmail)->send(new BookingApprovedMail($booking, $uploadLink));
-        } elseif ($newStatus === 2 && $visitorEmail) {
-            Mail::to($visitorEmail)->send(new BookingCancelledMail($booking));  // Create this mail class
+        } elseif ($newStatus === 3 && $visitorEmail) {
+            Mail::to($visitorEmail)->send(new BookingCancelledMail($booking));
         } else {
             Log::warning("ไม่พบอีเมลสำหรับการจองหมายเลข {$booking->booking_id}");
         }

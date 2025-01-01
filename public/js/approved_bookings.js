@@ -61,8 +61,3 @@ document.querySelectorAll("th").forEach((header) => {
         .querySelector(".resize-handle")
         .addEventListener("mousedown", initResize);
 });
-
-// เรียกใช้ฟังก์ชันนี้เมื่อหน้าเพจโหลด เพื่อให้แน่ใจว่าฟิลด์ comments และปุ่มถูกตั้งค่าอย่างถูกต้อง
-document.addEventListener("DOMContentLoaded", function () {
-    toggleCommentsAndButton();
-});

@@ -69,42 +69,52 @@ class DashboardController extends Controller
                 ->where('status', 1)
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty')); // คำนวณจำนวนผู้เข้าชมทั้งหมด
         }
-        
-        $totalVisitorsPerMonthThisYear = [];
-// คำนวณจำนวนผู้เข้าชมแต่ละเดือน
-for ($month = 1; $month <= 12; $month++) {
-    $startOfMonth = Carbon::createFromDate($currentYear, $month, 1)->startOfMonth();
-    $endOfMonth = Carbon::createFromDate($currentYear, $month, 1)->endOfMonth();
 
-    $totalVisitorsPerMonthThisYear[$month] = Bookings::whereBetween('booking_date', [$startOfMonth, $endOfMonth])
-        ->where('status', 1)
-        ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
-}
-    $specialActivities = DB::table('activities')
-    ->leftJoin('activity_types', 'activities.activity_type_id', '=', 'activity_types.activity_type_id')
-    ->leftJoin('bookings', 'activities.activity_id', '=', 'bookings.activity_id')
-    ->select(
-        'activities.activity_id',
-        'activities.activity_name',
-        DB::raw('
+        $totalVisitorsPerMonthThisYear = [];
+        // คำนวณจำนวนผู้เข้าชมแต่ละเดือน
+        for ($month = 1; $month <= 12; $month++) {
+            $startOfMonth = Carbon::createFromDate($currentYear, $month, 1)->startOfMonth();
+            $endOfMonth = Carbon::createFromDate($currentYear, $month, 1)->endOfMonth();
+
+            $totalVisitorsPerMonthThisYear[$month] = Bookings::whereBetween('booking_date', [$startOfMonth, $endOfMonth])
+                ->where('status', 1)
+                ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
+        }
+
+    $totalVisitorsThisYear = [];
+    foreach ($activities as $activity) {
+        // Get the total number of bookings for this activity in the current year
+        $totalVisitorsThisYear[$activity->activity_id] = Bookings::where('activity_id', $activity->activity_id)
+            ->whereBetween('booking_date', [$yearStart, $yearEnd])
+            ->where('status', 1)
+            ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
+    }
+
+        $specialActivities = DB::table('activities')
+            ->leftJoin('activity_types', 'activities.activity_type_id', '=', 'activity_types.activity_type_id')
+            ->leftJoin('bookings', 'activities.activity_id', '=', 'bookings.activity_id')
+            ->select(
+                'activities.activity_id',
+                'activities.activity_name',
+                DB::raw('
             COALESCE(SUM(bookings.children_qty + bookings.students_qty + bookings.adults_qty +
             bookings.disabled_qty + bookings.elderly_qty + bookings.monk_qty), 0) as total_visitors
         '),
-        DB::raw('COALESCE(COUNT(bookings.booking_id), 0) as total_bookings')
-    )
-    ->where('activities.activity_type_id', 2)
-    ->groupBy('activities.activity_id', 'activities.activity_name')
-    ->get();
+                DB::raw('COALESCE(COUNT(bookings.booking_id), 0) as total_bookings')
+            )
+            ->where('activities.activity_type_id', 2)
+            ->groupBy('activities.activity_id', 'activities.activity_name')
+            ->get();
 
-    $totalVisitors = [];
-    foreach ($activities as $activity) {
-        $totalVisitors[$activity->activity_id] = Bookings::whereHas('activity', function ($query) {
+        $totalVisitors = [];
+        foreach ($activities as $activity) {
+            $totalVisitors[$activity->activity_id] = Bookings::whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
-            ->where('activity_id', $activity->activity_id)
-            ->where('status', 1)
-            ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
-    }    
+                ->where('activity_id', $activity->activity_id)
+                ->where('status', 1)
+                ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
+        }
         $visitorStats = Bookings::selectRaw('
         SUM(children_qty) as children_qty, 
         SUM(students_qty) as students_qty, 
@@ -113,7 +123,7 @@ for ($month = 1; $month <= 12; $month++) {
         SUM(elderly_qty) as elderly_qty, 
         SUM(monk_qty) as monk_qty
     ')
-        ->first();
+            ->first();
 
         return view('admin.dashboard', compact(
             'activities',

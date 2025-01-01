@@ -66,11 +66,12 @@
                 <strong class="text-right">Goal: 12 ครั้ง/ปี</strong>
               </div>
               <div class="progress">
-                <div class="progress-bar" style="width:100%"></div>
+                <div class="progress-bar" style="width: 50%">50%</div>
+                <div class="progress-bar red" style="width: 50%">50%</div>              
               </div>
               <div>
-                <span class="ml-2 text-sm text-info"> สำเร็จ 4 ครั้ง </span>
-                <span class="ml-2 text-sm text-danger">เหลือ 9 ครั้ง</span>
+                <span class="ml-2 text-sm text-info"> สำเร็จ 6 ครั้ง </span>
+                <span class="ml-2 text-sm text-danger">เหลือ 6 ครั้ง</span>
               </div>
             </div>
           </div>

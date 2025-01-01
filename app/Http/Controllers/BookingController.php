@@ -16,6 +16,7 @@ use App\Models\closedTimeslots;
 use DateTime;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\BookingApprovedMail;
+use App\Mail\BookingCancelledMail;
 use Illuminate\Support\Facades\Log;
 
 class BookingController extends Controller
@@ -197,13 +198,13 @@ class BookingController extends Controller
                 'changed_by' => Auth::user()->name,
             ]);
         }
-        // ดึงอีเมลจากตาราง visitors ผ่านความสัมพันธ์
         $visitorEmail = $booking->visitor ? $booking->visitor->visitorEmail : null;
 
         if ($newStatus === 1 && $visitorEmail) {
-            // ส่งอีเมลหากพบอีเมล
             $uploadLink = route('documents.upload', ['booking_id' => $booking->booking_id]);
             Mail::to($visitorEmail)->send(new BookingApprovedMail($booking, $uploadLink));
+        } elseif ($newStatus === 2 && $visitorEmail) {
+            Mail::to($visitorEmail)->send(new BookingCancelledMail($booking));  // Create this mail class
         } else {
             Log::warning("ไม่พบอีเมลสำหรับการจองหมายเลข {$booking->booking_id}");
         }

@@ -316,7 +316,7 @@ class BookingController extends Controller
                 ->exists();
 
             if ($isClosed) {
-                return back()->with('error', 'รอบการเข้าชมนี้ถูกปิด')->withInput();
+                return back()->with('error', 'ไม่สามารถจองได้เนื่องจากรอบการเข้าชมรอบนี้ปิดรอบ')->withInput();
             }
 
             if ($activity->activity_id == 3) {
@@ -339,6 +339,26 @@ class BookingController extends Controller
                     }
                 }
             }
+            if (in_array($activity->activity_id, [1, 2])) {
+                if ($request->filled('fk_timeslots_id')) {
+                    $timeslot = Timeslots::find($request->fk_timeslots_id);
+                    if (!$timeslot) {
+                        return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
+                    }
+                    $conflictingBooking = Bookings::join('timeslots', 'bookings.timeslots_id', '=', 'timeslots.timeslots_id')
+                        ->where('bookings.activity_id', 3) // ตรวจสอบกิจกรรม activity_id = 3
+                        ->where('bookings.booking_date', $formattedDate)
+                        ->where(function ($query) use ($timeslot) {
+                            $query->whereBetween('timeslots.start_time', [$timeslot->start_time, $timeslot->end_time])
+                                ->orWhereBetween('timeslots.end_time', [$timeslot->start_time, $timeslot->end_time]);
+                        })
+                        ->exists();
+            
+                    if ($conflictingBooking) {
+                        return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีการจองกิจกรรมอื่นในช่วงเวลาใกล้เคียง')->withInput();
+                    }
+                }
+            }            
             $totalToBook = ($request->children_qty ?? 0) + ($request->students_qty ?? 0) + ($request->adults_qty ?? 0);
             $totalBooked = Bookings::where('booking_date', $formattedDate)
                 ->where('timeslots_id', $timeslot->timeslots_id)

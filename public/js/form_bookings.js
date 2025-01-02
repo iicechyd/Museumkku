@@ -72,23 +72,6 @@ function calculateTotal() {
     document.getElementById("totalPrice").innerText = totalPrice.toFixed(2);
 }
 
-function fetchTimeslots() {
-    const activityId = document.getElementById("fk_activity_id").value;
-    
-    fetch(`/timeslots/${activityId}`)
-        .then((response) => response.json())
-        .then((data) => {
-            const timeslotSelect = document.getElementById("fk_timeslots_id");
-            timeslotSelect.innerHTML =
-                '<option value="">เลือกรอบการเข้าชม</option>';
-            data.forEach((timeslot) => {
-                const option = document.createElement("option");
-                option.value = timeslot.id;
-                option.text = `${timeslot.start_time} - ${timeslot.end_time}`;
-                timeslotSelect.appendChild(option);
-            });
-        });
-}
 $.Thailand({
     $district: $('#subdistrict'),
     $amphoe: $('#district'),

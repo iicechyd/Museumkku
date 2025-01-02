@@ -66,7 +66,6 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/approve_user/{user_id}', [SuperAdminController::class, 'approveUsers'])->name('superadmin.approve_users');
 Route::post('/InsertBooking', [BookingController::class, 'InsertBooking'])->name('InsertBooking');
 Route::post('change_status/{booking_id}', [BookingController::class, 'changeStatus'])->name('changeStatus');
-Route::get('/timeslots/{activity_id}', [TimeslotController::class, 'getTimeslots']);
 Route::get('/form_bookings', [ActivityController::class, 'createBookingForm'])->name('booking.form');
 
 //UpdateStutusBookings

@@ -17,25 +17,6 @@ class TimeslotController extends Controller
         return view('admin.timeslots_list', compact('activities'));
     }
 
-    public function fetchTimeslots(Request $request)
-    {
-        $activityId = $request->input('fk_activity_id');
-        $bookingDate = $request->input('booking_date');
-
-        if (!$activityId || !$bookingDate) {
-            return response()->json(['error' => 'กรุณาระบุ activity_id และ booking_date'], 400);
-        }
-
-        $timeslots = Timeslots::where('activity_id', $activityId)
-            ->whereDoesntHave('closedTimeslots', function ($query) use ($bookingDate) {
-                $query->where('closed_on', $bookingDate);
-            })
-            ->where('max_capacity', '>', DB::raw('booked'))
-            ->get();
-
-        return response()->json($timeslots);
-    }
-
     public function update(Request $request, $id)
     {
         $timeslot = Timeslots::findOrFail($id);
@@ -75,21 +56,21 @@ class TimeslotController extends Controller
         ]);
     }
 
-    public function getTimeslots(Request $request)
-    {
-        $activityId = $request->input('activity_id');
-        $bookingDate = $request->input('booking_date');
+    // public function getTimeslots(Request $request)
+    // {
+    //     $activityId = $request->input('activity_id');
+    //     $bookingDate = $request->input('booking_date');
 
-        $timeslots = Timeslots::where('activity_id', $activityId)
-            ->whereDoesntHave('closedTimeslots', function ($query) use ($bookingDate) {
-                $query->where('closed_on', $bookingDate);
-            })
-            ->where('status', 'active')
-            ->select('timeslots_id', 'start_time', 'end_time', 'remaining_capacity')
-            ->get();
+    //     $timeslots = Timeslots::where('activity_id', $activityId)
+    //         ->whereDoesntHave('closedTimeslots', function ($query) use ($bookingDate) {
+    //             $query->where('closed_on', $bookingDate);
+    //         })
+    //         ->where('status', 'active')
+    //         ->select('timeslots_id', 'start_time', 'end_time', 'remaining_capacity')
+    //         ->get();
 
-        return response()->json($timeslots);
-    }
+    //     return response()->json($timeslots);
+    // }
 
     public function closeTimeslot(Request $request, $timeslotId)
     {

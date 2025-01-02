@@ -22,7 +22,7 @@
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/th.global.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     </head>
 
     <div class="container mt-4 pb-5">
@@ -38,16 +38,18 @@
             </div>
         @endif
 
-        <h2 class="text-center py-3" style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); ">แบบฟอร์มจองเข้าชมพิพิธภัณฑ์</h2>
+        <h2 class="text-center py-3"
+            style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); ">
+            แบบฟอร์มจองเข้าชมพิพิธภัณฑ์</h2>
         <div class="card shadow p-4">
             <div class="pb-3">
                 <button id="toggleButton" type="button" class="toggle-btn" onclick="toggleCalendar()">
-                  <span id="toggleText">แสดงปฏิทินการจอง</span>
-                  <span id="arrowIcon" class="arrow">&#9660;</span>
+                    <span id="toggleText">แสดงปฏิทินการจอง</span>
+                    <span id="arrowIcon" class="arrow">&#9660;</span>
                 </button>
                 <div id="calendar" class="calendar hidden">
                 </div>
-            </div>   
+            </div>
 
             <form method="POST" action="/InsertBooking" class="row g-3" novalidate>
                 @csrf
@@ -58,13 +60,13 @@
                         <option value="{{ $activity_id }}">{{ $selectedActivity->activity_name }}</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group col-4">
                     <label for="booking_date" class="form-label">วันที่จอง:</label>
                     <div class="input-group">
                         <input type="date" class="form-control" id="booking_date" name="booking_date"
-                        value="{{ old('booking_date', $booking_date ?? '') }}" 
-                        min="{{ date('Y-m-d', strtotime('+3 days')) }}" required
+                            value="{{ old('booking_date', $booking_date ?? '') }}"
+                            min="{{ date('Y-m-d', strtotime('+3 days')) }}" required
                             placeholder="กรุณาเลือกวันที่ต้องการจอง (วัน/เดือน/ปี)">
                         <div class="input-group-append">
                             <label for="booking_date" class="input-group-text" style="cursor: pointer;">
@@ -79,7 +81,7 @@
                     @enderror
                     <p>*หมายเหตุ กรุณาเลือกวันที่ต้องการจองล่วงหน้า 3 วัน</p>
                 </div>
-                
+
                 @if ($timeslots->isNotEmpty())
                     <div class="form-group col-3">
                         <label for="fk_timeslots_id" class="form-label">รอบการเข้าชม:</label>
@@ -89,7 +91,9 @@
                             @foreach ($timeslots as $index => $timeslot)
                                 <option value="{{ $timeslot->timeslots_id }}"
                                     {{ old('fk_timeslots_id') == $timeslot->timeslots_id ? 'selected' : '' }}>
-                                    รอบที่ {{ $index + 1 }}  {{ \Carbon\Carbon::parse($timeslot->start_time)->format('H:i') }} น. - {{ \Carbon\Carbon::parse($timeslot->end_time)->format('H:i') }} น. 
+                                    รอบที่ {{ $index + 1 }}
+                                    {{ \Carbon\Carbon::parse($timeslot->start_time)->format('H:i') }} น. -
+                                    {{ \Carbon\Carbon::parse($timeslot->end_time)->format('H:i') }} น.
                                 </option>
                             @endforeach
                         </select>
@@ -209,74 +213,79 @@
                 <label for="text-center p-5">ระบุจำนวนผู้เข้าชม</label>
                 <div id="errorMessage" style="color: red; display: none;"></div>
                 <label for="text-center" class="custom-gray-text">
-                    @if($selectedActivity->max_capacity)
-                    <span class="indent-line">จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $selectedActivity->max_capacity }} คน และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
-                    <span class="new-line">(หากผู้เข้าชมเกิน {{ $selectedActivity->max_capacity }} คน กรุณาติดต่อเจ้าหน้าที่ 0XX-XXXX )</span>
+                    @if ($selectedActivity->max_capacity)
+                        <span class="indent-line">จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $selectedActivity->max_capacity }} คน และ
+                            ไม่ต่ำกว่า 50 คนต่อการจอง</span>
+                        <span class="new-line">(หากผู้เข้าชมเกิน {{ $selectedActivity->max_capacity }} คน
+                            กรุณาติดต่อเจ้าหน้าที่ 0XX-XXXX )</span>
                     @else
-                    <span>ไม่จำกัดจำนวนผู้เข้าชม และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
+                        <span>ไม่จำกัดจำนวนผู้เข้าชม และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
                     @endif
                 </label>
-                <!-- เนอสเซอรี่ - อนุบาล -->
-                <div class="col-3">
-                    <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"
-                        onclick="toggleInput('childrenInput')">
-                    <label class="form-check-label" for="children_qty">เด็ก : {{ $selectedActivity->children_price }}
-                        บาท/คน</label>
-                    <input type="number" class="form-control mt-2" id="childrenInput" name="children_qty"
-                        min="0" disabled oninput="calculateTotal()">
+                <div class="row pt-3">
+                    <!-- เนอสเซอรี่ - อนุบาล -->
+                    <div class="col-3">
+                        <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"
+                            onclick="toggleInput('childrenInput')">
+                        <label class="form-check-label" for="children_qty">เด็ก : {{ $selectedActivity->children_price }}
+                            บาท/คน</label>
+                        <input type="number" class="form-control mt-2" id="childrenInput" name="children_qty"
+                            min="0" disabled oninput="calculateTotal()">
+                    </div>
+
+                    <!-- นักเรียน/นักศึกษา -->
+                    <div class="col-3">
+                        <input class="form-check-input" type="checkbox" id="students_qty" name="students_qty"
+                            onclick="toggleInput('studentInput')">
+                        <label class="form-check-label" for="students_qty">นักเรียน/นักศึกษา :
+                            {{ $selectedActivity->student_price }} บาท/คน</label>
+                        <input type="number" class="form-control mt-2" id="studentInput" name="students_qty"
+                            min="0" disabled oninput="calculateTotal()">
+                    </div>
+
+                    <!-- ครู / อาจารย์ -->
+                    <div class="col-3">
+                        <input class="form-check-input" type="checkbox" id="adults_qty" name="adults_qty"
+                            onclick="toggleInput('adultsInput')">
+                        <label class="form-check-label" for="adults_qty">ผู้ใหญ่ / คุณครู :
+                            {{ $selectedActivity->adult_price }} บาท/คน</label>
+                        <input type="number" class="form-control mt-2" id="adultsInput" name="adults_qty"
+                            min="0" disabled oninput="calculateTotal()">
+                    </div>
                 </div>
 
-                <!-- นักเรียน/นักศึกษา -->
-                <div class="col-3">
-                    <input class="form-check-input" type="checkbox" id="students_qty" name="students_qty"
-                        onclick="toggleInput('studentInput')">
-                    <label class="form-check-label" for="students_qty">นักเรียน/นักศึกษา :
-                        {{ $selectedActivity->student_price }} บาท/คน</label>
-                    <input type="number" class="form-control mt-2" id="studentInput" name="students_qty"
-                        min="0" disabled oninput="calculateTotal()">
-                </div>
+                <label for="text-center">สวัสดิการเข้าชมฟรี</label>
+                <div class="row pt-3">
+                    <!-- ผู้พิการ -->
+                    <div class="col-3">
+                        <input class="form-check-input" type="checkbox" id="disabled_qty" name="disabled_qty"
+                            onclick="toggleInput('disabledInput')">
+                        <label class="form-check-label" for="disabled_qty">
+                            ผู้พิการ</label>
+                        <input type="number" class="form-control mt-2" id="disabledInput" name="disabled_qty"
+                            min="0" disabled oninput="calculateTotal()">
+                    </div>
 
-                <!-- ครู / อาจารย์ -->
-                <div class="col-3">
-                    <input class="form-check-input" type="checkbox" id="adults_qty" name="adults_qty"
-                        onclick="toggleInput('adultsInput')">
-                    <label class="form-check-label" for="adults_qty">ผู้ใหญ่ / คุณครู :
-                        {{ $selectedActivity->adult_price }} บาท/คน</label>
-                    <input type="number" class="form-control mt-2" id="adultsInput" name="adults_qty" min="0"
-                        disabled oninput="calculateTotal()">
-                </div>
+                    <!-- ผู้สูงอายุ -->
+                    <div class="col-3">
+                        <input class="form-check-input" type="checkbox" id="elderly_qty" name="elderly_qty"
+                            onclick="toggleInput('elderlyInput')">
+                        <label class="form-check-label" for="elderly_qty">
+                            ผู้สูงอายุ</label>
+                        <input type="number" class="form-control mt-2" id="elderlyInput" name="elderly_qty"
+                            min="0" disabled oninput="calculateTotal()">
+                    </div>
 
-                <!-- ผู้พิการ -->
-                <div class="col-3">
-                    <input class="form-check-input" type="checkbox" id="disabled_qty" name="disabled_qty"
-                        onclick="toggleInput('disabledInput')">
-                    <label class="form-check-label" for="disabled_qty">
-                        ผู้พิการ : {{ $selectedActivity->disabled_price > 0 ? $selectedActivity->disabled_price . ' บาท/คน' : 'ฟรี' }}
-                    </label>
-                    <input type="number" class="form-control mt-2" id="disabledInput" name="disabled_qty"
-                        min="0" disabled oninput="calculateTotal()">
+                    <!-- พระภิกษุสงฆ์ /สามเณร -->
+                    <div class="col-3">
+                        <input class="form-check-input" type="checkbox" id="monk_qty" name="monk_qty"
+                            onclick="toggleInput('monkInput')">
+                        <label class="form-check-label" for="monk_qty">
+                            พระภิกษุสงฆ์ /สามเณร</label>
+                        <input type="number" class="form-control mt-2" id="monkInput" name="monk_qty" min="0"
+                            disabled oninput="calculateTotal()">
+                    </div>
                 </div>
-
-                <!-- ผู้สูงอายุ -->
-                <div class="col-3">
-                    <input class="form-check-input" type="checkbox" id="elderly_qty" name="elderly_qty"
-                        onclick="toggleInput('elderlyInput')">
-                    <label class="form-check-label" for="elderly_qty">
-                        ผู้สูงอายุ : {{ $selectedActivity->elderly_price > 0 ? $selectedActivity->elderly_price . ' บาท/คน' : 'ฟรี' }}</label>
-                    <input type="number" class="form-control mt-2" id="elderlyInput" name="elderly_qty" min="0"
-                        disabled oninput="calculateTotal()">
-                </div>
-
-                <!-- พระภิกษุสงฆ์ /สามเณร -->
-                <div class="col-3">
-                    <input class="form-check-input" type="checkbox" id="monk_qty" name="monk_qty"
-                        onclick="toggleInput('monkInput')">
-                    <label class="form-check-label" for="monk_qty">
-                        พระภิกษุสงฆ์ /สามเณร : {{ $selectedActivity->monk_price > 0 ? $selectedActivity->monk_price . ' บาท/รูป' : 'ฟรี' }}</label>
-                    <input type="number" class="form-control mt-2" id="monkInput" name="monk_qty" min="0"
-                        disabled oninput="calculateTotal()">
-                </div>
-
                 <!-- จำนวนผู้เข้าร่วมกิจกรรม -->
                 <div class="col-12 mt-4">
                     <h5>จำนวนผู้เข้าร่วมกิจกรรม: <span id="totalVisitors">0</span> คน</h5>
@@ -306,8 +315,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="successModalLabel">ส่งข้อมูลสำเร็จ</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                             </button>
                         </div>
                         <div class="modal-body text-center">
@@ -322,34 +330,35 @@
             </div>
         </div>
     </div>
-  <!-- Modal -->
-<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="eventModalLabel">รายละเอียดการจอง</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <h4 id="eventTitle"></h4>
-                <p id="eventStatus"></p>
-                <p><strong id="eventTimeslotLabel">รอบการเข้าชม:</strong> <span id="eventTimeslot"></span></p>
-                <p><strong id="eventTimeslotLabel">จำนวนที่นั่งคงเหลือ:</strong> <span id="eventRemainingCapacity"></span></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+    <!-- Modal -->
+    <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eventModalLabel">รายละเอียดการจอง</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 id="eventTitle"></h4>
+                    <p id="eventStatus"></p>
+                    <p><strong id="eventTimeslotLabel">รอบการเข้าชม:</strong> <span id="eventTimeslot"></span></p>
+                    <p><strong id="eventTimeslotLabel">จำนวนที่นั่งคงเหลือ:</strong> <span
+                            id="eventRemainingCapacity"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-    @if(session('showSuccessModal'))
-    <script>
-        window.addEventListener('DOMContentLoaded', function () {
-            const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-            successModal.show();
-        });
-    </script>
+    @if (session('showSuccessModal'))
+        <script>
+            window.addEventListener('DOMContentLoaded', function() {
+                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
+            });
+        </script>
     @endif
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>

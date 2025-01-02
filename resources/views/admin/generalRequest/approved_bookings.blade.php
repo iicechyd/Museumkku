@@ -96,7 +96,7 @@
                                             <option value="cancel" {{ $item->status == 3 ? 'selected' : '' }}>ยกเลิก</option>
                                         </select>
                                         <!-- ฟิลด์จำนวนผู้เข้าชม -->
-                                        <div id="visitorsField_{{ $item->booking_id }}" class="visitors-field"
+                                        <div id="visitorsField_{{ $item->booking_id }}" class="visitors-field pt-2"
                                             style="display: {{ $item->status == 2 ? 'block' : 'none' }};">
                                             <input type="number" name="number_of_visitors" placeholder="ระบุจำนวนผู้เข้าชม"
                                                 class="bg-gray-100 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
@@ -118,12 +118,10 @@
                                     data-target="#detailsModal_{{ $item->booking_id }}">
                                     รายละเอียด
                                 </button>
-                            </td>
-                            <td>
                                 @if ($item->documents->isNotEmpty())
-                                    <p class="text-success">แนบไฟล์เรียบร้อย</p>
+                                    <p class="text-success pt-2">แนบไฟล์เอกสารเรียบร้อย</p>
                                 @else
-                                    <p class="text-danger">รอแนบเอกสาร</p>
+                                    <p class="text-danger pt-2">รอแนบเอกสาร</p>
                                 @endif
                             </td>
                             <!-- Modal สำหรับแสดงรายละเอียด -->
@@ -227,14 +225,14 @@
         var visitorsField = document.getElementById("visitorsField_" + booking_id);
 
         if (status === "checkin") {
-        commentsField.style.display = "none";
-        visitorsField.style.display = "block";
-    } else if (status === "cancel") {
-        commentsField.style.display = "block";
-        visitorsField.style.display = "none";
-    } else {
-        commentsField.style.display = "none";
-        visitorsField.style.display = "none";
-    }
+            commentsField.style.display = "none";
+            visitorsField.style.display = "block";
+        } else if (status === "cancel") {
+            commentsField.style.display = "block";
+            visitorsField.style.display = "none";
+        } else {
+            commentsField.style.display = "none";
+            visitorsField.style.display = "none";
+        }
     }
 </script>

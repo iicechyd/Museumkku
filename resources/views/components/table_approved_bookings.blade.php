@@ -10,7 +10,6 @@
                 <th data-type="text-short">สถานะการจอง<span class="resize-handle"></span></th>
                 <th data-type="text-short">แก้ไขสถานะ<span class="resize-handle"></span></th>
                 <th data-type="text-short">รายละเอียดการจอง<span class="resize-handle"></span></th>
-                <th data-type="text-short">สถานะแนบเอกสาร<span class="resize-handle"></span></th>
             </tr>
         </thead>
         <tbody>

@@ -58,13 +58,16 @@
                                     <tr>
                                         <th scope="row">{{ $item->booking->booking_id }}</th>
                                         <td>{{ \Carbon\Carbon::parse($item->booking->booking_date)->locale('th')->translatedFormat('j F') }} {{ \Carbon\Carbon::parse($item->booking->booking_date)->year + 543 }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($item->booking->timeslot->start_time)->format('H:i') }} น. - {{ \Carbon\Carbon::parse($item->booking->timeslot->end_time)->format('H:i') }} น.</td>
-                                        <td>
+                                        <td>@if ($item->booking->timeslot)
+                                            {{ \Carbon\Carbon::parse($item->booking->timeslot->start_time)->format('H:i') }} น. - {{ \Carbon\Carbon::parse($item->booking->timeslot->end_time)->format('H:i') }} น.</td>
+                                            @else
+                                            ไม่มีรอบการเข้าชม
+                                        @endif
+                                            <td>
                                             <a href="#detailsModal_{{ $item->booking->booking_id }}" class="text-blue-500" data-toggle="modal">
                                                 รายละเอียด
                                             </a>
                                         </td>
-                                        
                                         <td>
                                             @if ($item->statusChange->new_status == 2)
                                                 <button type="button" class="status-btn">เข้าชม</button>

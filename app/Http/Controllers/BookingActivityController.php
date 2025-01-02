@@ -111,7 +111,7 @@ class BookingActivityController extends Controller
         ->whereHas('activity', function ($query) {
             $query->where('activity_type_id', 2);
         })
-        ->where('status', 2);
+        ->where('status', 3);
         
         if ($request->filled('activity_id')) {
             $query->where('activity_id', $request->activity_id);

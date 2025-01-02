@@ -62,19 +62,11 @@
                                 @endif
                             </td>
                             <td>
-                                @switch($item->status)
-                                    @case(0)
-                                        <button type="button" class="btn btn-warning text-white">รออนุมัติ</button>
-                                    @break
-
-                                    @case(1)
-                                        <button type="button" class="btn-approved-outline">อนุมัติ</button>
-                                    @break
-
-                                    @case(2)
+                                <td>
+                                    @if ($item->status == 3)
                                         <button type="button" class="btn-except">ยกเลิก</button>
-                                    @break
-                                @endswitch
+                                    @endif
+                                </td>
                             </td>
                             <td>{{ $item->latestStatusChange->comments ?? 'ไม่มีความคิดเห็น' }}</td>
                             <td>

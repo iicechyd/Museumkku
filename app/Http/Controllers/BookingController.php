@@ -124,7 +124,7 @@ class BookingController extends Controller
         ->whereHas('activity', function ($query) {
             $query->where('activity_type_id', 1);
         })
-        ->where('status', 2);
+        ->where('status', 3);
 
         if ($request->filled('activity_id')) {
             $query->where('activity_id', $request->activity_id);
@@ -442,14 +442,12 @@ class BookingController extends Controller
         'statusChange'
     ])->orderBy('created_at', 'desc');
 
-     // กรองตามชื่อกิจกรรม
      if ($request->filled('activity_name')) {
         $query->whereHas('booking.activity', function ($q) use ($request) {
             $q->where('activity_name', $request->activity_name);
         });
     }
 
-    // กรองตามสถานะการจอง
     if ($request->filled('status')) {
         $query->whereHas('statusChange', function ($q) use ($request) {
             $q->where('new_status', $request->status);
@@ -460,7 +458,7 @@ class BookingController extends Controller
     $histories = $query->get();
     $activities = Activity::orderBy('activity_name')->pluck('activity_name', 'activity_id');
 
-        return view('history', compact('histories', 'activities'));
+        return view('admin.history', compact('histories', 'activities'));
     }
 
     

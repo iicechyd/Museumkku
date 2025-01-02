@@ -95,8 +95,6 @@
                                         <select name="status" id="statusSelect_{{ $item->booking_id }}"
                                             onchange="toggleCommentsField({{ $item->booking_id }})"
                                             class="bg-gray-100 border border-gray-300 rounded-lg p-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                            <option value="pending" {{ $item->status == 0 ? 'selected' : '' }}>รออนุมัติ
-                                            </option>
                                             <option value="approve" {{ $item->status == 1 ? 'selected' : '' }}>อนุมัติ</option>
                                             <option value="cancel" {{ $item->status == 2 ? 'selected' : '' }}>ยกเลิก</option>
                                         </select>

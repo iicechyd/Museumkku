@@ -57,19 +57,9 @@
                                 {{ \Carbon\Carbon::parse($item->timeslot->end_time)->format('H:i') }} น.
                             </td>
                             <td>
-                                @switch($item->status)
-                                    @case(0)
-                                        <button type="button" class="btn btn-warning text-white">รออนุมัติ</button>
-                                    @break
-
-                                    @case(1)
-                                        <button type="button" class="btn-approved-outline">อนุมัติ</button>
-                                    @break
-
-                                    @case(2)
-                                        <button type="button" class="btn-except">ยกเลิก</button>
-                                    @break
-                                @endswitch
+                                @if ($item->status == 3)
+                                    <button type="button" class="btn-except">ยกเลิก</button>
+                                @endif
                             </td>
                             <td>{{ $item->latestStatusChange->comments ?? 'ไม่มีความคิดเห็น' }}</td>
                             <td>
@@ -118,16 +108,18 @@
                                                 </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
                                                 คน</p>
                                             <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
-                                        <p><strong>แก้ไขสถานะ: </strong>
+                                            <p><strong>แก้ไขสถานะ: </strong>
                                                 @if ($item->latestStatusChange)
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
-                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->year + 543 }} เวลา
-                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->format('H:i') }} น.
+                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->year + 543 }}
+                                                    เวลา
+                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->format('H:i') }}
+                                                    น.
                                                     แก้ไขโดยเจ้าหน้าที่: {{ $item->latestStatusChange->changed_by ?? 'N/A' }}
                                                 @else
                                                     ไม่พบข้อมูลการเปลี่ยนแปลงสถานะ
                                                 @endif
-                                        </p>
+                                            </p>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Activity;
 use App\Models\Timeslots;
 use App\Models\closedTimeslots;
+use Carbon\Carbon;
 
 class TimeslotController extends Controller
 {
@@ -99,7 +100,13 @@ class TimeslotController extends Controller
 
     public function getTimeslotsByActivity(Request $request)
     {
-        $timeslots = Timeslots::where('activity_id', $request->activity_id)->get();
+        $timeslots = Timeslots::where('activity_id', $request->activity_id)
+        ->get()
+        ->map(function ($timeslot) {
+            $timeslot->start_time = Carbon::parse($timeslot->start_time)->format('H:i') . ' น.';
+            $timeslot->end_time = Carbon::parse($timeslot->end_time)->format('H:i') . ' น.';
+            return $timeslot;
+        });
         return response()->json($timeslots);
     }
 

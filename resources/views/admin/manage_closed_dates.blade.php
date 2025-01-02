@@ -27,7 +27,7 @@
                 <div class="form-group col-4">
                     <label for="activity_id" class="font-weight-bold">เลือกกิจกรรม</label>
                     <select id="activity_id" name="activity_id" class="form-control" required>
-                        <option value="">-- เลือกกิจกรรม --</option>
+                        <option value="">กรุณาเลือกกิจกรรม</option>
                         @foreach ($activities as $activity)
                             <option value="{{ $activity->activity_id }}">{{ $activity->activity_name }}</option>
                         @endforeach
@@ -39,7 +39,7 @@
                 <div class="form-group col-4">
                     <label for="timeslots_id" class="font-weight-bold">เลือกรอบการเข้าชม</label>
                     <select id="timeslots_id" name="timeslots_id" class="form-control" required disabled>
-                        <option value="">-- เลือกรอบการเข้าชม --</option>
+                        <option value="">กรุณาเลือกรอบการเข้าชม</option>
                         <option value="all">ปิดทุกรอบ</option>
                     </select>
                     @error('timeslots_id')

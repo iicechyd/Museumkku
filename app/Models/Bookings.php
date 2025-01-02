@@ -59,15 +59,40 @@ class Bookings extends Model
         return $this->hasOne(StatusChanges::class, 'booking_id', 'booking_id')
             ->orderBy('changed_id', 'desc');
     }
-    
+
     public function getTotalVisitorsAttribute()
     {
         return $this->children_qty + $this->students_qty + $this->adults_qty;
     }
-    
+
     public function documents()
     {
         return $this->hasMany(Documents::class, 'booking_id', 'booking_id');
     }
-    
+    public function bookingHistories()
+    {
+        return $this->hasMany(BookingHistory::class, 'booking_id', 'booking_id');
+    }
+    // Booking.php
+public function getTotalPriceAttribute()
+{
+    $activity = $this->activity;
+
+    // ตรวจสอบว่ามีข้อมูลกิจกรรม
+    if (!$activity) {
+        return 0; // คืนค่า 0 หากไม่มีข้อมูลกิจกรรม
+    }
+
+    // คำนวณยอดรวมราคา
+    $total = 0;
+    $total += ($this->children_qty ?? 0) * ($activity->children_price ?? 0);
+    $total += ($this->students_qty ?? 0) * ($activity->student_price ?? 0);
+    $total += ($this->adults_qty ?? 0) * ($activity->adult_price ?? 0);
+    $total += ($this->disabled_qty ?? 0) * ($activity->disabled_price ?? 0);
+    $total += ($this->elderly_qty ?? 0) * ($activity->elderly_price ?? 0);
+    $total += ($this->monk_qty ?? 0) * ($activity->monk_price ?? 0);
+
+    return $total;
+}
+
 }

@@ -26,7 +26,7 @@ Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'showDashboard'])->name('showDashboard');
     Route::get('/admin/activity_list', [ActivityController::class, 'showListActivity']);
     Route::get('/admin/admin_calendar', [HomeController::class, 'showAdminCalendar'])->name('calendar.showAdminCalendar');
-    
+    Route::get('/admin/history', [BookingController::class, 'showHistory'])->name('booking.history.all');
     // Route ตรวจการจองทั่วไป
     Route::get('/admin/request_bookings/general', [BookingController::class, 'showBookings'])->name('request_bookings.general');
     Route::get('/admin/request_letter/general', [BookingController::class, 'showRequestLetter'])->name('request_letter');

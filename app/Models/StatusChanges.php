@@ -26,5 +26,8 @@ class StatusChanges extends Model
     {
         return $this->belongsTo(Bookings::class, 'booking_id', 'booking_id');
     }
-
+    public function bookingHistories()
+    {
+        return $this->hasMany(BookingHistory::class, 'changed_id', 'changed_id');
+    }
 }

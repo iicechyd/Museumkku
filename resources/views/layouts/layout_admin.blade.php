@@ -26,8 +26,6 @@
                         <img src="{{ asset('img/logo.png') }}" alt="Logo" class="img-fluid">
                     </a>
                 </div>
-
-                <!-- Sidebar Navigation -->
                 <ul class="sidebar-nav">
                     <li class="sidebar-header">
                         <h3 class="text-center">ยินดีต้อนรับ <br> {{ Auth::user()->name }}</h3>
@@ -46,10 +44,6 @@
                         </a>
 
                         <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item">
-                            <li class="sidebar-item">
-                                <a href="/admin/admin_calendar" class="sidebar-link">ปฏิทินพิพิธภัณฑ์</a>
-                            </li>
                             <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"
                                 data-bs-target="#multi-two" aria-expanded="false" aria-controls="multi-two">
                                 สถานะการจอง
@@ -64,6 +58,12 @@
                                         class="sidebar-link">การจองเข้าร่วมกิจกรรม</a>
                                 </li>
                             </ul>
+                            <li class="sidebar-item">
+                                <a href="/admin/admin_calendar" class="sidebar-link">ปฏิทินพิพิธภัณฑ์</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="{{route('booking.history.all')}}" class="sidebar-link">ประวัติการจองทั้งหมด</a>
+                            </li>
                     </li>
                 </ul>
                 </li>

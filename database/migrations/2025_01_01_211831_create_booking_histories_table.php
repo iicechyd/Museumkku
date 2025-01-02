@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('booking_histories', function (Blueprint $table) {
             $table->id('history_id');
             $table->unsignedBigInteger('booking_id');
-            $table->unsignedBigInteger('changed_id')->nullable(); // เปลี่ยนเป็น nullable
+            $table->unsignedBigInteger('changed_id')->nullable();
             $table->foreign('booking_id')->references('booking_id')->on('bookings')->onDelete('cascade');
             $table->foreign('changed_id')->references('changed_id')->on('status_changes')->onDelete('cascade');
         

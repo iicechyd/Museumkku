@@ -1,0 +1,122 @@
+html,
+body,
+.intro {
+  height: 100%;
+}
+
+table td,
+table th {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+tbody td {
+  font-weight: 500;
+  color: #999999;
+}
+
+.status-btn {
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: #f0fff8;
+  color: #18ab56;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  border: 2px solid #f0fff8;
+}
+
+.btn-success {
+  display: inline-block;
+  padding: 7px 12px;
+  background-color: #18ab56;
+  color: #f0fff8;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  border: 2px solid #18ab56;
+}
+
+.btn-request-outline {
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: transparent;
+  color: #ffbc10;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  border: 1px solid #ffbc10;
+  transition: color 0.3s, background-color 0.3s;
+}
+.btn-request-outline:hover {
+  color: white;
+  background-color: #ffbc10;
+}
+.btn-request-outline:active {
+  color: white;
+  background-color: #ffbc10;
+  border-color: #ffbc10;
+}
+
+.btn-except-outline {
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: transparent;
+  color: #df3139;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  border: 1px solid #df3139;
+  transition: color 0.3s, background-color 0.3s;
+}
+
+.btn-except-outline:hover {
+  color: white;
+  background-color: #df3139;
+  border-color: #df3139;
+}
+.btn-request-outline:active {
+  color: white;
+  background-color: #df3139;
+  border-color: #df3139;
+}
+.btn-except {
+  display: inline-block;
+  padding: 7px 12px;
+  background-color: #df3139;
+  color: #ffffff;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  border: 2px solid #df3139;
+}
+
+.modal-header {
+  background-color: #f8f9fa;
+}
+.modal-body {
+  font-size: 1rem;
+}
+.table th, .table td {
+  vertical-align: middle;
+}
+.table-responsive {
+  margin-top: 20px;
+}
+
+.container {
+  max-width: 1200px;
+}
+.form-inline .form-group {
+  margin-right: 10px;
+}
+.table th, .table td {
+color: black;
+text-align: center;
+
+}

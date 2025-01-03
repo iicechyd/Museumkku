@@ -10,96 +10,99 @@
     <title>Dashboard</title>
 
     <x-layout bodyClass>
-        <div class="container py-4">
-            <div class="row gy-4">
-                @foreach ($activities as $activity)
+        <div class="container">
+            <div id="activityCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner p-1">
+                    @foreach ($activities as $activity)
                     @if ($activity->activity_id == 1 || $activity->activity_id == 2)
-                        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                            <div class="card">
-                                <div class="card-header p-3 pt-2">
-                                    <div
-                                        class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-                                        <i class="material-icons opacity-10">weekend</i>
+                    <div class="carousel-item @if ($loop->first) active @endif">
+                        <div class="row gy-4 pt-4" >
+                            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                                <div class="card ">
+                                    <div class="card-header p-3 pt-2">
+                                        <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                                            <i class="material-icons opacity-10">weekend</i>
+                                        </div>
+                                        <div class="text-end pt-1">
+                                            <p class="text-sm mb-0 text-capitalize"><strong>จำนวนผู้เข้าชมวันนี้</strong></p>
+                                            <p class="text-sm mb-0 text-capitalize" style="color: {{ $activity->activity_id == 1 ? '#489085' : ($activity->activity_id == 2 ? '#C06628' : 'black') }};">{{ $activity->activity_name }}</p>
+                                            <h4 class="mb-0">{{ $totalVisitorsToday[$activity->activity_id] ?? 0 }} คน</h4>
+                                        </div>
                                     </div>
-                                    <div class="text-end pt-1">
-                                        <p class="text-sm mb-0 text-capitalize"><strong>จำนวนผู้เข้าชมวันนี้</strong></p>
-                                        <p class="text-sm mb-0 text-capitalize">{{ $activity->activity_name }}</p>
-                                        <h4 class="mb-0">{{ $totalVisitorsToday[$activity->activity_id] ?? 0 }} คน</h4>
+                                    <hr class="dark horizontal my-0">
+                                    <div class="card-footer p-3">
+                                        <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+55%</span> จากเมื่อวานนี้</p>
                                     </div>
                                 </div>
-                                <hr class="dark horizontal my-0">
-                                <div class="card-footer p-3">
-                                    <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+55%
-                                        </span>จากเมื่อวานนี้</p>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                                <div class="card">
+                                    <div class="card-header p-3 pt-2">
+                                        <div class="icon icon-lg icon-shape bg-gradient-primary shadow-primary text-center border-radius-xl mt-n4 position-absolute">
+                                            <i class="material-icons opacity-10">person</i>
+                                        </div>
+                                        <div class="text-end pt-1">
+                                            <p class="text-sm mb-0 text-capitalize"><strong>จำนวนผู้เข้าชมทั้งสัปดาห์</strong></p>
+                                            <p class="text-sm mb-0 text-capitalize" style="color: {{ $activity->activity_id == 1 ? '#489085' : ($activity->activity_id == 2 ? '#C06628' : 'black') }};">{{ $activity->activity_name }}</p>
+                                            <h4 class="mb-0">{{ $totalVisitorsThisWeek[$activity->activity_id] ?? 0 }} คน</h4>
+                                        </div>
+                                    </div>
+                                    <hr class="dark horizontal my-0">
+                                    <div class="card-footer p-3">
+                                        <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+3%</span> จากสัปดาห์ที่แล้ว</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                                <div class="card">
+                                    <div class="card-header p-3 pt-2">
+                                        <div class="icon icon-lg icon-shape bg-gradient-success shadow-success text-center border-radius-xl mt-n4 position-absolute">
+                                            <i class="material-icons opacity-10">person</i>
+                                        </div>
+                                        <div class="text-end pt-1">
+                                            <p class="text-sm mb-0 text-capitalize"><strong>จำนวนผู้เข้าชมทั้งเดือน</strong></p>
+                                            <p class="text-sm mb-0 text-capitalize" style="color: {{ $activity->activity_id == 1 ? '#489085' : ($activity->activity_id == 2 ? '#C06628' : 'black') }};">{{ $activity->activity_name }}</p>
+                                            <h4 class="mb-0">{{ $totalVisitorsThisMonth[$activity->activity_id] ?? 0 }} คน</h4>
+                                        </div>
+                                    </div>
+                                    <hr class="dark horizontal my-0">
+                                    <div class="card-footer p-3">
+                                        <p class="mb-0"><span class="text-danger text-sm font-weight-bolder">-2%</span> จากเดือนที่แล้ว</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6">
+                                <div class="card">
+                                    <div class="card-header p-3 pt-2">
+                                        <div class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
+                                            <i class="material-icons opacity-10">weekend</i>
+                                        </div>
+                                        <div class="text-end pt-1">
+                                            <p class="text-sm mb-0 text-capitalize"><strong>ยอดผู้เข้าชมทั้งหมดตลอดปี</strong></p>
+                                            <p class="text-sm mb-0 text-capitalize" style="color: {{ $activity->activity_id == 1 ? '#489085' : ($activity->activity_id == 2 ? '#C06628' : 'black') }};">{{ $activity->activity_name }}</p>
+                                            <h4 class="mb-0">{{ $totalVisitorsThisYear[$activity->activity_id] ?? 0 }} คน</h4>
+                                        </div>
+                                    </div>
+                                    <hr class="dark horizontal my-0">
+                                    <div class="card-footer p-3">
+                                        <p class="mb-0"><span class="text-danger text-sm font-weight-bolder">-2%</span> จากเดือนที่แล้ว</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                            <div class="card">
-                                <div class="card-header p-3 pt-2">
-                                    <div
-                                        class="icon icon-lg icon-shape bg-gradient-primary shadow-primary text-center border-radius-xl mt-n4 position-absolute">
-                                        <i class="material-icons opacity-10">person</i>
-                                    </div>
-                                    <div class="text-end pt-1">
-                                        <p class="text-sm mb-0 text-capitalize"><strong>จำนวนผู้เข้าชมทั้งสัปดาห์</strong>
-                                        </p>
-                                        <p class="text-sm mb-0 text-capitalize">{{ $activity->activity_name }}</p>
-                                        <h4 class="mb-0">{{ $totalVisitorsThisWeek[$activity->activity_id] ?? 0 }} คน</h4>
-                                    </div>
-                                </div>
-                                <hr class="dark horizontal my-0">
-                                <div class="card-footer p-3">
-                                    <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+3%
-                                        </span>จากสัปดาห์ที่แล้ว</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                            <div class="card">
-                                <div class="card-header p-3 pt-2">
-                                    <div
-                                        class="icon icon-lg icon-shape bg-gradient-success shadow-success text-center border-radius-xl mt-n4 position-absolute">
-                                        <i class="material-icons opacity-10">person</i>
-                                    </div>
-                                    <div class="text-end pt-1">
-                                        <p class="text-sm mb-0 text-capitalize"><strong>จำนวนผู้เข้าชมทั้งเดือน</strong></p>
-                                        <p class="text-sm mb-0 text-capitalize">{{ $activity->activity_name }}</p>
-                                        <h4 class="mb-0">{{ $totalVisitorsThisMonth[$activity->activity_id] ?? 0 }} คน
-                                        </h4>
-                                    </div>
-                                </div>
-                                <hr class="dark horizontal my-0">
-                                <div class="card-footer p-3">
-                                    <p class="mb-0"><span class="text-danger text-sm font-weight-bolder">-2%</span>
-                                        จากเดือนที่แล้ว</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-sm-6">
-                            <div class="card">
-                                <div class="card-header p-3 pt-2">
-                                    <div
-                                        class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
-                                        <i class="material-icons opacity-10">weekend</i>
-                                    </div>
-                                    <div class="text-end pt-1">
-                                        <p class="text-sm mb-0 text-capitalize"><strong>ยอดผู้เข้าชมทั้งหมดตลอดปี</strong>
-                                        </p>
-                                        <p class="text-sm mb-0 text-capitalize">{{ $activity->activity_name }}</p>
-                                        <h4 class="mb-0">{{ $totalVisitorsThisYear[$activity->activity_id] ?? 0 }} คน</h4>
-                                    </div>
-                                </div>
-                                <hr class="dark horizontal my-0">
-                                <div class="card-footer p-3">
-                                    <p class="mb-0"><span class="text-danger text-sm font-weight-bolder">-2%</span>
-                                        จากเดือนที่แล้ว</p>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
                     @endif
-                @endforeach
-            </div>
+                    @endforeach
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#activityCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#activityCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>            
             <div class="row mt-4">
                 <div class="col-lg-4 col-md-6 mt-4 mb-4">
                     <div class="card z-index-2 ">
@@ -116,7 +119,7 @@
                             <hr class="dark horizontal">
                             <div class="d-flex">
                                 <i class="material-icons text-sm my-auto me-1">schedule</i>
-                                <p class="mb-0 text-sm">รีเฟรชล่าสุดเมื่อ 2 วันที่แล้ว</p>
+                                <p class="mb-0 text-sm">อัปเดตล่าสุดเมื่อ 2 วันที่แล้ว</p>
                             </div>
                         </div>
                     </div>
@@ -156,7 +159,7 @@
                             <hr class="dark horizontal">
                             <div class="d-flex ">
                                 <i class="material-icons text-sm my-auto me-1">schedule</i>
-                                <p class="mb-0 text-sm">just updated</p>
+                                <p class="mb-0 text-sm">อัปเดตเมื่อกี้</p>
                             </div>
                         </div>
                     </div>
@@ -216,8 +219,7 @@
                                                     </div>
                                                 </td>
                                                 <td class="align-middle text-center text-sm">
-                                                    <span
-                                                        class="text-xs font-weight-bold">{{ $activity->total_visitors > 0 ? $activity->total_visitors . ' คน' : '-' }}</span>
+                                                    <span class="text-xs font-weight-bold">{{ $activity->total_visitors > 0 ? $activity->total_visitors . ' คน' : '-' }}</span>
                                                 </td>
                                                 <td class="align-middle text-center text-sm">
                                                     <span

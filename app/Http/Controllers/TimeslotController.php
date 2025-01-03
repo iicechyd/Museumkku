@@ -56,36 +56,6 @@ class TimeslotController extends Controller
             'message' => 'สถานะของกิจกรรมถูกเปลี่ยนเรียบร้อยแล้ว'
         ]);
     }
-
-    // public function getTimeslots(Request $request)
-    // {
-    //     $activityId = $request->input('activity_id');
-    //     $bookingDate = $request->input('booking_date');
-
-    //     $timeslots = Timeslots::where('activity_id', $activityId)
-    //         ->whereDoesntHave('closedTimeslots', function ($query) use ($bookingDate) {
-    //             $query->where('closed_on', $bookingDate);
-    //         })
-    //         ->where('status', 'active')
-    //         ->select('timeslots_id', 'start_time', 'end_time', 'remaining_capacity')
-    //         ->get();
-
-    //     return response()->json($timeslots);
-    // }
-
-    public function closeTimeslot(Request $request, $timeslotId)
-    {
-        $request->validate([
-            'closed_on' => 'required|date',
-        ]);
-
-        DB::table('closed_timeslots')->insert([
-            'timeslot_id' => $timeslotId,
-            'closed_on' => $request->input('closed_on'),
-        ]);
-
-        return redirect()->back()->with('success', 'ปิดรอบการเข้าชมสำเร็จแล้ว');
-    }
     public function showClosedDates()
     {
         $activities = Activity::all();
@@ -96,18 +66,6 @@ class TimeslotController extends Controller
             ->get();
 
         return view('admin.manage_closed_dates', compact('activities', 'closedDates'));
-    }
-
-    public function getTimeslotsByActivity(Request $request)
-    {
-        $timeslots = Timeslots::where('activity_id', $request->activity_id)
-        ->get()
-        ->map(function ($timeslot) {
-            $timeslot->start_time = Carbon::parse($timeslot->start_time)->format('H:i') . ' น.';
-            $timeslot->end_time = Carbon::parse($timeslot->end_time)->format('H:i') . ' น.';
-            return $timeslot;
-        });
-        return response()->json($timeslots);
     }
 
     public function saveClosedDates(Request $request)
@@ -148,5 +106,17 @@ class TimeslotController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'เกิดข้อผิดพลาดในการลบวันที่ปิดรอบ');
         }
+    }
+
+    public function getTimeslotsByActivity(Request $request)
+    {
+        $timeslots = Timeslots::where('activity_id', $request->activity_id)
+        ->get()
+        ->map(function ($timeslot) {
+            $timeslot->start_time = Carbon::parse($timeslot->start_time)->format('H:i') . ' น.';
+            $timeslot->end_time = Carbon::parse($timeslot->end_time)->format('H:i') . ' น.';
+            return $timeslot;
+        });
+        return response()->json($timeslots);
     }
 }

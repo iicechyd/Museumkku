@@ -422,12 +422,6 @@ class BookingController extends Controller
         ]);
     }
 
-    public function showGeneralBookingForm()
-    {
-        $activities = Activity::where('activity_type_id', 1)->get(); // ดึงกิจกรรมที่มี activity_type_id = 1
-        return view('form_bookings', ['activities' => $activities]);
-    }
-
     public function searchBookingByEmail(Request $request)
     {
         $request->validate([

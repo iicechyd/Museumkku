@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\UserLog;
 
 class SuperAdminController extends Controller
 {
@@ -37,8 +38,31 @@ class SuperAdminController extends Controller
         return view('superadmin.all_users', compact('users', 'roles'));
     }
 
-    public function showTable()
+    public function showUserLogs()
     {
-        return view('pages.tables');
+        $logs = UserLog::with('user')->get(); // โหลดความสัมพันธ์ 'user' พร้อมกับบันทึก
+    
+        return view('superadmin.user_logs', compact('logs'));
     }
+    public function logUserLogin(Request $request)
+{
+    // ตรวจสอบว่า user_id นี้ยังไม่ได้ logout (logout_at เป็น null)
+    $existingLog = UserLog::where('user_id', Auth::id())
+                          ->whereNull('logout_at') // ตรวจสอบว่า logout_at เป็น null
+                          ->first();
+
+    // หากพบว่า user นี้ล็อกอินอยู่แล้ว ก็ไม่ทำการบันทึกใหม่
+    if ($existingLog) {
+        return;
+    }
+
+    // บันทึกข้อมูลใหม่หากไม่พบว่าผู้ใช้ล็อกอินอยู่แล้ว
+    $log = new UserLog();
+    $log->user_id = Auth::id();
+    $log->ip_address = $request->ip();
+    $log->login_at = now();
+    $log->save();
+}
+
+    
 }

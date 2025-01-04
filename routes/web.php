@@ -20,6 +20,7 @@ use App\Http\Controllers\DashboardController;
 Auth::routes();
 Route::middleware([RoleMiddleware::class . ':Super Admin'])->group(function () {
     Route::get('/super_admin/all_users', [SuperAdminController::class, 'showAllUsers'])->name('showAllUsers');
+    Route::get('/superadmin/logs', [SuperAdminController::class, 'showUserLogs'])->name('superadmin.logs');
 
 });
 Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {

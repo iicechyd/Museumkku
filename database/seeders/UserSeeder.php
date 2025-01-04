@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
         User::create([
             'role_id' => '1',
             'email' => 'superadmin@gmail.com',
-            'name' => 'superadmin',
+            'name' => 'นายพันเทพ เด่นดัง',
             'password' => 'super123',
             'is_approved' => '1',
         ]);
@@ -22,10 +22,17 @@ class UserSeeder extends Seeder
         User::create([
             'role_id' => '2',
             'email' => 'admin@gmail.com',
-            'name' => 'admin',
+            'name' => 'นางสาวใจดี เด่นกล้า',
             'password' => 'admin123',
             'is_approved' => '2',
         ]);
 
+        User::create([
+            'role_id' => '3',
+            'email' => 'executive@gmail.com',
+            'name' => 'นายประธาน บริษัท',
+            'password' => 'executive123',
+            'is_approved' => '2',
+        ]);
     }
 }

@@ -37,7 +37,7 @@
                             <i class="fa-solid fa-list pe-2"></i>
                             จัดการบัญชีผู้ใช้งาน
                         </a>
-                        <a href="#" class="sidebar-link">
+                        <a href="{{ route('superadmin.logs') }}" class="sidebar-link">
                             <i class="fa-solid fa-sliders pe-2"></i>
                             ประวัติการใช้งาน
                         </a>

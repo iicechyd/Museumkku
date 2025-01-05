@@ -41,7 +41,7 @@
                 <div class="row justify-content-center">
                     <div class="col-12">
                         <div class="table-responsive bg-white shadow-sm rounded">
-                            <table class="table table-striped mb-0">
+                            <table class="table mb-0">
                                 <thead class="thead-white">
                                     <tr>
                                         <th scope="col">รายการที่</th>
@@ -55,59 +55,62 @@
                                 </thead>
                                 <tbody>
                                     @foreach($histories as $item)
+                                    @foreach ($item->statusChanges as $statusChange)
                                     <tr>
-                                        <th scope="row">{{ $item->booking->booking_id }}</th>
-                                        <td>{{ \Carbon\Carbon::parse($item->booking->booking_date)->locale('th')->translatedFormat('j F') }} {{ \Carbon\Carbon::parse($item->booking->booking_date)->year + 543 }}</td>
-                                        <td>@if ($item->booking->timeslot)
-                                            {{ \Carbon\Carbon::parse($item->booking->timeslot->start_time)->format('H:i') }} น. - {{ \Carbon\Carbon::parse($item->booking->timeslot->end_time)->format('H:i') }} น.</td>
+                                        <th scope="row">{{ $item->booking_id }}</th>
+                                        <td>{{ \Carbon\Carbon::parse($item->booking_date)->locale('th')->translatedFormat('j F') }} {{ \Carbon\Carbon::parse($item->booking_date)->year + 543 }}</td>
+                                        <td>@if ($item->timeslot)
+                                            {{ \Carbon\Carbon::parse($item->start_time)->format('H:i') }} น. - {{ \Carbon\Carbon::parse($item->end_time)->format('H:i') }} น.</td>
                                             @else
                                             ไม่มีรอบการเข้าชม
                                         @endif
                                             <td>
-                                            <a href="#detailsModal_{{ $item->booking->booking_id }}" class="text-blue-500" data-toggle="modal">
+                                            <a href="#detailsModal_{{ $item->booking_id }}" class="text-blue-500" data-toggle="modal">
                                                 รายละเอียด
                                             </a>
                                         </td>
                                         <td>
-                                            @if ($item->statusChange->new_status == 2)
+
+                                            @if ($statusChange->new_status == 2)
                                                 <button type="button" class="status-btn">เข้าชม</button>
-                                            @elseif ($item->statusChange->new_status == 3)
+                                            @elseif ($statusChange->new_status == 3)
                                                 <button type="button" class="btn-except">ยกเลิก</button>
                                             @else
-                                                {{ $item->statusChange->new_status }}
+                                                {{ $statusChange->new_status }}
                                             @endif
+
                                         </td>
-                                        <td>{{ $item->statusChange->number_of_visitors ? $item->statusChange->number_of_visitors . ' คน' : '-' }}</td>
-                                        <td>{{ $item->statusChange->comments ? $item->statusChange->comments . ' ' : '-' }}</td>
+                                        <td>{{ $statusChange->number_of_visitors ? $statusChange->number_of_visitors . ' คน' : '-' }}</td>
+                                        <td>{{ $statusChange->comments ? $statusChange->comments . ' ' : '-' }}</td>
 
                                     </tr>
 
                                     <!-- Modal for details -->
-                                    <div class="modal fade" id="detailsModal_{{ $item->booking->booking_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal fade" id="detailsModal_{{ $item->booking_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">รายละเอียดการจอง - {{ $item->booking->activity->activity_name }}</h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel">รายละเอียดการจอง - {{ $item->activity_name }}</h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <p><strong>วันเวลาที่จองเข้ามา:</strong> {{ \Carbon\Carbon::parse($item->created_at)->locale('th')->translatedFormat('j F') }} {{ \Carbon\Carbon::parse($item->created_at)->year + 543 }} เวลา {{ \Carbon\Carbon::parse($item->created_at)->format('H:i') }} น.</p>
-                                                    <p><strong>ชื่อหน่วยงาน:</strong> {{ $item->booking->institute->instituteName }}</p>
-                                                    <p><strong>ที่อยู่หน่วยงาน:</strong> {{ $item->booking->institute->instituteAddress }} {{ $item->booking->institute->subdistrict }} {{ $item->booking->institute->district }} {{ $item->booking->institute->inputProvince }} {{ $item->booking->institute->zipcode }}</p>
-                                                    <p><strong>ชื่อผู้ประสานงาน:</strong> {{ $item->booking->visitor->visitorName }}</p>
-                                                    <p><strong>อีเมลผู้ประสานงาน:</strong> {{ $item->booking->visitor->visitorEmail }}</p>
-                                                    <p><strong>เบอร์โทรศัพท์:</strong> {{ $item->booking->visitor->tel }}</p>
-                                                    <p><strong>เด็ก (คน):</strong> {{ $item->booking->children_qty > 0 ? $item->booking->children_qty . ' คน' : '-' }}</p>
-                                                    <p><strong>นร / นศ (คน):</strong> {{ $item->booking->students_qty > 0 ? $item->booking->students_qty . ' คน' : '-' }}</p>
-                                                    <p><strong>ผู้ใหญ่ / คุณครู (คน):</strong> {{ $item->booking->adults_qty > 0 ? $item->booking->adults_qty . ' คน' : '-' }}</p>
-                                                    <p><strong>ผู้พิการ (คน):</strong> {{ $item->booking->disabled_qty > 0 ? $item->disabled_qty . ' คน' : '-' }}</p>
-                                                    <p><strong>ผู้สูงอายุ (คน):</strong> {{ $item->booking->elderly_qty > 0 ? $item->booking->elderly_qty . ' คน' : '-' }}</p>
-                                                    <p><strong>พระภิกษุสงฆ์ / สามเณร (คน):</strong> {{ $item->booking->monk_qty > 0 ? $item->booking->monk_qty . ' รูป' : '-' }}</p>
-                                                    <p><strong>จำนวนคนทั้งหมด:</strong> {{ $item->booking->children_qty + $item->booking->students_qty + $item->booking->adults_qty + $item->booking->disabled_qty + $item->booking->elderly_qty + $item->booking->monk_qty }} คน</p>
-                                                    <p><strong>ยอดรวมราคา:</strong> {{ number_format($item->booking->totalPrice, 2) }} บาท</p>
-                                                    <p><strong>แก้ไขสถานะ:</strong> {{ \Carbon\Carbon::parse($item->statusChange->status_updated_at)->locale('th')->translatedFormat('j F') }} {{ \Carbon\Carbon::parse($item->statusChange->status_updated_at)->year + 543 }} เวลา {{ \Carbon\Carbon::parse($item->statusChange->status_updated_at)->format('H:i') }} น. โดยเจ้าหน้าที่: {{ $item->statusChange->changed_by ?? 'N/A' }}</p>
+                                                    <p><strong>ชื่อหน่วยงาน:</strong> {{ $item->institute->instituteName }}</p>
+                                                    <p><strong>ที่อยู่หน่วยงาน:</strong> {{ $item->institute->instituteAddress }} {{ $item->institute->subdistrict }} {{ $item->institute->district }} {{ $item->institute->inputProvince }} {{ $item->institute->zipcode }}</p>
+                                                    <p><strong>ชื่อผู้ประสานงาน:</strong> {{ $item->visitor->visitorName }}</p>
+                                                    <p><strong>อีเมลผู้ประสานงาน:</strong> {{ $item->visitor->visitorEmail }}</p>
+                                                    <p><strong>เบอร์โทรศัพท์:</strong> {{ $item->visitor->tel }}</p>
+                                                    <p><strong>เด็ก (คน):</strong> {{ $item->children_qty > 0 ? $item->children_qty . ' คน' : '-' }}</p>
+                                                    <p><strong>นร / นศ (คน):</strong> {{ $item->students_qty > 0 ? $item->students_qty . ' คน' : '-' }}</p>
+                                                    <p><strong>ผู้ใหญ่ / คุณครู (คน):</strong> {{ $item->adults_qty > 0 ? $item->adults_qty . ' คน' : '-' }}</p>
+                                                    <p><strong>ผู้พิการ (คน):</strong> {{ $item->disabled_qty > 0 ? $item->disabled_qty . ' คน' : '-' }}</p>
+                                                    <p><strong>ผู้สูงอายุ (คน):</strong> {{ $item->elderly_qty > 0 ? $item->elderly_qty . ' คน' : '-' }}</p>
+                                                    <p><strong>พระภิกษุสงฆ์ / สามเณร (คน):</strong> {{ $item->monk_qty > 0 ? $item->monk_qty . ' รูป' : '-' }}</p>
+                                                    <p><strong>จำนวนคนทั้งหมด:</strong> {{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }} คน</p>
+                                                    <p><strong>ยอดรวมราคา:</strong> {{ number_format($item->totalPrice, 2) }} บาท</p>
+                                                    <p><strong>แก้ไขสถานะ:</strong> {{ \Carbon\Carbon::parse($item->status_updated_at)->locale('th')->translatedFormat('j F') }} {{ \Carbon\Carbon::parse($item->status_updated_at)->year + 543 }} เวลา {{ \Carbon\Carbon::parse($item->status_updated_at)->format('H:i') }} น. โดยเจ้าหน้าที่: {{ $item->changed_by ?? 'N/A' }}</p>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
@@ -116,6 +119,8 @@
                                         </div>
                                     </div>
                                     @endforeach
+                                    @endforeach
+
                                 </tbody>
                             </table>
                         </div>

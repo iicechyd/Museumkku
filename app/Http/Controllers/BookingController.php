@@ -206,14 +206,6 @@ class BookingController extends Controller
             ]);
         }
 
-        if (in_array($newStatus, [2, 3])) {
-            BookingHistory::create([
-                'booking_id' => $booking->booking_id,
-                'changed_id' => $statusChange->changed_id,
-            ]);
-        }
-        
-
         $visitorEmail = $booking->visitor ? $booking->visitor->visitorEmail : null;
 
         if ($newStatus === 1 && $visitorEmail) {
@@ -448,30 +440,29 @@ class BookingController extends Controller
 
     public function showHistory(Request $request)
     {
-    $query = BookingHistory::with([
-        'booking.institute',
-        'booking.activity',
-        'booking.documents',
-        'booking.timeslot',
-        'statusChange'
-    ])->orderBy('created_at', 'desc');
+        $query = Bookings::with([
+            'institute',
+            'activity',
+            'documents',
+            'timeslot',
+            'statusChanges'
+        ])->whereIn('status', [2, 3])->orderBy('created_at', 'desc');
 
-     if ($request->filled('activity_name')) {
-        $query->whereHas('booking.activity', function ($q) use ($request) {
-            $q->where('activity_name', $request->activity_name);
-        });
-    }
+        if ($request->filled('activity_name')) {
+            $query->whereHas('activity', function ($q) use ($request) {
+                $q->where('activity_name', $request->activity_name);
+            });
+        }
 
-    if ($request->filled('status')) {
-        $query->whereHas('statusChange', function ($q) use ($request) {
-            $q->where('new_status', $request->status);
-        });
-    }
+        if ($request->filled('status')) {
+            $query->whereHas('statusChanges', function ($q) use ($request) {
+                $q->where('new_status', $request->status);
+            });
+        }
 
-    // ดึงข้อมูลที่กรองแล้ว
-    $histories = $query->get();
-    $activities = Activity::orderBy('activity_name')->pluck('activity_name', 'activity_id');
-
+        $histories = $query->get();
+        $activities = Activity::orderBy('activity_name')->pluck('activity_name', 'activity_id');
+        
         return view('admin.history', compact('histories', 'activities'));
     }
 

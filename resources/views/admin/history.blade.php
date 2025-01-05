@@ -56,11 +56,12 @@
                                 <tbody>
                                     @foreach($histories as $item)
                                     @foreach ($item->statusChanges as $statusChange)
+                                    
                                     <tr>
                                         <th scope="row">{{ $item->booking_id }}</th>
                                         <td>{{ \Carbon\Carbon::parse($item->booking_date)->locale('th')->translatedFormat('j F') }} {{ \Carbon\Carbon::parse($item->booking_date)->year + 543 }}</td>
                                         <td>@if ($item->timeslot)
-                                            {{ \Carbon\Carbon::parse($item->start_time)->format('H:i') }} น. - {{ \Carbon\Carbon::parse($item->end_time)->format('H:i') }} น.</td>
+                                            {{ \Carbon\Carbon::parse($item->timeslot->start_time)->format('H:i') }} น. - {{ \Carbon\Carbon::parse($item->timeslot->end_time)->format('H:i') }} น.</td>
                                             @else
                                             ไม่มีรอบการเข้าชม
                                         @endif
@@ -110,7 +111,7 @@
                                                     <p><strong>พระภิกษุสงฆ์ / สามเณร (คน):</strong> {{ $item->monk_qty > 0 ? $item->monk_qty . ' รูป' : '-' }}</p>
                                                     <p><strong>จำนวนคนทั้งหมด:</strong> {{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }} คน</p>
                                                     <p><strong>ยอดรวมราคา:</strong> {{ number_format($item->totalPrice, 2) }} บาท</p>
-                                                    <p><strong>แก้ไขสถานะ:</strong> {{ \Carbon\Carbon::parse($item->status_updated_at)->locale('th')->translatedFormat('j F') }} {{ \Carbon\Carbon::parse($item->status_updated_at)->year + 543 }} เวลา {{ \Carbon\Carbon::parse($item->status_updated_at)->format('H:i') }} น. โดยเจ้าหน้าที่: {{ $item->changed_by ?? 'N/A' }}</p>
+                                                    <p><strong>แก้ไขสถานะ:</strong> {{ \Carbon\Carbon::parse($item->status_updated_at)->locale('th')->translatedFormat('j F') }} {{ \Carbon\Carbon::parse($item->status_updated_at)->year + 543 }} เวลา {{ \Carbon\Carbon::parse($item->status_updated_at)->format('H:i') }} น. โดยเจ้าหน้าที่: {{ $statusChange->changed_by ?? 'N/A' }}</p>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>

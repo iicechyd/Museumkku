@@ -13,18 +13,10 @@ class CalendarController extends Controller
     public function getEvents(Request $request)
     {
         $isAdmin = Auth::check() && Auth::user()->role->role_name === 'Admin';
-
-        $bookingsQuery = Bookings::with('activity', 'timeslot', 'institute');
-        if (!$isAdmin) {
-            $bookingsQuery->where('status', 1);
-        } else {
-            $bookingsQuery->whereIn('status', [0, 1]);
-        }
-
+        $bookingsQuery = Bookings::with('activity', 'timeslot', 'institute')
+            ->where('status', 1);
         $bookings = $bookingsQuery->get();
-
         $events = $isAdmin ? $this->getAdminEvents($bookings) : $this->getGroupedEvents($bookings);
-
         return response()->json($events);
     }
 
@@ -41,7 +33,6 @@ class CalendarController extends Controller
         $groupedBookings = $bookings->groupBy(function ($booking) {
             return $booking->booking_date . '-' . $booking->activity_id . '-' . ($booking->timeslot->timeslots_id ?? 'no_timeslot');
         });
-
         return $groupedBookings->map(function ($groupedBooking) {
             $firstBooking = $groupedBooking->first();
             $totalApproved = $this->calculateTotalApprovedForGroup($groupedBooking);
@@ -50,31 +41,34 @@ class CalendarController extends Controller
     }
 
     private function calculateTotalApprovedForGroup($groupedBookings)
-{
-    // Calculate the total approved for all bookings in the group
-    return $groupedBookings->sum(function ($booking) {
-        return $this->calculateTotalApproved($booking);
-    });
-}
+    {
+        return $groupedBookings->sum(function ($booking) {
+            return $this->calculateTotalApproved($booking);
+        });
+    }
+    private function calculateTotalApproved($booking)
+    {
+        return $booking->children_qty + $booking->students_qty + $booking->adults_qty + $booking->disabled_qty + $booking->elderly_qty + $booking->monk_qty;
+    }
 
     private function createEvent($booking, $totalApproved)
     {
         $startTime = $booking->timeslot ? Carbon::createFromFormat('H:i:s', $booking->timeslot->start_time)->format('H:i') : null;
         $endTime = $booking->timeslot ? Carbon::createFromFormat('H:i:s', $booking->timeslot->end_time)->format('H:i') : null;
-                
-            $startDate = Carbon::createFromFormat('Y-m-d', $booking->booking_date);
-            $durationDays = $booking->activity->duration_days; 
-            $endDate = date('Y-m-d', strtotime("+$durationDays days", strtotime($startDate)));
-    
-            $endDate = $booking->end_date ?? $booking->booking_date;
-            if ($endDate !== $booking->booking_date) {
-                $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->addDay()->format('Y-m-d');
-            }
 
-        $remainingCapacity = $booking->activity->max_capacity !== null 
-        ? max(0, $booking->activity->max_capacity - $totalApproved)
-        : 'ไม่จำกัดจำนวนคน';
-        
+        $startDate = Carbon::createFromFormat('Y-m-d', $booking->booking_date);
+        $durationDays = $booking->activity->duration_days;
+        $endDate = date('Y-m-d', strtotime("+$durationDays days", strtotime($startDate)));
+
+        $endDate = $booking->end_date ?? $booking->booking_date;
+        if ($endDate !== $booking->booking_date) {
+            $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->addDay()->format('Y-m-d');
+        }
+
+        $remainingCapacity = $booking->activity->max_capacity !== null
+            ? max(0, $booking->activity->max_capacity - $totalApproved)
+            : 'ไม่จำกัดจำนวนคน';
+
         return [
             'title' => $booking->activity->activity_name . " (สถานะการจอง: " . $this->getStatusText($booking->status) . ")",
             'start' => $startDate->format('Y-m-d') . ($startTime ? " $startTime" : ''),
@@ -97,11 +91,6 @@ class CalendarController extends Controller
                 'remaining_capacity' => $remainingCapacity,
             ]
         ];
-    }
-
-    private function calculateTotalApproved($booking)
-    {
-        return $booking->children_qty + $booking->students_qty + $booking->adults_qty + $booking->disabled_qty + $booking->elderly_qty + $booking->monk_qty;
     }
 
     private function getStatusColor($status)

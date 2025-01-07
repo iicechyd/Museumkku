@@ -87,16 +87,13 @@ document.addEventListener('DOMContentLoaded', function () {
         },
 
         eventDidMount: function (info) {
-            var status = info.event.extendedProps.status;
-            if (status === 0) {
-                info.el.style.backgroundColor = '#ffc107';
-                info.el.style.color = '#ffffff';
-            } else if (status === 1) {
-                info.el.style.backgroundColor = '#28a745';
-                info.el.style.color = '#ffffff';
-
+            // Colors are now determined server-side in the `color` property of the event
+            if (info.event.backgroundColor) {
+                info.el.style.backgroundColor = info.event.backgroundColor;
+                info.el.style.color = '#ffffff'; // Ensure text is visible
             }
         },
+        
     });
 
     calendar.render();

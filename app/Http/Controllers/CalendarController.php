@@ -69,11 +69,14 @@ class CalendarController extends Controller
             ? max(0, $booking->activity->max_capacity - $totalApproved)
             : 'ไม่จำกัดจำนวนคน';
 
+        $color = $this->getActivityColor($booking->activity_id);
+
         return [
             'title' => $booking->activity->activity_name . " (สถานะการจอง: " . $this->getStatusText($booking->status) . ")",
             'start' => $startDate->format('Y-m-d') . ($startTime ? " $startTime" : ''),
             'end'   => $endDate . ($endTime ? " $endTime" : ''),
-            'color' => $this->getStatusColor($booking->status),
+            // 'color' => $this->getStatusColor($booking->status),
+            'color' => $color,
             'extendedProps' => [
                 'start_time'  => $startTime,
                 'end_time'    => $endTime,
@@ -93,6 +96,19 @@ class CalendarController extends Controller
         ];
     }
 
+    private function getActivityColor($activityId)
+{
+    // Define a color map for each `activity_id`
+    $colorMap = [
+        1 => '#ff5733', // Example color for `activity_id` 1
+        2 => '#33ff57', // Example color for `activity_id` 2
+        3 => '#3357ff', // Example color for `activity_id` 3
+        // Add more mappings as needed
+    ];
+
+    // Default color if `activity_id` is not in the map
+    return $colorMap[$activityId] ?? '#000000';
+}
     private function getStatusColor($status)
     {
         return match ($status) {
@@ -106,10 +122,7 @@ class CalendarController extends Controller
     private function getStatusText($status)
     {
         return match ($status) {
-            0 => 'รออนุมัติ',
-            1 => 'อนุมัติ',
-            2 => 'ยกเลิก',
-            default => 'ไม่ทราบสถานะ',
+            1 => 'อนุมัติ'
         };
     }
 }

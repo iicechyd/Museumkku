@@ -107,7 +107,7 @@ flatpickr("#booking_date", {
     },
     onChange: function(selectedDates, dateStr, instance) {
         let [day, month, year] = dateStr.split('/');
-        let formattedDate = `${year}-${month}-${day}`; // Convert to YYYY-MM-DD
+        let formattedDate = `${year}-${month}-${day}`;
 
         let activityId = document.getElementById('fk_activity_id').value;
 
@@ -121,24 +121,24 @@ flatpickr("#booking_date", {
                 })
                 .then(timeslots => {
                     let timeslotsSelect = document.getElementById('fk_timeslots_id');
-                    timeslotsSelect.innerHTML = ''; // Clear existing options
+                    timeslotsSelect.innerHTML = '';
 
                     if (timeslots.length === 0) {
                         let option = document.createElement('option');
                         option.value = "";
-                        option.text = "ไม่เปิดให้จองในวันนี้"; // Display message when no timeslots available
+                        option.text = "ไม่เปิดให้จองในวันนี้";
                         timeslotsSelect.appendChild(option);
-                        timeslotsSelect.disabled = true; // Disable the select box
+                        timeslotsSelect.disabled = true;
                     } else {
                         let option = document.createElement('option');
                         option.value = "";
-                        option.text = "เลือกรอบการเข้าชม"; // Default prompt
+                        option.text = "เลือกรอบการเข้าชม";
                         timeslotsSelect.appendChild(option);
 
-                        timeslots.forEach(timeslot => {
+                        timeslots.forEach((timeslot, index) => {
                             let option = document.createElement('option');
                             option.value = timeslot.timeslots_id;
-                            option.text = `รอบที่ ${timeslot.timeslots_id} ${timeslot.start_time} น. - ${timeslot.end_time} น.`;
+                            option.text = `รอบที่ ${index + 1} ${timeslot.start_time} น. - ${timeslot.end_time} น.`;
                             timeslotsSelect.appendChild(option);
                         });
 

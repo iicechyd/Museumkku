@@ -21,6 +21,7 @@
         }
 
         body {
+            font-family: 'Noto Sans Thai', sans-serif;
             display: flex;
             flex-direction: column;
             padding-top: 70px;

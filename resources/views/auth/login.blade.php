@@ -90,12 +90,7 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-            <script src="js/login/jquery.min.js"></script>
-            <script src="js/login/popper.js"></script>
-            <script src="js/login/bootstrap.min.js"></script>
-            <script src="js/login/main.js"></script>
         </section>
     @endsection
 </body>

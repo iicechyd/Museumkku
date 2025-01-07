@@ -14,6 +14,5 @@
 @stack('js')
 
 <script async defer src="https://buttons.github.io/buttons.js"></script>
-<script src="{{ asset('material/assets/js/material-dashboard.min.js') }}"></script>
 </body>
 </html>

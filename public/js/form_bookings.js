@@ -105,6 +105,51 @@ flatpickr("#booking_date", {
             dayElem.classList.add("disabled-day");
         }
     },
+    onChange: function(selectedDates, dateStr, instance) {
+        let [day, month, year] = dateStr.split('/');
+        let formattedDate = `${year}-${month}-${day}`; // Convert to YYYY-MM-DD
+
+        let activityId = document.getElementById('fk_activity_id').value;
+
+        if (formattedDate) {
+            fetch(`/available-timeslots/${activityId}/${formattedDate}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(timeslots => {
+                    let timeslotsSelect = document.getElementById('fk_timeslots_id');
+                    timeslotsSelect.innerHTML = ''; // Clear existing options
+
+                    if (timeslots.length === 0) {
+                        let option = document.createElement('option');
+                        option.value = "";
+                        option.text = "ไม่เปิดให้จองในวันนี้"; // Display message when no timeslots available
+                        timeslotsSelect.appendChild(option);
+                        timeslotsSelect.disabled = true; // Disable the select box
+                    } else {
+                        let option = document.createElement('option');
+                        option.value = "";
+                        option.text = "เลือกรอบการเข้าชม"; // Default prompt
+                        timeslotsSelect.appendChild(option);
+
+                        timeslots.forEach(timeslot => {
+                            let option = document.createElement('option');
+                            option.value = timeslot.timeslots_id;
+                            option.text = `รอบที่ ${timeslot.timeslots_id} ${timeslot.start_time} น. - ${timeslot.end_time} น.`;
+                            timeslotsSelect.appendChild(option);
+                        });
+
+                        timeslotsSelect.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+    },
     onReady: function() {
         document.querySelector('.input-group-text').addEventListener('click', () => {
             document.querySelector("#booking_date")._flatpickr.open();

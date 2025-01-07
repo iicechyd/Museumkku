@@ -92,7 +92,9 @@ Route::delete('admin/closed-dates/{id}', [TimeslotController::class, 'deleteClos
 Route::get('/admin/manage-closed-dates', [TimeslotController::class, 'showClosedDates'])->name('admin.manageClosedDates');
 Route::post('/admin/manage-closed-dates', [TimeslotController::class, 'saveClosedDates'])->name('admin.saveClosedDates');
 Route::post('/admin/get-timeslots', [TimeslotController::class, 'getTimeslotsByActivity'])->name('admin.getTimeslots');
+Route::get('/available-timeslots/{activity_id}/{date}', [BookingController::class, 'getAvailableTimeslots']);
 
 Route::get('/documents/upload/{booking_id}', [DocumentController::class, 'showUploadForm'])->name('documents.upload');
 Route::post('/documents/upload/{booking_id}', [DocumentController::class, 'uploadDocument'])->name('documents.store');
 Route::put('/documents/{document_id}', [DocumentController::class, 'update'])->name('documents.update');
+

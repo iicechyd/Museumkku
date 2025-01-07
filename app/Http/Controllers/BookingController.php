@@ -303,14 +303,6 @@ class BookingController extends Controller
                 return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
             }
 
-            $isClosed = ClosedTimeslots::where('timeslots_id', $timeslot->timeslots_id)
-                ->where('closed_on', $formattedDate)
-                ->exists();
-
-            if ($isClosed) {
-                return back()->with('error', 'ไม่สามารถจองได้เนื่องจากรอบการเข้าชมรอบนี้ปิดรอบ')->withInput();
-            }
-
             if ($activity->activity_id == 3) {
                 if ($request->filled('fk_timeslots_id')) {
                     $timeslot = Timeslots::find($request->fk_timeslots_id);
@@ -413,6 +405,19 @@ class BookingController extends Controller
             'timeslots' => $timeslots,
         ]);
     }
+
+    public function getAvailableTimeslots($activity_id, $date)
+{
+    $closedTimeslotsIds = ClosedTimeslots::where('closed_on', $date)
+        ->where('activity_id', $activity_id)
+        ->pluck('timeslots_id');
+
+    $availableTimeslots = Timeslots::where('activity_id', $activity_id)
+        ->whereNotIn('timeslots_id', $closedTimeslotsIds)
+        ->get();
+
+    return response()->json($availableTimeslots);
+}
 
     public function searchBookingByEmail(Request $request)
     {

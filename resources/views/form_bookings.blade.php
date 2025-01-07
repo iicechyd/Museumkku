@@ -88,14 +88,6 @@
                         <select id="fk_timeslots_id" class="form-select @error('fk_timeslots_id') is-invalid @enderror"
                             name="fk_timeslots_id">
                             <option value="">เลือกรอบการเข้าชม</option>
-                            @foreach ($timeslots as $index => $timeslot)
-                                <option value="{{ $timeslot->timeslots_id }}"
-                                    {{ old('fk_timeslots_id') == $timeslot->timeslots_id ? 'selected' : '' }}>
-                                    รอบที่ {{ $index + 1 }}
-                                    {{ \Carbon\Carbon::parse($timeslot->start_time)->format('H:i') }} น. -
-                                    {{ \Carbon\Carbon::parse($timeslot->end_time)->format('H:i') }} น.
-                                </option>
-                            @endforeach
                         </select>
                         @error('fk_timeslots_id')
                             <div class="my-2">

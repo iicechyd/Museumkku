@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
     var ctx = document.getElementById("chart-bars").getContext("2d");
-
-    // ดึงข้อมูลที่ส่งจาก Blade template ผ่าน window
     var data = window.totalVisitorsPerDayType1;
 
     new Chart(ctx, {
@@ -188,16 +186,14 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-
 var ctx3 = document.getElementById("chart-line-tasks").getContext("2d");
-
 new Chart(ctx3, {
     type: "line",
     data: {
-        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         datasets: [
             {
-                label: "Mobile apps",
+                label: "Special Activities",
                 tension: 0,
                 borderWidth: 0,
                 pointRadius: 5,
@@ -207,7 +203,7 @@ new Chart(ctx3, {
                 borderWidth: 4,
                 backgroundColor: "transparent",
                 fill: true,
-                data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+                data: Object.values(activitiesType2Monthly),
                 maxBarThickness: 6,
             },
         ],
@@ -218,6 +214,13 @@ new Chart(ctx3, {
         plugins: {
             legend: {
                 display: false,
+            },
+            tooltip: {
+                callbacks: {
+                    label: function (tooltipItem) {
+                        return tooltipItem.raw + " ครั้ง";
+                    },
+                },
             },
         },
         interaction: {

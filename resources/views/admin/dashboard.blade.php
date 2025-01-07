@@ -263,6 +263,7 @@
                 var monk_qty = {{ $visitorStats->monk_qty ?? 0 }};
                 var ctx = document.getElementById("chart-bars").getContext("2d");
                 var data = @json($totalVisitorsPerDayType1);
+                var activitiesType2Monthly = @json($activitiesType2Monthly);
                 window.totalVisitorsPerDayType1 = @json($totalVisitorsPerDayType1);
                 window.totalVisitorsPerMonthThisYear = @json(array_values($totalVisitorsPerMonthThisYear));
             </script>

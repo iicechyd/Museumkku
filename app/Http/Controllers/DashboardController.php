@@ -31,7 +31,6 @@ class DashboardController extends Controller
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
         }
 
-        // จำนวนผู้เข้าชมทั้งหมดสำหรับแต่ละกิจกรรมในสัปดาห์นี้
         $totalVisitorsThisWeek = [];
         foreach ($activities as $activity) {
             $totalVisitorsThisWeek[$activity->activity_id] = Bookings::where('activity_id', $activity->activity_id)
@@ -40,7 +39,6 @@ class DashboardController extends Controller
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
         }
 
-        // จำนวนผู้เข้าชมทั้งหมดสำหรับแต่ละกิจกรรมในเดือนนี้
         $totalVisitorsThisMonth = [];
         foreach ($activities as $activity) {
             $totalVisitorsThisMonth[$activity->activity_id] = Bookings::where('activity_id', $activity->activity_id)
@@ -81,15 +79,26 @@ class DashboardController extends Controller
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
         }
 
-    $totalVisitorsThisYear = [];
-    foreach ($activities as $activity) {
-        // Get the total number of bookings for this activity in the current year
-        $totalVisitorsThisYear[$activity->activity_id] = Bookings::where('activity_id', $activity->activity_id)
-            ->whereBetween('booking_date', [$yearStart, $yearEnd])
-            ->where('status', 1)
-            ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
-    }
+        $totalVisitorsThisYear = [];
+        foreach ($activities as $activity) {
+            $totalVisitorsThisYear[$activity->activity_id] = Bookings::where('activity_id', $activity->activity_id)
+                ->whereBetween('booking_date', [$yearStart, $yearEnd])
+                ->where('status', 1)
+                ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
+        }
 
+        $activitiesType2Monthly = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $startOfMonth = Carbon::createFromDate($currentYear, $month, 1)->startOfMonth();
+            $endOfMonth = Carbon::createFromDate($currentYear, $month, 1)->endOfMonth();
+
+            $activitiesType2Monthly[$month] = Bookings::whereHas('activity', function ($query) {
+                $query->where('activity_type_id', 2);
+            })
+                ->whereBetween('booking_date', [$startOfMonth, $endOfMonth])
+                ->where('status', 1)
+                ->count();
+        }
         $specialActivities = DB::table('activities')
             ->leftJoin('activity_types', 'activities.activity_type_id', '=', 'activity_types.activity_type_id')
             ->leftJoin('bookings', 'activities.activity_id', '=', 'bookings.activity_id')
@@ -131,6 +140,7 @@ class DashboardController extends Controller
             'totalVisitorsThisWeek',
             'totalVisitorsThisMonth',
             'totalVisitorsThisYear',
+            'activitiesType2Monthly',
             'totalVisitors',
             'specialActivities',
             'visitorStats',

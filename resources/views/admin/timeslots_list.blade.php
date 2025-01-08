@@ -63,17 +63,6 @@
                                                     <i class="fa fa-edit"></i>
                                                 </button>
                                             </li>
-                                            {{-- <li class="list-inline-item">
-                                                <form action="{{ route('timeslots.destroy', $timeslot->timeslots_id) }}"
-                                                    method="POST"
-                                                    onsubmit="return confirm('คุณต้องการลบรอบการเข้าชมหรือไม่?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="btn btn-danger btn-sm rounded-0" type="submit">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </li> --}}
                                         </ul>
                                     </td>
                                     <td class="text-center"> 
@@ -173,11 +162,6 @@
                                     <label for="end_time">เวลาสิ้นสุด:</label>
                                     <input type="time" name="end_time" id="end_time" class="form-control" required>
                                 </div>
-                                {{-- <div class="form-group">
-                                    <label for="max_capacity">ความจุสูงสุดต่อรอบ</label>
-                                    <input type="number" name="max_capacity" id="max_capacity" class="form-control"
-                                        required>
-                                </div> --}}
                                 <div class="pt-3">
                                     <button type="submit" class="btn btn-primary ">เพิ่มรอบการเข้าชม</button>
                                 </div>

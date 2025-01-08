@@ -88,7 +88,7 @@
                             </td>
                             <td>
                                 <form action="{{ route('bookings.updateStatus', $item->booking_id) }}" method="POST"
-                                    style="display: inline;">
+                                    style="display: inline;" onsubmit="return confirmUpdateStatus(event)">
                                     @csrf
                                     <div class="flex items-center space-x-3">
                                         <select name="status" id="statusSelect_{{ $item->booking_id }}"
@@ -112,7 +112,7 @@
                                         <button type="submit" class="button-custom">
                                             อัปเดตสถานะ
                                         </button>
-                                        
+
                                     </div>
                                 </form>
                             </td>
@@ -169,15 +169,15 @@
                                             <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
                                             <p><strong>แก้ไขสถานะ: </strong>
                                                 @if ($item->latestStatusChange)
-                                                {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
-                                                {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->year + 543 }}
-                                                เวลา
-                                                {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->format('H:i') }}
-                                                น.
-                                                แก้ไขโดยเจ้าหน้าที่: {{ $item->latestStatusChange->changed_by ?? 'N/A' }}
+                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
+                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->year + 543 }}
+                                                    เวลา
+                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->format('H:i') }}
+                                                    น.
+                                                    แก้ไขโดยเจ้าหน้าที่: {{ $item->latestStatusChange->changed_by ?? 'N/A' }}
                                                 @else
-                                                ไม่พบข้อมูลการเปลี่ยนแปลงสถานะ
-                                            @endif
+                                                    ไม่พบข้อมูลการเปลี่ยนแปลงสถานะ
+                                                @endif
                                             </p>
                                             <p><strong>แนบเอกสาร: </strong>
                                                 @if ($item->documents->isNotEmpty())
@@ -213,29 +213,5 @@
 @endsection
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script id="approvedBookingsData" type="application/json"> @json($approvedBookings->pluck('booking_id'))</script>
 <script src="{{ asset('js/approved_bookings.js') }}"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var approvedBookings = @json($approvedBookings->pluck('booking_id'));
-        approvedBookings.forEach(function(booking_id) {
-            toggleCommentsField(booking_id);
-        });
-    });
-
-    function toggleCommentsField(booking_id) {
-        var status = document.getElementById("statusSelect_" + booking_id).value;
-        var commentsField = document.getElementById("commentsField_" + booking_id);
-        var visitorsField = document.getElementById("visitorsField_" + booking_id);
-
-        if (status === "checkin") {
-            commentsField.style.display = "none";
-            visitorsField.style.display = "block";
-        } else if (status === "cancel") {
-            commentsField.style.display = "block";
-            visitorsField.style.display = "none";
-        } else {
-            commentsField.style.display = "none";
-            visitorsField.style.display = "none";
-        }
-    }
-</script>

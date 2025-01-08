@@ -86,7 +86,7 @@
                             </td>
                             <td>
                                 <form action="{{ route('bookings.updateStatus', $item->booking_id) }}" method="POST"
-                                    style="display: inline;">
+                                    style="display: inline;" onsubmit="return confirmUpdateStatus(event)">
                                     @csrf
                                     <div class="flex items-center space-x-3">
                                         <select name="status" id="statusSelect_{{ $item->booking_id }}"
@@ -210,29 +210,5 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script id="approvedBookingsData" type="application/json"> @json($approvedBookings->pluck('booking_id'))</script>
 <script src="{{ asset('js/approved_bookings.js') }}"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var approvedBookings = @json($approvedBookings->pluck('booking_id'));
-        approvedBookings.forEach(function(booking_id) {
-            toggleCommentsField(booking_id);
-        });
-    });
-
-    function toggleCommentsField(booking_id) {
-        var status = document.getElementById("statusSelect_" + booking_id).value;
-        var commentsField = document.getElementById("commentsField_" + booking_id);
-        var visitorsField = document.getElementById("visitorsField_" + booking_id);
-
-        if (status === "checkin") {
-            commentsField.style.display = "none";
-            visitorsField.style.display = "block";
-        } else if (status === "cancel") {
-            commentsField.style.display = "block";
-            visitorsField.style.display = "none";
-        } else {
-            commentsField.style.display = "none";
-            visitorsField.style.display = "none";
-        }
-    }
-</script>

@@ -89,7 +89,7 @@
                             </td>
                             <td>
                                 <form action="{{ route('bookings.updateStatus', $item->booking_id) }}" method="POST"
-                                    style="display: inline;">
+                                    style="display: inline;" onsubmit="return confirmUpdateStatus(event)">
                                     @csrf
                                     <div class="flex items-center space-x-3">
                                         <select name="status" id="statusSelect_{{ $item->booking_id }}"
@@ -175,22 +175,5 @@
 @endsection
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script> var requestBookings = @json($requestBookings->pluck('booking_id'));</script>
 <script src="{{ asset('js/request_bookings.js') }}"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var requestBookings = @json($requestBookings->pluck('booking_id'));
-        requestBookings.forEach(function(booking_id) {
-            toggleCommentsField(booking_id);
-        });
-    });
-
-    function toggleCommentsField(booking_id) {
-        var status = document.getElementById("statusSelect_" + booking_id).value;
-        var commentsField = document.getElementById("commentsField_" + booking_id);
-        if (status === "cancel") {
-            commentsField.style.display = "block";
-        } else {
-            commentsField.style.display = "none";
-        }
-    }
-</script>

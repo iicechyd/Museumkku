@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="{{ asset('css/card.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Maitree&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 @section('content')

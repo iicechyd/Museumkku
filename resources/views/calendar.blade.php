@@ -1,15 +1,14 @@
 @extends('layouts.layout')
 @section('title', 'ปฏิทินการจอง')
-@section('content')
 
 <head>
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/th.global.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
+@section('content')
     <div class="container pt-4 pb-5">
         <div class="title">
             <h1 class="text-center" style="color: #489085; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);">ปฏิทินการจอง</h1>

@@ -1,13 +1,7 @@
 @extends('layouts.layout')
 @section('title', 'เบิ่งบ่ ระบบจองเข้าชมพิพิธภัณฑ์')
-
-<head>
-    <link rel="stylesheet" href="{{ asset('css/card.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Maitree&display=swap" rel="stylesheet">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-</head>
-
 @section('content')
+
     <div class="container">
         <div class="title p-5 text-center">
             <h1 style="color: #489085; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); 
@@ -29,6 +23,5 @@
                     ตรวจสอบสถานะการจอง</a>
             </div>
         </div>
-
     </div>
 @endsection

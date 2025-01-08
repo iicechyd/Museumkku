@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\BookingApprovedMail;
 use App\Mail\BookingCancelledMail;
 use Illuminate\Support\Facades\Log;
-use App\Models\bookingHistory;
+use App\Models\SubActivity;
 
 class BookingController extends Controller
 {
@@ -224,6 +224,7 @@ class BookingController extends Controller
             [
                 'fk_activity_id' => 'required|exists:activities,activity_id',
                 'fk_timeslots_id' => 'nullable|exists:timeslots,timeslots_id',
+                'sub_activity_id' => 'nullable|exists:sub_activities,sub_activity_id',
                 'booking_date' => 'required|date_format:d/m/Y',
                 'instituteName' => 'required',
                 'instituteAddress' => 'required',
@@ -374,6 +375,7 @@ class BookingController extends Controller
 
         $booking = new Bookings();
         $booking->activity_id = $request->fk_activity_id;
+        $booking->sub_activity_id = $request->fk_subactivity_id;
         $booking->timeslots_id = $request->fk_timeslots_id ?? null;
         $booking->institute_id = $institute->institute_id;
         $booking->visitor_id = $visitor->visitor_id;
@@ -398,11 +400,16 @@ class BookingController extends Controller
         }
 
         $timeslots = Timeslots::where('activity_id', $activity_id)->get();
+        $subactivities = SubActivity::where('activity_id', $activity_id)->get();
+        $hasSubactivities = $subactivities->isNotEmpty();
 
         return view('form_bookings', [
             'activity_id' => $activity_id,
             'selectedActivity' => $selectedActivity,
             'timeslots' => $timeslots,
+            'subactivities' => $subactivities,
+            'hasSubactivities' =>$hasSubactivities
+
         ]);
     }
 

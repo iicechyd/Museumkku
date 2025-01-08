@@ -82,6 +82,19 @@
                     <p>*หมายเหตุ กรุณาเลือกวันที่ต้องการจองล่วงหน้า 3 วัน</p>
                 </div>
 
+                @if ($hasSubactivities)
+                <div class="form-group col-3">
+                    <label for="fk_subactivity_id" class="form-label">กิจกรรมย่อย:</label>
+                    <select id="fk_subactivity_id" class="form-select" name="fk_subactivity_id">
+                        <option value="">เลือกกิจกรรมย่อย</option>
+                        @foreach ($subactivities as $subactivity)
+                            <option value="{{ $subactivity->sub_activity_id }}">{{ $subactivity->sub_activity_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                @endif
+
+
                 @if ($timeslots->isNotEmpty())
                     <div class="form-group col-3">
                         <label for="fk_timeslots_id" class="form-label">รอบการเข้าชม:</label>
@@ -355,4 +368,16 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/form_bookings.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let subactivities = @json($subactivities);
+            let subactivitySection = document.getElementById('subactivity-section');
+    
+            if (subactivities.length > 0) {
+                subactivitySection.style.display = 'block';
+            } else {
+                subactivitySection.style.display = 'none';
+            }
+        });
+    </script>
 @endsection

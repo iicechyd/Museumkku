@@ -24,10 +24,14 @@
             </button>
             <button type="button" class="btn my-3"
                 style="background-color: rgb(119, 144, 242); border-color: rgb(119, 144, 242); color: white;"
+                onclick="window.location='{{ url('/admin/subactivity_list') }}'">
+                ตรวจสอบกิจกรรมย่อย
+            </button>
+            <button type="button" class="btn my-3"
+                style="background-color: rgb(119, 144, 242); border-color: rgb(119, 144, 242); color: white;"
                 onclick="window.location='{{ url('/admin/timeslots_list') }}'">
                 ตรวจสอบรอบการเข้าชม
             </button>
-
             {{ $requestListActivity->links() }}
             <div class="table-responsive">
                 <table>
@@ -110,17 +114,17 @@
                                     </ul>
                                 </td>
                                 <td class="text-center" data-name="{{ $item->activity_name }}">
-                                    <a href="javascript:void(0);" 
-                                       class="toggle-status" 
-                                       data-id="{{ $item->activity_id }}" 
-                                       data-status="{{ $item->status }}">
-                                        @if($item->status === 'active')
-                                            <i class="fas fa-toggle-on text-success" style="font-size: 24px;" title="Active"></i>
+                                    <a href="javascript:void(0);" class="toggle-status" data-id="{{ $item->activity_id }}"
+                                        data-status="{{ $item->status }}">
+                                        @if ($item->status === 'active')
+                                            <i class="fas fa-toggle-on text-success" style="font-size: 24px;"
+                                                title="Active"></i>
                                         @else
-                                            <i class="fas fa-toggle-off text-secondary" style="font-size: 24px;" title="Inactive"></i>
+                                            <i class="fas fa-toggle-off text-secondary" style="font-size: 24px;"
+                                                title="Inactive"></i>
                                         @endif
                                     </a>
-                                </td>                                          
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -188,14 +192,16 @@
                             <label for="disabled_price">ราคาผู้พิการ</label>
                             <input type="number" class="form-control" id="disabled_price" name="disabled_price"
                                 min="0" required>
-                        </div><div class="form-group">
+                        </div>
+                        <div class="form-group">
                             <label for="elderly_price">ราคาผู้สูงอายุ</label>
                             <input type="number" class="form-control" id="elderly_price" name="elderly_price"
                                 min="0" required>
-                        </div><div class="form-group">
+                        </div>
+                        <div class="form-group">
                             <label for="monk_price">ราคาพระภิกษุสงฆ์ /สามเณร</label>
-                            <input type="number" class="form-control" id="monk_price" name="monk_price"
-                                min="0" required>
+                            <input type="number" class="form-control" id="monk_price" name="monk_price" min="0"
+                                required>
                         </div>
                         <div class="form-group">
                             <label for="max_capacity">ความจุคนต่อรอบการเข้าชม</label>
@@ -305,5 +311,5 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/activity_list.js') }}"></script>
-    
+
 @endsection

@@ -304,3 +304,4 @@ function toggleCalendar() {
         arrowIcon.innerHTML = "&#9660;";
     }
 }
+

@@ -9,12 +9,11 @@ class SubActivity extends Model
 {
     use HasFactory;
     protected $table = 'sub_activities';
+    protected $primaryKey = 'sub_activity_id';
 
     protected $fillable = [
         'activity_id',
         'sub_activity_name',
-        'description',
-        'image',
     ];
 
     public function activity()

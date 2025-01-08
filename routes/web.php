@@ -10,6 +10,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BookingActivityController;
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\SubActivityController;
 use App\Http\Controllers\TimeslotController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DocumentController;
@@ -98,3 +99,5 @@ Route::get('/documents/upload/{booking_id}', [DocumentController::class, 'showUp
 Route::post('/documents/upload/{booking_id}', [DocumentController::class, 'uploadDocument'])->name('documents.store');
 Route::put('/documents/{document_id}', [DocumentController::class, 'update'])->name('documents.update');
 
+Route::get('/admin/subactivity_list', [SubActivityController::class, 'showSubActivities'])->name('admin.subactivities');
+Route::post('/admin/subactivities/store', [SubActivityController::class, 'storeSubActivity'])->name('admin.storeSubActivity');

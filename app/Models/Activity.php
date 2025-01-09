@@ -41,5 +41,8 @@ class Activity extends Model
     {
         return $this->hasMany(Bookings::class, 'activity_id');
     }
-
+    public function subactivities()
+    {
+        return $this->hasMany(Subactivity::class, 'activity_id');
+    }
 }

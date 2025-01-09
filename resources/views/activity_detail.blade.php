@@ -25,27 +25,44 @@
                                 <h2 class="card-title">{{ $activity->activity_name }}</h2>
                                 <p class="card-text text-muted">{{ $activity->description }}</p>
                                 <div class="mt-3">
-
+                                    @if ($activity->subactivities->isNotEmpty())
+                                        <p>กิจกรรม</p>
+                                        <ul>
+                                            @foreach ($activity->subactivities as $subactivity)
+                                                <li>{{ $subactivity->sub_activity_name }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
                                     <p>ราคาเข้าชม</p>
                                     <p>
-                                        เด็ก: {{ $activity->children_price > 0 ? $activity->children_price . ' บาท/คน' : 'ฟรี' }} | 
-                                        นักเรียน/นักศึกษา: {{ $activity->student_price > 0 ? $activity->student_price . ' บาท/คน' : 'ฟรี' }} | 
-                                        ผู้ใหญ่: {{ $activity->adult_price > 0 ? $activity->adult_price . ' บาท/คน' : 'ฟรี' }}
+                                        เด็ก:
+                                        {{ $activity->children_price > 0 ? $activity->children_price . ' บาท/คน' : 'ฟรี' }}
+                                        |
+                                        นักเรียน/นักศึกษา:
+                                        {{ $activity->student_price > 0 ? $activity->student_price . ' บาท/คน' : 'ฟรี' }} |
+                                        ผู้ใหญ่:
+                                        {{ $activity->adult_price > 0 ? $activity->adult_price . ' บาท/คน' : 'ฟรี' }}
                                     </p>
                                     <p>
-                                        ผู้พิการ: {{ $activity->disabled_price > 0 ? $activity->disabled_price . ' บาท/คน' : 'ฟรี' }} | 
-                                        ผู้สูงอายุ: {{ $activity->elderly_price > 0 ? $activity->elderly_price . ' บาท/คน' : 'ฟรี' }} | 
-                                        พระภิกษุสงฆ์ /สามเณร: {{ $activity->monk_price > 0 ? $activity->monk_price . ' บาท/รูป' : 'ฟรี' }}
-                                    </p>                                    
+                                        ผู้พิการ:
+                                        {{ $activity->disabled_price > 0 ? $activity->disabled_price . ' บาท/คน' : 'ฟรี' }}
+                                        |
+                                        ผู้สูงอายุ:
+                                        {{ $activity->elderly_price > 0 ? $activity->elderly_price . ' บาท/คน' : 'ฟรี' }} |
+                                        พระภิกษุสงฆ์ /สามเณร:
+                                        {{ $activity->monk_price > 0 ? $activity->monk_price . ' บาท/รูป' : 'ฟรี' }}
+                                    </p>
                                 </div>
                                 <p class="custom-gray-text">
-                                    @if($activity->max_capacity)
-                                        <span>จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $activity->max_capacity }} คน และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
-                                        <span class="new-line">(หากผู้เข้าชมเกิน {{ $activity->max_capacity }} คน กรุณาติดต่อเจ้าหน้าที่ 0XX-XXXX )</span>
+                                    @if ($activity->max_capacity)
+                                        <span>จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $activity->max_capacity }} คน และ ไม่ต่ำกว่า 50
+                                            คนต่อการจอง</span>
+                                        <span class="new-line">(หากผู้เข้าชมเกิน {{ $activity->max_capacity }} คน
+                                            กรุณาติดต่อเจ้าหน้าที่ 0XX-XXXX )</span>
                                     @else
                                         <span>ไม่จำกัดจำนวนผู้เข้าชม และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
                                     @endif
-                                </p>                                
+                                </p>
                                 <div class="mt-4">
                                     <a href="{{ route('form_bookings.activity', ['activity_id' => $activity->activity_id]) }}"
                                         class="btn text-white width:50%"
@@ -80,4 +97,4 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-    @endsection
+@endsection

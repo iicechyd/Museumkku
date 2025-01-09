@@ -11,7 +11,7 @@ class ActivityController extends Controller
 {
     public function showDetail($activity_id)
     {
-        $activity = Activity::findOrFail($activity_id);
+        $activity = Activity::with('subactivities')->findOrFail($activity_id);
         return view('activity_detail', compact('activity'));
     }
 

@@ -17,7 +17,7 @@ class SubActivityController extends Controller
     }
     public function storeSubActivity(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'activity_id' => 'required|exists:activities,activity_id',
             'sub_activity_name' => 'required|string|max:255',
         ]);
@@ -27,6 +27,19 @@ class SubActivityController extends Controller
         $subActivity->sub_activity_name = $request->sub_activity_name;
         $subActivity->save();
 
-        return redirect()->route('admin.subactivities')->with('success', 'กิจกรรมย่อยถูกเพิ่มสำเร็จ');
+        return redirect()->route('admin.subactivities')->with('success', 'เพิ่มกิจกรรมย่อยเรียบร้อยแล้ว');
     }
+    public function toggleSubactivityStatus(Request $request, $subActivityId)
+{
+    $subActivity = SubActivity::find($subActivityId);
+    if ($subActivity) {
+        $subActivity->status = $request->status;
+        $subActivity->save();
+
+        return response()->json(['success' => true]);
+    }
+    
+    return response()->json(['success' => false], 404);
+}
+
 }

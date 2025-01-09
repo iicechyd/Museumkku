@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->id('sub_activity_id');
             $table->foreignId('activity_id')->constrained('activities', 'activity_id')->onDelete('cascade');
             $table->string('sub_activity_name');
+            $table->string('status')->default('active');
 
             $table->timestamps();
         });

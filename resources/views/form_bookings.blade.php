@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="form-group col-4">
-                    <label for="booking_date" class="form-label">วันที่จอง:</label>
+                    <label for="booking_date" class="form-label">วันที่จอง</label>
                     <div class="input-group">
                         <input type="date" class="form-control" id="booking_date" name="booking_date"
                             value="{{ old('booking_date', $booking_date ?? '') }}"
@@ -84,9 +84,9 @@
 
                 @if ($hasSubactivities)
                 <div class="form-group col-3">
-                    <label for="fk_subactivity_id" class="form-label">กิจกรรมย่อย:</label>
+                    <label for="fk_subactivity_id" class="form-label">กิจกรรม</label>
                     <select id="fk_subactivity_id" class="form-select" name="fk_subactivity_id">
-                        <option value="">เลือกกิจกรรมย่อย</option>
+                        <option value="">เลือกกิจกรรม</option>
                         @foreach ($subactivities as $subactivity)
                             <option value="{{ $subactivity->sub_activity_id }}">{{ $subactivity->sub_activity_name }}</option>
                         @endforeach

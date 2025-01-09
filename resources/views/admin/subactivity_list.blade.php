@@ -44,12 +44,36 @@
                                     {{ $subActivity->activity->activity_name }}
                                 </td>
                                 <td>{{ $subActivity->sub_activity_name }}</td>
-                                <td>test</td>
+                                <td class="text-center"> 
+                                    <a href="javascript:void(0);" 
+                                       class="toggle-status" 
+                                       data-id="{{ $subActivity->sub_activity_id }}"
+                                       data-name="{{ $subActivity->sub_activity_name }}"
+                                       data-status="{{ $subActivity->status }}">
+                                        @if($subActivity->status === 'active')
+                                            <i class="fas fa-toggle-on text-success" style="font-size: 24px;" title="Active"></i>
+                                        @else
+                                            <i class="fas fa-toggle-off text-secondary" style="font-size: 24px;" title="Inactive"></i>
+                                        @endif
+                                    </a>
+                                </td>
                             </tr>
                         @else
                             <tr>
                                 <td>{{ $subActivity->sub_activity_name }}</td>
-                                <td>test</td>
+                                <td class="text-center"> 
+                                    <a href="javascript:void(0);" 
+                                       class="toggle-status" 
+                                       data-id="{{ $subActivity->sub_activity_id }}" 
+                                       data-name="{{ $subActivity->sub_activity_name }}"
+                                       data-status="{{ $subActivity->status }}">
+                                        @if($subActivity->status === 'active')
+                                            <i class="fas fa-toggle-on text-success" style="font-size: 24px;" title="Active"></i>
+                                        @else
+                                            <i class="fas fa-toggle-off text-secondary" style="font-size: 24px;" title="Inactive"></i>
+                                        @endif
+                                    </a>
+                                </td>
                             </tr>
                         @endif
                     @endforeach
@@ -69,13 +93,13 @@ aria-hidden="true">
            </button>
        </div>
        <div class="modal-body">
-           <!-- Form for adding sub-activity -->
            <form action="{{ route('admin.storeSubActivity') }}" method="POST">
                @csrf
                <div class="form-group">
                    <label for="activity_id">เลือกกิจกรรม</label>
                    <select name="activity_id" id="activity_id" class="form-control" required>
-                       @foreach ($activities as $activity)
+                    <option value="">เลือกประเภทกิจกรรม</option>   
+                    @foreach ($activities as $activity)
                            <option value="{{ $activity->activity_id }}">{{ $activity->activity_name }}</option>
                        @endforeach
                    </select>
@@ -84,7 +108,9 @@ aria-hidden="true">
                    <label for="sub_activity_name">ชื่อกิจกรรมย่อย</label>
                    <input type="text" class="form-control" id="sub_activity_name" name="sub_activity_name" required>
                </div>
+               <div class="pt-2">
                <button type="submit" class="btn btn-primary">เพิ่มกิจกรรมย่อย</button>
+               </div>
            </form>
        </div>
    </div>
@@ -94,4 +120,6 @@ aria-hidden="true">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-@endsection
+    <script src="{{ asset('js/subactivity_list.js') }}"></script>
+
+    @endsection

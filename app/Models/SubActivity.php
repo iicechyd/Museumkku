@@ -14,6 +14,7 @@ class SubActivity extends Model
     protected $fillable = [
         'activity_id',
         'sub_activity_name',
+        'status'
     ];
 
     public function activity()

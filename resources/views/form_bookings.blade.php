@@ -84,9 +84,9 @@
 
                 @if ($hasSubactivities)
                 <div class="form-group col-3">
-                    <label for="fk_subactivity_id" class="form-label">กิจกรรม</label>
+                    <label for="fk_subactivity_id" class="form-label">หลักสูตร</label>
                     <select id="fk_subactivity_id" class="form-select" name="fk_subactivity_id">
-                        <option value="">เลือกกิจกรรม</option>
+                        <option value="">เลือกหลักสูตร</option>
                         @foreach ($subactivities as $subactivity)
                             <option value="{{ $subactivity->sub_activity_id }}">{{ $subactivity->sub_activity_name }}</option>
                         @endforeach

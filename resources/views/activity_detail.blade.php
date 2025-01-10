@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ asset('css/activity_detail.css') }}">
 </head>
 
+@section('sidebar')
 @section('content')
     <div class="container py-5">
         <div class="srow gy-4">
@@ -25,14 +26,14 @@
                                 <h2 class="card-title">{{ $activity->activity_name }}</h2>
                                 <p class="card-text text-muted">{{ $activity->description }}</p>
                                 <div class="mt-3">
-                                    @if ($activity->subactivities->isNotEmpty())
+                                    {{-- @if ($activity->subactivities->isNotEmpty())
                                         <p>หลักสูตร</p>
                                         <ul>
                                             @foreach ($activity->subactivities as $subactivity)
                                                 <li>{{ $subactivity->sub_activity_name }}</li>
                                             @endforeach
                                         </ul>
-                                    @endif
+                                    @endif --}}
                                     <p>ราคาเข้าชม</p>
                                     <p>
                                         เด็ก:

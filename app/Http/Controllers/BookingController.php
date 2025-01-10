@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use DateTime;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -121,10 +122,10 @@ class BookingController extends Controller
         $activities = Activity::where('activity_type_id', 1)->get();
 
         $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute')
-        ->whereHas('activity', function ($query) {
-            $query->where('activity_type_id', 1);
-        })
-        ->where('status', 3);
+            ->whereHas('activity', function ($query) {
+                $query->where('activity_type_id', 1);
+            })
+            ->where('status', 3);
 
         if ($request->filled('activity_id')) {
             $query->where('activity_id', $request->activity_id);
@@ -224,7 +225,8 @@ class BookingController extends Controller
             [
                 'fk_activity_id' => 'required|exists:activities,activity_id',
                 'fk_timeslots_id' => 'nullable|exists:timeslots,timeslots_id',
-                'sub_activity_id' => 'nullable|exists:sub_activities,sub_activity_id',
+                'sub_activity_id' => 'nullable|array',
+                'sub_activity_id.*' => 'nullable|exists:sub_activities,sub_activity_id',
                 'booking_date' => 'required|date_format:d/m/Y',
                 'instituteName' => 'required',
                 'instituteAddress' => 'required',
@@ -254,7 +256,18 @@ class BookingController extends Controller
         ];
 
         $request->validate($rules, $messages);
-
+        
+        $activity = Activity::find($request->fk_activity_id);
+        if (!$activity) {
+            return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
+        }
+        $maxSubactivities = $activity->max_subactivities;
+        $selectedSubactivities = $request->input('sub_activity_id', []);
+        if (count($selectedSubactivities) > $maxSubactivities) {
+            return back()->withErrors([
+                'sub_activity_id' => "คุณสามารถเลือกได้สูงสุด $maxSubactivities กิจกรรมย่อยเท่านั้น"
+            ])->withInput();
+        }
         $quantityFields = [
             'children_qty',
             'students_qty',
@@ -338,12 +351,12 @@ class BookingController extends Controller
                                 ->orWhereBetween('timeslots.end_time', [$timeslot->start_time, $timeslot->end_time]);
                         })
                         ->exists();
-            
+
                     if ($conflictingBooking) {
                         return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีการจองกิจกรรมอื่นในช่วงเวลาใกล้เคียง')->withInput();
                     }
                 }
-            }            
+            }
             $totalToBook = ($request->children_qty ?? 0) + ($request->students_qty ?? 0) + ($request->adults_qty ?? 0);
             $totalBooked = Bookings::where('booking_date', $formattedDate)
                 ->where('timeslots_id', $timeslot->timeslots_id)
@@ -375,7 +388,7 @@ class BookingController extends Controller
 
         $booking = new Bookings();
         $booking->activity_id = $request->fk_activity_id;
-        $booking->sub_activity_id = $request->fk_subactivity_id;
+        // $booking->sub_activity_id = $request->fk_subactivity_id;
         $booking->timeslots_id = $request->fk_timeslots_id ?? null;
         $booking->institute_id = $institute->institute_id;
         $booking->visitor_id = $visitor->visitor_id;
@@ -388,6 +401,8 @@ class BookingController extends Controller
         $booking->monk_qty = $request->monk_qty ?? 0;
         $booking->status = false;
         $booking->save();
+
+        // $booking->subActivities()->sync($selectedSubactivities);
 
         return back()->with('showSuccessModal', true);
     }
@@ -408,23 +423,24 @@ class BookingController extends Controller
             'selectedActivity' => $selectedActivity,
             'timeslots' => $timeslots,
             'subactivities' => $subactivities,
-            'hasSubactivities' =>$hasSubactivities
+            'hasSubactivities' => $hasSubactivities,
+            'maxSubactivities' => $selectedActivity->max_subactivities,
 
         ]);
     }
 
     public function getAvailableTimeslots($activity_id, $date)
-{
-    $closedTimeslotsIds = ClosedTimeslots::where('closed_on', $date)
-        ->where('activity_id', $activity_id)
-        ->pluck('timeslots_id');
+    {
+        $closedTimeslotsIds = ClosedTimeslots::where('closed_on', $date)
+            ->where('activity_id', $activity_id)
+            ->pluck('timeslots_id');
 
-    $availableTimeslots = Timeslots::where('activity_id', $activity_id)
-        ->whereNotIn('timeslots_id', $closedTimeslotsIds)
-        ->get();
+        $availableTimeslots = Timeslots::where('activity_id', $activity_id)
+            ->whereNotIn('timeslots_id', $closedTimeslotsIds)
+            ->get();
 
-    return response()->json($availableTimeslots);
-}
+        return response()->json($availableTimeslots);
+    }
 
     public function searchBookingByEmail(Request $request)
     {
@@ -474,9 +490,7 @@ class BookingController extends Controller
 
         $histories = $query->get();
         $activities = Activity::orderBy('activity_name')->pluck('activity_name', 'activity_id');
-        
+
         return view('admin.history', compact('histories', 'activities'));
     }
-
-    
 }

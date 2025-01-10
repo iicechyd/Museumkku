@@ -75,15 +75,15 @@
                     </a>
                     <ul id="dashboard" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                         <li class="sidebar-item">
-                            <a href="/admin/activity_list" class="sidebar-link">แก้ไขรายละเอียดกิจกรรม</a>
+                            <a href="/admin/activity_list" class="sidebar-link">จัดการรายละเอียดกิจกรรม</a>
                         </li>
                         <li class="sidebar-item">
                             <a href="{{ url('/admin/timeslots_list') }}" class="sidebar-link">
-                                แก้ไขรอบการเข้าชม
+                                จัดการรอบการเข้าชม
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="#" class="sidebar-link">แก้ไขข้อมูลพิพิธภัณฑ์</a>
+                            <a href="#" class="sidebar-link">จัดการข้อมูลพิพิธภัณฑ์</a>
                         </li>
                     </ul>
                 </li>

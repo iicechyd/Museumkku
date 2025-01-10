@@ -137,8 +137,13 @@ flatpickr("#booking_date", {
 
                         timeslots.forEach((timeslot, index) => {
                             let option = document.createElement('option');
+                            let startTime = new Date(`1970-01-01T${timeslot.start_time}Z`);
+                            let endTime = new Date(`1970-01-01T${timeslot.end_time}Z`);
+                            let startFormatted = `${startTime.getUTCHours().toString().padStart(2, '0')}:${startTime.getUTCMinutes().toString().padStart(2, '0')}`;
+                            let endFormatted = `${endTime.getUTCHours().toString().padStart(2, '0')}:${endTime.getUTCMinutes().toString().padStart(2, '0')}`;
+
                             option.value = timeslot.timeslots_id;
-                            option.text = `รอบที่ ${index + 1} ${timeslot.start_time} น. - ${timeslot.end_time} น.`;
+                            option.text = `รอบที่ ${index + 1} ${startFormatted} น. - ${endFormatted} น.`;
                             timeslotsSelect.appendChild(option);
                         });
 

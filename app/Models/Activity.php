@@ -23,6 +23,7 @@ class Activity extends Model
         'max_capacity',
         'status',
         'duration_days',
+        'max_subactivities',
     ];
 
     public function activityType()

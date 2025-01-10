@@ -91,7 +91,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">
-                                    <i class="fas fa-trash"></i> ลบ
+                                    ยกเลิก
                                 </button>
                             </form>
                         </td>

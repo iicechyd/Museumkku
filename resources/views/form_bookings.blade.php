@@ -83,17 +83,31 @@
                 </div>
 
                 @if ($hasSubactivities)
-                <div class="form-group col-3">
-                    <label for="fk_subactivity_id" class="form-label">หลักสูตร</label>
-                    <select id="fk_subactivity_id" class="form-select" name="fk_subactivity_id">
-                        <option value="">เลือกหลักสูตร</option>
-                        @foreach ($subactivities as $subactivity)
-                            <option value="{{ $subactivity->sub_activity_id }}">{{ $subactivity->sub_activity_name }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                    <div class="form-group col-3">
+                        <label for="fk_subactivity_id" class="form-label">หลักสูตร</label>
+                        <div class="dropdown">
+                            <button class="btn btn-white border dropdown-toggle" type="button" id="subactivityDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                เลือกหลักสูตร
+                            </button>
+                            <ul class="dropdown-menu p-2" aria-labelledby="subactivityDropdown">
+                                @foreach ($subactivities as $subactivity)
+                                    <li>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="sub_activity_id[]"
+                                                value="{{ $subactivity->sub_activity_id }}"
+                                                id="sub_activity_{{ $subactivity->sub_activity_id }}">
+                                            <label class="form-check-label"
+                                                for="sub_activity_{{ $subactivity->sub_activity_id }}">
+                                                {{ $subactivity->sub_activity_name }}
+                                            </label>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
                 @endif
-
 
                 @if ($timeslots->isNotEmpty())
                     <div class="form-group col-3">
@@ -369,15 +383,31 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/form_bookings.js') }}"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             let subactivities = @json($subactivities);
             let subactivitySection = document.getElementById('subactivity-section');
-    
+
             if (subactivities.length > 0) {
                 subactivitySection.style.display = 'block';
             } else {
                 subactivitySection.style.display = 'none';
             }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let maxSubactivities = {{ $maxSubactivities }};
+            let checkboxes = document.querySelectorAll('input[name="sub_activity_id[]"]');
+
+            checkboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    let selectedCount = document.querySelectorAll('input[name="sub_activity_id[]"]:checked').length;
+                    if (selectedCount > maxSubactivities) {
+                        alert(`คุณสามารถเลือกได้สูงสุด ${maxSubactivities} กิจกรรมย่อย`);
+                        checkbox.checked = false;
+                    }
+                });
+            });
         });
     </script>
 @endsection

@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->string('status')->default('active');
             $table->string('image')->nullable();
             $table->integer('duration_days')->nullable();
+            $table->integer('max_subactivities')->default(0);
 
             $table->timestamps();
         });

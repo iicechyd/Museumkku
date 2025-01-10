@@ -5,6 +5,7 @@
     <head>
         <link rel="stylesheet" href="{{ asset('css/request_bookings.css') }}">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
 
     @if (session('success'))
@@ -89,32 +90,53 @@
                             </td>
                             <td>
                                 <form action="{{ route('bookings.updateStatus', $item->booking_id) }}" method="POST"
-                                    style="display: inline;" onsubmit="return confirmUpdateStatus(event)">
+                                    style="display: inline;" id="statusForm_{{ $item->booking_id }}">
                                     @csrf
+                                    <input type="hidden" name="status" value="approve" id="status_{{ $item->booking_id }}">
+                                    <input type="hidden" name="number_of_visitors"
+                                        id="number_of_visitors_{{ $item->booking_id }}">
+                                    <input type="hidden" name="comments" id="comments_{{ $item->booking_id }}">
+
                                     <div class="flex items-center space-x-3">
-                                        <select name="status" id="statusSelect_{{ $item->booking_id }}"
-                                            onchange="toggleCommentsField({{ $item->booking_id }})"
-                                            class="bg-gray-100 border border-gray-300 rounded-lg p-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                            <option value="approve" {{ $item->status == 1 ? 'selected' : '' }}>อนุมัติ</option>
-                                            <option value="cancel" {{ $item->status == 2 ? 'selected' : '' }}>ยกเลิก</option>
-                                        </select>
-                                        <div id="commentsField_{{ $item->booking_id }}" class="comments-field"
-                                            style="display: {{ $item->status == 2 ? 'block' : 'none' }};">
-                                            <input type="text" name="comments" placeholder="กรอกความคิดเห็น"
-                                                class="bg-gray-100 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                        </div>
-                                        <button type="submit" class="button-custom">
-                                            อัปเดตสถานะ
+                                        <button type="button" class="btn btn-success"
+                                            onclick="confirmUpdateStatus(event, {{ $item->booking_id }})">
+                                            อนุมัติ
+                                        </button>
+                                        <button type="button" class="btn-except"
+                                            onclick="openCancelModal({{ $item->booking_id }})">
+                                            ยกเลิก
                                         </button>
                                     </div>
                                 </form>
                             </td>
-                            <td>
-                                <button type="button" class="btn btn-info text-white" data-toggle="modal"
-                                    data-target="#detailsModal_{{ $item->booking_id }}">
+                            <td>   
+                                <a href="#detailsModal_{{ $item->booking_id }}" class="text-blue-500" data-toggle="modal">
                                     รายละเอียด
-                                </button>
+                                </a>
                             </td>
+                            <!-- Modal สำหรับยกเลิกการจอง -->
+                            <div class="modal fade" id="cancelModal_{{ $item->booking_id }}" tabindex="-1" role="dialog"
+                                aria-labelledby="cancelModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="cancelModalLabel">กรอกเหตุผลการยกเลิก</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <label for="reason_{{ $item->booking_id }}">กรุณาระบุหมายเหตุ</label>
+                                            <textarea id="reason_{{ $item->booking_id }}" class="form-control"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                                            <button type="button" class="btn btn-danger"
+                                                onclick="submitCancelForm({{ $item->booking_id }})">บันทึก</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- Modal สำหรับแสดงรายละเอียด -->
                             <div class="modal fade" id="detailsModal_{{ $item->booking_id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -157,7 +179,8 @@
                                             <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">ปิด</button>
                                         </div>
                                     </div>
                                 </div>
@@ -169,12 +192,24 @@
                 <h2 class="text-center py-5">ไม่พบข้อมูลการจองสำหรับกิจกรรมนี้</h2>
             @endif
     </div>
-    @else
+@else
     <h1 class="text text-center py-5 ">กรุณาเลือกกิจกรรมเพื่อตรวจสอบข้อมูล</h1>
     @endif
 @endsection
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-<script> var requestBookings = @json($requestBookings->pluck('booking_id'));</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    var requestBookings = @json($requestBookings->pluck('booking_id'));
+</script>
+<script>
+    $(document).ready(function() {
+        $('[data-dismiss="modal"]').on('click', function() {
+            var modalId = $(this).closest('.modal').attr('id');
+            $('#' + modalId).modal('hide');
+        });
+    });
+</script>
 <script src="{{ asset('js/request_bookings.js') }}"></script>

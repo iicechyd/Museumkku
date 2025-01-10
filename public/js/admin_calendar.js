@@ -85,16 +85,13 @@ document.addEventListener('DOMContentLoaded', function () {
             var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
             myModal.show();
         },
-
         eventDidMount: function (info) {
-            // Colors are now determined server-side in the `color` property of the event
-            if (info.event.backgroundColor) {
-                info.el.style.backgroundColor = info.event.backgroundColor;
-                info.el.style.color = '#ffffff'; // Ensure text is visible
+            var status = info.event.extendedProps.status;
+            if (status === 1) {
+                info.el.style.backgroundColor = '#28a745';
+                info.el.style.color = '#ffffff';
             }
         },
-        
     });
-
     calendar.render();
 });

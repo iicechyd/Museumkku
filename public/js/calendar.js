@@ -99,14 +99,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         eventDidMount: function (info) {
             var status = info.event.extendedProps.status;
-            if (status === 0) {
-                info.el.style.backgroundColor = '#ffc107';
-                info.el.style.color = '#ffffff';
-            } else if (status === 1) {
+            if (status === 1) {
                 info.el.style.backgroundColor = '#28a745';
-                info.el.style.color = '#ffffff';
-            } else if (status === 2) {
-                info.el.style.backgroundColor = '#dc3545';
                 info.el.style.color = '#ffffff';
             }
         },

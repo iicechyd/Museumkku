@@ -25,12 +25,7 @@
             <button type="button" class="btn my-3"
                 style="background-color: rgb(119, 144, 242); border-color: rgb(119, 144, 242); color: white;"
                 onclick="window.location='{{ url('/admin/subactivity_list') }}'">
-                ตรวจสอบกิจกรรมย่อย
-            </button>
-            <button type="button" class="btn my-3"
-                style="background-color: rgb(119, 144, 242); border-color: rgb(119, 144, 242); color: white;"
-                onclick="window.location='{{ url('/admin/timeslots_list') }}'">
-                ตรวจสอบรอบการเข้าชม
+                หลักสูตร
             </button>
             {{ $requestListActivity->links() }}
             <div class="table-responsive">

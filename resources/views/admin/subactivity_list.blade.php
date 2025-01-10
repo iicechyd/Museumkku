@@ -14,18 +14,18 @@
         </div>
     @endif
     <div>
-        <h1 class="table-heading text-center">กิจกรรมย่อย</h1>
+        <h1 class="table-heading text-center">หลักสูตร</h1>
         <button type="button" class="btn my-3"
             style="background-color: rgb(85, 88, 218); border-color: rgb(85, 88, 218); color: white;" data-toggle="modal"
             data-target="#InsertTimeslotsModal">
-            เพิ่มกิจกรรมย่อย
+            เพิ่มหลักสูตร
         </button>
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
                         <th data-type="text-long">ชื่อกิจกรรม<span class="resize-handle"></span></th>
-                        <th data-type="text-short">กิจกรรมย่อย<span class="resize-handle"></span></th>
+                        <th data-type="text-short">หลักสูตร<span class="resize-handle"></span></th>
                         <th data-type="text-short">สถานะ<span class="resize-handle"></span></th>
                     </tr>
                 </thead>

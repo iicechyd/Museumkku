@@ -26,7 +26,7 @@
                                 <p class="card-text text-muted">{{ $activity->description }}</p>
                                 <div class="mt-3">
                                     @if ($activity->subactivities->isNotEmpty())
-                                        <p>กิจกรรม</p>
+                                        <p>หลักสูตร</p>
                                         <ul>
                                             @foreach ($activity->subactivities as $subactivity)
                                                 <li>{{ $subactivity->sub_activity_name }}</li>

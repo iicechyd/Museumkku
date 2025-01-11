@@ -31,11 +31,13 @@ Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {
     Route::get('/admin/admin_calendar', [HomeController::class, 'showAdminCalendar'])->name('calendar.showAdminCalendar');
     Route::get('/admin/history', [BookingController::class, 'showHistory'])->name('booking.history.all');
     // Route ตรวจการจองทั่วไป
+    Route::get('/admin/manage_bookings/general', [BookingController::class, 'showTodayBookings'])->name('today_bookings.general');
     Route::get('/admin/request_bookings/general', [BookingController::class, 'showBookings'])->name('request_bookings.general');
     Route::get('/admin/request_letter/general', [BookingController::class, 'showRequestLetter'])->name('request_letter');
     Route::get('/admin/approved_bookings/general', [BookingController::class, 'showApproved'])->name('approved_bookings.general');
     Route::get('/admin/except_cases_bookings/general', [BookingController::class, 'showExcept'])->name('except_bookings.general');
     // Route ตรวจการจองกิจกรรม
+    Route::get('/admin/manage_bookings/activity', [BookingActivityController::class, 'showTodayBookings'])->name('today_bookings.activity');
     Route::get('/admin/request_bookings/activity', [BookingActivityController::class, 'showBookingsActivity'])->name('request_bookings.activity');
     Route::get('/admin/approved_bookings/activity', [BookingActivityController::class, 'showApprovedActivity'])->name('approved_bookings.activity');
     Route::get('/admin/except_cases_bookings/activity', [BookingActivityController::class, 'showExceptActivity'])->name('except_bookings.activity');    

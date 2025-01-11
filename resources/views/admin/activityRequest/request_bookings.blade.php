@@ -15,6 +15,7 @@
 
     <div class="container">
         <div class="button pb-2">
+            <a href="{{ url('/admin/manage_bookings/activity') }}" class="btn btn-outline-primary">การจองวันนี้</a>
             <a href="{{ url('/admin/request_bookings/activity') }}" class="btn-request">รออนุมัติ</a>
             <a href="{{ url('/admin/approved_bookings/activity') }}" class="btn-approved-outline">อนุมัติ</a>
             <a href="{{ url('/admin/except_cases_bookings/activity') }}" class="btn-except-outline">ยกเลิก</a>
@@ -101,7 +102,7 @@
                                             onclick="confirmUpdateStatus(event, {{ $item->booking_id }})">
                                             อนุมัติ
                                         </button>
-                                        <button type="button" class="btn-except"
+                                        <button type="button" class="btn btn-danger"
                                             onclick="openCancelModal({{ $item->booking_id }})">
                                             ยกเลิก
                                         </button>
@@ -119,7 +120,7 @@
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="cancelModalLabel">กรอกเหตุผลการยกเลิก</h5>
+                                            <h5 class="modal-title" id="cancelModalLabel">กรอกหมายเหตุการยกเลิก</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>

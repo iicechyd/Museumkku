@@ -13,6 +13,7 @@
     @endif
     <div class="container">
         <div class="button pb-2">
+            <a href="{{ url('/admin/manage_bookings/general') }}" class="btn btn-outline-primary">การจองวันนี้</a>
             <a href="{{ url('/admin/request_bookings/general') }}" class="btn-request-outline">รออนุมัติ</a>
             <a href="{{ url('/admin/approved_bookings/general') }}" class="btn btn-success">อนุมัติ</a>
             <a href="{{ url('/admin/except_cases_bookings/general') }}" class="btn-except-outline">ยกเลิก</a>
@@ -86,44 +87,55 @@
                             </td>
                             <td>
                                 <form action="{{ route('bookings.updateStatus', $item->booking_id) }}" method="POST"
-                                    style="display: inline;" onsubmit="return confirmUpdateStatus(event)">
+                                    style="display: inline;" id="statusForm_{{ $item->booking_id }}">
                                     @csrf
+                                    <input type="hidden" name="status" value="approve" id="status_{{ $item->booking_id }}">
+                                    <input type="hidden" name="number_of_visitors"
+                                        id="number_of_visitors_{{ $item->booking_id }}">
+                                    <input type="hidden" name="comments" id="comments_{{ $item->booking_id }}">
+
                                     <div class="flex items-center space-x-3">
-                                        <select name="status" id="statusSelect_{{ $item->booking_id }}"
-                                            onchange="toggleCommentsField({{ $item->booking_id }})"
-                                            class="bg-gray-100 border border-gray-300 rounded-lg p-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                            <option value="checkin" {{ $item->status == 2 ? 'selected' : '' }}>เข้าชม</option>
-                                            <option value="cancel" {{ $item->status == 3 ? 'selected' : '' }}>ยกเลิก</option>
-                                        </select>
-                                        <!-- ฟิลด์จำนวนผู้เข้าชม -->
-                                        <div id="visitorsField_{{ $item->booking_id }}" class="visitors-field pt-2"
-                                            style="display: {{ $item->status == 2 ? 'block' : 'none' }};">
-                                            <input type="number" name="number_of_visitors" placeholder="ระบุจำนวนผู้เข้าชม"
-                                                class="bg-gray-100 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                        </div>
-                                        <!-- ฟิลด์ความคิดเห็น -->
-                                        <div id="commentsField_{{ $item->booking_id }}" class="comments-field"
-                                            style="display: {{ $item->status == 3 ? 'block' : 'none' }};">
-                                            <input type="text" name="comments" placeholder="กรอกเหตุผล"
-                                                class="bg-gray-100 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                        </div>
-                                        <button type="submit" class="button-custom">
-                                            อัปเดตสถานะ
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="openCancelModal({{ $item->booking_id }})">
+                                            ยกเลิก
                                         </button>
                                     </div>
                                 </form>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-info text-white" data-toggle="modal"
-                                    data-target="#detailsModal_{{ $item->booking_id }}">
+                                <a href="#detailsModal_{{ $item->booking_id }}" class="text-blue-500" data-toggle="modal">
                                     รายละเอียด
-                                </button>
+                                </a>
                                 @if ($item->documents->isNotEmpty())
                                     <p class="text-success pt-2">แนบไฟล์เอกสารเรียบร้อย</p>
                                 @else
                                     <p class="text-danger pt-2">รอแนบเอกสาร</p>
                                 @endif
                             </td>
+                            <!-- Modal สำหรับยกเลิกการจอง -->
+                            <div class="modal fade" id="cancelModal_{{ $item->booking_id }}" tabindex="-1" role="dialog"
+                                aria-labelledby="cancelModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="cancelModalLabel">กรอกหมายเหตุการยกเลิก</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <label for="reason_{{ $item->booking_id }}">กรุณาระบุหมายเหตุ</label>
+                                            <textarea id="reason_{{ $item->booking_id }}" class="form-control"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">ปิด</button>
+                                            <button type="button" class="btn btn-danger"
+                                                onclick="submitCancelForm({{ $item->booking_id }})">บันทึก</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- Modal สำหรับแสดงรายละเอียด -->
                             <div class="modal fade" id="detailsModal_{{ $item->booking_id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">

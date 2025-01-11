@@ -17,7 +17,7 @@ function submitCancelForm(bookingId) {
     var reason = document.getElementById('reason_' + bookingId).value;
 
     if (!reason) {
-        alert("กรุณากรอกเหตุผลการยกเลิก");
+        alert("กรุณากรอกหมายเหตุการยกเลิก");
         return;
     }
     document.getElementById('status_' + bookingId).value = 'cancel';

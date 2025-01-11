@@ -15,6 +15,7 @@
 
     <div class="container">
         <div class="button pb-2">
+            <a href="{{ url('/admin/manage_bookings/general') }}" class="btn btn-outline-primary">การจองวันนี้</a>
             <a href="{{ url('/admin/request_bookings/general') }}" class="btn-request-outline">รออนุมัติ</a>
             <a href="{{ url('/admin/approved_bookings/general') }}" class="btn-approved-outline">อนุมัติ</a>
             <a href="{{ url('/admin/except_cases_bookings/general') }}" class="btn-except">ยกเลิก</a>
@@ -63,10 +64,9 @@
                             </td>
                             <td>{{ $item->latestStatusChange->comments ?? 'ไม่มีความคิดเห็น' }}</td>
                             <td>
-                                <button type="button" class="btn btn-info text-white" data-toggle="modal"
-                                    data-target="#detailsModal_{{ $item->booking_id }}">
+                                <a href="#detailsModal_{{ $item->booking_id }}" class="text-blue-500" data-toggle="modal">
                                     รายละเอียด
-                                </button>
+                                </a>
                             </td>
                             <!-- Modal สำหรับแสดงรายละเอียด -->
                             <div class="modal fade" id="detailsModal_{{ $item->booking_id }}" tabindex="-1" role="dialog"

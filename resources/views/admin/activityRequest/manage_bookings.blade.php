@@ -3,7 +3,8 @@
 @section('content')
 
     <head>
-        <link rel="stylesheet" href="{{ asset('css/approved_bookings.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/manage_bookings.css') }}">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
 
     @if (session('success'))
@@ -14,14 +15,14 @@
 
     <div class="container">
         <div class="button pb-2">
-            <a href="{{ url('/admin/manage_bookings/activity') }}" class="btn btn-outline-primary">การจองวันนี้</a>
+            <a href="{{ url('/admin/manage_bookings/activity') }}" class="btn btn-primary">การจองวันนี้</a>
             <a href="{{ url('/admin/request_bookings/activity') }}" class="btn-request-outline">รออนุมัติ</a>
-            <a href="{{ url('/admin/approved_bookings/activity') }}" class="btn btn-success">อนุมัติ</a>
+            <a href="{{ url('/admin/approved_bookings/activity') }}" class="btn-approved-outline">อนุมัติ</a>
             <a href="{{ url('/admin/except_cases_bookings/activity') }}" class="btn-except-outline">ยกเลิก</a>
         </div>
 
         <div class="form col-6">
-            <form method="GET" action="{{ route('approved_bookings.activity') }}">
+            <form method="GET" action="{{ route('today_bookings.activity') }}">
                 <label for="activity_id">เลือกกิจกรรม:</label>
                 <select name="activity_id" id="activity_id" class="form-select" onchange="this.form.submit()">
                     <option value="">กรุณาเลือกประเภทการเข้าชม</option>
@@ -97,6 +98,10 @@
                                     <input type="hidden" name="comments" id="comments_{{ $item->booking_id }}">
 
                                     <div class="flex items-center space-x-3">
+                                        <button type="button" class="btn btn-primary"
+                                            onclick="openVisitorModal({{ $item->booking_id }})">
+                                            เข้าชม
+                                        </button>
                                         <button type="button" class="btn btn-danger"
                                             onclick="openCancelModal({{ $item->booking_id }})">
                                             ยกเลิก
@@ -114,6 +119,30 @@
                                     <p class="text-danger pt-2">รอแนบเอกสาร</p>
                                 @endif
                             </td>
+                            <!-- Modal สำหรับกรอกจำนวนผู้เข้าชม -->
+                            <div class="modal fade" id="visitorModal_{{ $item->booking_id }}" tabindex="-1" role="dialog"
+                                aria-labelledby="visitorModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="visitorModalLabel">กรอกจำนวนผู้เข้าชม</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <label for="visitor_count_{{ $item->booking_id }}">จำนวนผู้เข้าชม</label>
+                                            <input type="number" id="visitor_count_{{ $item->booking_id }}"
+                                                class="form-control" min="1" required>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                                            <button type="button" class="btn btn-success"
+                                                onclick="submitVisitorCount({{ $item->booking_id }})">บันทึก</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- Modal สำหรับยกเลิกการจอง -->
                             <div class="modal fade" id="cancelModal_{{ $item->booking_id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="cancelModalLabel" aria-hidden="true">
@@ -215,7 +244,8 @@
                                             </p>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">ปิด</button>
                                         </div>
                                     </div>
                                 </div>
@@ -231,6 +261,19 @@
     <h1 class="text text-center py-5 ">กรุณาเลือกกิจกรรมเพื่อตรวจสอบข้อมูล</h1>
     @endif
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('js/approved_bookings.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    var approvedBookings = @json($approvedBookings->pluck('booking_id'));
+</script>
+<script>
+    $(document).ready(function() {
+        $('[data-dismiss="modal"]').on('click', function() {
+            var modalId = $(this).closest('.modal').attr('id');
+            $('#' + modalId).modal('hide');
+        });
+    });
+</script>
+<script src="{{ asset('js/manage_bookings.js') }}"></script>

@@ -179,24 +179,20 @@ td.custom-td {
     margin-top: 10px;
 }
 
-.button-custom:hover {
-    background-color: #2563eb;
+.btn-outline-primary {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: transparent;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    border: 1px solid ;
+    transition: color 0.3s, background-color 0.3s;
 }
-.comments-input {
-    background-color: #f7fafc;
-    border: 1px solid #d1d5db;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-    width: 100%;
-    box-sizing: border-box;
-    transition: border-color 0.2s, box-shadow 0.2s;
+.btn-outline-primary:hover {
+    color: white;
 }
-
-.comments-input:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-}
-.comments-field {
-    margin-top: 10px;
+.btn-outline-primary:active {
+    color: white;
 }

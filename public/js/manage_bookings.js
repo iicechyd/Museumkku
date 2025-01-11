@@ -9,6 +9,23 @@ function confirmUpdateStatus(event, bookingId) {
     document.getElementById('statusForm_' + bookingId).submit();
 }
 
+function openVisitorModal(bookingId) {
+    $('#visitorModal_' + bookingId).modal('show');
+}
+
+function submitVisitorCount(bookingId) {
+    var visitorCount = document.getElementById('visitor_count_' + bookingId).value;
+    
+    if(visitorCount > 0) {
+        document.getElementById('number_of_visitors_' + bookingId).value = visitorCount;
+        document.getElementById('status_' + bookingId).value = 'checkin'; // Set status to checkin
+        document.getElementById('statusForm_' + bookingId).submit();
+    } else {
+        alert('กรุณากรอกจำนวนผู้เข้าชมที่ถูกต้อง');
+    }
+}
+
+
 function openCancelModal(bookingId) {
     $('#cancelModal_' + bookingId).modal('show');
 }

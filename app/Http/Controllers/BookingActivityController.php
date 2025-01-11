@@ -14,7 +14,7 @@ class BookingActivityController extends Controller
     {
         $activities = Activity::where('activity_type_id', 2)->get();
 
-        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute')
+        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'subactivities')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 2);
             })
@@ -62,7 +62,7 @@ class BookingActivityController extends Controller
     {
         $activities = Activity::where('activity_type_id', 2)->get();
 
-        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute')
+        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'subactivities')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 2);
             })
@@ -107,7 +107,7 @@ class BookingActivityController extends Controller
     {
         $activities = Activity::where('activity_type_id', 2)->get();
 
-        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute')
+        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'subactivities')
         ->whereHas('activity', function ($query) {
             $query->where('activity_type_id', 2);
         })

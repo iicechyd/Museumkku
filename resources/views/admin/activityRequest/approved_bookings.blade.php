@@ -140,6 +140,15 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
+                                            <p><strong>หลักสูตร:</strong>
+                                                @if ($item->subActivities->isEmpty())
+                                                    -
+                                                @else
+                                                    @foreach ($item->subActivities as $subactivity)
+                                                        {{ $subactivity->sub_activity_name }}
+                                                    @endforeach
+                                                @endif
+                                            </p>
                                             <p><strong>วันเวลาที่จองเข้ามา:
                                                 </strong>{{ \Carbon\Carbon::parse($item->created_at)->locale('th')->translatedFormat('j F') }}
                                                 {{ \Carbon\Carbon::parse($item->created_at)->year + 543 }} เวลา

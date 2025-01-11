@@ -40,9 +40,9 @@
                 $selectedActivityName =
                     $activities->firstWhere('activity_id', request('activity_id'))->activity_name ?? null;
             @endphp
-            
+
             @if (count($requestBookings) > 0)
-            <h1 class="table-heading text-center">{{ $selectedActivityName }}</h1>
+                <h1 class="table-heading text-center">{{ $selectedActivityName }}</h1>
                 {{ $requestBookings->appends(request()->query())->links() }}
 
                 @component('components.table_request_bookings')
@@ -149,6 +149,10 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
+                                            <p><strong>หลักสูตร:</strong>
+                                                @foreach($item->subActivities as $subactivity)
+                                                    {{ $subactivity->sub_activity_name }}
+                                                @endforeach</p>
                                             <p><strong>วันเวลาที่จองเข้ามา:
                                                 </strong>{{ \Carbon\Carbon::parse($item->created_at)->locale('th')->translatedFormat('j F') }}
                                                 {{ \Carbon\Carbon::parse($item->created_at)->year + 543 }} เวลา
@@ -178,7 +182,8 @@
                                             <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">ปิด</button>
                                         </div>
                                     </div>
                                 </div>
@@ -190,11 +195,13 @@
                 <h2 class="text-center py-5">ไม่พบข้อมูลการจองสำหรับกิจกรรมนี้</h2>
             @endif
     </div>
-    @else
+@else
     <h1 class="text text-center py-5 ">กรุณาเลือกกิจกรรมเพื่อตรวจสอบข้อมูล</h1>
     @endif
 @endsection
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-<script> var requestBookings = @json($requestBookings->pluck('booking_id'));</script>
+<script>
+    var requestBookings = @json($requestBookings->pluck('booking_id'));
+</script>
 <script src="{{ asset('js/request_bookings.js') }}"></script>

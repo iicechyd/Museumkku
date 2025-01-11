@@ -21,4 +21,9 @@ class SubActivity extends Model
     {
         return $this->belongsTo(Activity::class, 'activity_id', 'activity_id');
     }
+    public function bookings()
+{
+    return $this->belongsToMany(Bookings::class, 'booking_subactivities', 'sub_activity_id', 'booking_id');
+}
+
 }

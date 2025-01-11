@@ -34,7 +34,6 @@
                 </select>
             </form>
         </div>
-
         @if (request('activity_id'))
             @php
                 $selectedActivityName =
@@ -61,13 +60,11 @@
                                     ไม่มีรอบการเข้าชม
                                 @endif
                             </td>
-                            <td>
                                 <td>
                                     @if ($item->status == 3)
                                         <button type="button" class="btn-except">ยกเลิก</button>
                                     @endif
                                 </td>
-                            </td>
                             <td>{{ $item->latestStatusChange->comments ?? 'ไม่มีความคิดเห็น' }}</td>
                             <td>
                                 <button type="button" class="btn btn-info text-white" data-toggle="modal"
@@ -88,6 +85,15 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
+                                            <p><strong>หลักสูตร:</strong>
+                                                @if ($item->subActivities->isEmpty())
+                                                    -
+                                                @else
+                                                    @foreach ($item->subActivities as $subactivity)
+                                                        {{ $subactivity->sub_activity_name }}
+                                                    @endforeach
+                                                @endif
+                                            </p>
                                             <p><strong>วันเวลาที่จองเข้ามา:
                                                 </strong>{{ \Carbon\Carbon::parse($item->created_at)->locale('th')->translatedFormat('j F') }}
                                                 {{ \Carbon\Carbon::parse($item->created_at)->year + 543 }} เวลา

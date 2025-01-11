@@ -59,6 +59,7 @@ class ActivitySeeder extends Seeder
                 'max_capacity' => null,
                 'status' => 'active',
                 'duration_days' => 1,
+                'max_subactivities' => 2
             ],
             [
                 'activity_id' => 5,
@@ -71,6 +72,7 @@ class ActivitySeeder extends Seeder
                 'max_capacity' => null,
                 'status' => 'active',
                 'duration_days' => 2,
+                'max_subactivities' => 3
             ],
             [
                 'activity_id' => 6,
@@ -116,6 +118,7 @@ class ActivitySeeder extends Seeder
                 'status' => $item['status'],
                 // 'image' => 'images/' . $item['image'],
                 'duration_days' => $item['duration_days'],
+                'max_subactivities' => $item['max_subactivities'] ?? 0,
             ]);
         }
         $this->command->info('สร้างข้อมูลกิจกรรมสำเร็จ');

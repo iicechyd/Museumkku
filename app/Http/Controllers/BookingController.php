@@ -26,7 +26,7 @@ class BookingController extends Controller
     {
         $activities = Activity::where('activity_type_id', 1)->get();
 
-        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute')
+        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'subactivities')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
@@ -73,7 +73,7 @@ class BookingController extends Controller
     {
         $activities = Activity::where('activity_type_id', 1)->get();
 
-        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'documents')
+        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'documents', 'subactivities')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
@@ -121,7 +121,7 @@ class BookingController extends Controller
     {
         $activities = Activity::where('activity_type_id', 1)->get();
 
-        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute')
+        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'subactivities')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
@@ -256,7 +256,7 @@ class BookingController extends Controller
         ];
 
         $request->validate($rules, $messages);
-        
+
         $activity = Activity::find($request->fk_activity_id);
         if (!$activity) {
             return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
@@ -388,7 +388,6 @@ class BookingController extends Controller
 
         $booking = new Bookings();
         $booking->activity_id = $request->fk_activity_id;
-        // $booking->sub_activity_id = $request->fk_subactivity_id;
         $booking->timeslots_id = $request->fk_timeslots_id ?? null;
         $booking->institute_id = $institute->institute_id;
         $booking->visitor_id = $visitor->visitor_id;
@@ -402,7 +401,10 @@ class BookingController extends Controller
         $booking->status = false;
         $booking->save();
 
-        // $booking->subActivities()->sync($selectedSubactivities);
+        if ($request->has('sub_activity_id')) {
+            $subActivities = $request->input('sub_activity_id');
+            $booking->subActivities()->sync($subActivities);
+        }
 
         return back()->with('showSuccessModal', true);
     }

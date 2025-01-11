@@ -46,6 +46,11 @@ class Bookings extends Model
         return $this->belongsTo(Activity::class, 'activity_id');
     }
 
+    public function subActivities()
+    {
+        return $this->belongsToMany(SubActivity::class, 'booking_subactivities', 'booking_id', 'sub_activity_id');
+    }
+
     public function timeslot()
     {
         return $this->belongsTo(Timeslots::class, 'timeslots_id');

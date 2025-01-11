@@ -133,7 +133,7 @@
                                         <div class="modal-body">
                                             <label for="visitor_count_{{ $item->booking_id }}">จำนวนผู้เข้าชม</label>
                                             <input type="number" id="visitor_count_{{ $item->booking_id }}"
-                                                class="form-control" min="1" required>
+                                                class="form-control" min="0" required>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>

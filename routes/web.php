@@ -108,3 +108,4 @@ Route::post('/admin/subactivities/store', [SubActivityController::class, 'storeS
 Route::post('/admin/toggle-subactivity-status/{subActivityId}', [SubActivityController::class, 'toggleSubactivityStatus']);
 
 Route::get('/calendar/timeslots/{date}', [CalendarController::class, 'getTimeslotsForDate']);
+Route::post('/admin/update-max-subactivities', [SubActivityController::class, 'updateMaxSubactivities'])->name('admin.updateMaxSubactivities');

@@ -30,16 +30,28 @@ class SubActivityController extends Controller
         return redirect()->route('admin.subactivities')->with('success', 'เพิ่มกิจกรรมย่อยเรียบร้อยแล้ว');
     }
     public function toggleSubactivityStatus(Request $request, $subActivityId)
-{
-    $subActivity = SubActivity::find($subActivityId);
-    if ($subActivity) {
-        $subActivity->status = $request->status;
-        $subActivity->save();
+    {
+        $subActivity = SubActivity::find($subActivityId);
+        if ($subActivity) {
+            $subActivity->status = $request->status;
+            $subActivity->save();
 
-        return response()->json(['success' => true]);
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false], 404);
     }
-    
-    return response()->json(['success' => false], 404);
-}
+    public function updateMaxSubactivities(Request $request)
+    {
+        $request->validate([
+            'activity_id' => 'required|exists:activities,activity_id',
+            'max_subactivities' => 'required|integer',
+        ]);
 
+        $activity = Activity::find($request->activity_id);
+        $activity->max_subactivities = $request->max_subactivities;
+        $activity->save();
+
+        return response()->json(['success' => 'Max subactivities updated successfully.']);
+    }
 }

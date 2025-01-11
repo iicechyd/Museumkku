@@ -101,3 +101,15 @@ td.custom-td {
     text-overflow: clip;
     text-align: left;
 }
+
+/* Style for the edit icon */
+.fas.fa-edit {
+    cursor: pointer; /* Change cursor to indicate it's clickable */
+    transition: transform 0.2s ease-in-out; /* Smooth transition for scaling */
+}
+
+/* Hover effect */
+.fas.fa-edit:hover {
+    transform: scale(1.1); /* Slightly scale the icon when hovered */
+    color: #007bff; /* Change the color to blue when hovered */
+}

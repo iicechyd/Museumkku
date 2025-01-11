@@ -40,3 +40,32 @@ $(document).on('click', '.toggle-status', function(e) {
         }
     });
 });
+
+$(document).ready(function() {
+    $('.fas.fa-edit').on('click', function() {
+        const activityId = $(this).data('id');
+        const maxSubactivities = $(this).data('max');
+
+        $('#editActivityId').val(activityId);
+        $('#maxSubactivitiesInput').val(maxSubactivities);
+
+        $('#EditMaxSubactivitiesModal').modal('show');
+    });
+
+    $('#editMaxSubactivitiesForm').on('submit', function(e) {
+        e.preventDefault();
+        const form = $(this);
+        $.ajax({
+            type: 'POST',
+            url: form.attr('action'),
+            data: form.serialize(),
+            success: function(response) {
+                $('#EditMaxSubactivitiesModal').modal('hide');
+                location.reload();
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+});

@@ -3,60 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Bookings;
-use App\Models\Activity;
-use Carbon\Carbon;
+ use Carbon\Carbon;
 
-class CalendarController extends Controller
+class AdminCalendarController extends Controller
 {
     public function getEvents(Request $request)
     {
-        // ดึงข้อมูลการจองที่มี activity_type_id = 2
-        $bookingsQuery = Bookings::with(['activity', 'timeslot', 'institute'])
-            ->whereHas('activity', function ($query) {
-                $query->where('activity_type_id', 2);
-            })
+        $isAdmin = Auth::check() && Auth::user()->role->role_name === 'Admin';
+        $bookingsQuery = Bookings::with('activity', 'timeslot', 'institute')
             ->where('status', 1);
-
         $bookings = $bookingsQuery->get();
+        $events = $isAdmin ? $this->getAdminEvents($bookings) : $this->getGroupedEvents($bookings);
+        return response()->json($events);
+    }
 
-        // ดึงข้อมูลการจองสำหรับ activity_type_id = 1 และ activity_id = 1, 2, 3
-        $filteredBookings = Bookings::with('activity', 'timeslot', 'institute')
-            ->whereHas('activity', function ($query) {
-                $query->where('activity_type_id', 1)
-                      ->whereIn('activity_id', [1, 2, 3]);
-            })
-            ->where('status', 1)
-            ->get();
-
-        // คำนวณจำนวนผู้เข้าชมรวมสำหรับ activity_type_id = 1
-        $dailyTotalVisitors = $filteredBookings->groupBy('booking_date')->map(function ($bookingsByDate) {
-            $totalVisitors = $bookingsByDate->sum(function ($booking) {
-                return $this->calculateTotalApproved($booking);
-            });
-            return $totalVisitors;
+    private function getAdminEvents($bookings)
+    {
+        return $bookings->map(function ($booking) {
+            $totalApproved = $this->calculateTotalApproved($booking);
+            return $this->createEvent($booking, $totalApproved);
         });
-
-        // สร้าง Event สำหรับจำนวนผู้เข้าชมรวม
-        $totalVisitorEvents = $dailyTotalVisitors->map(function ($total, $date) {
-            return [
-                'title' => "จำนวนผู้เข้าชม $total คน",
-                'start' => $date,
-                'allDay' => true,
-                'color' => '#007bff',
-                'extendedProps' => [
-                    'total_visitors' => $total
-                ]
-            ];
-        });
-
-        // สร้าง Event ปกติสำหรับ activity_type_id = 2
-        $events = $this->getGroupedEvents($bookings);
-
-        // รวม Event ปกติและ Event จำนวนผู้เข้าชมรวม
-        $allEvents = $events->merge($totalVisitorEvents)->values();
-
-        return response()->json($allEvents);
     }
 
     private function getGroupedEvents($bookings)
@@ -64,7 +32,6 @@ class CalendarController extends Controller
         $groupedBookings = $bookings->groupBy(function ($booking) {
             return $booking->booking_date . '-' . $booking->activity_id . '-' . ($booking->timeslot->timeslots_id ?? 'no_timeslot');
         });
-
         return $groupedBookings->map(function ($groupedBooking) {
             $firstBooking = $groupedBooking->first();
             $totalApproved = $this->calculateTotalApprovedForGroup($groupedBooking);
@@ -78,7 +45,6 @@ class CalendarController extends Controller
             return $this->calculateTotalApproved($booking);
         });
     }
-
     private function calculateTotalApproved($booking)
     {
         return $booking->children_qty + $booking->students_qty + $booking->adults_qty + $booking->disabled_qty + $booking->elderly_qty + $booking->monk_qty;
@@ -102,6 +68,7 @@ class CalendarController extends Controller
             ? max(0, $booking->activity->max_capacity - $totalApproved)
             : 'ไม่จำกัดจำนวนคน';
 
+
         return [
             'title' => $booking->activity->activity_name . " (สถานะการจอง: " . $this->getStatusText($booking->status) . ")",
             'start' => $startDate->format('Y-m-d') . ($startTime ? " $startTime" : ''),
@@ -112,23 +79,33 @@ class CalendarController extends Controller
                 'end_time'    => $endTime,
                 'duration_days' => $durationDays,
                 'status'      => $booking->status,
+                'visitor_name'  => $booking->visitor->visitorName ?? 'ไม่ระบุ',
+                'visitorEmail' => $booking->visitor->visitorEmail ?? 'ไม่ระบุ',
+                'tel' => $booking->visitor->tel ?? 'ไม่ระบุ',
+                'institute_name' => $booking->institute->instituteName ?? 'ไม่ระบุ',
+                'province' => $booking->institute->province,
+                'district' => $booking->institute->district,
+                'subdistrict' => $booking->institute->subdistrict,
+                'zipcode' => $booking->institute->zipcode,
                 'total_qty'     => $totalApproved,
                 'remaining_capacity' => $remainingCapacity,
             ]
         ];
     }
-
     private function getStatusColor($status)
     {
         return match ($status) {
+            0 => '#ffc107',
             1 => '#28a745',
+            2 => '#dc3545',
+            default => '#000000',
         };
     }
 
     private function getStatusText($status)
     {
         return match ($status) {
-            1 => 'อนุมัติ',
+            1 => 'อนุมัติ'
         };
     }
 }

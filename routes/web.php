@@ -16,6 +16,7 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminCalendarController;
 
 //Middleware routes
 Auth::routes();
@@ -54,7 +55,7 @@ Route::get('/calendar', [HomeController::class, 'showCalendar'])->name('calendar
 
 //ดึงeventที่ได้รับการจองมาแสดงบนปฏิทิน
 Route::get('/calendar/events', [CalendarController::class, 'getEvents'])->name('calendar.events');
-Route::get('/bookings/{booking}', [CalendarController::class, 'show'])->name('bookings.show');
+Route::get('/admin_calendar/events', [AdminCalendarController::class, 'getEvents'])->name('calendar.events');
 
  //ฟอร์มสำหรับจองกิจกรรมของแต่ละกิจกรรม
  Route::get('/form_bookings/activity/{activity_id}', [BookingController::class, 'showBookingForm'])->name('form_bookings.activity');
@@ -103,3 +104,5 @@ Route::get('/admin/subactivity_list', [SubActivityController::class, 'showSubAct
 Route::post('/admin/subactivities/store', [SubActivityController::class, 'storeSubActivity'])->name('admin.storeSubActivity');
 
 Route::post('/admin/toggle-subactivity-status/{subActivityId}', [SubActivityController::class, 'toggleSubactivityStatus']);
+
+Route::get('/calendar/timeslots/{date}', [CalendarController::class, 'getTimeslotsForDate']);

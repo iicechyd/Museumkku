@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
         height: 'auto',
         eventSources: [
             {
-                url: '/calendar/events',
+                url: '/admin_calendar/events',
             },
             {
                 events: function (fetchInfo, successCallback, failureCallback) {

@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'th',
-        // events: '/calendar/events',
         eventLimit: true,
         dayMaxEventRows: 3,
         contentHeight: 'auto',
@@ -34,14 +33,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         ],
-
-        // ปรับแต่งข้อความในปฏิทิน
         eventContent: function (eventInfo) {
             var startTime = eventInfo.event.extendedProps.start_time || '';
             var endTime = eventInfo.event.extendedProps.end_time || '';
             var title = eventInfo.event.title || '';
-
-            // แสดงเฉพาะกรณีที่มี timeslots
             var contentHtml = title;
             if (startTime && endTime) {
                 contentHtml = `
@@ -51,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         text-overflow: ellipsis; 
                         max-width: 200px;"
                     >
-                        ${startTime} น. - ${endTime} น. ${title}
+                         ${title}
                     </div>
                 `;
             }
@@ -91,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 remainingText = `${remainingCapacity} คน`;
             }        
             
-        document.getElementById('eventRemainingCapacity').innerText = remainingText;
+            document.getElementById('eventRemainingCapacity').innerText = remainingText;
 
             var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
             myModal.show();

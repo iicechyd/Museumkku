@@ -4,9 +4,7 @@
     font-family: "Noto Sans Thai", sans-serif;
 }
 
-body,
-.table-heading,
-.table-responsive table {
+body, .table-heading, .table-responsive table {
     font-family: "Noto Sans Thai", sans-serif;
 }
 
@@ -31,49 +29,15 @@ body,
 }
 
 table {
-    min-width: 100vw;
-    width: auto;
-    flex: 1;
-    display: grid;
-    border-collapse: collapse;
-    grid-template-columns:
-        minmax(100px, 1fr)
-        minmax(270px, 1.67fr)
-        minmax(200px, 1.67fr)
-        minmax(600px, 3.33fr)
-        minmax(170px, 1.67fr)
-        minmax(150px, 1.67fr)
-        minmax(190px, 1.67fr)
-        minmax(190px, 1.67fr)
-        minmax(190px, 1.67fr)
-        minmax(190px, 1.67fr)
-        minmax(250px, 1.67fr)
-        minmax(190px, 1.67fr)
-        minmax(190px, 1.67fr)
-        minmax(190px, 1.67fr);
+    min-width: 130%;
 }
 
-thead th {
-    text-align: center;
-}
-
-thead,
-tbody,
-tr {
-    display: contents;
-}
-
-th,
-td {
+th,td {
     padding: 15px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: center;
-    vertical-align: middle;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 th {

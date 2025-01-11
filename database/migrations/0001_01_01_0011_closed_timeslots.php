@@ -13,6 +13,8 @@ return new class extends Migration
             $table->id('closed_timeslots_id');
             $table->foreignId('activity_id')->constrained('activities', 'activity_id')->onDelete('cascade');
             $table->foreignId('timeslots_id')->nullable()->constrained('timeslots', 'timeslots_id')->onDelete('cascade');
+            $table->text('comments')->nullable();
+
             $table->date('closed_on');
 
             $table->timestamps();

@@ -43,3 +43,9 @@ function submitCancelForm(bookingId) {
     document.getElementById('statusForm_' + bookingId).submit();
     $('#cancelModal_' + bookingId).modal('hide');
 }
+
+flatpickr("#closed_on", {
+    dateFormat: "d/m/Y",
+    minDate: "today",
+
+});

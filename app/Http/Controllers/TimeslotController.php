@@ -8,6 +8,7 @@ use App\Models\Activity;
 use App\Models\Timeslots;
 use App\Models\closedTimeslots;
 use Carbon\Carbon;
+use DateTime;
 
 class TimeslotController extends Controller
 {
@@ -61,7 +62,7 @@ class TimeslotController extends Controller
         $activities = Activity::all();
 
         $closedDates = ClosedTimeslots::with(['activity', 'timeslot'])
-            ->select('closed_timeslots_id', 'activity_id', 'timeslots_id', 'closed_on')
+            ->select('closed_timeslots_id', 'activity_id', 'timeslots_id', 'closed_on', 'comments')
             ->orderBy('closed_on', 'desc')
             ->get();
 
@@ -73,24 +74,33 @@ class TimeslotController extends Controller
         $request->validate([
             'activity_id' => 'required|exists:activities,activity_id',
             'timeslots_id' => 'required',
-            'closed_on' => 'required|date',
+            'closed_on' => 'required|date_format:d/m/Y',
+            'comments' => 'required|string|max:255',
         ]);
 
         $activityId = $request->input('activity_id');
         $timeslotsId = $request->input('timeslots_id');
-        $closedOn = $request->input('closed_on');
+
+        $closedOn = DateTime::createFromFormat('d/m/Y', $request->closed_on);
+        if (!$closedOn) {
+            return back()->with('error', 'รูปแบบวันที่ไม่ถูกต้อง')->withInput();
+        }
+        $formattedDate = $closedOn->format('Y-m-d');
+        $comments = $request->input('comments');
 
         if ($timeslotsId === 'all') {
             ClosedTimeslots::create([
                 'activity_id' => $activityId,
                 'timeslots_id' => null,
                 'closed_on' => $closedOn,
+                'comments' => $comments,
             ]);
         } else {
             ClosedTimeslots::create([
                 'activity_id' => $activityId,
                 'timeslots_id' => $timeslotsId,
                 'closed_on' => $closedOn,
+                'comments' => $comments,
             ]);
         }
 

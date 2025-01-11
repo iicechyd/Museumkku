@@ -12,7 +12,8 @@ class closedTimeslots extends Model
     protected $fillable = [
         'activity_id',
         'timeslots_id',
-        'closed_on'
+        'closed_on',
+        'comments'
     ];
     public function activity()
     {

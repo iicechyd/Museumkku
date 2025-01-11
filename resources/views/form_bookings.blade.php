@@ -401,7 +401,8 @@
 
             checkboxes.forEach(function(checkbox) {
                 checkbox.addEventListener('change', function() {
-                    let selectedCount = document.querySelectorAll('input[name="sub_activity_id[]"]:checked').length;
+                    let selectedCount = document.querySelectorAll(
+                        'input[name="sub_activity_id[]"]:checked').length;
                     if (selectedCount > maxSubactivities) {
                         alert(`คุณสามารถเลือกได้สูงสุด ${maxSubactivities} กิจกรรมย่อย`);
                         checkbox.checked = false;

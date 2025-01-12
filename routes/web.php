@@ -82,11 +82,11 @@ Route::get('/calendar/events', [CalendarController::class, 'getEvents'])->name('
 Route::get('/admin_calendar/events', [AdminCalendarController::class, 'getEvents'])->name('calendar.events');
 Route::get('/calendar/timeslots/{date}', [CalendarController::class, 'getTimeslotsForDate']);
 //Route ส่งค่าต่างๆ
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/InsertBooking', [BookingController::class, 'InsertBooking'])->name('InsertBooking');
 Route::post('change_status/{booking_id}', [BookingController::class, 'changeStatus'])->name('changeStatus');
 Route::get('/form_bookings', [ActivityController::class, 'createBookingForm'])->name('booking.form');
-
 //Route สำหรับผู้เข้าชม หน้าเพจต่างๆ
 Route::get('/', [HomeController::class, 'showWelcome'])->name('showWelcome');
 Route::get('/preview', [HomeController::class, 'showPreview'])->name('showPreview');

@@ -6,26 +6,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <style>
-    html,
-    body {
-        height: 100%;
-    }
-
     body {
         font-family: 'Noto Sans Thai', sans-serif;
         display: flex;
         flex-direction: column;
         padding-top: 70px;
-    }
-
-    .container {
-        flex: 1;
+        height: 100%;
     }
 
     .navbar {
@@ -54,13 +47,55 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('showPreview') }}">หน้าหลัก</a>
+                        <a class="nav-link" href="{{ route('showPreview') }}">
+                            <button class="btn nav-item nav-link">
+                                หน้าหลัก
+                            </button>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('calendar.showCalendar') }}">ปฏิทินพิพิธภัณฑ์</a>
+                        <a class="nav-link" href="{{ route('calendar.showCalendar') }}">
+                            <button class="btn nav-item nav-link">
+                                ปฏิทินพิพิธภัณฑ์
+                            </button>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="info">ข้อมูลพิพิธภัณฑ์</a>
+                        <a class="nav-link" href="info">
+                            <button class="btn nav-item nav-link">
+                                ข้อมูลพิพิธภัณฑ์
+                            </button>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        @auth
+                            @if (Auth::user()->is_approved)
+                                @if (Auth::user()->role && Auth::user()->role->role_name === 'Super Admin')
+                                    <a class="nav-link" href="{{ url('super_admin/all_users') }}">
+                                        <button class="btn btn-menu shadow-sm hover-shadow-lg">
+                                            เข้าสู่หน้าผู้ดูแลระบบ
+                                        </button>
+                                    </a>
+                                @elseif (Auth::user()->role && Auth::user()->role->role_name === 'Admin')
+                                    <a class="nav-link" href="{{ url('admin/dashboard') }}">
+                                        <button class="btn btn-menu shadow-sm hover-shadow-lg">
+                                            เข้าสู่หน้าเจ้าหน้าที่
+                                        </button></a>
+                                @elseif (Auth::user()->role && Auth::user()->role->role_name === 'Executive')
+                                    <a class="nav-link" href="{{ url('executive/dashboard') }}">
+                                        <button class="btn btn-menu shadow-sm hover-shadow-lg">
+                                            เข้าสู่หน้าฝ่ายบริหาร
+                                        </button>
+                                    </a>
+                                @endif
+                            @endif
+                        @else
+                            <a class="nav-link" href="{{ route('login') }}">
+                                <button class="btn btn-menu shadow-sm hover-shadow-lg">
+                                    เข้าสู่ระบบ
+                                </button>
+                            </a>
+                        @endauth
                     </li>
                 </ul>
             </div>

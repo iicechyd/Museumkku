@@ -27,7 +27,6 @@ class LoginController extends Controller
             Auth::logout();
             return redirect('/login')->with('error', 'บัญชีของคุณยังไม่ได้รับการอนุมัติเข้าใช้งาน');
         }
-        // session(['is_admin' => $user->role && $user->role->role_name === 'Admin']);
 
         if ($user->role && $user->role->role_name === 'Super Admin') {
             return redirect('super_admin/all_users');
@@ -36,8 +35,6 @@ class LoginController extends Controller
         } elseif ($user->role && $user->role->role_name === 'Executive') {
             return redirect('executive/dashboard');
         }
-
-        // Default redirection if no specific role is found
         return redirect('/');
     }
 
@@ -46,9 +43,6 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/login';
 
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
         $this->middleware('guest')->except('logout');

@@ -65,13 +65,13 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <button type="submit" class="form-control btn btn-primary submit px-3">
+                                        <button type="submit" class="form-control btn btn-menu submit px-3">
                                             เข้าสู่ระบบ
                                         </button>
                                     </div>
                                     <div class="form-group d-md-flex">
                                         <div class="w-50 text-left">
-                                            <label class="checkbox-wrap checkbox-primary mb-0">จดจำรหัสผ่าน
+                                            <label class="checkbox-wrap checkbox-menu mb-0">จดจำรหัสผ่าน
                                                 <input type="checkbox" checked name="remember"
                                                     id="remember"{{ old('remember') ? 'checked' : '' }}>
                                                 <span class="checkmark" for="remember"></span>

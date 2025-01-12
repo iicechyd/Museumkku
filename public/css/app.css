@@ -1,19 +1,10 @@
-body,
-.footer,
-.navbar,
-.nav-link {
+body,.footer,.navbar,.nav-link {
     font-family: 'Noto Sans Thai', sans-serif;
 
 }
 
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
+h1,h2,h3,h4,h5,h6,p {
     font-family: 'Noto Sans Thai', sans-serif;
 }
 
@@ -37,4 +28,61 @@ p {
 
 .font-extrabold {
     font-weight: 900;
+}
+
+.btn-menu:focus,
+.btn-menu.focus {
+    -webkit-box-shadow: 0 0 0 0.2rem rgba(72, 144, 133, 0.5);
+    box-shadow: 0 0 0 0.2rem rgba(72, 144, 133, 0.5);
+}
+
+.btn.btn-menu {
+    border: 1px solid #489085;
+    background: #489085;
+    color: white;
+}
+
+.btn.btn-menu {
+    border: 1px solid #489085;
+    background: #489085;
+}
+
+.btn.btn-menu:hover {
+    border: 1px solid #3b6e5f;
+    background: #3b6e5f;
+    color: white;
+}
+
+.btn.btn-menu.btn-outline-menu {
+    border: 1px solid #489085;
+    background: transparent;
+    color: #489085;
+}
+
+.btn.btn-menu.btn-outline-menu:hover {
+    border: 1px solid transparent;
+    background: #489085;
+    color: #fff;
+}
+
+.btn-menu.disabled,
+.btn-menu:disabled {
+    color: #fff;
+    background-color: #489085;
+    border-color: #489085;
+}
+
+.btn-menu:not(:disabled):not(.disabled):active,
+.btn-menu:not(:disabled):not(.disabled).active,
+.show > .btn-menu.dropdown-toggle {
+    color: #fff;
+    background-color: #3a766f;
+    border-color: #356e68;
+}
+
+.btn-menu:not(:disabled):not(.disabled):active:focus,
+.btn-menu:not(:disabled):not(.disabled).active:focus,
+.show > .btn-menu.dropdown-toggle:focus {
+    -webkit-box-shadow: 0 0 0 0.2rem rgba(72, 144, 133, 0.5);
+    box-shadow: 0 0 0 0.2rem rgba(72, 144, 133, 0.5);
 }

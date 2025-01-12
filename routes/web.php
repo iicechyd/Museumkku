@@ -61,7 +61,7 @@ Route::put('/documents/{document_id}', [DocumentController::class, 'update'])->n
 //ดึงeventที่ได้รับการจองมาแสดงบนปฏิทิน
 Route::get('/calendar', [HomeController::class, 'showCalendar'])->name('calendar.showCalendar');
 Route::get('/calendar/events', [CalendarController::class, 'getEvents'])->name('calendar.events');
-Route::get('/admin_calendar/events', [AdminCalendarController::class, 'getEvents'])->name('calendar.events');
+Route::get('/admin_calendar/events', [AdminCalendarController::class, 'getEvents'])->name('admin_calendar.events');
 Route::get('/calendar/timeslots/{date}', [CalendarController::class, 'getTimeslotsForDate']);
 //Route ส่งค่าต่างๆ
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

@@ -7,10 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('css/login.css') }}"> --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>เข้าสู่ระบบ | สำหรับเจ้าหน้าที่</title>
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 @if (session('error'))
@@ -69,7 +69,7 @@
                                             เข้าสู่ระบบ
                                         </button>
                                     </div>
-                                    <div class="form-group d-md-flex">
+                                    <div class="form-group d-md-flex pt-3">
                                         <div class="w-50 text-left">
                                             <label class="checkbox-wrap checkbox-menu mb-0">จดจำรหัสผ่าน
                                                 <input type="checkbox" checked name="remember"

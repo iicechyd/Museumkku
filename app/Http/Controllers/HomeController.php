@@ -10,11 +10,6 @@ class HomeController extends Controller
         return view('welcome');
     }
 
-    public function showFormBookings()
-    {
-        return view('form_bookings');
-    }
-
     public function showPreview()
     {
         return view('preview');

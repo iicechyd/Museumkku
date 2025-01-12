@@ -69,7 +69,6 @@ class DashboardController extends Controller
         }
 
         $totalVisitorsPerMonthThisYear = [];
-        // คำนวณจำนวนผู้เข้าชมแต่ละเดือน
         for ($month = 1; $month <= 12; $month++) {
             $startOfMonth = Carbon::createFromDate($currentYear, $month, 1)->startOfMonth();
             $endOfMonth = Carbon::createFromDate($currentYear, $month, 1)->endOfMonth();

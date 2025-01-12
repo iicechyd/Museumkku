@@ -79,7 +79,7 @@
                                         </div>
                                         <div class="w-50 text-md-right">
                                             @if (Route::has('password.request'))
-                                                <a class="btn btn-link" href="{{ route('password.request') }}">
+                                                <a href="{{ route('password.request') }}">
                                                     ลืมรหัสผ่าน
                                                 </a>
                                             @endif

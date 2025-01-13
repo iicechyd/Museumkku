@@ -14,9 +14,9 @@
         </div>
     </div>
     @if ($activities->count())
-        <div class="container pb-5 d-flex flex-wrap justify-content-center">
+        <div class="container pb-5 d-flex justify-content-center flex-nowrap gap-3">
             @foreach ($activities as $item)
-                <div class="col-md-3 mb-4">
+                <div class="col-md-3">
                     <x-card-group>
                         <x-card title="{{ $item->activity_name }}" text="{{ $item->description }}"
                             image="{{ asset('storage/' . $item->image) }}"

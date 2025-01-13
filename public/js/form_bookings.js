@@ -243,38 +243,68 @@ document.addEventListener('DOMContentLoaded', function () {
 
         eventClick: function (info) {
             info.jsEvent.preventDefault();
-
-            if (info.event.title === 'ปิดให้บริการ') {
-                return;
-            }
-            document.getElementById('eventTitle').innerText = info.event.title;
-
-            var timeslotText = '';
-            var timeslotLabel = 'รอบการเข้าชม:';
-            if (info.event.extendedProps.start_time && info.event.extendedProps.end_time) {
-                timeslotText = `${info.event.extendedProps.start_time} น. - ${info.event.extendedProps.end_time} น.`;
+        
+            var eventTitle = info.event.title || "";
+            var eventProps = info.event.extendedProps || {};
+        
+            if (eventTitle.includes("จำนวนผู้เข้าชม")) {
+                document.getElementById("eventTitle").innerText = eventTitle;
+        
+                var timeslotDetails = eventProps.booking_details || [];
+        
+                // Group time slots by activity name and start_time, then sum total_approved
+                var groupedByActivity = timeslotDetails.reduce(function (acc, detail) {
+                    var activityName = detail.activity_name || "ไม่ระบุชื่อกิจกรรม";
+                    var startTime = detail.start_time.slice(0, 5); // Remove seconds (HH:mm)
+        
+                    if (!acc[activityName]) {
+                        acc[activityName] = {};
+                    }
+                    if (!acc[activityName][startTime]) {
+                        acc[activityName][startTime] = 0;
+                    }
+                    acc[activityName][startTime] += detail.total_approved;
+        
+                    return acc;
+                }, {});
+        
+                // Format the grouped data into a string
+                var timeslotText = Object.keys(groupedByActivity).map(function (activityName) {
+                    var slots = Object.keys(groupedByActivity[activityName])
+                        .map(function (startTime) {
+                            var totalApproved = groupedByActivity[activityName][startTime];
+                            return `รอบ ${startTime} น. จำนวน ${totalApproved} คน`;
+                        })
+                        .join("<br>");
+                    return `<strong>${activityName}</strong><br>${slots}`;
+                }).join("<br><br>");
+        
+                document.getElementById("eventTimeslot").innerHTML =
+                    timeslotText || "ไม่มีรายละเอียดการจอง";
+        
+                var myModal = new bootstrap.Modal(
+                    document.getElementById("eventModal")
+                );
+                myModal.show();
             } else {
-                var durationDays = info.event.extendedProps.duration_days || 'ไม่ระบุ';
-                timeslotLabel = 'ระยะเวลากิจกรรม:';
-                timeslotText = `${durationDays} วัน`;
+                document.getElementById("eventTitle").innerText = eventTitle;
+        
+                var timeslotText = "";
+                var timeslotLabel = "";
+                if (eventProps.start_time && eventProps.end_time) {
+                    timeslotText = `${eventProps.start_time} น. - ${eventProps.end_time} น.`;
+                }
+        
+                document.getElementById("eventTimeslotLabel").innerText =
+                    timeslotLabel;
+                document.getElementById("eventTimeslot").innerText =
+                    timeslotText;
+        
+                var myModal = new bootstrap.Modal(
+                    document.getElementById("eventModal")
+                );
+                myModal.show();
             }
-
-            document.getElementById('eventTimeslotLabel').innerText = timeslotLabel;
-            document.getElementById('eventTimeslot').innerText = timeslotText;
-
-            var remainingCapacity = info.event.extendedProps.remaining_capacity;
-            var remainingText = 'ไม่จำกัดจำนวนคน';
-
-            if (remainingCapacity === 0) {
-                remainingText = 'เต็ม';
-            } else if (remainingCapacity > 0) {
-                remainingText = `${remainingCapacity} คน`;
-            }
-
-            document.getElementById('eventRemainingCapacity').innerText = remainingText;
-
-            var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
-            myModal.show();
         },
 
         eventDidMount: function (info) {

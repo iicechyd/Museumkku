@@ -349,7 +349,7 @@
             </div>
         </div>
     </div>
-    <!-- Modal -->
+    <!-- Modal Calendar -->
     <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -359,10 +359,9 @@
                 </div>
                 <div class="modal-body">
                     <h4 id="eventTitle"></h4>
-                    <p id="eventStatus"></p>
-                    <p><strong id="eventTimeslotLabel">รอบการเข้าชม:</strong> <span id="eventTimeslot"></span></p>
-                    <p><strong id="eventTimeslotLabel">จำนวนที่นั่งคงเหลือ:</strong> <span
-                            id="eventRemainingCapacity"></span></p>
+                    <p><strong id="eventTimeslotLabel"></strong>
+                    <p id="eventTimeslot"></p>
+                    </p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
@@ -382,6 +381,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/form_bookings.js') }}"></script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let subactivities = @json($subactivities);

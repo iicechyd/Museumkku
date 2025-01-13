@@ -37,15 +37,28 @@ class CalendarController extends Controller
             return $totalVisitors;
         });
 
-        // สร้าง Event สำหรับจำนวนผู้เข้าชมรวม
-        $totalVisitorEvents = $dailyTotalVisitors->map(function ($total, $date) {
+         // Create events for total visitors
+         $totalVisitorEvents = $dailyTotalVisitors->map(function ($total, $date) use ($filteredBookings) {
+            // $bookingsByDate = $filteredBookings->where('booking_date', $date);
+            $bookingDetails = $filteredBookings->where('booking_date', $date)->map(function ($booking) {
+                
+                return [
+                    'activity_name' => $booking->activity->activity_name,
+                    'timeslot_id' => $booking->timeslot->timeslots_id ?? '',
+                    'start_time' => $booking->timeslot->start_time ?? '',
+                    'end_time' => $booking->timeslot->end_time ?? '',
+                    'total_approved' => $this->calculateTotalApproved($booking),
+                ];
+            });
+
             return [
                 'title' => "จำนวนผู้เข้าชม $total คน",
                 'start' => $date,
                 'allDay' => true,
                 'color' => '#007bff',
                 'extendedProps' => [
-                    'total_visitors' => $total
+                    'total_visitors' => $total,
+                    'booking_details' => $bookingDetails
                 ]
             ];
         });
@@ -98,22 +111,18 @@ class CalendarController extends Controller
             $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->addDay()->format('Y-m-d');
         }
 
-        $remainingCapacity = $booking->activity->max_capacity !== null
-            ? max(0, $booking->activity->max_capacity - $totalApproved)
-            : 'ไม่จำกัดจำนวนคน';
-
         return [
-            'title' => $booking->activity->activity_name . " (สถานะการจอง: " . $this->getStatusText($booking->status) . ")",
+            'title' => $booking->activity->activity_name,
             'start' => $startDate->format('Y-m-d') . ($startTime ? " $startTime" : ''),
             'end'   => $endDate . ($endTime ? " $endTime" : ''),
             'color' => $this->getStatusColor($booking->status),
             'extendedProps' => [
+                'activity_name' => $booking->activity->activity_name,
                 'start_time'  => $startTime,
                 'end_time'    => $endTime,
                 'duration_days' => $durationDays,
                 'status'      => $booking->status,
                 'total_qty'     => $totalApproved,
-                'remaining_capacity' => $remainingCapacity,
             ]
         ];
     }

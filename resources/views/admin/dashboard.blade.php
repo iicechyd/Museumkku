@@ -148,8 +148,8 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <h6 class="mb-0 ">ยอดผู้เข้าชมทั้งหมดในสัปดาห์นี้</h6>
-                            <p class="text-sm">ผลการดำเนินงานล่าสุด</p>
+                            <h6 class="mb-0 ">รายได้การเข้าชมทั้งหมดในปีนี้</h6>
+                            <p class="text-sm">ปีงบประมาณ ตั้งแต่ ตุลาคม - กันยายน</p>
                             <hr class="dark horizontal">
                             <div class="d-flex">
                                 <i class="material-icons text-sm my-auto me-1">schedule</i>
@@ -328,9 +328,8 @@
                 var elderly_qty = {{ $visitorStats->elderly_qty ?? 0 }};
                 var monk_qty = {{ $visitorStats->monk_qty ?? 0 }};
                 var ctx = document.getElementById("chart-bars").getContext("2d");
-                var data = @json($totalVisitorsPerDayType1);
                 var activitiesType2Monthly = @json($activitiesType2Monthly);
-                window.totalVisitorsPerDayType1 = @json($totalVisitorsPerDayType1);
+                window.monthlyRevenueType1 = @json($monthlyRevenueType1);
                 window.totalVisitorsPerMonthThisYear = @json(array_values($totalVisitorsPerMonthThisYear));
             </script>
             <script src="{{ asset('js/dashboard.js') }}"></script>

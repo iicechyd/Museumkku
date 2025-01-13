@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Bookings;
-use App\Models\Activity;
 use Carbon\Carbon;
 
 class CalendarController extends Controller
@@ -31,17 +30,14 @@ class CalendarController extends Controller
 
         // คำนวณจำนวนผู้เข้าชมรวมสำหรับ activity_type_id = 1
         $dailyTotalVisitors = $filteredBookings->groupBy('booking_date')->map(function ($bookingsByDate) {
-            $totalVisitors = $bookingsByDate->sum(function ($booking) {
+            return $bookingsByDate->sum(function ($booking) {
                 return $this->calculateTotalApproved($booking);
             });
-            return $totalVisitors;
         });
 
          // Create events for total visitors
          $totalVisitorEvents = $dailyTotalVisitors->map(function ($total, $date) use ($filteredBookings) {
-            // $bookingsByDate = $filteredBookings->where('booking_date', $date);
-            $bookingDetails = $filteredBookings->where('booking_date', $date)->map(function ($booking) {
-                
+            $bookingDetails = $filteredBookings->where('booking_date', $date)->map(function ($booking) { 
                 return [
                     'activity_name' => $booking->activity->activity_name,
                     'timeslot_id' => $booking->timeslot->timeslots_id ?? '',
@@ -55,7 +51,6 @@ class CalendarController extends Controller
                 'title' => "จำนวนผู้เข้าชม $total คน",
                 'start' => $date,
                 'allDay' => true,
-                'color' => '#007bff',
                 'extendedProps' => [
                     'total_visitors' => $total,
                     'booking_details' => $bookingDetails
@@ -63,12 +58,8 @@ class CalendarController extends Controller
             ];
         });
 
-        // สร้าง Event ปกติสำหรับ activity_type_id = 2
         $events = $this->getGroupedEvents($bookings);
-
-        // รวม Event ปกติและ Event จำนวนผู้เข้าชมรวม
-        $allEvents = $events->merge($totalVisitorEvents)->values();
-
+        $allEvents = collect($events)->merge(collect($totalVisitorEvents))->values();
         return response()->json($allEvents);
     }
 
@@ -130,14 +121,8 @@ class CalendarController extends Controller
     private function getStatusColor($status)
     {
         return match ($status) {
-            1 => '#28a745',
+            1 => '#E6A732',
         };
     }
 
-    private function getStatusText($status)
-    {
-        return match ($status) {
-            1 => 'อนุมัติ',
-        };
-    }
 }

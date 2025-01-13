@@ -3,9 +3,8 @@
 
 <head>
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/th.global.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 @section('content')
@@ -16,7 +15,6 @@
             <div id="calendar"></div>
         </div>
     </div>
-
     <!-- Modal Calendar -->
     <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -37,7 +35,6 @@
             </div>
         </div>
     </div>
-
     <script src="{{ asset('js/calendar.js') }}"></script>
-
+    
 @endsection

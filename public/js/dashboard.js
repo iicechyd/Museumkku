@@ -1,14 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
     var ctx = document.getElementById("chart-bars").getContext("2d");
-    var data = window.totalVisitorsPerDayType1;
+    var data = window.monthlyRevenueType1;
 
     new Chart(ctx, {
         type: "bar",
         data: {
-            labels: ["M", "TUE", "W", "TH", "F", "SAT", "S"],
+            labels: Object.keys(data),
             datasets: [
                 {
-                    label: "ผู้เข้าชมทั้งหมด",
+                    label: "รายได้ทั้งหมด",
                     tension: 0.4,
                     borderWidth: 0,
                     borderRadius: 4,
@@ -24,13 +24,27 @@ document.addEventListener("DOMContentLoaded", function () {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    display: false,
+                    display: true,
+                    labels: {
+                        color: "#fff",
+                        font: {
+                            family: 'Noto Sans Thai',
+                        }
+                    },
                 },
                 tooltip: {
                     callbacks: {
                         label: function (tooltipItem) {
-                            return tooltipItem.raw + " คน";
+                            return tooltipItem.raw + " บาท";
                         },
+                    },
+                    titleColor: "#fff",
+                    bodyColor: "#fff",
+                    titleFont: {
+                        family: 'Noto Sans Thai',
+                    },
+                    bodyFont: {
+                        family: 'Noto Sans Thai',
                     },
                 },
             },

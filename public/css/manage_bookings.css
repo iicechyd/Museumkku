@@ -10,8 +10,8 @@ body, .table-heading, .table-responsive table {
     text-align: center;
     background: linear-gradient(
         to right,
-        rgb(182, 244, 146),
-        rgb(51, 139, 147)
+        rgb(173, 216, 230),
+        rgb(0, 123, 255) 
     );
     color: white;
     padding: 15px;

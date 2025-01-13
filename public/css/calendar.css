@@ -69,3 +69,10 @@
     font-family: 'Noto Sans Thai', sans-serif;
 }
 
+.custom-event {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+}

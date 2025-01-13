@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'th',
-        eventLimit: true,
         dayMaxEventRows: 3,
         contentHeight: 'auto',
         aspectRatio: 2,

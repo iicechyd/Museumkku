@@ -20,7 +20,8 @@ class DashboardController extends Controller
         $yearStart = Carbon::today()->startOfYear();
         $yearEnd = Carbon::today()->endOfYear();
         $currentYear = Carbon::now()->year;
-
+        $startMonth = now()->month >= 10 ? now()->startOfMonth() : now()->subYear()->startOfMonth()->month(10);
+        $endMonth = $startMonth->copy()->addYear()->month(9)->endOfMonth();
         $activities = Activity::all();
 
         $totalVisitorsToday = [];
@@ -55,17 +56,29 @@ class DashboardController extends Controller
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
         }
 
-        $totalVisitorsPerDayType1 = [];
-        $daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        foreach ($daysOfWeek as $index => $day) {
-            $startOfDay = $weekStart->copy()->addDays($index)->format('Y-m-d');
-            $endOfDay = $weekStart->copy()->addDays($index)->format('Y-m-d');
-            $totalVisitorsPerDayType1[$day] = Bookings::whereHas('activity', function ($query) {
+        $monthlyRevenueType1 = [];
+        $currentDate = $startMonth->copy();
+        
+        while ($currentDate <= $endMonth) {
+            $monthStart = $currentDate->copy()->startOfMonth()->format('Y-m-d');
+            $monthEnd = $currentDate->copy()->endOfMonth()->format('Y-m-d');
+            
+            $monthLabel = $currentDate->copy()->translatedFormat('M Y'); // เช่น "ต.ค 67"
+
+            $monthlyRevenueType1[$monthLabel] = Bookings::whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
-                ->whereBetween('booking_date', [$startOfDay, $endOfDay])
-                ->where('status', 1)
-                ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty')); // คำนวณจำนวนผู้เข้าชมทั้งหมด
+                ->join('activities', 'bookings.activity_id', '=', 'activities.activity_id')
+                ->whereBetween('booking_date', [$monthStart, $monthEnd])
+                ->where('bookings.status', 1)
+                ->sum(DB::raw(
+                    '(children_qty * children_price) + 
+                    (students_qty * student_price) + 
+                    (adults_qty * adult_price) + 
+                    (disabled_qty * disabled_price) + 
+                    (elderly_qty * elderly_price) + 
+                    (monk_qty * monk_price)'));
+            $currentDate->addMonth();
         }
 
         $totalVisitorsPerMonthThisYear = [];
@@ -143,8 +156,8 @@ class DashboardController extends Controller
             'totalVisitors',
             'specialActivities',
             'visitorStats',
-            'totalVisitorsPerDayType1',
             'totalVisitorsPerMonthThisYear',
+            'monthlyRevenueType1'
         ));
     }
 }

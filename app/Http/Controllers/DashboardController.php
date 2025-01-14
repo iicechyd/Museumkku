@@ -60,14 +60,14 @@ class DashboardController extends Controller
                 ->sum('status_changes.number_of_visitors');
         }
 
-        $yearlyRevenueType1 = [];
+        $yearlyRevenueGeneral = [];
         $currentDate = $startMonth->copy();
         while ($currentDate <= $endMonth) {
             $monthStart = $currentDate->copy()->startOfMonth()->format('Y-m-d');
             $monthEnd = $currentDate->copy()->endOfMonth()->format('Y-m-d');
             $monthLabel = $currentDate->copy()->translatedFormat('M Y');
 
-            $yearlyRevenueType1[$monthLabel] = Bookings::whereHas('activity', function ($query) {
+            $yearlyRevenueGeneral[$monthLabel] = Bookings::whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
                 ->join('activities', 'bookings.activity_id', '=', 'activities.activity_id')
@@ -84,7 +84,7 @@ class DashboardController extends Controller
             $currentDate->addMonth();
         }
 
-        $yearlyRevenueType2 = [];
+        $yearlyRevenueActivity = [];
         $currentDate = $startMonth->copy();
         while ($currentDate <= $endMonth) {
             $monthStart = $currentDate->copy()->startOfMonth()->format('Y-m-d');
@@ -92,7 +92,7 @@ class DashboardController extends Controller
 
             $monthLabel = $currentDate->copy()->translatedFormat('M Y');
 
-            $yearlyRevenueType2[$monthLabel] = Bookings::whereHas('activity', function ($query) {
+            $yearlyRevenueActivity[$monthLabel] = Bookings::whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 2);
             })
                 ->join('activities', 'bookings.activity_id', '=', 'activities.activity_id')
@@ -105,37 +105,28 @@ class DashboardController extends Controller
             $currentDate->addMonth();
             }
 
-        $activitiesType2Monthly = [];
-        for ($month = 1; $month <= 12; $month++) {
-            $startOfMonth = Carbon::createFromDate($currentYear, $month, 1)->startOfMonth();
-            $endOfMonth = Carbon::createFromDate($currentYear, $month, 1)->endOfMonth();
-
-            $activitiesType2Monthly[$month] = Bookings::whereHas('activity', function ($query) {
-                $query->where('activity_type_id', 2);
-            })
-                ->whereBetween('booking_date', [$startOfMonth, $endOfMonth])
-                ->where('status', 1)
-                ->count();
-        }
-        $specialActivities = DB::table('activities')
+            $totalSpecialActivity = DB::table('activities')
             ->leftJoin('activity_types', 'activities.activity_type_id', '=', 'activity_types.activity_type_id')
-            ->leftJoin('bookings', 'activities.activity_id', '=', 'bookings.activity_id')
+            ->leftJoin('bookings', function($join) use ($yearStart, $yearEnd) {
+                $join->on('activities.activity_id', '=', 'bookings.activity_id')
+                     ->whereBetween('bookings.booking_date', [$yearStart, $yearEnd]);
+            })
             ->select(
                 'activities.activity_id',
                 'activities.activity_name',
                 DB::raw('
-            COALESCE(SUM(bookings.children_qty + bookings.students_qty + bookings.adults_qty +
-            bookings.disabled_qty + bookings.elderly_qty + bookings.monk_qty), 0) as total_visitors
-        '),
+                    COALESCE(SUM(bookings.children_qty + bookings.students_qty + bookings.adults_qty +
+                    bookings.disabled_qty + bookings.elderly_qty + bookings.monk_qty), 0) as total_visitors
+                '),
                 DB::raw('COALESCE(COUNT(bookings.booking_id), 0) as total_bookings')
             )
             ->where('activities.activity_type_id', 2)
             ->groupBy('activities.activity_id', 'activities.activity_name')
             ->get();
 
-        $totalVisitors = [];
+        $totalVisitorsBooked = [];
         foreach ($activities as $activity) {
-            $totalVisitors[$activity->activity_id] = Bookings::whereHas('activity', function ($query) {
+            $totalVisitorsBooked[$activity->activity_id] = Bookings::whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
                 ->where('activity_id', $activity->activity_id)
@@ -155,13 +146,12 @@ class DashboardController extends Controller
             'totalVisitorsThisWeek',
             'totalVisitorsThisMonth',
             'totalVisitorsThisYear',
-            'activitiesType2Monthly',
-            'totalVisitors',
-            'specialActivities',
-            'visitorStats',
             'totalVisitorsPerMonthThisYear',
-            'yearlyRevenueType1',
-            'yearlyRevenueType2'
+            'yearlyRevenueGeneral',
+            'yearlyRevenueActivity',
+            'totalVisitorsBooked',
+            'totalSpecialActivity',
+            'visitorStats',
         ));
     }
 }

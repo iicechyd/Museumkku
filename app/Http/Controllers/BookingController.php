@@ -353,15 +353,6 @@ class BookingController extends Controller
         }
         $formattedDate = $bookingDate->format('Y-m-d');
 
-        $isAllClosed = ClosedTimeslots::whereNull('timeslots_id')
-            ->where('activity_id', $activity->activity_id)
-            ->where('closed_on', $formattedDate)
-            ->exists();
-
-        if ($isAllClosed) {
-            return back()->with('error', 'ไม่สามารถจองได้เนื่องจากรอบการเข้าชมถูกปิด')->withInput();
-        }
-
         if ($request->filled('fk_timeslots_id')) {
             $timeslot = Timeslots::find($request->fk_timeslots_id);
             if (!$timeslot) {
@@ -411,7 +402,7 @@ class BookingController extends Controller
             $totalToBook = ($request->children_qty ?? 0) + ($request->students_qty ?? 0) + ($request->adults_qty ?? 0);
             $totalBooked = Bookings::where('booking_date', $formattedDate)
                 ->where('timeslots_id', $timeslot->timeslots_id)
-                ->where('status', 1)
+                ->whereIn('status', [0, 1])
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
             if ($activity->max_capacity !== null && $totalBooked + $totalToBook > $activity->max_capacity) {
                 return back()->with('error', 'จำนวนเกินความจุต่อรอบการเข้าชม')->withInput();

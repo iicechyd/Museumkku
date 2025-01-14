@@ -208,20 +208,20 @@
                             <div class="card-body">
                                 <h5>{{ $activity->activity_name }}</h5>
                                 <h3 class="{{ $activity->activity_id == 1 ? 'text-info' : 'text-danger' }}">
-                                    {{ number_format($totalVisitors[$activity->activity_id]) }} คน
+                                    {{ number_format($totalVisitorsBooked[$activity->activity_id]) }} คน
                                 </h3>
                             </div>
                         </div>
                     </div>
                 @endforeach
                 @php
-                    $totalActivity3Visitors = isset($totalVisitors[3]) ? $totalVisitors[3] : 0;
+                    $totalVisitorsActivityBooked = isset($totalVisitorsBooked[3]) ? $totalVisitorsBooked[3] : 0;
                 @endphp
                 <div class="col-md-3">
                     <div class="card text-center">
                         <div class="card-body">
                             <h5>เข้าชมทั้งสองพิพิธภัณฑ์</h5>
-                            <h3 class="text-success">{{ number_format($totalActivity3Visitors) }} คน
+                            <h3 class="text-success">{{ number_format($totalVisitorsActivityBooked) }} คน
                             </h3>
                         </div>
                     </div>
@@ -230,7 +230,7 @@
                     <div class="card text-center">
                         <div class="card-body">
                             <h5>ผู้เข้าชมทั้งหมด</h5>
-                            <h3 class="text-warning">{{ number_format(array_sum($totalVisitors)) }} คน</h3>
+                            <h3 class="text-warning">{{ number_format(array_sum($totalVisitorsBooked)) }} คน</h3>
                         </div>
                     </div>
                 </div>
@@ -241,7 +241,7 @@
                         <div class="card-header pb-0">
                             <div class="row">
                                 <div class="col-lg-6 col-7">
-                                    <h6>ยอดการจัดกิจกรรม และจำนวนผู้เข้าร่วม</h6>
+                                    <h6>ยอดการจัดกิจกรรม และจำนวนผู้เข้าร่วมปีนี้</h6>
                                 </div>
                                 <div class="col-lg-6 col-5 my-auto text-end">
                                     <div class="dropdown float-lg-end pe-4">
@@ -279,7 +279,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($specialActivities as $activity)
+                                        @foreach ($totalSpecialActivity as $activity)
                                             <tr>
                                                 <td>
                                                     <div class="d-flex px-2 py-1">
@@ -328,9 +328,9 @@
                 var disabled_qty = {{ $visitorStats->disabled_qty ?? 0 }};
                 var elderly_qty = {{ $visitorStats->elderly_qty ?? 0 }};
                 var monk_qty = {{ $visitorStats->monk_qty ?? 0 }};
-                var yearlyRevenueType2 = @json($yearlyRevenueType2);
-                window.yearlyRevenueType1 = @json($yearlyRevenueType1);
-                window.totalVisitorsPerMonthThisYear = @json(array_values($totalVisitorsPerMonthThisYear));
+                var totalVisitorsPerMonthThisYear = @json(array_values($totalVisitorsPerMonthThisYear));
+                var yearlyRevenueGeneral = @json($yearlyRevenueGeneral);
+                var yearlyRevenueActivity = @json($yearlyRevenueActivity);
             </script>
             <script src="{{ asset('js/dashboard.js') }}"></script>
         @endpush

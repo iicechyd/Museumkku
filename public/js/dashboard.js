@@ -122,11 +122,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     var ctxLine = document.getElementById("chart-line").getContext("2d");
-    const yearlyRevenueType1 = window.yearlyRevenueType1 || {};
+    const yearlyRevenueGeneral = window.yearlyRevenueGeneral || {};
     new Chart(ctxLine, {
         type: "line",
         data: {
-            labels: Object.keys(yearlyRevenueType1),
+            labels: Object.keys(yearlyRevenueGeneral),
             datasets: [
                 {
                     label: "รายได้ทั้งหมด",
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     borderColor: "rgba(255, 255, 255, .8)",
                     backgroundColor: "transparent",
                     fill: true,
-                    data: Object.values(yearlyRevenueType1),
+                    data: Object.values(yearlyRevenueGeneral),
                     maxBarThickness: 6,
                     pointStyle: "circle",
                     pointHoverRadius: 6,
@@ -226,7 +226,7 @@ var ctx3 = document.getElementById("chart-line-tasks").getContext("2d");
 new Chart(ctx3, {
     type: "line",
     data: {
-        labels: Object.keys(yearlyRevenueType2),
+        labels: Object.keys(yearlyRevenueActivity),
         datasets: [
             {
                 label: "รายได้จากการจัดกิจกรรม",
@@ -239,7 +239,7 @@ new Chart(ctx3, {
                 borderWidth: 4,
                 backgroundColor: "transparent",
                 fill: true,
-                data: Object.values(yearlyRevenueType2),
+                data: Object.values(yearlyRevenueActivity),
                 maxBarThickness: 6,
                 pointStyle: "circle",
                 pointHoverRadius: 6,

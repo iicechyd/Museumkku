@@ -139,6 +139,32 @@ class DashboardController extends Controller
     ')
             ->first();
 
+            $yearlyRevenueType2 = [];
+$currentDate = $startMonth->copy();
+
+while ($currentDate <= $endMonth) {
+    $monthStart = $currentDate->copy()->startOfMonth()->format('Y-m-d');
+    $monthEnd = $currentDate->copy()->endOfMonth()->format('Y-m-d');
+
+    $monthLabel = $currentDate->copy()->translatedFormat('M Y'); // เช่น "ต.ค 67"
+
+    $yearlyRevenueType2[$monthLabel] = Bookings::whereHas('activity', function ($query) {
+        $query->where('activity_type_id', 2);
+    })
+    ->join('activities', 'bookings.activity_id', '=', 'activities.activity_id')
+    ->whereBetween('booking_date', [$monthStart, $monthEnd])
+    ->where('bookings.status', 1)
+    ->sum(DB::raw(
+        '(children_qty * children_price) + 
+        (students_qty * student_price) + 
+        (adults_qty * adult_price) + 
+        (disabled_qty * disabled_price) + 
+        (elderly_qty * elderly_price) + 
+        (monk_qty * monk_price)'
+    ));
+
+    $currentDate->addMonth();
+}
         return view('admin.dashboard', compact(
             'activities',
             'totalVisitorsToday',
@@ -150,7 +176,9 @@ class DashboardController extends Controller
             'specialActivities',
             'visitorStats',
             'totalVisitorsPerMonthThisYear',
-            'monthlyRevenueType1'
+            'monthlyRevenueType1',
+            'yearlyRevenueType2'
+
         ));
     }
 }

@@ -218,9 +218,8 @@
                                 min="0" required>
                         </div>
                         <div class="form-group">
-                            <label for="image">รูปภาพ</label>
-                            <input type="file" class="form-control-file" id="image" name="image"
-                                accept="image/*" required>
+                            <label for="images">เลือกรูปภาพ:</label>
+                            <input type="file" name="images[]" multiple>
                         </div>
                         <div class="pt-2">
                             <button type="submit" class="btn btn-primary">บันทึก</button>
@@ -302,9 +301,8 @@
                                 min="0" required>
                         </div>
                         <div class="form-group">
-                            <label for="image">รูปภาพ</label>
-                            <input type="file" class="form-control-file" id="image" name="image"
-                                accept="image/*" required>
+                            <label for="images">เลือกรูปภาพ:</label>
+                            <input type="file" name="images[]" multiple>
                         </div>
 
                         <div class="pt-2">

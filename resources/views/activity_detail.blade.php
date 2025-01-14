@@ -4,6 +4,8 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/activity_detail.css') }}">
+    <style>
+    </style>
 </head>
 
 @section('sidebar')
@@ -14,11 +16,32 @@
                 <div class="card">
                     <div class="row g-0">
                         <div class="col-lg-6 col-md-12 px-3 py-2">
-                            <div class="image "
-                                style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden;">
-                                <img src="{{ asset('storage/' . $activity->image) }}" class="card-img-top"
-                                    style="max-height: 100%; max-width: 100%; object-fit: contain;"
-                                    alt="{{ $activity->activity_name }}">
+                            <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    @foreach ($activity->images as $index => $image)
+                                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                            <div class="image"
+                                                style="width: 620px; height: 400px; display: flex; justify-content: center; align-items: center; overflow: hidden; cursor: pointer;"
+                                                onclick="showLargeImage('{{ asset('storage/' . $image->image_path) }}')">
+                                                <img src="{{ asset('storage/' . $image->image_path) }}"
+                                                    class="d-block w-100"
+                                                    style="max-height: 100%; max-width: 100%; object-fit: contain; border-radius: 15px;" 
+                                                    alt="Image for {{ $activity->activity_name }}">
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <!-- Controls -->
+                                <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel"
+                                    data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel"
+                                    data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-12">
@@ -26,14 +49,6 @@
                                 <h2 class="card-title">{{ $activity->activity_name }}</h2>
                                 <p class="card-text text-muted">{{ $activity->description }}</p>
                                 <div class="mt-3">
-                                    {{-- @if ($activity->subactivities->isNotEmpty())
-                                        <p>หลักสูตร</p>
-                                        <ul>
-                                            @foreach ($activity->subactivities as $subactivity)
-                                                <li>{{ $subactivity->sub_activity_name }}</li>
-                                            @endforeach
-                                        </ul>
-                                    @endif --}}
                                     <p>ราคาเข้าชม</p>
                                     <p>
                                         เด็ก:
@@ -73,29 +88,35 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex gap-2 px-3 py-2">
-                            <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
-                                style="width: 115px; height: 100px;">
-                                <p>115 X 100</p>
-                            </div>
-                            <div class="bg-warning text-white text-center d-flex align-items-center justify-content-center"
-                                style="width: 115px; height: 100px;">
-                                <p>115 X 100</p>
-                            </div>
-                            <div class="bg-success text-white text-center d-flex align-items-center justify-content-center"
-                                style="width: 115px; height: 100px;">
-                                <p>115 X 100</p>
-                            </div>
-                            <div class="bg-info text-white text-center d-flex align-items-center justify-content-center"
-                                style="width: 115px; height: 100px;">
-                                <p>115 X 100</p>
-                            </div>
+                        <div class="d-flex gap-2 px-3 py-2 pb-3">
+                            @foreach ($activity->images as $image)
+                                <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
+                                    style="width: 115px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
+                                    onclick="showLargeImage('{{ asset('storage/' . $image->image_path) }}')">
+                                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="Activity Image"
+                                        class="img-fluid" style="object-fit: cover; width: 100%; height: 100%;">
+                                </div>
+                            @endforeach
+                        </div>
+                        <div id="largeImageContainer" onclick="closeLargeImage()">
+                            <img id="largeImage" src="" alt="Large Image">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function showLargeImage(imageUrl) {
+            var largeImageContainer = document.getElementById('largeImageContainer');
+            var largeImage = document.getElementById('largeImage');
+            largeImage.src = imageUrl;
+            largeImageContainer.style.display = 'flex';
+        }
 
+        function closeLargeImage() {
+            var largeImageContainer = document.getElementById('largeImageContainer');
+            largeImageContainer.style.display = 'none';
+        }
+    </script>
 @endsection

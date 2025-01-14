@@ -19,7 +19,7 @@ class Activity extends Model
         'disabled_price',
         'elderly_price',
         'monk_price',
-        'image',
+        // 'image',
         'max_capacity',
         'status',
         'duration_days',
@@ -45,5 +45,9 @@ class Activity extends Model
     public function subactivities()
     {
         return $this->hasMany(Subactivity::class, 'activity_id');
+    }
+    public function images()
+    {
+        return $this->hasMany(ActivityImages::class, 'activity_id', 'activity_id');
     }
 }

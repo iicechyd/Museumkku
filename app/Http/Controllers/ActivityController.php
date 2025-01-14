@@ -11,13 +11,14 @@ class ActivityController extends Controller
 {
     public function showDetail($activity_id)
     {
-        $activity = Activity::with('subactivities')->findOrFail($activity_id);
+        $activity = Activity::with('images')->findOrFail($activity_id);
         return view('activity_detail', compact('activity'));
     }
 
     public function previewActivity()
     {
-        $activities = Activity::where('activity_type_id', 2)
+        $activities = Activity::with('images')
+            ->where('activity_type_id', 2)
             ->where('status', 'active')
             ->get();
         return view('preview_activity', compact('activities'));
@@ -25,7 +26,8 @@ class ActivityController extends Controller
 
     public function previewGeneral()
     {
-        $activities = Activity::where('activity_type_id', 1)
+        $activities = Activity::with('images')
+            ->where('activity_type_id', 1)
             ->where('status', 'active')
             ->get();
         return view('preview_general', compact('activities'));
@@ -57,8 +59,7 @@ class ActivityController extends Controller
                 'disabled_price' => 'required',
                 'elderly_price' => 'required',
                 'monk_price' => 'required',
-
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ],
             [
                 'activity_name.required' => 'กรุณาป้อนชื่อกิจกรรม',
@@ -69,8 +70,8 @@ class ActivityController extends Controller
                 'disabled_price.required' => 'กรุณาป้อนราคาผู้พิการ',
                 'elderly_price.required' => 'กรุณาป้อนราคาผู้สูงอายุ',
                 'monk_price.required' => 'กรุณาป้อนราคาพระภิกษุสงฆ์ /สามเณร',
-                'image.image' => 'ไฟล์ที่อัปโหลดต้องเป็นรูปภาพ',
-                'image.mimes' => 'รูปภาพต้องเป็นไฟล์ชนิด jpeg, png, jpg, หรือ gif',
+                'images.*.image' => 'ไฟล์ที่อัปโหลดต้องเป็นรูปภาพ',
+                'images.*.mimes' => 'รูปภาพต้องเป็นไฟล์ชนิด jpeg, png, jpg, หรือ gif',
             ]
         );
 
@@ -86,17 +87,23 @@ class ActivityController extends Controller
         $activity->max_capacity = $request->max_capacity;
         $activity->activity_type_id = $request->activity_type_id;
         $activity->status = 'inactive';
-
-        if ($request->hasFile('image')) {
-            $timestamp = now()->format('Ymd_His'); 
-            $extension = $request->file('image')->getClientOriginalExtension();
-            $newFileName = "activity_{$timestamp}." . $extension;
-
-            $imagePath = $request->file('image')->storeAs('images', $newFileName, 'public');
-            $activity->image = $imagePath;
-        }
-
         $activity->save();
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $timestamp = now()->format('Ymd_His');
+                $extension = $image->getClientOriginalExtension();
+                $newFileName = "activity_{$activity->activity_id}_" . uniqid() . '.' . $extension;
+                $imagePath = $image->storeAs('images', $newFileName, 'public');
+
+                DB::table('activity_images')->insert([
+                    'activity_id' => $activity->activity_id,
+                    'image_path' => $imagePath,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
         return redirect('/admin/activity_list')->with('success', 'เพิ่มกิจกรรมเรียบร้อยแล้ว!');
     }
 
@@ -116,16 +123,24 @@ class ActivityController extends Controller
         $activity->elderly_price = $request->elderly_price;
         $activity->monk_price = $request->monk_price;
         $activity->max_capacity = $request->max_capacity;
-
-        if ($request->hasFile('image')) {
-            $timestamp = now()->format('Ymd_His'); 
-            $extension = $request->file('image')->getClientOriginalExtension();
-            $newFileName = "activity_{$timestamp}." . $extension;
-
-            $imagePath = $request->file('image')->storeAs('images', $newFileName, 'public');
-            $activity->image = $imagePath;
-        }
         $activity->save();
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $timestamp = now()->format('Ymd_His');
+                $extension = $image->getClientOriginalExtension();
+                $newFileName = "activity_{$activity->activity_id}_{$timestamp}." . $extension;
+
+                $imagePath = $image->storeAs('images', $newFileName, 'public');
+
+                DB::table('activity_images')->insert([
+                    'activity_id' => $activity->activity_id,
+                    'image_path' => $imagePath,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
         return redirect()->back()->with('success', 'แก้ไขกิจกรรมเรียบร้อยแล้ว');
     }
 
@@ -134,7 +149,6 @@ class ActivityController extends Controller
         $item = Activity::find($activity_id);
         return view('activity_list', [
             'activity' => $item,
-            'image_url' => asset('storage/' . $item->image)
         ]);
     }
 

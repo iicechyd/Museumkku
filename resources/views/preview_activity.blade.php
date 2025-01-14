@@ -3,7 +3,6 @@
 
 <head>
     <link rel="stylesheet" href="{{ asset('css/card.css') }}">
-    {{-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"> --}}
 </head>
 
 @section('content')
@@ -20,7 +19,7 @@
                 <div class="col-md-3">
                     <x-card-group>
                         <x-card title="{{ $item->activity_name }}" text="{{ $item->description }}"
-                            image="{{ asset('storage/' . $item->image) }}"
+                            image="{{ $item->images->isNotEmpty() ? asset('storage/' . $item->images->first()->image_path) : asset('storage/default.jpg') }}"
                             detail="{{ route('activity_detail', ['activity_id' => $item->activity_id]) }}"
                             booking="{{ route('form_bookings.activity', ['activity_id' => $item->activity_id]) }}" />
                     </x-card-group>

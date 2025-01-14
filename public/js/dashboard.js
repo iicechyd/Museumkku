@@ -1,11 +1,25 @@
 document.addEventListener("DOMContentLoaded", function () {
     var ctxBars = document.getElementById("chart-bars").getContext("2d");
-    const totalVisitorsPerMonthThisYear = window.totalVisitorsPerMonthThisYear || [];
+    const totalVisitorsPerMonthThisYear =
+        window.totalVisitorsPerMonthThisYear || [];
 
     new Chart(ctxBars, {
         type: "bar",
         data: {
-            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            labels: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+            ],
             datasets: [
                 {
                     label: "ผู้เข้าชม",
@@ -30,24 +44,25 @@ document.addEventListener("DOMContentLoaded", function () {
                     labels: {
                         color: "#fff",
                         font: {
-                            family: 'Noto Sans Thai',
+                            family: "Noto Sans Thai",
                         },
                     },
                 },
                 tooltip: {
                     callbacks: {
                         label: function (tooltipItem) {
-                            const formattedNumber = new Intl.NumberFormat().format(tooltipItem.raw);
+                            const formattedNumber =
+                                new Intl.NumberFormat().format(tooltipItem.raw);
                             return formattedNumber + " คน";
                         },
                     },
                     titleColor: "#fff",
                     bodyColor: "#fff",
                     titleFont: {
-                        family: 'Noto Sans Thai',
+                        family: "Noto Sans Thai",
                     },
                     bodyFont: {
-                        family: 'Noto Sans Thai',
+                        family: "Noto Sans Thai",
                     },
                 },
             },
@@ -125,7 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     fill: true,
                     data: Object.values(monthlyRevenueType1),
                     maxBarThickness: 6,
-                    pointStyle: 'circle',
+                    pointStyle: "circle",
                     pointHoverRadius: 6,
                     pointHoverBorderColor: "#228B22",
                 },
@@ -141,9 +156,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 tooltip: {
                     callbacks: {
                         label: function (tooltipItem) {
-                            const formattedNumber = new Intl.NumberFormat().format(tooltipItem.raw);
+                            const formattedNumber =
+                                new Intl.NumberFormat().format(tooltipItem.raw);
                             return formattedNumber + " บาท";
                         },
+                    },
+                    titleFont: {
+                        family: "Noto Sans Thai",
+                    },
+                    bodyFont: {
+                        family: "Noto Sans Thai",
                     },
                 },
             },
@@ -219,7 +241,7 @@ new Chart(ctx3, {
                 fill: true,
                 data: Object.values(yearlyRevenueType2),
                 maxBarThickness: 6,
-                pointStyle: 'circle',
+                pointStyle: "circle",
                 pointHoverRadius: 6,
                 pointHoverBorderColor: "#000",
             },
@@ -235,9 +257,17 @@ new Chart(ctx3, {
             tooltip: {
                 callbacks: {
                     label: function (tooltipItem) {
-                        const formattedNumber = new Intl.NumberFormat().format(tooltipItem.raw);
+                        const formattedNumber = new Intl.NumberFormat().format(
+                            tooltipItem.raw
+                        );
                         return formattedNumber + " บาท";
                     },
+                },
+                titleFont: {
+                    family: "Noto Sans Thai",
+                },
+                bodyFont: {
+                    family: "Noto Sans Thai",
                 },
             },
         },
@@ -295,7 +325,13 @@ new Chart(ctx3, {
 
 document.addEventListener("DOMContentLoaded", function () {
     var ctx = document.getElementById("visitorPieChart").getContext("2d");
-    var total = children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty;
+    var total =
+        children_qty +
+        students_qty +
+        adults_qty +
+        disabled_qty +
+        elderly_qty +
+        monk_qty;
     var visitorPieChart = new Chart(ctx, {
         type: "pie",
         data: {

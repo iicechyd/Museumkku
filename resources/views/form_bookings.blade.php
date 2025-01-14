@@ -370,6 +370,29 @@
         </div>
     </div>
 
+    <!-- Modal Calendar -->
+    <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eventModalLabel">รายละเอียดการจอง</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 id="eventTitle"></h4>
+                    <p><strong id="eventTimeslotLabel"></strong>
+                    <p id="eventTimeslot"></p>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <script src="{{ asset('js/form_bookings.js') }}"></script>
     @if (session('showSuccessModal'))
         <script>
             window.addEventListener('DOMContentLoaded', function() {
@@ -378,10 +401,6 @@
             });
         </script>
     @endif
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-    <script src="{{ asset('js/form_bookings.js') }}"></script>
-    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let subactivities = @json($subactivities);

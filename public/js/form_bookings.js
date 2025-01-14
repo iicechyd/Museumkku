@@ -250,12 +250,11 @@ document.addEventListener('DOMContentLoaded', function () {
             if (eventTitle.includes("จำนวนผู้เข้าชม")) {
                 document.getElementById("eventTitle").innerText = eventTitle;
         
-                var timeslotDetails = eventProps.booking_details || [];
+                var timeslotDetails = Object.values(eventProps.booking_details || {});
         
-                // Group time slots by activity name and start_time, then sum total_approved
                 var groupedByActivity = timeslotDetails.reduce(function (acc, detail) {
                     var activityName = detail.activity_name || "ไม่ระบุชื่อกิจกรรม";
-                    var startTime = detail.start_time.slice(0, 5); // Remove seconds (HH:mm)
+                    var startTime = detail.start_time.slice(0, 5);
         
                     if (!acc[activityName]) {
                         acc[activityName] = {};
@@ -268,7 +267,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     return acc;
                 }, {});
         
-                // Format the grouped data into a string
                 var timeslotText = Object.keys(groupedByActivity).map(function (activityName) {
                     var slots = Object.keys(groupedByActivity[activityName])
                         .map(function (startTime) {

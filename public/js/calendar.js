@@ -61,12 +61,12 @@ document.addEventListener("DOMContentLoaded", function () {
         
             var eventTitle = info.event.title || "";
             var eventProps = info.event.extendedProps || {};
-        
+
             if (eventTitle.includes("จำนวนผู้เข้าชม")) {
                 document.getElementById("eventTitle").innerText = eventTitle;
         
-                var timeslotDetails = eventProps.booking_details || [];
-        
+                var timeslotDetails = Object.values(eventProps.booking_details || {});
+    
                 var groupedByActivity = timeslotDetails.reduce(function (acc, detail) {
                     var activityName = detail.activity_name || "ไม่ระบุชื่อกิจกรรม";
                     var startTime = detail.start_time.slice(0, 5);
@@ -117,6 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     document.getElementById("eventModal")
                 );
                 myModal.show();
+                
             }
         },
         eventDidMount: function (info) {

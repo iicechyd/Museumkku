@@ -58,11 +58,11 @@ class DashboardController extends Controller
 
         $monthlyRevenueType1 = [];
         $currentDate = $startMonth->copy();
-        
+
         while ($currentDate <= $endMonth) {
             $monthStart = $currentDate->copy()->startOfMonth()->format('Y-m-d');
             $monthEnd = $currentDate->copy()->endOfMonth()->format('Y-m-d');
-            
+
             $monthLabel = $currentDate->copy()->translatedFormat('M Y'); // เช่น "ต.ค 67"
 
             $monthlyRevenueType1[$monthLabel] = Bookings::whereHas('activity', function ($query) {
@@ -77,7 +77,8 @@ class DashboardController extends Controller
                     (adults_qty * adult_price) + 
                     (disabled_qty * disabled_price) + 
                     (elderly_qty * elderly_price) + 
-                    (monk_qty * monk_price)'));
+                    (monk_qty * monk_price)'
+                ));
             $currentDate->addMonth();
         }
 
@@ -87,14 +88,6 @@ class DashboardController extends Controller
             $endOfMonth = Carbon::createFromDate($currentYear, $month, 1)->endOfMonth();
 
             $totalVisitorsPerMonthThisYear[$month] = Bookings::whereBetween('booking_date', [$startOfMonth, $endOfMonth])
-                ->where('status', 1)
-                ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
-        }
-
-        $totalVisitorsThisYear = [];
-        foreach ($activities as $activity) {
-            $totalVisitorsThisYear[$activity->activity_id] = Bookings::where('activity_id', $activity->activity_id)
-                ->whereBetween('booking_date', [$yearStart, $yearEnd])
                 ->where('status', 1)
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
         }

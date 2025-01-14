@@ -122,11 +122,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     var ctxLine = document.getElementById("chart-line").getContext("2d");
-    const monthlyRevenueType1 = window.monthlyRevenueType1 || {};
+    const yearlyRevenueType1 = window.yearlyRevenueType1 || {};
     new Chart(ctxLine, {
         type: "line",
         data: {
-            labels: Object.keys(monthlyRevenueType1),
+            labels: Object.keys(yearlyRevenueType1),
             datasets: [
                 {
                     label: "รายได้ทั้งหมด",
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     borderColor: "rgba(255, 255, 255, .8)",
                     backgroundColor: "transparent",
                     fill: true,
-                    data: Object.values(monthlyRevenueType1),
+                    data: Object.values(yearlyRevenueType1),
                     maxBarThickness: 6,
                     pointStyle: "circle",
                     pointHoverRadius: 6,

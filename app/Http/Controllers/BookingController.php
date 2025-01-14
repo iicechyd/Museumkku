@@ -254,7 +254,6 @@ class BookingController extends Controller
                 'new_status' => $newStatus,
                 'comments' => $request->input('comments', null),
                 'number_of_visitors' => $request->input('number_of_visitors', null),
-
                 'changed_by' => Auth::user()->name,
             ]);
         }

@@ -32,7 +32,8 @@
                                                         style="color: {{ $activity->activity_id == 1 ? '#489085' : ($activity->activity_id == 2 ? '#C06628' : 'black') }};">
                                                         {{ $activity->activity_name }}</p>
                                                     <h4 class="mb-0">
-                                                        {{ $totalVisitorsToday[$activity->activity_id] ?? 0 }} คน</h4>
+                                                        {{ $totalVisitorsToday }} คน
+                                                    </h4>
                                                 </div>
                                             </div>
                                             <hr class="dark horizontal my-0">
@@ -58,7 +59,7 @@
                                                         style="color: {{ $activity->activity_id == 1 ? '#489085' : ($activity->activity_id == 2 ? '#C06628' : 'black') }};">
                                                         {{ $activity->activity_name }}</p>
                                                     <h4 class="mb-0">
-                                                        {{ $totalVisitorsThisWeek[$activity->activity_id] ?? 0 }} คน</h4>
+                                                        {{ $totalVisitorsThisWeek }} คน</h4>
                                                 </div>
                                             </div>
                                             <hr class="dark horizontal my-0">
@@ -84,7 +85,7 @@
                                                         style="color: {{ $activity->activity_id == 1 ? '#489085' : ($activity->activity_id == 2 ? '#C06628' : 'black') }};">
                                                         {{ $activity->activity_name }}</p>
                                                     <h4 class="mb-0">
-                                                        {{ $totalVisitorsThisMonth[$activity->activity_id] ?? 0 }} คน</h4>
+                                                        {{ $totalVisitorsThisMonth }} คน</h4>
                                                 </div>
                                             </div>
                                             <hr class="dark horizontal my-0">
@@ -110,7 +111,7 @@
                                                         style="color: {{ $activity->activity_id == 1 ? '#489085' : ($activity->activity_id == 2 ? '#C06628' : 'black') }};">
                                                         {{ $activity->activity_name }}</p>
                                                     <h4 class="mb-0">
-                                                        {{ $totalVisitorsThisYear[$activity->activity_id] ?? 0 }} คน</h4>
+                                                        {{ $totalVisitorsThisYear }} คน</h4>
                                                 </div>
                                             </div>
                                             <hr class="dark horizontal my-0">
@@ -199,7 +200,7 @@
                     </div>
                 </div>
             </div>
-            <h4 class="mb-4">จำนวนผู้เข้าชมตามการจอง</h4>
+            <h4 class="mb-4">จำนวนผู้เข้าชมตามการจองปีนี้</h4>
             <div class="row mb-4">
                 @foreach ($activities->whereIn('activity_id', [1, 2]) as $activity)
                     <div class="col-md-3">
@@ -306,7 +307,7 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="card">
                         <div class="card-header pb-0">
-                            <h6>สถิติประเภทผู้เข้าชม</h6>
+                            <h6>สถิติประเภทผู้เข้าชมปีนี้</h6>
                         </div>
                     </div>
                     <div class="card align-items-center">
@@ -328,7 +329,7 @@
                 var elderly_qty = {{ $visitorStats->elderly_qty ?? 0 }};
                 var monk_qty = {{ $visitorStats->monk_qty ?? 0 }};
                 var yearlyRevenueType2 = @json($yearlyRevenueType2);
-                window.monthlyRevenueType1 = @json($monthlyRevenueType1);
+                window.yearlyRevenueType1 = @json($yearlyRevenueType1);
                 window.totalVisitorsPerMonthThisYear = @json(array_values($totalVisitorsPerMonthThisYear));
             </script>
             <script src="{{ asset('js/dashboard.js') }}"></script>

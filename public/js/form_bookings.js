@@ -1,3 +1,30 @@
+document.addEventListener('DOMContentLoaded', function() {
+    let subactivities = window.subactivities;
+    let subactivitySection = document.getElementById('subactivity-section');
+
+    if (subactivities.length > 0) {
+        subactivitySection.style.display = 'block';
+    } else {
+        subactivitySection.style.display = 'none';
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    let maxSubactivities = window.maxSubactivities;
+    let checkboxes = document.querySelectorAll('input[name="sub_activity_id[]"]');
+
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            let selectedCount = document.querySelectorAll(
+                'input[name="sub_activity_id[]"]:checked').length;
+            if (selectedCount > maxSubactivities) {
+                alert(`คุณสามารถเลือกได้สูงสุด ${maxSubactivities} หลักสูตร`);
+                checkbox.checked = false;
+            }
+        });
+    });
+});
+
 function fetchActivityPrice() {
     const activityId = document.getElementById("fk_activity_id").value;
     if (activityId) {
@@ -88,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "123/45 หมู่ 2 บ้านหมีน้อย";
     document.getElementById("visitorName").value = "นางสาวชญาดา วิชัยโย";
     document.getElementById("visitorEmail").value = "iicechyd.gaming@gmail.com";
-    document.getElementById("tel").value = "0967121279";
+    document.getElementById("tel").value = "0987654321";
     calculateTotal();
 });
 

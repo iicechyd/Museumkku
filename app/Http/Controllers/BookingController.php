@@ -469,7 +469,6 @@ class BookingController extends Controller
             'subactivities' => $subactivities,
             'hasSubactivities' => $hasSubactivities,
             'maxSubactivities' => $selectedActivity->max_subactivities,
-
         ]);
     }
 

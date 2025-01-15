@@ -37,6 +37,14 @@
                 {{ session('error') }}
             </div>
         @endif
+        @if (session('showSuccessModal'))
+            <script>
+                window.addEventListener('DOMContentLoaded', function() {
+                    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                    successModal.show();
+                });
+            </script>
+        @endif
 
         <h2 class="text-center py-3"
             style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); ">
@@ -106,6 +114,7 @@
                                 @endforeach
                             </ul>
                         </div>
+                        <p>เลือกได้สูงสุด {{ $maxSubactivities }} หลักสูตร</p>
                     </div>
                 @endif
 
@@ -370,64 +379,11 @@
         </div>
     </div>
 
-    <!-- Modal Calendar -->
-    <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="eventModalLabel">รายละเอียดการจอง</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h4 id="eventTitle"></h4>
-                    <p><strong id="eventTimeslotLabel"></strong>
-                    <p id="eventTimeslot"></p>
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <script>
+        window.subactivities = @json($subactivities);
+        window.maxSubactivities = {{ $maxSubactivities }};
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/form_bookings.js') }}"></script>
-    @if (session('showSuccessModal'))
-        <script>
-            window.addEventListener('DOMContentLoaded', function() {
-                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                successModal.show();
-            });
-        </script>
-    @endif
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let subactivities = @json($subactivities);
-            let subactivitySection = document.getElementById('subactivity-section');
-
-            if (subactivities.length > 0) {
-                subactivitySection.style.display = 'block';
-            } else {
-                subactivitySection.style.display = 'none';
-            }
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let maxSubactivities = {{ $maxSubactivities }};
-            let checkboxes = document.querySelectorAll('input[name="sub_activity_id[]"]');
-
-            checkboxes.forEach(function(checkbox) {
-                checkbox.addEventListener('change', function() {
-                    let selectedCount = document.querySelectorAll(
-                        'input[name="sub_activity_id[]"]:checked').length;
-                    if (selectedCount > maxSubactivities) {
-                        alert(`คุณสามารถเลือกได้สูงสุด ${maxSubactivities} กิจกรรมย่อย`);
-                        checkbox.checked = false;
-                    }
-                });
-            });
-        });
-    </script>
 @endsection

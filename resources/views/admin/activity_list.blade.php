@@ -112,10 +112,10 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                            <div class="row">
-                                                @foreach ($item->images as $image)
-                                                    <div class="col-md-4 text-center">
-                                                        <div class="pt-3">
+                                        <div class="row">
+                                            @foreach ($item->images as $image)
+                                                <div class="col-md-4 text-center">
+                                                    <div class="pt-3">
                                                         <img src="{{ Storage::url($image->image_path) }}"
                                                             class="img-fluid mb-2 image-thumbnail" alt="Activity Image">
                                                         <form
@@ -128,9 +128,9 @@
                                                             </button>
                                                         </form>
                                                     </div>
-                                                    </div>
-                                                @endforeach
-                                            </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -205,12 +205,13 @@
                         @csrf
                         <div class="form-group">
                             <label for="activity_name">ชื่อกิจกรรม</label>
-                            <input type="text" class="form-control" id="activity_name" name="activity_name" 
-                            placeholder="กรุณากรอกชื่อกิจกรรม" required>
+                            <input type="text" class="form-control" id="activity_name" name="activity_name"
+                                placeholder="กรุณากรอกชื่อกิจกรรม" required>
                         </div>
                         <div class="form-group">
                             <label for="activity_type_id">ประเภทกิจกรรม</label>
-                            <select class="form-control" id="activity_type_id" name="activity_type_id" placeholder="กรุณากรอกประเภทกิจกรรม" required>
+                            <select class="form-control" id="activity_type_id" name="activity_type_id"
+                                placeholder="กรุณากรอกประเภทกิจกรรม" required>
                                 <option value="">เลือกประเภทกิจกรรม</option>
                                 @foreach ($activityTypes as $type)
                                     <option value="{{ $type->activity_type_id }}">{{ $type->type_name }}</option>
@@ -219,8 +220,8 @@
                         </div>
                         <div class="form-group">
                             <label for="description">คำอธิบายกิจกรรม</label>
-                            <textarea class="form-control" id="description" name="description" rows="3"
-                            placeholder="กรุณากรอกคำอธิบาย" required></textarea>
+                            <textarea class="form-control" id="description" name="description" rows="3" placeholder="กรุณากรอกคำอธิบาย"
+                                required></textarea>
                         </div>
                         <div class="form-group">
                             <label for="children_price">ราคาเด็ก</label>
@@ -250,13 +251,12 @@
                         <div class="form-group">
                             <label for="monk_price">ราคาพระภิกษุสงฆ์ /สามเณร</label>
                             <input type="number" class="form-control" id="monk_price" name="monk_price" min="0"
-                            placeholder="กรุณาระบุราคา" required>
+                                placeholder="กรุณาระบุราคา" required>
                         </div>
                         <div class="form-group">
                             <label for="max_capacity">ความจุคนต่อรอบการเข้าชม</label>
                             <input type="number" class="form-control" id="max_capacity" name="max_capacity"
-                                min="0" placeholder="กรุณาระบุความจุผู้เข้าชม" required
-                                >
+                                min="0" placeholder="กรุณาระบุความจุผู้เข้าชม" required>
                         </div>
                         <div class="form-group pt-2">
                             <label for="images">เลือกรูปภาพ:</label>
@@ -300,12 +300,12 @@
                         <div class="form-group">
                             <label for="edit_activity_name">ชื่อกิจกรรม</label>
                             <input type="text" class="form-control" id="edit_activity_name" name="activity_name"
-                            placeholder="กรุณากรอกชื่อกิจกรรม" required>
+                                placeholder="กรุณากรอกชื่อกิจกรรม" required>
                         </div>
                         <div class="form-group">
                             <label for="edit_description">คำอธิบายกิจกรรม</label>
-                            <textarea class="form-control" id="edit_description" name="description" rows="3" 
-                            placeholder="กรุณากรอกคำอธิบาย" required>
+                            <textarea class="form-control" id="edit_description" name="description" rows="3"
+                                placeholder="กรุณากรอกคำอธิบาย" required>
                         </textarea>
                         </div>
                         <div class="form-group">
@@ -341,13 +341,10 @@
                         <div class="form-group">
                             <label for="edit_max_capacity">ความจุคนต่อรอบการเข้าชม</label>
                             <input type="number" class="form-control" id="edit_max_capacity" name="max_capacity"
-                                min="0" required     
-                                   @if(is_null($item->max_capacity))
-                                placeholder="ไม่จำกัดจำนวนคน"
+                                min="0" required
+                                @if (is_null($item->max_capacity)) placeholder="ไม่จำกัดจำนวนคน"
                             @else
-                                value="{{ $item->max_capacity }}"
-                            @endif
-                            >
+                                value="{{ $item->max_capacity }}" @endif>
                         </div>
                         <div class="form-group pt-2">
                             <label for="images">เลือกรูปภาพ:</label>
@@ -362,8 +359,6 @@
             </div>
         </div>
     </div>
-
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

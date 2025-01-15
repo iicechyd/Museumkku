@@ -21,7 +21,6 @@ return new class extends Migration {
             $table->integer('monk_price')->nullable()->default(0);
             $table->integer('max_capacity')->nullable();
             $table->string('status')->default('active');
-            // $table->string('image')->nullable();
             $table->integer('duration_days')->nullable();
             $table->integer('max_subactivities')->default(0);
 

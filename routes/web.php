@@ -93,3 +93,7 @@ Route::post('/UpdateActivity', [ActivityController::class, 'updateActivity'])->n
 Route::get('/getActivityPrice/{activity_id}', [ActivityController::class, 'getActivityPrice']);
 Route::get('activity/toggle-status/{id}', [ActivityController::class, 'toggleStatus'])->name('toggle.status');
 Route::post('activity/toggle-status/{id}', [ActivityController::class, 'toggleStatus'])->name('toggle.status');
+
+
+Route::get('/admin/activity_images/{activity_id}', [ActivityController::class, 'getImages']);
+Route::get('/admin/activity/{activity_id}/images', [ActivityController::class, 'getImages']);

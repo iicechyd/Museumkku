@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityImages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Activity;
 use App\Models\ActivityType;
+use Illuminate\Support\Facades\Storage;
 
 class ActivityController extends Controller
 {
@@ -35,11 +37,23 @@ class ActivityController extends Controller
 
     function showListActivity()
     {
-        $requestListActivity = Activity::with('activityType')->paginate(4);
+        $requestListActivity = Activity::with(['activityType', 'images'])->paginate(4);
         $activityTypes = ActivityType::all();
-
         return view('admin.activity_list', compact('requestListActivity', 'activityTypes'));
     }
+
+    public function getImages($activity_id)
+{
+    $activity = Activity::with('images')->findOrFail($activity_id);
+
+    $images = $activity->images->map(function($image) {
+        return [
+            'url' => asset('storage/' . $image->image_path),
+        ];
+    });
+
+    return response()->json(['images' => $images]);
+}
 
     function delete($activity_id)
     {
@@ -47,6 +61,7 @@ class ActivityController extends Controller
         return redirect('/admin/activity_list');
     }
 
+    
     function InsertActivity(Request $request)
     {
         $request->validate(
@@ -129,8 +144,7 @@ class ActivityController extends Controller
             foreach ($request->file('images') as $image) {
                 $timestamp = now()->format('Ymd_His');
                 $extension = $image->getClientOriginalExtension();
-                $newFileName = "activity_{$activity->activity_id}_{$timestamp}." . $extension;
-
+                $newFileName = "activity_{$activity->activity_id}_" . uniqid() . '.' . $extension;
                 $imagePath = $image->storeAs('images', $newFileName, 'public');
 
                 DB::table('activity_images')->insert([

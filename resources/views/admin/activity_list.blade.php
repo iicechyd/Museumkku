@@ -36,9 +36,10 @@
                         <td>{{ $item->activityType ? $item->activityType->type_name : 'N/A' }}</td>
                         <td class="long-cell">{{ $item->description }}</td>
                         <td>
-                            @if ($item->image)
-                                <img src="{{ asset('storage/' . $item->image) }}" alt="Image of {{ $item->activity_name }}"
-                                    width="150">
+                            @if ($item->images->isNotEmpty())
+                                <img src="{{ asset('storage/' . $item->images->first()->image_path) }}"
+                                    alt="Image of {{ $item->activity_name }}" width="150" class="image-thumbnail"
+                                    data-toggle="modal" data-target="#imageModal" data-activity-id="{{ $item->activity_id }}">
                             @else
                                 <p>ไม่มีรูปภาพ</p>
                             @endif
@@ -300,6 +301,7 @@
                             <input type="number" class="form-control" id="edit_max_capacity" name="max_capacity"
                                 min="0" required>
                         </div>
+
                         <div class="form-group">
                             <label for="images">เลือกรูปภาพ:</label>
                             <input type="file" name="images[]" multiple>
@@ -313,9 +315,50 @@
             </div>
         </div>
     </div>
+<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">รูปภาพกิจกรรม</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-wrap" id="modal-images">
+            </div>
+        </div>
+    </div>
+</div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/activity_list.js') }}"></script>
-
+    <script>
+        $(document).ready(function() {
+            $('#imageModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var activityId = button.data('activity-id');
+    
+                $('#modal-images').empty();
+    
+                $.ajax({
+                    url: '/admin/activity/' + activityId + '/images',
+                    method: 'GET',
+                    success: function(data) {
+                        if (data.images.length > 0) {
+                            data.images.forEach(function(image) {
+                                var imgElement = '<div class="p-2" style="max-width: 300px;"><img src="' + image.url + '" alt="Image" class="img-fluid" style="max-width: 100%; height: auto;"></div>';
+                                $('#modal-images').append(imgElement);
+                            });
+                        } else {
+                            $('#modal-images').append('<p>No images available for this activity.</p>');
+                        }
+                    },
+                    error: function() {
+                        $('#modal-images').append('<p>Error loading images.</p>');
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

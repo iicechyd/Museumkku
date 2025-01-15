@@ -8,15 +8,14 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        <link rel="stylesheet"
-            href="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.css">
+        {{-- Dependencies Thailand location  --}}
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-        <script type="text/javascript"
-            src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/JQL.min.js"></script>
-        <script type="text/javascript"
-            src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/typeahead.bundle.js"></script>
-        <script type="text/javascript"
-            src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
+        <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/JQL.min.js"></script>
+        <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/typeahead.bundle.js"></script>
+        {{-- jquery.Thailand.js --}}
+        <link rel="stylesheet" href="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.css">
+        <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
+        
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/th.global.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
@@ -171,8 +170,8 @@
                 <div class="col-md-2">
                     <label for="subdistrict" class="form-label">แขวน/ตำบล</label>
                     <input type="text" class="form-control @error('subdistrict') is-invalid @enderror"
-                        id="subdistrict" name="subdistrict" placeholder="กรอกแขวน/ตำบล"
-                        value="{{ old('subdistrict') }}" required>
+                        id="subdistrict" name="subdistrict"
+                        value="{{ old('subdistrict') }}" disabled required>
                     @error('subdistrict')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -183,7 +182,7 @@
                 <div class="col-md-3">
                     <label for="district" class="form-label">เขต/อำเภอ</label>
                     <input type="text" class="form-control @error('district') is-invalid @enderror" id="district"
-                        name="district" placeholder="กรอกเขต/อำเภอ" value="{{ old('district') }}" required>
+                        name="district" value="{{ old('district') }}" disabled required>
                     @error('district')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -194,7 +193,7 @@
                 <div class="col-md-2">
                     <label for="province" class="form-label">จังหวัด</label>
                     <input type="text" class="form-control @error('province') is-invalid @enderror" id="province"
-                        name="province" placeholder="กรอกจังหวัด" value="{{ old('province') }}" required>
+                        name="province" value="{{ old('province') }}" disabled required>
                     @error('inputProvince')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -378,6 +377,7 @@
         </div>
     </div>
 
+    
     <script>
         window.subactivities = @json($subactivities);
         window.maxSubactivities = {{ $maxSubactivities }};

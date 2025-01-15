@@ -9,7 +9,7 @@ function updateEndTime(startTimeInput) {
         const [hours, minutes] = startTime.split(":");
         startDate.setHours(hours);
         startDate.setMinutes(minutes);
-        startDate.setMinutes(startDate.getMinutes() + 30); // Add 30 minutes
+        startDate.setMinutes(startDate.getMinutes() + 30);
 
         const formattedHours = String(startDate.getHours()).padStart(2, "0");
         const formattedMinutes = String(startDate.getMinutes()).padStart(
@@ -29,7 +29,7 @@ function updateInsertEndTime(startTimeInput) {
         const [hours, minutes] = startTime.split(":");
         startDate.setHours(hours);
         startDate.setMinutes(minutes);
-        startDate.setMinutes(startDate.getMinutes() + 30); // Add 30 minutes
+        startDate.setMinutes(startDate.getMinutes() + 30);
 
         const formattedHours = String(startDate.getHours()).padStart(2, "0");
         const formattedMinutes = String(startDate.getMinutes()).padStart(

@@ -64,3 +64,20 @@ td.custom-td {
     background-color: #fff; 
     z-index: 1;
 }
+.flatpickr-day.disabled-day {
+    color: #ddb1b1  !important;
+    opacity: 0.5 !important;
+    font-weight: bold !important; 
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+  }
+  
+  .custom-gray-text {
+    color: gray;
+  }
+  .new-line {
+    display: block;
+  }
+  .indent-line {
+    margin-left: 1em;
+  }

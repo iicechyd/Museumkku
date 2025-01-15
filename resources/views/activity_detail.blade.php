@@ -88,10 +88,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex gap-2 px-3 py-2 pb-3">
+                        <div class="d-flex gap-2 px-4 py-2 pb-3">
                             @foreach ($activity->images as $image)
                                 <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
-                                    style="width: 115px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
+                                    style="width: 114px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
                                     onclick="showLargeImage('{{ asset('storage/' . $image->image_path) }}')">
                                     <img src="{{ asset('storage/' . $image->image_path) }}" alt="Activity Image"
                                         class="img-fluid" style="object-fit: cover; width: 100%; height: 100%;">

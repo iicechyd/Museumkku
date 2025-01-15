@@ -347,7 +347,7 @@
                             </button>
                         </div>
                         <div class="modal-body text-center">
-                            กรุณารอการติดต่อกลับจากเจ้าหน้าที่ทางอีเมล ภายใน 24 ชั่วโมง หากมีข้อสงสัยติดต่อ 096-XXX-XXXX
+                            กรุณารอการติดต่อกลับจากเจ้าหน้าที่ทางอีเมล ภายใน 24 ชั่วโมง<br> หากมีข้อสงสัย กรุณาติดต่อ 096-XXX-XXXX เจ้าหน้าที่ฝ่ายกิจกรรม
                         </div>
                         <div class="modal-footer">
                             <a href="/checkBookingStatus" class="btn btn-primary">ตรวจสอบสถานะการจอง</a>

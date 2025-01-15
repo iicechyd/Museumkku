@@ -42,25 +42,20 @@ class ActivityController extends Controller
         return view('admin.activity_list', compact('requestListActivity', 'activityTypes'));
     }
 
-    public function getImages($activity_id)
-{
-    $activity = Activity::with('images')->findOrFail($activity_id);
-
-    $images = $activity->images->map(function($image) {
-        return [
-            'url' => asset('storage/' . $image->image_path),
-        ];
-    });
-
-    return response()->json(['images' => $images]);
-}
-
     function delete($activity_id)
     {
         DB::table('activities')->where('activity_id', $activity_id)->delete();
         return redirect('/admin/activity_list');
     }
 
+    public function deleteImage($image_id)
+    {
+        $image = ActivityImages::findOrFail($image_id);
+        Storage::disk('public')->delete($image->image_path);
+        $image->delete();
+    
+        return redirect()->back()->with('success', 'ลบรูปภาพเรียบร้อยแล้ว');
+    }
     
     function InsertActivity(Request $request)
     {

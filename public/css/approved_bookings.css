@@ -188,3 +188,15 @@ td.custom-td {
 .btn-outline-primary:active {
     color: white;
 }
+.modal-header .close {
+    font-size: 1.5rem;
+    color: #ff0000;
+    opacity: 1;
+    background: transparent;
+    border: none;
+}
+
+.modal-header .close:hover, .modal-header .close:focus {
+    color: #d70202;
+    text-decoration: none;
+}

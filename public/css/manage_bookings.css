@@ -24,7 +24,6 @@ body, .table-heading, .table-responsive table {
 
 table {
     min-width: 100%;
-
 }
 
 th,td {
@@ -44,28 +43,6 @@ th {
     color: black;
 }
 
-th:last-child {
-    border: 0;
-}
-
-.resize-handle {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    background: black;
-    opacity: 0;
-    width: 3px;
-    cursor: col-resize;
-}
-
-.resize-handle:hover, .header--being-resized .resize-handle {
-    opacity: 0.5;
-}
-
-th:hover .resize-handle {
-    opacity: 0.3;
-}
 
 td {
     padding-top: 10px;
@@ -207,4 +184,17 @@ td.custom-td {
     font-weight: 600;
     font-size: 14px;
     border: 2px solid #2667ff;
+}
+
+.modal-header .close {
+    font-size: 1.5rem;
+    color: #ff0000;
+    opacity: 1;
+    background: transparent;
+    border: none;
+}
+
+.modal-header .close:hover, .modal-header .close:focus {
+    color: #d70202;
+    text-decoration: none;
 }

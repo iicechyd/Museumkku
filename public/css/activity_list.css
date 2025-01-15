@@ -115,3 +115,35 @@ td.custom-td {
     cursor: pointer;
     color: #6c757d;
 }
+
+.image-thumbnail {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px; /* เว้นระยะระหว่างรูปภาพและปุ่มลบ */
+}
+
+.text-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-button {
+    margin-top: 5px;
+}
+
+.modal-header .close {
+    font-size: 1.5rem;
+    color: #ff0000;
+    opacity: 1;
+    background: transparent;
+    border: none;
+}
+
+.modal-header .close:hover, .modal-header .close:focus {
+    color: #d70202;
+    text-decoration: none;
+}

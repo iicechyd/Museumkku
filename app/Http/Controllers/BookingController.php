@@ -386,7 +386,7 @@ class BookingController extends Controller
                         return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
                     }
                     $conflictingBooking = Bookings::join('timeslots', 'bookings.timeslots_id', '=', 'timeslots.timeslots_id')
-                        ->where('bookings.activity_id', 3) // ตรวจสอบกิจกรรม activity_id = 3
+                        ->where('bookings.activity_id', 3)
                         ->where('bookings.booking_date', $formattedDate)
                         ->where(function ($query) use ($timeslot) {
                             $query->whereBetween('timeslots.start_time', [$timeslot->start_time, $timeslot->end_time])

@@ -13,7 +13,11 @@
             {{ session('success') }}
         </div>
     @endif
-
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
     @if (count($requestListActivity) > 0)
         <div class="container">
             <h1 class="table-heading text-center">รายละเอียดกิจกรรม</h1>
@@ -36,15 +40,6 @@
                         <td>{{ $item->activityType ? $item->activityType->type_name : 'N/A' }}</td>
                         <td class="long-cell">{{ $item->description }}</td>
                         <td>
-                            @if ($item->images->isNotEmpty())
-                                <img src="{{ asset('storage/' . $item->images->first()->image_path) }}"
-                                    alt="Image of {{ $item->activity_name }}" width="150" class="image-thumbnail"
-                                    data-toggle="modal" data-target="#imageModal" data-activity-id="{{ $item->activity_id }}">
-                            @else
-                                <p>ไม่มีรูปภาพ</p>
-                            @endif
-                        </td>
-                        <td>
                             @if ($item->max_capacity === null)
                                 ไม่จำกัดจำนวนคน
                             @else
@@ -52,10 +47,19 @@
                             @endif
                         </td>
                         <td>
-                            <button type="button" class="btn btn-info text-white" data-toggle="modal"
-                                data-target="#PricesModal_{{ $item->activity_id }}">
+                            <a href="#PricesModal_{{ $item->activity_id }}" class="text-blue-500" data-toggle="modal">
                                 แสดงราคา
-                            </button>
+                            </a>
+                        </td>
+                        <td>
+                            @if ($item->images->isNotEmpty())
+                                <button type="button" class="btn btn-light text-black border" data-toggle="modal"
+                                    data-target="#ImagesModal_{{ $item->activity_id }}">
+                                    <i class="fa-regular fa-images"></i>
+                                </button>
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
                         </td>
                         <td>
                             <ul class="list-inline m-0">
@@ -71,8 +75,7 @@
                                         data-disabled_price="{{ $item->disabled_price }}"
                                         data-elderly_price="{{ $item->elderly_price }}"
                                         data-monk_price="{{ $item->monk_price }}"
-                                        data-max_capacity="{{ $item->max_capacity }}"
-                                        data-image="{{ asset('storage/' . $item->image) }}">
+                                        data-max_capacity="{{ $item->max_capacity }}">
                                         <i class="fa fa-edit"></i>
                                     </button>
                                 </li>
@@ -87,7 +90,7 @@
                                 </li>
                             </ul>
                         </td>
-                        <td class="text-center" data-name="{{ $item->activity_name }}">
+                        <td data-name="{{ $item->activity_name }}">
                             <a href="javascript:void(0);" class="toggle-status" data-id="{{ $item->activity_id }}"
                                 data-status="{{ $item->status }}">
                                 @if ($item->status === 'active')
@@ -97,6 +100,41 @@
                                 @endif
                             </a>
                         </td>
+                        <!-- Modal แสดงรูปภาพ -->
+                        <div class="modal fade" id="ImagesModal_{{ $item->activity_id }}" tabindex="-1" role="dialog"
+                            aria-labelledby="ImagesModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="ImagesModalLabel">รูปภาพของ {{ $item->activity_name }}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                            <div class="row">
+                                                @foreach ($item->images as $image)
+                                                    <div class="col-md-4 text-center">
+                                                        <div class="pt-3">
+                                                        <img src="{{ Storage::url($image->image_path) }}"
+                                                            class="img-fluid mb-2 image-thumbnail" alt="Activity Image">
+                                                        <form
+                                                            action="{{ route('deleteImage', ['image_id' => $image->image_id]) }}"
+                                                            method="POST" onsubmit="return confirm('ยืนยันการลบรูปภาพนี้?')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger btn-sm delete-button">
+                                                                ลบรูปภาพ <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Modal สำหรับแสดงราคา -->
                         <div class="modal fade" id="PricesModal_{{ $item->activity_id }}" tabindex="-1" role="dialog"
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -167,58 +205,60 @@
                         @csrf
                         <div class="form-group">
                             <label for="activity_name">ชื่อกิจกรรม</label>
-                            <input type="text" class="form-control" id="activity_name" name="activity_name" required>
+                            <input type="text" class="form-control" id="activity_name" name="activity_name" 
+                            placeholder="กรุณากรอกชื่อกิจกรรม" required>
                         </div>
                         <div class="form-group">
                             <label for="activity_type_id">ประเภทกิจกรรม</label>
-                            <select class="form-control" id="activity_type_id" name="activity_type_id" required>
+                            <select class="form-control" id="activity_type_id" name="activity_type_id" placeholder="กรุณากรอกประเภทกิจกรรม" required>
                                 <option value="">เลือกประเภทกิจกรรม</option>
                                 @foreach ($activityTypes as $type)
                                     <option value="{{ $type->activity_type_id }}">{{ $type->type_name }}</option>
                                 @endforeach
                             </select>
                         </div>
-
                         <div class="form-group">
                             <label for="description">คำอธิบายกิจกรรม</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                            <textarea class="form-control" id="description" name="description" rows="3"
+                            placeholder="กรุณากรอกคำอธิบาย" required></textarea>
                         </div>
                         <div class="form-group">
                             <label for="children_price">ราคาเด็ก</label>
                             <input type="number" class="form-control" id="children_price" name="children_price"
-                                min="0" required>
+                                min="0" placeholder="กรุณาระบุราคา" required>
                         </div>
                         <div class="form-group">
                             <label for="student_price">ราคานร/นศ</label>
                             <input type="number" class="form-control" id="student_price" name="student_price"
-                                min="0" required>
+                                min="0" placeholder="กรุณาระบุราคา" required>
                         </div>
                         <div class="form-group">
                             <label for="adult_price">ราคาผู้ใหญ่</label>
                             <input type="number" class="form-control" id="adult_price" name="adult_price"
-                                min="0" required>
+                                min="0" placeholder="กรุณาระบุราคา" required>
                         </div>
                         <div class="form-group">
                             <label for="disabled_price">ราคาผู้พิการ</label>
                             <input type="number" class="form-control" id="disabled_price" name="disabled_price"
-                                min="0" required>
+                                min="0" placeholder="กรุณาระบุราคา" required>
                         </div>
                         <div class="form-group">
                             <label for="elderly_price">ราคาผู้สูงอายุ</label>
                             <input type="number" class="form-control" id="elderly_price" name="elderly_price"
-                                min="0" required>
+                                min="0" placeholder="กรุณาระบุราคา" required>
                         </div>
                         <div class="form-group">
                             <label for="monk_price">ราคาพระภิกษุสงฆ์ /สามเณร</label>
                             <input type="number" class="form-control" id="monk_price" name="monk_price" min="0"
-                                required>
+                            placeholder="กรุณาระบุราคา" required>
                         </div>
                         <div class="form-group">
                             <label for="max_capacity">ความจุคนต่อรอบการเข้าชม</label>
                             <input type="number" class="form-control" id="max_capacity" name="max_capacity"
-                                min="0" required>
+                                min="0" placeholder="กรุณาระบุความจุผู้เข้าชม" required
+                                >
                         </div>
-                        <div class="form-group">
+                        <div class="form-group pt-2">
                             <label for="images">เลือกรูปภาพ:</label>
                             <input type="file" name="images[]" multiple>
                         </div>
@@ -260,49 +300,56 @@
                         <div class="form-group">
                             <label for="edit_activity_name">ชื่อกิจกรรม</label>
                             <input type="text" class="form-control" id="edit_activity_name" name="activity_name"
-                                required>
+                            placeholder="กรุณากรอกชื่อกิจกรรม" required>
                         </div>
                         <div class="form-group">
                             <label for="edit_description">คำอธิบายกิจกรรม</label>
-                            <textarea class="form-control" id="edit_description" name="description" rows="3" required></textarea>
+                            <textarea class="form-control" id="edit_description" name="description" rows="3" 
+                            placeholder="กรุณากรอกคำอธิบาย" required>
+                        </textarea>
                         </div>
                         <div class="form-group">
                             <label for="edit_childrenprice">ราคาเด็ก</label>
                             <input type="number" class="form-control" id="edit_childrenprice" name="children_price"
-                                min="0" required>
+                                min="0" placeholder="กรุณาระบุราคา" required>
                         </div>
                         <div class="form-group">
                             <label for="edit_studentprice">ราคานร/นศ</label>
                             <input type="number" class="form-control" id="edit_studentprice" name="student_price"
-                                min="0" required>
+                                min="0" placeholder="กรุณาระบุราคา" required>
                         </div>
                         <div class="form-group">
                             <label for="edit_adultprice">ราคาผู้ใหญ่</label>
                             <input type="number" class="form-control" id="edit_adultprice" name="adult_price"
-                                min="0" required>
+                                min="0" placeholder="กรุณาระบุราคา" required>
                         </div>
                         <div class="form-group">
                             <label for="edit_disabledprice">ราคาผู้พิการ</label>
                             <input type="number" class="form-control" id="edit_disabledprice" name="disabled_price"
-                                min="0" required>
+                                min="0" placeholder="กรุณาระบุราคา" required>
                         </div>
                         <div class="form-group">
                             <label for="edit_elderlyprice">ราคาผู้สูงอายุ</label>
                             <input type="number" class="form-control" id="edit_elderlyprice" name="elderly_price"
-                                min="0" required>
+                                min="0" placeholder="กรุณาระบุราคา" required>
                         </div>
                         <div class="form-group">
                             <label for="edit_monkprice">ราคาพระภิกษุสงฆ์ /สามเณร</label>
                             <input type="number" class="form-control" id="edit_monkprice" name="monk_price"
-                                min="0" required>
+                                min="0" placeholder="กรุณาระบุราคา" required>
                         </div>
                         <div class="form-group">
                             <label for="edit_max_capacity">ความจุคนต่อรอบการเข้าชม</label>
                             <input type="number" class="form-control" id="edit_max_capacity" name="max_capacity"
-                                min="0" required>
+                                min="0" required     
+                                   @if(is_null($item->max_capacity))
+                                placeholder="ไม่จำกัดจำนวนคน"
+                            @else
+                                value="{{ $item->max_capacity }}"
+                            @endif
+                            >
                         </div>
-
-                        <div class="form-group">
+                        <div class="form-group pt-2">
                             <label for="images">เลือกรูปภาพ:</label>
                             <input type="file" name="images[]" multiple>
                         </div>
@@ -315,50 +362,10 @@
             </div>
         </div>
     </div>
-<!-- Modal -->
-<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="imageModalLabel">รูปภาพกิจกรรม</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body d-flex flex-wrap" id="modal-images">
-            </div>
-        </div>
-    </div>
-</div>
+
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/activity_list.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#imageModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
-                var activityId = button.data('activity-id');
-    
-                $('#modal-images').empty();
-    
-                $.ajax({
-                    url: '/admin/activity/' + activityId + '/images',
-                    method: 'GET',
-                    success: function(data) {
-                        if (data.images.length > 0) {
-                            data.images.forEach(function(image) {
-                                var imgElement = '<div class="p-2" style="max-width: 300px;"><img src="' + image.url + '" alt="Image" class="img-fluid" style="max-width: 100%; height: auto;"></div>';
-                                $('#modal-images').append(imgElement);
-                            });
-                        } else {
-                            $('#modal-images').append('<p>No images available for this activity.</p>');
-                        }
-                    },
-                    error: function() {
-                        $('#modal-images').append('<p>Error loading images.</p>');
-                    }
-                });
-            });
-        });
-    </script>
 @endsection

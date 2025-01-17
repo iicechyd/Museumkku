@@ -29,6 +29,9 @@
                         <option value="{{ $activity->activity_id }}"
                             {{ request('activity_id') == $activity->activity_id ? 'selected' : '' }}>
                             {{ $activity->activity_name }}
+                            @if ($activity->countBookings > 0)
+                                ({{ $activity->countBookings}})
+                            @endif
                         </option>
                     @endforeach
                 </select>

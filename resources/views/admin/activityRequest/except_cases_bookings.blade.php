@@ -30,6 +30,9 @@
                         <option value="{{ $activity->activity_id }}"
                             {{ request('activity_id') == $activity->activity_id ? 'selected' : '' }}>
                             {{ $activity->activity_name }}
+                            @if ($activity->countBookings > 0)
+                                ({{ $activity->countBookings}})
+                            @endif
                         </option>
                     @endforeach
                 </select>
@@ -123,10 +126,14 @@
                                             <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
                                         
                                         <p><strong>แก้ไขสถานะ: </strong>
+                                            @if ($item->latestStatusChange)
                                             {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
                                             {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->year + 543 }} เวลา
                                             {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->format('H:i') }} น.
                                             โดยเจ้าหน้าที่: {{ $item->latestStatusChange->changed_by ?? 'N/A' }}
+                                        @else
+                                            ไม่พบข้อมูลการเปลี่ยนแปลงสถานะ
+                                        @endif
                                         </p>
                                     </div>
                                         <div class="modal-footer">

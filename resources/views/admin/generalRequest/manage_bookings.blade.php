@@ -15,7 +15,8 @@
 
     <div class="container">
         <div class="button pb-2">
-            <a href="{{ url('/admin/manage_bookings/general') }}" class="btn btn-primary">การจองวันนี้</a>
+            <a href="{{ url('/admin/manage_bookings/general') }}" class="btn btn-primary">การจองวันนี้</i>
+            </a>
             <a href="{{ url('/admin/request_bookings/general') }}" class="btn-request-outline">รออนุมัติ</a>
             <a href="{{ url('/admin/approved_bookings/general') }}" class="btn-approved-outline">อนุมัติ</a>
             <a href="{{ url('/admin/except_cases_bookings/general') }}" class="btn-except-outline">ยกเลิก</a>
@@ -23,13 +24,16 @@
 
         <div class="form col-6">
             <form method="GET" action="{{ route('today_bookings.general') }}">
-                <label for="activity_id">เลือกกิจกรรม:</label>
+                <label for="activity_id">เลือกกิจกรรม</label>
                 <select name="activity_id" id="activity_id" class="form-select" onchange="this.form.submit()">
                     <option value="">กรุณาเลือกประเภทการเข้าชม</option>
                     @foreach ($activities as $activity)
                         <option value="{{ $activity->activity_id }}"
                             {{ request('activity_id') == $activity->activity_id ? 'selected' : '' }}>
                             {{ $activity->activity_name }}
+                            @if ($activity->countBookings > 0)
+                                ({{ $activity->countBookings}})
+                            @endif
                         </option>
                     @endforeach
                 </select>

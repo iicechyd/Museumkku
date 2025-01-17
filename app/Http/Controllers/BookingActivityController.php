@@ -15,7 +15,17 @@ class BookingActivityController extends Controller
     {
         $today = Carbon::today();
 
-        $activities = Activity::where('activity_type_id', 2)->get();
+        $activities = Activity::where('activity_type_id', 2)
+        ->get()
+        ->map(function ($activity) use ($today) {
+            $countBookings = Bookings::where('activity_id', $activity->activity_id)
+                ->whereDate('booking_date', $today)
+                ->where('status', 1)
+                ->count();
+
+            $activity->countBookings = $countBookings;
+            return $activity;
+        });
 
         $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'documents', 'subactivities')
             ->whereHas('activity', function ($query) {
@@ -63,7 +73,17 @@ class BookingActivityController extends Controller
     }
     function showBookingsActivity(Request $request)
     {
-        $activities = Activity::where('activity_type_id', 2)->get();
+        $activities = Activity::where('activity_type_id', 2)
+        ->get()
+        ->map(function ($activity) {
+            $countBookings = Bookings::where('activity_id', $activity->activity_id)
+                ->where('status', 0)
+                ->count();
+
+            $activity->countBookings = $countBookings;
+            return $activity;
+        });
+
 
         $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'subactivities')
             ->whereHas('activity', function ($query) {
@@ -111,7 +131,16 @@ class BookingActivityController extends Controller
 
     function showApprovedActivity(Request $request)
     {
-        $activities = Activity::where('activity_type_id', 2)->get();
+        $activities = Activity::where('activity_type_id', 2)
+        ->get()
+        ->map(function ($activity) {
+            $countBookings = Bookings::where('activity_id', $activity->activity_id)
+                ->where('status', 1)
+                ->count();
+
+            $activity->countBookings = $countBookings;
+            return $activity;
+        });
 
         $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'subactivities')
             ->whereHas('activity', function ($query) {
@@ -156,7 +185,16 @@ class BookingActivityController extends Controller
 
     function showExceptActivity(Request $request)
     {
-        $activities = Activity::where('activity_type_id', 2)->get();
+        $activities = Activity::where('activity_type_id', 2)
+        ->get()
+        ->map(function ($activity) {
+            $countBookings = Bookings::where('activity_id', $activity->activity_id)
+                ->where('status', 3)
+                ->count();
+
+            $activity->countBookings = $countBookings;
+            return $activity;
+        });
 
         $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'subactivities')
         ->whereHas('activity', function ($query) {

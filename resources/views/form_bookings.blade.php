@@ -376,8 +376,6 @@
             </div>
         </div>
     </div>
-
-    
     <script>
         window.subactivities = @json($subactivities);
         window.maxSubactivities = {{ $maxSubactivities }};

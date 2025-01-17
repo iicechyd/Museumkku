@@ -171,6 +171,13 @@ flatpickr("#booking_date", {
 
                             option.value = timeslot.timeslots_id;
                             option.text = `รอบที่ ${index + 1} ${startFormatted} น. - ${endFormatted} น.`;
+                            
+                        if (timeslot.remaining_capacity === 0) {
+                            option.disabled = true;
+                            option.text += " (เต็ม)";
+                        } else {
+                            option.text += ` (เหลือ ${timeslot.remaining_capacity} ที่นั่ง)`;
+                        }
                             timeslotsSelect.appendChild(option);
                         });
 
@@ -211,6 +218,9 @@ function confirmSubmission() {
     } else {
         document.getElementById("errorMessage").style.display = "none";
     }
+    document.querySelectorAll('input[disabled]').forEach(input => {
+        input.disabled = false;
+    });
     const isConfirmed = confirm("คุณต้องการยืนยันการส่งข้อมูลใช่หรือไม่?");
     if (isConfirmed) {
         document.querySelector('form').submit();

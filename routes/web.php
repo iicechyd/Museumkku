@@ -85,7 +85,7 @@ Route::delete('/timeslots/{timeslots_id}', [TimeslotController::class, 'destroy'
 Route::put('timeslots/{id}', [TimeslotController::class, 'update'])->name('timeslots.update');
 Route::get('/toggle-status/{id}', [TimeslotController::class, 'toggleStatus'])->name('toggle.status');
 Route::post('/toggle-status/{id}', [TimeslotController::class, 'toggleStatus'])->name('toggle.status');
-Route::get('/available-timeslots/{activity_id}/{date}', [BookingController::class, 'getAvailableTimeslots']);
+Route::get('/available-timeslots/{activity_id}/{date}', [TimeslotController::class, 'getAvailableTimeslots']);
 //Route กิจกรรม
 Route::post('/InsertActivity', [ActivityController::class, 'InsertActivity'])->name('insert.activity');
 Route::get('delete/{activity_id}', [ActivityController::class, 'delete'])->name('delete');

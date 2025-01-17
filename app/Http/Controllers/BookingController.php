@@ -472,19 +472,6 @@ class BookingController extends Controller
         ]);
     }
 
-    public function getAvailableTimeslots($activity_id, $date)
-    {
-        $closedTimeslotsIds = ClosedTimeslots::where('closed_on', $date)
-            ->where('activity_id', $activity_id)
-            ->pluck('timeslots_id');
-
-        $availableTimeslots = Timeslots::where('activity_id', $activity_id)
-            ->whereNotIn('timeslots_id', $closedTimeslotsIds)
-            ->get();
-
-        return response()->json($availableTimeslots);
-    }
-
     public function searchBookingByEmail(Request $request)
     {
         $request->validate([

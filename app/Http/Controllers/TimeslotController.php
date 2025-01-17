@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Activity;
 use App\Models\Timeslots;
+use App\Models\Bookings;
 use App\Models\closedTimeslots;
 use Carbon\Carbon;
 use DateTime;
@@ -121,12 +122,40 @@ class TimeslotController extends Controller
     public function getTimeslotsByActivity(Request $request)
     {
         $timeslots = Timeslots::where('activity_id', $request->activity_id)
-        ->get()
-        ->map(function ($timeslot) {
-            $timeslot->start_time = Carbon::parse($timeslot->start_time)->format('H:i') . ' น.';
-            $timeslot->end_time = Carbon::parse($timeslot->end_time)->format('H:i') . ' น.';
+            ->get()
+            ->map(function ($timeslot) {
+                $timeslot->start_time = Carbon::parse($timeslot->start_time)->format('H:i') . ' น.';
+                $timeslot->end_time = Carbon::parse($timeslot->end_time)->format('H:i') . ' น.';
+                return $timeslot;
+            });
+        return response()->json($timeslots);
+    }
+    public function getAvailableTimeslots($activity_id, $date)
+    {
+        $closedTimeslotsIds = ClosedTimeslots::where('closed_on', $date)
+            ->where('activity_id', $activity_id)
+            ->pluck('timeslots_id');
+
+        $availableTimeslots = Timeslots::where('activity_id', $activity_id)
+            ->whereNotIn('timeslots_id', $closedTimeslotsIds)
+            ->get();
+
+        $availableTimeslotsWithCapacity = $availableTimeslots->map(function ($timeslot) use ($activity_id, $date) {
+            $totalApproved = Bookings::where('booking_date', $date)
+                ->where('activity_id', $activity_id)
+                ->where('timeslots_id', $timeslot->timeslots_id)
+                ->whereIn('status', [0, 1])
+                ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
+
+            if ($timeslot->activity->max_capacity !== null) {
+                $remainingCapacity = $timeslot->activity->max_capacity - $totalApproved;
+            } else {
+                $remainingCapacity = 'ไม่จำกัดจำนวนคน';
+            }
+
+            $timeslot->remaining_capacity = $remainingCapacity;
             return $timeslot;
         });
-        return response()->json($timeslots);
+        return response()->json($availableTimeslotsWithCapacity);
     }
 }

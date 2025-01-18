@@ -27,6 +27,11 @@ class LoginController extends Controller
             Auth::logout();
             return redirect('/login')->with('error', 'บัญชีของคุณยังไม่ได้รับการอนุมัติเข้าใช้งาน');
         }
+        // Check if the user has a role assigned
+        if (is_null($user->role_id)) {
+            Auth::logout();
+            return redirect('/login')->with('error', 'บัญชีของคุณไม่มีบทบาทที่กำหนด');
+        }
 
         if ($user->role && $user->role->role_name === 'Super Admin') {
             return redirect('super_admin/all_users');
@@ -56,11 +61,14 @@ class LoginController extends Controller
 
         return redirect('/login');
     }
-    
+
     protected function sendFailedLoginResponse(Request $request)
     {
-        return redirect()->back()
-            ->withErrors(['email' => 'อีเมลหรือรหัสผ่านไม่ถูกต้อง'])
+        return redirect('/login')
+            ->withErrors([
+                'email' => '',
+                'password' => 'อีเมลหรือรหัสผ่านไม่ถูกต้อง'
+            ])
             ->withInput($request->only('email', 'remember'));
     }
 }

@@ -4,8 +4,6 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/activity_detail.css') }}">
-    <style>
-    </style>
 </head>
 
 @section('sidebar')
@@ -21,11 +19,11 @@
                                     @foreach ($activity->images as $index => $image)
                                         <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
                                             <div class="image"
-                                                style="width: 620px; height: 400px; display: flex; justify-content: center; align-items: center; overflow: hidden; cursor: pointer; border-radius: 3px;"
+                                                style="width: 602px; height: 400px; display: flex; justify-content: center; align-items: center; overflow: hidden; cursor: pointer; border-radius: 3px;"
                                                 onclick="showLargeImage('{{ asset('storage/' . $image->image_path) }}')">
                                                 <img src="{{ asset('storage/' . $image->image_path) }}"
                                                     class="d-block w-100"
-                                                    style="max-height: 100%; max-width: 100%;  contain; " 
+                                                    style="max-height: 100%; max-width: 100%;  contain; "
                                                     alt="Image for {{ $activity->activity_name }}">
                                             </div>
                                         </div>
@@ -42,6 +40,8 @@
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Next</span>
                                 </button>
+                                <div id="carouselIndicator" class="carousel-indicator">1/{{ count($activity->images) }}
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-12">
@@ -89,12 +89,14 @@
                             </div>
                         </div>
                         <div class="d-flex gap-2 px-3 py-2 pb-3">
-                            @foreach ($activity->images as $image)
-                                <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
-                                    style="width: 114px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
-                                    onclick="showLargeImage('{{ asset('storage/' . $image->image_path) }}')">
-                                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="Activity Image"
-                                        class="img-fluid" style="object-fit: cover; width: 100%; height: 100%;">
+                            @foreach ($activity->images->take(5) as $image)
+                            <div class="position-relative">
+                                    <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
+                                        style="width: 114px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
+                                        onclick="showLargeImage('{{ asset('storage/' . $image->image_path) }}')">
+                                        <img src="{{ asset('storage/' . $image->image_path) }}" alt="Activity Image"
+                                            class="img-fluid" style="object-fit: cover; width: 100%; height: 100%;">
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
@@ -118,5 +120,12 @@
             var largeImageContainer = document.getElementById('largeImageContainer');
             largeImageContainer.style.display = 'none';
         }
+        var carousel = document.getElementById('imageCarousel');
+        var carouselIndicator = document.getElementById('carouselIndicator');
+        carousel.addEventListener('slid.bs.carousel', function(event) {
+            var currentIndex = event.to + 1;
+            var totalImages = {{ count($activity->images) }};
+            carouselIndicator.textContent = currentIndex + '/' + totalImages;
+        });
     </script>
 @endsection

@@ -1,6 +1,5 @@
 $(document).ready(function () {
     $(".edit-activity-btn").on("click", function () {
-        // ดึงค่าที่เก็บใน data-* attribute ของปุ่ม
         var activityId = $(this).data("id");
         var activityTypeId = $(this).data("activity_type_id");
         var activityName = $(this).data("name");
@@ -14,7 +13,6 @@ $(document).ready(function () {
         var activityMaxCapacity = $(this).data("max_capacity");
         var activityImage = $(this).data("image");
 
-        // ใส่ข้อมูลลงใน modal
         $("#edit_activity_id").val(activityId);
         $("#edit_activity_type_id").val(activityTypeId);
         $("#edit_activity_name").val(activityName);
@@ -47,32 +45,29 @@ $(document).on('click', '.toggle-status', function(e) {
     var activityName = button.closest('td').data('name');
     var currentStatus = button.data('status');
 
-    // ยืนยันก่อนเปลี่ยนสถานะ
     if (!confirm('คุณต้องการเปลี่ยนสถานะของ ' + activityName + ' หรือไม่?')) {
         return false;
     }
 
-    // ส่งคำขอ Ajax ไปยังเซิร์ฟเวอร์เพื่อเปลี่ยนสถานะ
     $.ajax({
-        url: '/activity/toggle-status/' + activityId, // ใช้ URL ที่มีการเปลี่ยนสถานะ
+        url: '/activity/toggle-status/' + activityId,
         type: 'POST',
         data: {
-            _token: $('meta[name="csrf-token"]').attr('content'), // ส่ง CSRF token ไปด้วย
+            _token: $('meta[name="csrf-token"]').attr('content'),
         },
         success: function(response) {
-            // อัปเดตไอคอนและสถานะในหน้าเว็บ
             if (response.status === 'active') {
                 button.find('i').removeClass('fa-toggle-off text-secondary')
                     .addClass('fa-toggle-on text-success')
                     .attr('title', 'Active');
-                button.data('status', 'active'); // อัปเดตข้อมูลสถานะใน data-status
+                button.data('status', 'active');
             } else {
                 button.find('i').removeClass('fa-toggle-on text-success')
                     .addClass('fa-toggle-off text-secondary')
                     .attr('title', 'Inactive');
-                button.data('status', 'inactive'); // อัปเดตข้อมูลสถานะใน data-status
+                button.data('status', 'inactive');
             }
-            alert(response.message); // แสดงข้อความแจ้งเตือนเมื่อเปลี่ยนสถานะสำเร็จ
+            alert(response.message);
         },
         error: function(xhr, status, error) {
             alert('เกิดข้อผิดพลาดในการเปลี่ยนสถานะ');
@@ -80,3 +75,33 @@ $(document).on('click', '.toggle-status', function(e) {
     });
 });
 
+$(document).ready(function() {
+    $('form').on('submit', function(e) {
+        e.preventDefault(); // ป้องกันไม่ให้ฟอร์มรีเฟรชหน้า
+
+        // แสดง confirm ก่อนส่งคำขอลบ
+        if (!confirm('ยืนยันการลบรูปภาพนี้?')) {
+            return false; // ยกเลิกการส่งฟอร์ม
+        }
+
+        var form = $(this);
+        var button = form.find('button[type="submit"]');
+        button.prop('disabled', true); // ปิดปุ่มเพื่อล็อคการกดซ้ำ
+
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: form.serialize(),
+            success: function(response) {
+                form.closest('.col-md-4').fadeOut('slow', function() {
+                    $(this).remove(); // ลบรูปภาพจากหน้าเว็บ
+                });
+                alert('ลบรูปภาพสำเร็จ!');
+            },
+            error: function(xhr, status, error) {
+                alert('เกิดข้อผิดพลาดในการลบรูปภาพ');
+                button.prop('disabled', false); // เปิดปุ่มอีกครั้งหากเกิดข้อผิดพลาด
+            }
+        });
+    });
+});

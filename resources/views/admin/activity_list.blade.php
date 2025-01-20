@@ -118,15 +118,13 @@
                                                     <div class="pt-3">
                                                         <img src="{{ Storage::url($image->image_path) }}"
                                                             class="img-fluid mb-2 image-thumbnail" alt="Activity Image">
-                                                        <form
-                                                            action="{{ route('deleteImage', ['image_id' => $image->image_id]) }}"
-                                                            method="POST" onsubmit="return confirm('ยืนยันการลบรูปภาพนี้?')">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger btn-sm delete-button">
-                                                                ลบรูปภาพ <i class="fas fa-trash-alt"></i>
-                                                            </button>
-                                                        </form>
+                                                            <form action="{{ route('deleteImage', ['image_id' => $image->image_id]) }}" method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="btn btn-danger btn-sm delete-button">
+                                                                    ลบรูปภาพ <i class="fas fa-trash-alt"></i>
+                                                                </button>
+                                                            </form>
                                                     </div>
                                                 </div>
                                             @endforeach

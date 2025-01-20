@@ -29,3 +29,13 @@ p {
     max-width: 90%;
     max-height: 90%;
 }
+
+.carousel-indicator {
+  position: absolute;
+  bottom: 0px;
+  right: 15px;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 14px;
+}

@@ -147,3 +147,8 @@ td.custom-td {
     color: #d70202;
     text-decoration: none;
 }
+
+.dropdown-scrollable {
+    max-height: 300px;
+    overflow-y: auto;
+}

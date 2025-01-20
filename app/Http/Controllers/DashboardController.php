@@ -112,8 +112,9 @@ class DashboardController extends Controller
                      ->whereBetween('bookings.booking_date', [$yearStart, $yearEnd]);
             })
             ->select(
-                'activities.activity_id',
+       'activities.activity_id',
                 'activities.activity_name',
+                'activities.target_yearly_count',
                 DB::raw('
                     COALESCE(SUM(bookings.children_qty + bookings.students_qty + bookings.adults_qty +
                     bookings.disabled_qty + bookings.elderly_qty + bookings.monk_qty), 0) as total_visitors
@@ -121,7 +122,7 @@ class DashboardController extends Controller
                 DB::raw('COALESCE(COUNT(bookings.booking_id), 0) as total_bookings')
             )
             ->where('activities.activity_type_id', 2)
-            ->groupBy('activities.activity_id', 'activities.activity_name')
+            ->groupBy('activities.activity_id', 'activities.activity_name','activities.target_yearly_count',)
             ->get();
 
         $totalVisitorsBooked = [];

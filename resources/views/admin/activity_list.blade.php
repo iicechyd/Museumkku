@@ -27,6 +27,11 @@
                 + กิจกรรม
             </button>
             <button type="button" class="btn mb-3"
+                style="background-color: rgb(82, 190, 128); border-color: rgb(82, 190, 128); color: white;"
+                data-toggle="modal" data-target="#addTargetModal">
+                เป้าหมาย
+            </button>
+            <button type="button" class="btn mb-3"
                 style="background-color: rgb(119, 144, 242); border-color: rgb(119, 144, 242); color: white;"
                 onclick="window.location='{{ url('/admin/subactivity_list') }}'">
                 หลักสูตร
@@ -118,13 +123,16 @@
                                                     <div class="pt-3">
                                                         <img src="{{ Storage::url($image->image_path) }}"
                                                             class="img-fluid mb-2 image-thumbnail" alt="Activity Image">
-                                                            <form action="{{ route('deleteImage', ['image_id' => $image->image_id]) }}" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-danger btn-sm delete-button">
-                                                                    ลบรูปภาพ <i class="fas fa-trash-alt"></i>
-                                                                </button>
-                                                            </form>
+                                                        <form
+                                                            action="{{ route('deleteImage', ['image_id' => $image->image_id]) }}"
+                                                            method="POST" class="delete-image-form">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="btn btn-danger btn-sm delete-button">
+                                                                ลบรูปภาพ <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -140,7 +148,8 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLabel">ราคา -
-                                            {{ $item->activity_name }}</h5>
+                                            {{ $item->activity_name }}
+                                        </h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -340,15 +349,13 @@
                             <label for="edit_max_capacity">ความจุคนต่อรอบการเข้าชม</label>
                             <input type="number" class="form-control" id="edit_max_capacity" name="max_capacity"
                                 min="0" required
-                                @if (is_null($item->max_capacity)) placeholder="ไม่จำกัดจำนวนคน"
-                            @else
-                                value="{{ $item->max_capacity }}" @endif>
+                                @if (is_null($item->max_capacity)) placeholder="ไม่จำกัดจำนวนคน" @else
+                            value="{{ $item->max_capacity }}" @endif>
                         </div>
                         <div class="form-group pt-2">
                             <label for="images">เลือกรูปภาพ:</label>
                             <input type="file" name="images[]" multiple>
                         </div>
-
                         <div class="pt-2">
                             <button type="submit" class="btn btn-primary">บันทึก</button>
                         </div>
@@ -357,8 +364,64 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="addTargetModal" tabindex="-1" aria-labelledby="addTargetModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTargetModalLabel">เพิ่มเป้าหมายการจัดกิจกรรมต่อปี</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/add-target" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="activity_id" class="form-label">เลือกกิจกรรม</label>
+                            <select class="form-control dropdown-scrollable" id="activity_id" name="activity_id"
+                                required>
+                                <option value="">กรุณาเลือกกิจกรรม</option>
+                                @foreach ($allActivities as $item)
+                                    @if ($item->activity_type_id == 2)
+                                        <option value="{{ $item->activity_id }}">{{ $item->activity_name }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="target_yearly_count" class="form-label">เป้าหมายการจัดกิจกรรมต่อปี</label>
+                            <input type="number" class="form-control" id="target_yearly_count"
+                                name="target_yearly_count" min="0" placeholder="กรุณาระบุจำนวนครั้งต่อปี"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary">บันทึก</button>
+                            <a href="{{ url('/admin/dashboard#targetSection') }}" class="text-blue-500">
+                                เป้าหมายปัจจุบัน
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/activity_list.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.location.hash) {
+                const targetElement = document.querySelector(window.location.hash); // หาส่วนที่ต้องการเลื่อน
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth', // ทำให้การเลื่อนนุ่มนวล
+                        block: 'start' // ให้เลื่อนให้ตรงกับตำแหน่งด้านบนของหน้าจอ
+                    });
+                }
+            }
+        });
+    </script>
+
 @endsection

@@ -262,7 +262,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body px-0 pb-2">
+                        <div class="card-body px-0 pb-2" id="targetSection">
                             <div class="table-responsive">
                                 <table class="table align-items-center mb-0">
                                     <thead>
@@ -294,7 +294,7 @@
                                                 </td>
                                                 <td class="align-middle text-center text-sm">
                                                     <span
-                                                        class="text-xs font-weight-bold">{{ $activity->total_bookings > 0 ? $activity->total_bookings . ' ครั้ง' : '-' }}</span>
+                                                        class="text-xs font-weight-bold">{{ $activity->total_bookings > 0 ? $activity->total_bookings . '' : '-' }} {{ $activity->target_yearly_count > 0 ? '/ ' . $activity->target_yearly_count . '' : '' }}</span>
                                                 </td>
                                             </tr>
                                         @endforeach

@@ -37,9 +37,11 @@ class ActivityController extends Controller
 
     function showListActivity()
     {
-        $requestListActivity = Activity::with(['activityType', 'images'])->paginate(4);
+        $allActivities = Activity::all();
+        $requestListActivity = Activity::with(['activityType', 'images'])
+        ->paginate(4);
         $activityTypes = ActivityType::all();
-        return view('admin.activity_list', compact('requestListActivity', 'activityTypes'));
+        return view('admin.activity_list', compact('requestListActivity', 'activityTypes', 'allActivities'));
     }
 
     function delete($activity_id)
@@ -53,10 +55,10 @@ class ActivityController extends Controller
         $image = ActivityImages::findOrFail($image_id);
         Storage::disk('public')->delete($image->image_path);
         $image->delete();
-    
+
         return redirect()->back()->with('success', 'ลบรูปภาพเรียบร้อยแล้ว');
     }
-    
+
     function InsertActivity(Request $request)
     {
         $request->validate(
@@ -70,6 +72,7 @@ class ActivityController extends Controller
                 'elderly_price' => 'required',
                 'monk_price' => 'required',
                 'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'target_yearly_count' => 'nullable|integer',
             ],
             [
                 'activity_name.required' => 'กรุณาป้อนชื่อกิจกรรม',
@@ -95,6 +98,7 @@ class ActivityController extends Controller
         $activity->elderly_price = $request->elderly_price;
         $activity->monk_price = $request->monk_price;
         $activity->max_capacity = $request->max_capacity;
+        $activity->target_yearly_count = $request->target_yearly_count;
         $activity->activity_type_id = $request->activity_type_id;
         $activity->status = 'inactive';
         $activity->save();
@@ -133,6 +137,7 @@ class ActivityController extends Controller
         $activity->elderly_price = $request->elderly_price;
         $activity->monk_price = $request->monk_price;
         $activity->max_capacity = $request->max_capacity;
+        $activity->target_yearly_count = $request->target_yearly_count;
         $activity->save();
 
         if ($request->hasFile('images')) {
@@ -170,5 +175,22 @@ class ActivityController extends Controller
             'status' => $activity->status,
             'message' => 'สถานะของกิจกรรมถูกเปลี่ยนเรียบร้อยแล้ว'
         ]);
+    }
+    public function addTarget(Request $request)
+    {
+        $request->validate([
+            'activity_id' => 'required|exists:activities,activity_id',
+            'target_yearly_count' => 'required|integer',
+        ]);
+
+        $activity = Activity::find($request->activity_id);
+        if ($activity) {
+            $activity->target_yearly_count = $request->target_yearly_count;
+            $activity->save();
+
+            return redirect()->back()->with('success', 'เป้าหมายกิจกรรมถูกเพิ่มเรียบร้อยแล้ว');
+        } else {
+            return redirect()->back()->with('error', 'ไม่พบกิจกรรมที่ระบุ');
+        }
     }
 }

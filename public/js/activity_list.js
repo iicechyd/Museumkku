@@ -76,17 +76,16 @@ $(document).on('click', '.toggle-status', function(e) {
 });
 
 $(document).ready(function() {
-    $('form').on('submit', function(e) {
-        e.preventDefault(); // ป้องกันไม่ให้ฟอร์มรีเฟรชหน้า
+    $('.delete-image-form').on('submit', function(e) {
+        e.preventDefault();
 
-        // แสดง confirm ก่อนส่งคำขอลบ
         if (!confirm('ยืนยันการลบรูปภาพนี้?')) {
-            return false; // ยกเลิกการส่งฟอร์ม
+            return false;
         }
 
         var form = $(this);
         var button = form.find('button[type="submit"]');
-        button.prop('disabled', true); // ปิดปุ่มเพื่อล็อคการกดซ้ำ
+        button.prop('disabled', true);
 
         $.ajax({
             url: form.attr('action'),
@@ -94,13 +93,16 @@ $(document).ready(function() {
             data: form.serialize(),
             success: function(response) {
                 form.closest('.col-md-4').fadeOut('slow', function() {
-                    $(this).remove(); // ลบรูปภาพจากหน้าเว็บ
+                    $(this).remove();
+                    if ($('.row').children('.col-md-4').length === 0) {
+                        $('.row').html('<div class="col-12 text-center"><h2>ไม่พบรูปภาพสำหรับกิจกรรมนี้</h2></div>');
+                    }
                 });
-                alert('ลบรูปภาพสำเร็จ!');
+                alert('ลบรูปภาพสำเร็จ');
             },
             error: function(xhr, status, error) {
                 alert('เกิดข้อผิดพลาดในการลบรูปภาพ');
-                button.prop('disabled', false); // เปิดปุ่มอีกครั้งหากเกิดข้อผิดพลาด
+                button.prop('disabled', false);
             }
         });
     });

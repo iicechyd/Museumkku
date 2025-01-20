@@ -19,11 +19,11 @@ class Activity extends Model
         'disabled_price',
         'elderly_price',
         'monk_price',
-        // 'image',
         'max_capacity',
         'status',
         'duration_days',
         'max_subactivities',
+        'target_yearly_count'
     ];
 
     public function activityType()

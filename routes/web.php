@@ -98,3 +98,5 @@ Route::post('activity/toggle-status/{id}', [ActivityController::class, 'toggleSt
 Route::get('/admin/activity_images/{activity_id}', [ActivityController::class, 'getImages']);
 Route::get('/admin/activity/{activity_id}/images', [ActivityController::class, 'getImages']);
 Route::delete('/admin/activity_images/{image_id}', [ActivityController::class, 'deleteImage'])->name('deleteImage');
+
+Route::post('/add-target', [ActivityController::class, 'addTarget']);

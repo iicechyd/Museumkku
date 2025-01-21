@@ -69,6 +69,6 @@ class LoginController extends Controller
                 'email' => '',
                 'password' => 'อีเมลหรือรหัสผ่านไม่ถูกต้อง'
             ])
-            ->withInput($request->only('email', 'remember'));
+            ->withInput($request->only('email', 'password'));
     }
 }

@@ -9,10 +9,10 @@
     </div>
     <div class="footer text-center" style="padding: 10px;">
         <div class="flex justify-center space-x-4">
-            <a href="{{ $detail }}" class="btn text-white width:50%" style="background-color: #489085;">
+            <a href="{{ $detail }}" class="btn text-white width:50%" style="background-color: #489085;" data-id="detail-button">
                 รายละเอียดเพิ่มเติม
             </a>
-            <a href="{{ $booking }}" class="btn text-white width:50%" style=" background-color: #E6A732;">
+            <a href="{{ $booking }}" class="btn text-white width:50%" style=" background-color: #E6A732;" data-id="booking-button">
                 จองกิจกรรม
             </a>
         </div>

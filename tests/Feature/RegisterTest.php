@@ -37,7 +37,10 @@ class RegisterTest extends TestCase
             'password_confirmation' => 'password123',
         ]);
         $response->assertSessionHasErrors(['name']);
-
+        $nameErrors = session('errors')->get('name');
+        foreach ($nameErrors as $error) {
+            echo "Error for 'name': " . $error . PHP_EOL;
+        }
         $response = $this->post('/register', [
             'name' => $this->faker->name,
             'email' => '',
@@ -45,7 +48,10 @@ class RegisterTest extends TestCase
             'password_confirmation' => 'password123',
         ]);
         $response->assertSessionHasErrors(['email']);
-
+        $emailErrors = session('errors')->get('email');
+        foreach ($emailErrors as $error) {
+            echo "Error for 'email': " . $error . PHP_EOL;
+        }
         $response = $this->post('/register', [
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
@@ -61,5 +67,17 @@ class RegisterTest extends TestCase
             'password_confirmation' => '',
         ]);
         $response->assertSessionHasErrors(['password']);
+
+        $response = $this->post('/register', [
+            'name' => $this->faker->name,
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => 't123',
+            'password_confirmation' => 't123',
+        ]);
+        $response->assertSessionHasErrors(['password']);
+        $errors = session('errors')->get('password');
+        foreach ($errors as $error) {
+            echo $error;
+        }
     }
 }

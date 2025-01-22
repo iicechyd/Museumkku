@@ -4,8 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (subactivities.length > 0) {
         subactivitySection.style.display = 'block';
-    } else {
-        subactivitySection.style.display = 'none';
     }
 });
 
@@ -114,7 +112,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("instituteAddress").value =
         "123/45 หมู่ 2 บ้านหมีน้อย";
     document.getElementById("visitorName").value = "นางสาวชญาดา วิชัยโย";
-    document.getElementById("visitorEmail").value = "iicechyd.gaming@gmail.com";
     document.getElementById("tel").value = "0987654321";
     calculateTotal();
 });
@@ -234,7 +231,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'th',
-        eventLimit: true,
         dayMaxEventRows: 3,
         aspectRatio: 2,
         eventSources: [

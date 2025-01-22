@@ -15,6 +15,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminCalendarController;
+use App\Http\Controllers\AuthController;
 
 //Middleware routes
 Auth::routes();
@@ -68,14 +69,14 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/InsertBooking', [BookingController::class, 'InsertBooking'])->name('InsertBooking');
 Route::post('change_status/{booking_id}', [BookingController::class, 'changeStatus'])->name('changeStatus');
-Route::get('/form_bookings', [ActivityController::class, 'createBookingForm'])->name('booking.form');
 //Route สำหรับผู้เข้าชม หน้าเพจต่างๆ
 Route::get('/', [HomeController::class, 'showWelcome'])->name('showWelcome');
 Route::get('/preview', [HomeController::class, 'showPreview'])->name('showPreview');
 Route::get('/preview_activity', [ActivityController::class, 'previewActivity'])->name('preview_activity');
 Route::get('/preview_general', [ActivityController::class, 'previewGeneral'])->name('preview_general');
 Route::get('/activity/{activity_id}', [ActivityController::class, 'showDetail'])->name('activity_detail');
-Route::get('/form_bookings/activity/{activity_id}', [BookingController::class, 'showBookingForm'])->name('form_bookings.activity');
+Route::get('/form_bookings/activity/{activity_id}', [BookingController::class, 'showBookingForm'])
+->name('form_bookings.activity');
 Route::get('/checkBookingStatus', [BookingController::class, 'checkBookingStatus'])->name('checkBookingStatus');
 Route::post('/checkBookingStatus', [BookingController::class, 'searchBookingByEmail'])->name('searchBookingByEmail');
 //Route รอบการเข้าชม
@@ -100,3 +101,8 @@ Route::get('/admin/activity/{activity_id}/images', [ActivityController::class, '
 Route::delete('/admin/activity_images/{image_id}', [ActivityController::class, 'deleteImage'])->name('deleteImage');
 
 Route::post('/add-target', [ActivityController::class, 'addTarget']);
+Route::get('/auth/redirect', [AuthController::class, 'redirectToGoogle']);
+Route::get('/auth/callback', [AuthController::class, 'handleGoogleCallback']);
+Route::get('/guest_verify', function () {
+    return view('guest_verify'); 
+})->name('guest.verify');

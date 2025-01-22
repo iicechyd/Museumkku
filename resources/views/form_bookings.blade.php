@@ -2,48 +2,52 @@
 @section('title', 'กรอกข้อมูลเพื่อจองเข้าชมพิพิธภัณฑ์')
 @section('content')
 
-    <head>
-        <link rel="stylesheet" href="{{ asset('css/form_bookings.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        {{-- Dependencies Thailand location  --}}
-        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-        <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/JQL.min.js"></script>
-        <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/typeahead.bundle.js"></script>
-        {{-- jquery.Thailand.js --}}
-        <link rel="stylesheet" href="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.css">
-        <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
-        
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/th.global.min.js"></script>
-        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    </head>
+<head>
+    <link rel="stylesheet" href="{{ asset('css/form_bookings.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    {{-- Dependencies Thailand location --}}
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript"
+        src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/JQL.min.js"></script>
+    <script type="text/javascript"
+        src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/typeahead.bundle.js"></script>
+    {{-- jquery.Thailand.js --}}
+    <link rel="stylesheet"
+        href="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.css">
+    <script type="text/javascript"
+        src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
 
-    <div class="container mt-4 pb-5">
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
-        @if (session('showSuccessModal'))
-            <script>
-                window.addEventListener('DOMContentLoaded', function() {
-                    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                    successModal.show();
-                });
-            </script>
-        @endif
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/th.global.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</head>
 
+<div class="container mt-4 pb-5">
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+    @if (session('showSuccessModal'))
+        <script>
+            window.addEventListener('DOMContentLoaded', function () {
+                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
+            });
+        </script>
+    @endif
+    @if(session('email'))
         <h2 class="text-center py-3"
             style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); ">
             แบบฟอร์มจองเข้าชมพิพิธภัณฑ์</h2>
@@ -103,8 +107,7 @@
                                             <input class="form-check-input" type="checkbox" name="sub_activity_id[]"
                                                 value="{{ $subactivity->sub_activity_id }}"
                                                 id="sub_activity_{{ $subactivity->sub_activity_id }}">
-                                            <label class="form-check-label"
-                                                for="sub_activity_{{ $subactivity->sub_activity_id }}">
+                                            <label class="form-check-label" for="sub_activity_{{ $subactivity->sub_activity_id }}">
                                                 {{ $subactivity->sub_activity_name }}
                                             </label>
                                         </div>
@@ -133,9 +136,8 @@
 
                 <div class="col-4">
                     <label for="instituteName" class="form-label">ชื่อหน่วยงาน</label>
-                    <input type="text" class="form-control @error('instituteName') is-invalid @enderror"
-                        id="instituteName" name="instituteName" placeholder="กรอกชื่อหน่วยงาน"
-                        value="{{ old('instituteName') }}" required>
+                    <input type="text" class="form-control @error('instituteName') is-invalid @enderror" id="instituteName"
+                        name="instituteName" placeholder="กรอกชื่อหน่วยงาน" value="{{ old('instituteName') }}" required>
                     @error('instituteName')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -169,9 +171,8 @@
 
                 <div class="col-md-2">
                     <label for="subdistrict" class="form-label">แขวน/ตำบล</label>
-                    <input type="text" class="form-control @error('subdistrict') is-invalid @enderror"
-                        id="subdistrict" name="subdistrict"
-                        value="{{ old('subdistrict') }}" disabled required>
+                    <input type="text" class="form-control @error('subdistrict') is-invalid @enderror" id="subdistrict"
+                        name="subdistrict" value="{{ old('subdistrict') }}" disabled required>
                     @error('subdistrict')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -202,9 +203,8 @@
                 </div>
                 <div class="col-md-3">
                     <label for="visitorName" class="form-label">ชื่อผู้ประสานงาน</label>
-                    <input type="text" class="form-control @error('visitorName') is-invalid @enderror"
-                        id="visitorName" name="visitorName" placeholder="ชื่อ-นามสกุล"
-                        value="{{ old('visitorName') }}">
+                    <input type="text" class="form-control @error('visitorName') is-invalid @enderror" id="visitorName"
+                        name="visitorName" placeholder="ชื่อ-นามสกุล" value="{{ old('visitorName') }}">
                     @error('visitorName')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -214,9 +214,9 @@
 
                 <div class="col-md-2">
                     <label for="visitorEmail" class="form-label">อีเมล์ผู้ประสานงาน</label>
-                    <input type="email" class="form-control @error('visitorEmail') is-invalid @enderror"
-                        id="visitorEmail" name="visitorEmail" placeholder="Test@email.com"
-                        value="{{ old('visitorEmail') }}">
+                    <input type="email" class="form-control @error('visitorEmail') is-invalid @enderror" id="visitorEmail"
+                        name="visitorEmail" placeholder="Test@email.com" value="{{ session('email', old('visitorEmail')) }}"
+                        readonly>
                     @error('visitorEmail')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -226,9 +226,9 @@
 
                 <div class="col-md-2">
                     <label for="tel" class="form-label">เบอร์โทรผู้ประสานงาน</label>
-                    <input type="text" class="form-control @error('tel') is-invalid @enderror" id="tel"
-                        name="tel" placeholder="หมายเลขโทรศัพท์" value="{{ old('tel') }}" pattern="\d{10}"
-                        maxlength="10" minlength="10" inputmode="numeric" title="กรุณากรอกเบอร์โทร 10 หลัก" required>
+                    <input type="text" class="form-control @error('tel') is-invalid @enderror" id="tel" name="tel"
+                        placeholder="หมายเลขโทรศัพท์" value="{{ old('tel') }}" pattern="\d{10}" maxlength="10"
+                        minlength="10" inputmode="numeric" title="กรุณากรอกเบอร์โทร 10 หลัก" required>
                     @error('tel')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -255,8 +255,8 @@
                             onclick="toggleInput('childrenInput')">
                         <label class="form-check-label" for="children_qty">เด็ก : {{ $selectedActivity->children_price }}
                             บาท/คน</label>
-                        <input type="number" class="form-control mt-2" id="childrenInput" name="children_qty"
-                            min="0" disabled oninput="calculateTotal()">
+                        <input type="number" class="form-control mt-2" id="childrenInput" name="children_qty" min="0"
+                            disabled oninput="calculateTotal()">
                     </div>
 
                     <!-- นักเรียน/นักศึกษา -->
@@ -265,8 +265,8 @@
                             onclick="toggleInput('studentInput')">
                         <label class="form-check-label" for="students_qty">นักเรียน/นักศึกษา :
                             {{ $selectedActivity->student_price }} บาท/คน</label>
-                        <input type="number" class="form-control mt-2" id="studentInput" name="students_qty"
-                            min="0" disabled oninput="calculateTotal()">
+                        <input type="number" class="form-control mt-2" id="studentInput" name="students_qty" min="0"
+                            disabled oninput="calculateTotal()">
                     </div>
 
                     <!-- ครู / อาจารย์ -->
@@ -275,8 +275,8 @@
                             onclick="toggleInput('adultsInput')">
                         <label class="form-check-label" for="adults_qty">ผู้ใหญ่ / คุณครู :
                             {{ $selectedActivity->adult_price }} บาท/คน</label>
-                        <input type="number" class="form-control mt-2" id="adultsInput" name="adults_qty"
-                            min="0" disabled oninput="calculateTotal()">
+                        <input type="number" class="form-control mt-2" id="adultsInput" name="adults_qty" min="0" disabled
+                            oninput="calculateTotal()">
                     </div>
                 </div>
 
@@ -288,8 +288,8 @@
                             onclick="toggleInput('disabledInput')">
                         <label class="form-check-label" for="disabled_qty">
                             ผู้พิการ</label>
-                        <input type="number" class="form-control mt-2" id="disabledInput" name="disabled_qty"
-                            min="0" disabled oninput="calculateTotal()">
+                        <input type="number" class="form-control mt-2" id="disabledInput" name="disabled_qty" min="0"
+                            disabled oninput="calculateTotal()">
                     </div>
 
                     <!-- ผู้สูงอายุ -->
@@ -298,8 +298,8 @@
                             onclick="toggleInput('elderlyInput')">
                         <label class="form-check-label" for="elderly_qty">
                             ผู้สูงอายุ</label>
-                        <input type="number" class="form-control mt-2" id="elderlyInput" name="elderly_qty"
-                            min="0" disabled oninput="calculateTotal()">
+                        <input type="number" class="form-control mt-2" id="elderlyInput" name="elderly_qty" min="0" disabled
+                            oninput="calculateTotal()">
                     </div>
 
                     <!-- พระภิกษุสงฆ์ /สามเณร -->
@@ -308,8 +308,8 @@
                             onclick="toggleInput('monkInput')">
                         <label class="form-check-label" for="monk_qty">
                             พระภิกษุสงฆ์ /สามเณร</label>
-                        <input type="number" class="form-control mt-2" id="monkInput" name="monk_qty" min="0"
-                            disabled oninput="calculateTotal()">
+                        <input type="number" class="form-control mt-2" id="monkInput" name="monk_qty" min="0" disabled
+                            oninput="calculateTotal()">
                     </div>
                 </div>
                 <!-- จำนวนผู้เข้าร่วมกิจกรรม -->
@@ -320,13 +320,11 @@
 
                 <input type="hidden" id="children_price" name="children_price"
                     value="{{ $selectedActivity->children_price }}">
-                <input type="hidden" id="student_price" name="student_price"
-                    value="{{ $selectedActivity->student_price }}">
+                <input type="hidden" id="student_price" name="student_price" value="{{ $selectedActivity->student_price }}">
                 <input type="hidden" id="adult_price" name="adult_price" value="{{ $selectedActivity->adult_price }}">
                 <input type="hidden" id="disabled_price" name="disabled_price"
                     value="{{ $selectedActivity->disabled_price }}">
-                <input type="hidden" id="elderly_price" name="elderly_price"
-                    value="{{ $selectedActivity->elderly_price }}">
+                <input type="hidden" id="elderly_price" name="elderly_price" value="{{ $selectedActivity->elderly_price }}">
                 <input type="hidden" id="monk_price" name="monk_price" value="{{ $selectedActivity->monk_price }}">
 
                 <div class="col-12 d-flex justify-content-center pt-2">
@@ -335,8 +333,7 @@
                     </button>
                 </div>
             </form>
-            <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel"
-                aria-hidden="true">
+            <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -345,7 +342,8 @@
                             </button>
                         </div>
                         <div class="modal-body text-center">
-                            กรุณารอการติดต่อกลับจากเจ้าหน้าที่ทางอีเมล ภายใน 24 ชั่วโมง<br> หากมีข้อสงสัย กรุณาติดต่อ 096-XXX-XXXX เจ้าหน้าที่ฝ่ายกิจกรรม
+                            กรุณารอการติดต่อกลับจากเจ้าหน้าที่ทางอีเมล ภายใน 24 ชั่วโมง<br> หากมีข้อสงสัย กรุณาติดต่อ
+                            096-XXX-XXXX เจ้าหน้าที่ฝ่ายกิจกรรม
                         </div>
                         <div class="modal-footer">
                             <a href="/checkBookingStatus" class="btn btn-primary">ตรวจสอบสถานะการจอง</a>
@@ -355,32 +353,36 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Modal Calendar -->
-    <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="eventModalLabel">รายละเอียดการจอง</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h4 id="eventTitle"></h4>
-                    <p><strong id="eventTimeslotLabel"></strong>
-                    <p id="eventTimeslot"></p>
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                </div>
+    {{-- @else
+        <p>You need to verify your email to access the booking form. <a href="/auth/redirect">Click here to verify</a>.</p> --}}
+    @endif
+</div>
+<!-- Modal Calendar -->
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel">รายละเอียดการจอง</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h4 id="eventTitle"></h4>
+                <p><strong id="eventTimeslotLabel"></strong>
+                <p id="eventTimeslot"></p>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
             </div>
         </div>
     </div>
-    <script>
-        window.subactivities = @json($subactivities);
-        window.maxSubactivities = {{ $maxSubactivities }};
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-    <script src="{{ asset('js/form_bookings.js') }}"></script>
+</div>
+
+<script>
+    window.subactivities = @json($subactivities);
+    window.maxSubactivities = {{ $maxSubactivities }};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+<script src="{{ asset('js/form_bookings.js') }}"></script>
 @endsection

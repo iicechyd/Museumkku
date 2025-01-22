@@ -28,16 +28,16 @@ class BookingController extends Controller
         $today = Carbon::today();
 
         $activities = Activity::where('activity_type_id', 1)
-        ->get()
-        ->map(function ($activity) use ($today) {
-            $countBookings = Bookings::where('activity_id', $activity->activity_id)
-                ->whereDate('booking_date', $today)
-                ->where('status', 1)
-                ->count();
+            ->get()
+            ->map(function ($activity) use ($today) {
+                $countBookings = Bookings::where('activity_id', $activity->activity_id)
+                    ->whereDate('booking_date', $today)
+                    ->where('status', 1)
+                    ->count();
 
-            $activity->countBookings = $countBookings;
-            return $activity;
-        });
+                $activity->countBookings = $countBookings;
+                return $activity;
+            });
 
         $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'documents', 'subactivities')
             ->whereHas('activity', function ($query) {
@@ -86,15 +86,15 @@ class BookingController extends Controller
     function showBookings(Request $request)
     {
         $activities = Activity::where('activity_type_id', 1)
-        ->get()
-        ->map(function ($activity) {
-            $countBookings = Bookings::where('activity_id', $activity->activity_id)
-                ->where('status', 0)
-                ->count();
+            ->get()
+            ->map(function ($activity) {
+                $countBookings = Bookings::where('activity_id', $activity->activity_id)
+                    ->where('status', 0)
+                    ->count();
 
-            $activity->countBookings = $countBookings;
-            return $activity;
-        });
+                $activity->countBookings = $countBookings;
+                return $activity;
+            });
 
         $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'subactivities')
             ->whereHas('activity', function ($query) {
@@ -142,15 +142,15 @@ class BookingController extends Controller
     function showApproved(Request $request)
     {
         $activities = Activity::where('activity_type_id', 1)
-        ->get()
-        ->map(function ($activity) {
-            $countBookings = Bookings::where('activity_id', $activity->activity_id)
-                ->where('status', 1)
-                ->count();
+            ->get()
+            ->map(function ($activity) {
+                $countBookings = Bookings::where('activity_id', $activity->activity_id)
+                    ->where('status', 1)
+                    ->count();
 
-            $activity->countBookings = $countBookings;
-            return $activity;
-        });
+                $activity->countBookings = $countBookings;
+                return $activity;
+            });
 
         $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'documents', 'subactivities')
             ->whereHas('activity', function ($query) {
@@ -199,15 +199,15 @@ class BookingController extends Controller
     function showExcept(Request $request)
     {
         $activities = Activity::where('activity_type_id', 1)
-        ->get()
-        ->map(function ($activity) {
-            $countBookings = Bookings::where('activity_id', $activity->activity_id)
-                ->where('status', 3)
-                ->count();
+            ->get()
+            ->map(function ($activity) {
+                $countBookings = Bookings::where('activity_id', $activity->activity_id)
+                    ->where('status', 3)
+                    ->count();
 
-            $activity->countBookings = $countBookings;
-            return $activity;
-        });
+                $activity->countBookings = $countBookings;
+                return $activity;
+            });
 
         $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'subactivities')
             ->whereHas('activity', function ($query) {
@@ -308,37 +308,35 @@ class BookingController extends Controller
     }
     function InsertBooking(Request $request)
     {
-        $request->validate(
-            [
-                'fk_activity_id' => 'required|exists:activities,activity_id',
-                'fk_timeslots_id' => 'nullable|exists:timeslots,timeslots_id',
-                'sub_activity_id' => 'nullable|array',
-                'sub_activity_id.*' => 'nullable|exists:sub_activities,sub_activity_id',
-                'booking_date' => 'required|date_format:d/m/Y',
-                'instituteName' => 'required',
-                'instituteAddress' => 'required',
-                'province' => 'required',
-                'district' => 'required',
-                'subdistrict' => 'required',
-                'zipcode' => ['required', 'regex:/^[0-9]{5}$/'],
-                'visitorName' => 'required',
-                'visitorEmail' => 'required|email',
-                'tel' => ['required', 'regex:/^[0-9]{10}$/'],
-                'children_qty' => 'nullable|integer|min:0',
-                'students_qty' => 'nullable|integer|min:0',
-                'adults_qty' => 'nullable|integer|min:0',
-                'disabled_qty' => 'nullable|integer|min:0',
-                'elderly_qty' => 'nullable|integer|min:0',
-                'monk_qty' => 'nullable|integer|min:0',
-            ]
-        );
+        $rules = [
+            'fk_activity_id' => 'required|exists:activities,activity_id',
+            'fk_timeslots_id' => 'nullable|exists:timeslots,timeslots_id',
+            'sub_activity_id' => 'nullable|array',
+            'sub_activity_id.*' => 'nullable|exists:sub_activities,sub_activity_id',
+            'booking_date' => 'required|date_format:d/m/Y',
+            'instituteName' => 'required',
+            'instituteAddress' => 'required',
+            'province' => 'required',
+            'district' => 'required',
+            'subdistrict' => 'required',
+            'zipcode' => ['required', 'regex:/^[0-9]{5}$/'],
+            'visitorName' => 'required',
+            'visitorEmail' => 'required|email',
+            'tel' => ['required', 'regex:/^[0-9]{10}$/'],
+            'children_qty' => 'nullable|integer|min:0',
+            'students_qty' => 'nullable|integer|min:0',
+            'adults_qty' => 'nullable|integer|min:0',
+            'disabled_qty' => 'nullable|integer|min:0',
+            'elderly_qty' => 'nullable|integer|min:0',
+            'monk_qty' => 'nullable|integer|min:0',
+        ];
+
         if (in_array($request->fk_activity_id, [1, 2, 3])) {
             $rules['fk_timeslots_id'] = 'required|exists:timeslots,timeslots_id';
-        } else {
-            $rules['fk_timeslots_id'] = 'nullable|exists:timeslots,timeslots_id';
         }
         $messages = [
             'fk_timeslots_id.required' => 'กรุณาเลือกรอบการเข้าชม',
+            'booking_date.required' => 'กรุณาระบุวันที่จองเข้าชม',
             'at_least_one_quantity.required' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท',
         ];
 
@@ -489,6 +487,11 @@ class BookingController extends Controller
 
     public function showBookingForm($activity_id)
     {
+        if (!session()->has('email')) {
+            session(['redirect_url' => route('form_bookings.activity', ['activity_id' => $activity_id])]);
+            return redirect()->route('guest.verify');
+        }
+
         $selectedActivity = Activity::find($activity_id);
         if (!$selectedActivity) {
             return redirect()->back()->with('error', 'Activity not found.');

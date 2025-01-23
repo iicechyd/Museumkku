@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,13 +12,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-</head>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+    </head>
 <style>
-    body {
+    html, body {
         font-family: 'Noto Sans Thai', sans-serif;
         display: flex;
         flex-direction: column;
-        padding-top: 70px;
         height: 100%;
     }
 
@@ -26,13 +30,14 @@
         width: 100%;
         z-index: 1000;
     }
+    .custom-padding-top {
+    padding-top: 50px;
+}
 
     .footer {
         margin-top: auto;
     }
 </style>
-
-
 <body>
     <nav class="navbar navbar-expand-lg" style="background-color: #ECECEC;">
         <div class="container-fluid">
@@ -100,7 +105,9 @@
             </div>
         </div>
     </nav>
-    @yield('content')
+    <div class="custom-padding-top">
+        @yield('content')
+    </div>
     <div class="footer">
         <footer class="text-center" style="background-color: #F9F9F9;">
             <div class="text-center text-black p-3">
@@ -109,7 +116,4 @@
         </footer>
     </div>
 </body>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-</script>
+</html>

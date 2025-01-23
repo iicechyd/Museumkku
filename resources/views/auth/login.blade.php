@@ -43,7 +43,7 @@
                                     @csrf
                                     <div class="form-group mb-3">
                                         <label class="label" for="email">Email</label>
-                                        <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                        <input type="email" id="email" class="form-control @error('email') is-invalid @enderror"
                                             placeholder="Email" required name="email" value="{{ old('email') }}" required
                                             autocomplete="email" autofocus>
                                         @error('email')
@@ -51,11 +51,10 @@
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                         @enderror
-
                                     </div>
                                     <div class="form-group mb-3">
                                         <label class="label" for="password">Password</label>
-                                        <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                        <input type="password" id="password" class="form-control @error('password') is-invalid @enderror"
                                             name="password" required autocomplete="current-password" placeholder="Password">
 
                                         @error('password')

@@ -22,7 +22,6 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/th.global.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
@@ -64,9 +63,9 @@
             <form method="POST" action="/InsertBooking" class="row g-3" novalidate>
                 @csrf
                 <div class="col-md-5">
-                    <label for="fk_activity_id" class="form-label">ประเภทเข้าชม</label>
+                    <label for="activity_select" class="form-label">ประเภทเข้าชม</label>
                     <input type="hidden" id="fk_activity_id" name="fk_activity_id" value="{{ $activity_id }}">
-                    <select class="form-select" disabled>
+                    <select class="form-select" id="activity_select" disabled>
                         <option value="{{ $activity_id }}">{{ $selectedActivity->activity_name }}</option>
                     </select>
                 </div>
@@ -94,7 +93,7 @@
 
                 @if ($hasSubactivities)
                     <div class="form-group col-3">
-                        <label for="fk_subactivity_id" class="form-label">หลักสูตร</label>
+                        <label class="form-label">หลักสูตร</label>
                         <div class="dropdown">
                             <button class="btn btn-white border dropdown-toggle" type="button" id="subactivityDropdown"
                                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -236,9 +235,9 @@
                     @enderror
                 </div>
 
-                <label for="text-center p-5">ระบุจำนวนผู้เข้าชม</label>
+                <label class="form-label">ระบุจำนวนผู้เข้าชม</label>
                 <div id="errorMessage" style="color: red; display: none;"></div>
-                <label for="text-center" class="custom-gray-text">
+                <label class="custom-gray-text">
                     @if ($selectedActivity->max_capacity)
                         <span class="indent-line">จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $selectedActivity->max_capacity }} คน และ
                             ไม่ต่ำกว่า 50 คนต่อการจอง</span>
@@ -280,7 +279,7 @@
                     </div>
                 </div>
 
-                <label for="text-center">สวัสดิการเข้าชมฟรี</label>
+                <label>สวัสดิการเข้าชมฟรี</label>
                 <div class="row pt-3">
                     <!-- ผู้พิการ -->
                     <div class="col-3">

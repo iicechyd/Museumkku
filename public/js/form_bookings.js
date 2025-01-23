@@ -1,13 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    let subactivities = window.subactivities;
-    let subactivitySection = document.getElementById('subactivity-section');
-
-    if (subactivities.length > 0) {
-        subactivitySection.style.display = 'block';
-    }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
     let maxSubactivities = window.maxSubactivities;
     let checkboxes = document.querySelectorAll('input[name="sub_activity_id[]"]');
 

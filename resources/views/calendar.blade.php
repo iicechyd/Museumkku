@@ -1,10 +1,12 @@
 @extends('layouts.layout')
 @section('title', 'ปฏิทินการจอง')
 
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 @section('content')
@@ -36,5 +38,5 @@
         </div>
     </div>
     <script src="{{ asset('js/calendar.js') }}"></script>
-    
 @endsection
+</html>

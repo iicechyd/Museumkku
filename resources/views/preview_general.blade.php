@@ -1,6 +1,8 @@
 @extends('layouts.layout')
 @section('title', 'จองกิจกรรมพิพิธภัณฑ์')
 
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <link rel="stylesheet" href="{{ asset('css/card.css') }}">
 </head>
@@ -14,12 +16,12 @@
         </div>
     </div>
     @if ($activities->count())
-        <div class="container pb-5 d-flex justify-content-center flex-nowrap gap-3">
-            @foreach ($activities as $item)
-                <div class="col-md-3">
-                    <x-card-group>
+    <div class="container pb-5 d-flex justify-content-center flex-wrap gap-3">
+        @foreach ($activities as $item)
+        <div class="w-full sm:w-1/2 lg:w-1/4">
+            <x-card-group>
                         <x-card title="{{ $item->activity_name }}" text="{{ $item->description }}"
-                            image="{{ $item->images->isNotEmpty() ? asset('storage/' . $item->images->first()->image_path) : asset('storage/default.jpg') }}"
+                            image="{{ $item->images->isNotEmpty() ? asset('storage/' . $item->images->first()->image_path) : asset('') }}"
                             detail="{{ route('activity_detail', ['activity_id' => $item->activity_id]) }}"
                             booking="{{ route('form_bookings.activity', ['activity_id' => $item->activity_id]) }}" />
                     </x-card-group>
@@ -29,25 +31,5 @@
             <div class="text-center pb-5">ไม่มีข้อมูลกิจกรรม</div>
     @endif
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="activityDetailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p></p>
-                    <img src="" class="img-fluid" alt="Activity Image">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
+</html>

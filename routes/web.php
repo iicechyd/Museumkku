@@ -106,3 +106,6 @@ Route::get('/auth/callback', [AuthController::class, 'handleGoogleCallback']);
 Route::get('/guest_verify', function () {
     return view('guest_verify'); 
 })->name('guest.verify');
+
+Route::get('/bookings/edit/{booking_id}', [BookingController::class, 'showBookingEdit'])->name('bookings.edit');
+Route::put('/bookings/update/{booking_id}', [BookingController::class, 'update'])->name('bookings.update');

@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use DateTime;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+use DateTime;
 use App\Models\Bookings;
 use App\Models\Timeslots;
 use App\Models\Activity;
+use App\Models\SubActivity;
 use App\Models\Institutes;
 use App\Models\Visitors;
 use App\Models\StatusChanges;
-use App\Models\closedTimeslots;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\BookingApprovedMail;
 use App\Mail\BookingCancelledMail;
-use Illuminate\Support\Facades\Log;
-use App\Models\SubActivity;
-use Carbon\Carbon;
+use App\Mail\BookingPendingMail;
 
 class BookingController extends Controller
 {
@@ -482,6 +482,8 @@ class BookingController extends Controller
             $booking->subActivities()->sync($subActivities);
         }
 
+        $editLink = route('bookings.edit', ['booking_id' => $booking->booking_id]);
+        Mail::to($request->visitorEmail)->send(new BookingPendingMail($booking, $editLink));
         return back()->with('showSuccessModal', true);
     }
 
@@ -561,5 +563,196 @@ class BookingController extends Controller
         $activities = Activity::orderBy('activity_name')->pluck('activity_name', 'activity_id');
 
         return view('admin.history', compact('histories', 'activities'));
+    }
+    //CustomerEditBookings
+    public function showBookingEdit($booking_id)
+    {
+        $booking = Bookings::findOrFail($booking_id);
+        $institutes = Institutes::findOrFail($booking->institute_id);
+        $visitors = Visitors::findOrFail($booking->visitor_id);
+        $activities = Activity::all();
+        $subactivities = Subactivity::where('activity_id', $booking->activity_id)->get();
+        $timeslots = Timeslots::where('activity_id', $booking->activity_id)->get();
+        $activity = Activity::findOrFail($booking->activity_id);
+        $maxSubactivities = $activity->max_subactivities;
+        
+        return view('visitorEditBooking', compact('booking', 'institutes', 'visitors', 'activities', 'subactivities', 'timeslots', 'maxSubactivities'));
+    }
+    public function update(Request $request, $booking_id)
+    {
+        $rules = [
+            'fk_activity_id' => 'required|exists:activities,activity_id',
+            'fk_timeslots_id' => 'nullable|exists:timeslots,timeslots_id',
+            'sub_activity_id' => 'nullable|array',
+            'sub_activity_id.*' => 'nullable|exists:sub_activities,sub_activity_id',
+            'booking_date' => 'required|date_format:d/m/Y',
+            'instituteName' => 'required',
+            'instituteAddress' => 'required',
+            'province' => 'required',
+            'district' => 'required',
+            'subdistrict' => 'required',
+            'zipcode' => ['required', 'regex:/^[0-9]{5}$/'],
+            'visitorName' => 'required',
+            'visitorEmail' => 'required|email',
+            'tel' => ['required', 'regex:/^[0-9]{10}$/'],
+            'children_qty' => 'nullable|integer|min:0',
+            'students_qty' => 'nullable|integer|min:0',
+            'adults_qty' => 'nullable|integer|min:0',
+            'disabled_qty' => 'nullable|integer|min:0',
+            'elderly_qty' => 'nullable|integer|min:0',
+            'monk_qty' => 'nullable|integer|min:0',
+        ];
+        
+        if (in_array($request->fk_activity_id, [1, 2, 3])) {
+            $rules['fk_timeslots_id'] = 'required|exists:timeslots,timeslots_id';
+        }
+        $messages = [
+            'fk_timeslots_id.required' => 'กรุณาเลือกรอบการเข้าชม',
+            'booking_date.required' => 'กรุณาระบุวันที่จองเข้าชม',
+            'at_least_one_quantity.required' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท',
+        ];
+
+        $request->validate($rules, $messages);
+
+        $activity = Activity::find($request->fk_activity_id);
+        if (!$activity) {
+            return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
+        }
+        $maxSubactivities = $activity->max_subactivities;
+        $selectedSubactivities = $request->input('sub_activity_id', []);
+        if (count($selectedSubactivities) > $maxSubactivities) {
+            return back()->withErrors([
+                'sub_activity_id' => "คุณสามารถเลือกได้สูงสุด $maxSubactivities กิจกรรมย่อยเท่านั้น"
+            ])->withInput();
+        }
+        $quantityFields = [
+            'children_qty',
+            'students_qty',
+            'adults_qty',
+            'disabled_qty',
+            'elderly_qty',
+            'monk_qty'
+        ];
+
+        $isAtLeastOneQuantityFilled = false;
+        foreach ($quantityFields as $field) {
+            if ($request->$field > 0) {
+                $isAtLeastOneQuantityFilled = true;
+                break;
+            }
+        }
+
+        if (!$isAtLeastOneQuantityFilled) {
+            return back()->withErrors([
+                'at_least_one_quantity' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท'
+            ])->withInput();
+        }
+
+        $activity = Activity::with('activityType')->find($request->fk_activity_id);
+        if (!$activity) {
+            return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
+        }
+
+        $bookingDate = DateTime::createFromFormat('d/m/Y', $request->booking_date);
+        if (!$bookingDate) {
+            return back()->with('error', 'รูปแบบวันที่ไม่ถูกต้อง')->withInput();
+        }
+        $formattedDate = $bookingDate->format('Y-m-d');
+
+        if ($request->filled('fk_timeslots_id')) {
+            $timeslot = Timeslots::find($request->fk_timeslots_id);
+            if (!$timeslot) {
+                return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
+            }
+
+            if ($activity->activity_id == 3) {
+                if ($request->filled('fk_timeslots_id')) {
+                    $timeslot = Timeslots::find($request->fk_timeslots_id);
+                    if (!$timeslot) {
+                        return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
+                    }
+                    $conflictingBooking = Bookings::join('timeslots', 'bookings.timeslots_id', '=', 'timeslots.timeslots_id')
+                        ->whereIn('bookings.activity_id', [1, 2])
+                        ->where('bookings.booking_date', $formattedDate)
+                        ->where(function ($query) use ($timeslot) {
+                            $query->whereBetween('timeslots.start_time', [$timeslot->start_time, $timeslot->end_time])
+                                ->orWhereBetween('timeslots.end_time', [$timeslot->start_time, $timeslot->end_time]);
+                        })
+                        ->exists();
+
+                    if ($conflictingBooking) {
+                        return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีกิจกรรมที่จองในช่วงเวลาใกล้เคียงกันจากกิจกรรมอื่น')->withInput();
+                    }
+                }
+            }
+            if (in_array($activity->activity_id, [1, 2])) {
+                if ($request->filled('fk_timeslots_id')) {
+                    $timeslot = Timeslots::find($request->fk_timeslots_id);
+                    if (!$timeslot) {
+                        return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
+                    }
+                    $conflictingBooking = Bookings::join('timeslots', 'bookings.timeslots_id', '=', 'timeslots.timeslots_id')
+                        ->where('bookings.activity_id', 3)
+                        ->where('bookings.booking_date', $formattedDate)
+                        ->where(function ($query) use ($timeslot) {
+                            $query->whereBetween('timeslots.start_time', [$timeslot->start_time, $timeslot->end_time])
+                                ->orWhereBetween('timeslots.end_time', [$timeslot->start_time, $timeslot->end_time]);
+                        })
+                        ->exists();
+
+                    if ($conflictingBooking) {
+                        return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีการจองกิจกรรมอื่นในช่วงเวลาใกล้เคียง')->withInput();
+                    }
+                }
+            }
+            $totalToBook = ($request->children_qty ?? 0) + ($request->students_qty ?? 0) + ($request->adults_qty ?? 0);
+            $totalBooked = Bookings::where('booking_date', $formattedDate)
+                ->where('timeslots_id', $timeslot->timeslots_id)
+                ->whereIn('status', [0, 1])
+                ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
+            if ($activity->max_capacity !== null && $totalBooked + $totalToBook > $activity->max_capacity) {
+                return back()->with('error', 'จำนวนเกินความจุต่อรอบการเข้าชม')->withInput();
+            }
+        }
+        
+        $booking = Bookings::findOrFail($booking_id);
+
+        $institute = Institutes::firstOrNew([
+            'instituteName' => $request->instituteName,
+        ]);
+                if ($institute->exists) {
+            $institute->instituteAddress = $request->instituteAddress;
+            $institute->province = $request->province;
+            $institute->district = $request->district;
+            $institute->subdistrict = $request->subdistrict;
+            $institute->zipcode = $request->zipcode;
+            $institute->save();
+        } else {
+            $institute->save();
+        }
+
+        $visitor = Visitors::updateOrCreate(
+            ['visitorEmail' => $request->visitorEmail],
+            [
+                'visitorName' => $request->visitorName,
+                'tel' => $request->tel,
+                'institute_id' => $institute->institute_id,
+            ]
+        );
+        $booking->update([
+            'fk_activity_id' => $request->fk_activity_id,
+            'booking_date' => $formattedDate,
+            'timeslots_id' => $request->fk_timeslots_id,
+            'children_qty' => $request->children_qty ?? 0,
+            'students_qty' => $request->students_qty ?? 0,
+            'adults_qty' => $request->adults_qty ?? 0,
+            'disabled_qty' => $request->disabled_qty ?? 0,
+            'elderly_qty' => $request->elderly_qty ?? 0,
+            'monk_qty' => $request->monk_qty ?? 0,
+        ]);
+        
+        $booking->subactivities()->sync($request->sub_activity_id ?? []);
+
+        return redirect()->route('bookings.edit', $booking_id)->with('success', 'อัปเดตข้อมูลการจองสำเร็จ');
     }
 }

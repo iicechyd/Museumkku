@@ -82,7 +82,7 @@
                 </div>
 
                 @if ($subactivities->isNotEmpty())
-                    <div class="form-group col-3">
+                    <div class="form-group col-md-3">
                         <label class="form-label">หลักสูตร</label>
                         <div class="dropdown">
                             <button class="btn btn-white border dropdown-toggle" type="button" id="subactivityDropdown"
@@ -110,7 +110,7 @@
                 @endif
 
                 @if ($timeslots->isNotEmpty())
-                    <div class="form-group col-3">
+                    <div class="form-group col-md-3">
                         <label for="fk_timeslots_id" class="form-label">รอบการเข้าชม:</label>
                         <select id="fk_timeslots_id" class="form-select @error('fk_timeslots_id') is-invalid @enderror"
                             name="fk_timeslots_id">
@@ -124,7 +124,7 @@
                     </div>
                 @endif
 
-                <div class="col-4">
+                <div class="col-md-4">
                     <label for="instituteName" class="form-label">ชื่อหน่วยงาน</label>
                     <input type="text" class="form-control @error('instituteName') is-invalid @enderror"
                         id="instituteName" name="instituteName" placeholder="กรอกชื่อหน่วยงาน"
@@ -136,7 +136,7 @@
                     @enderror
                 </div>
 
-                <div class="col-4">
+                <div class="col-md-4">
                     <label for="instituteAddress" class="form-label">ที่อยู่หน่วยงาน</label>
                     <input type="text" class="form-control @error('instituteAddress') is-invalid @enderror"
                         id="instituteAddress" name="instituteAddress" placeholder="บ้านเลขที่, ซอย, หมู่, ถนน"
@@ -233,22 +233,22 @@
                     @enderror
                 </div>
 
-                <label class="form-label">ระบุจำนวนผู้เข้าชม</label>
-                <div id="errorMessage" style="color: red; display: none;"></div>
-                <label class="custom-gray-text">
-                    @if ($booking->activity && $booking->activity->max_capacity)
-                        <span class="indent-line">จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $booking->activity->max_capacity }} คน และ
+                <p>ระบุจำนวนผู้เข้าชม</p>
+                <p class="custom-gray-text mt-0">
+                    @if ($selectedActivity->max_capacity)
+                        <span class="indent-line">จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $selectedActivity->max_capacity }} คน และ
                             ไม่ต่ำกว่า 50 คนต่อการจอง</span>
-                        <span class="new-line">(หากผู้เข้าชมเกิน {{ $booking->activity->max_capacity }} คน
+                        <span class="new-line">(หากผู้เข้าชมเกิน {{ $selectedActivity->max_capacity }} คน
                             กรุณาติดต่อเจ้าหน้าที่ 0XX-XXXX )</span>
                     @else
                         <span>ไม่จำกัดจำนวนผู้เข้าชม และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
                     @endif
-                </label>
+                </p>
+                <p id="errorMessage" style="color: red; display: none;"></p>
 
-                <div class="row pt-3">
+                <div class="row">
                     <!-- เนอสเซอรี่ - อนุบาล -->
-                    <div class="col-3">
+                    <div class="col-md-3">
                         <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"
                             onclick="toggleInput('childrenInput')" {{ $booking->children_qty > 0 ? 'checked' : '' }}>
                         <label class="form-check-label" for="children_qty">เด็ก : {{ $booking->activity->children_price }} บาท/คน</label>
@@ -258,7 +258,7 @@
                     </div>
 
                     <!-- นักเรียน/นักศึกษา -->
-                    <div class="col-3">
+                    <div class="col-md-3">
                         <input class="form-check-input" type="checkbox" id="students_qty" name="students_qty"
                             onclick="toggleInput('studentInput')" {{ $booking->students_qty > 0 ? 'checked' : '' }}>
                         <label class="form-check-label" for="students_qty">นักเรียน/นักศึกษา : {{ $booking->activity->student_price }} บาท/คน</label>
@@ -268,7 +268,7 @@
                     </div>
 
                     <!-- ครู / อาจารย์  -->
-                    <div class="col-3">
+                    <div class="col-md-3">
                         <input class="form-check-input" type="checkbox" id="adults_qty" name="adults_qty"
                             onclick="toggleInput('adultsInput')" {{ $booking->adults_qty > 0 ? 'checked' : '' }}>
                         <label class="form-check-label" for="adults_qty">ผู้ใหญ่ / คุณครู : {{ $booking->activity->adult_price }} บาท/คน</label>
@@ -280,7 +280,7 @@
                 <label>สวัสดิการเข้าชมฟรี</label>
                 <div class="row pt-3">
                     <!-- ผู้พิการ -->
-                    <div class="col-3">
+                    <div class="col-md-3">
                         <input class="form-check-input" type="checkbox" id="disabled_qty" name="disabled_qty"
                             onclick="toggleInput('disabledInput')" {{ $booking->disabled_qty > 0 ? 'checked' : '' }}>
                         <label class="form-check-label" for="disabled_qty">ผู้พิการ</label>
@@ -289,7 +289,7 @@
                             {{ $booking->disabled_qty > 0 ? '' : 'disabled' }} oninput="calculateTotal()">
                     </div>
                     <!-- ผู้สูงอายุ -->
-                    <div class="col-3">
+                    <div class="col-md-3">
                         <input class="form-check-input" type="checkbox" id="elderly_qty" name="elderly_qty"
                             onclick="toggleInput('elderlyInput')" {{ $booking->elderly_qty > 0 ? 'checked' : '' }}>
                         <label class="form-check-label" for="elderly_qty">ผู้สูงอายุ</label>
@@ -298,7 +298,7 @@
                             {{ $booking->elderly_qty > 0 ? '' : 'disabled' }} oninput="calculateTotal()">
                     </div>
                     <!-- พระภิกษุสงฆ์ /สามเณร -->
-                    <div class="col-3">
+                    <div class="col-md-3">
                         <input class="form-check-input" type="checkbox" id="monk_qty" name="monk_qty"
                             onclick="toggleInput('monkInput')" {{ $booking->monk_qty > 0 ? 'checked' : '' }}>
                         <label class="form-check-label" for="monk_qty">ผู้สูงอายุ</label>

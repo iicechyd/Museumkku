@@ -21,9 +21,7 @@
         src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/th.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <div class="container mt-4 pb-5">
@@ -70,7 +68,7 @@
                     </select>
                 </div>
 
-                <div class="form-group col-4">
+                <div class="form-group col-md-4">
                     <label for="booking_date" class="form-label">วันที่จอง</label>
                     <div class="input-group">
                         <input type="date" class="form-control" id="booking_date" name="booking_date"
@@ -92,7 +90,7 @@
                 </div>
 
                 @if ($hasSubactivities)
-                    <div class="form-group col-3">
+                    <div class="form-group col-md-3">
                         <label class="form-label">หลักสูตร</label>
                         <div class="dropdown">
                             <button class="btn btn-white border dropdown-toggle" type="button" id="subactivityDropdown"
@@ -119,7 +117,7 @@
                 @endif
 
                 @if ($timeslots->isNotEmpty())
-                    <div class="form-group col-3">
+                    <div class="form-group col-md-3">
                         <label for="fk_timeslots_id" class="form-label">รอบการเข้าชม:</label>
                         <select id="fk_timeslots_id" class="form-select @error('fk_timeslots_id') is-invalid @enderror"
                             name="fk_timeslots_id">
@@ -133,7 +131,7 @@
                     </div>
                 @endif
 
-                <div class="col-4">
+                <div class="col-md-4">
                     <label for="instituteName" class="form-label">ชื่อหน่วยงาน</label>
                     <input type="text" class="form-control @error('instituteName') is-invalid @enderror" id="instituteName"
                         name="instituteName" placeholder="กรอกชื่อหน่วยงาน" value="{{ old('instituteName') }}" required>
@@ -144,7 +142,7 @@
                     @enderror
                 </div>
 
-                <div class="col-4">
+                <div class="col-md-4">
                     <label for="instituteAddress" class="form-label">ที่อยู่หน่วยงาน</label>
                     <input type="text" class="form-control @error('instituteAddress') is-invalid @enderror"
                         id="instituteAddress" name="instituteAddress" placeholder="บ้านเลขที่, ซอย, หมู่, ถนน"
@@ -227,7 +225,7 @@
                     <label for="tel" class="form-label">เบอร์โทรผู้ประสานงาน</label>
                     <input type="text" class="form-control @error('tel') is-invalid @enderror" id="tel" name="tel"
                         placeholder="หมายเลขโทรศัพท์" value="{{ old('tel') }}" pattern="\d{10}" maxlength="10"
-                        minlength="10" inputmode="numeric" title="กรุณากรอกเบอร์โทร 10 หลัก" required>
+                        minlength="10" inputmode="numeric" title="กรุณากรอกเบอร์โทร 10 หลัก" required autocomplete="tel">
                     @error('tel')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -235,9 +233,8 @@
                     @enderror
                 </div>
 
-                <label class="form-label">ระบุจำนวนผู้เข้าชม</label>
-                <div id="errorMessage" style="color: red; display: none;"></div>
-                <label class="custom-gray-text">
+                <p>ระบุจำนวนผู้เข้าชม</p>
+                <p class="custom-gray-text mt-0">
                     @if ($selectedActivity->max_capacity)
                         <span class="indent-line">จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $selectedActivity->max_capacity }} คน และ
                             ไม่ต่ำกว่า 50 คนต่อการจอง</span>
@@ -246,10 +243,12 @@
                     @else
                         <span>ไม่จำกัดจำนวนผู้เข้าชม และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
                     @endif
-                </label>
-                <div class="row pt-3">
+                </p>
+                <p id="errorMessage" style="color: red; display: none;"></p>
+
+                <div class="row">
                     <!-- เนอสเซอรี่ - อนุบาล -->
-                    <div class="col-3">
+                    <div class="col-md-3">
                         <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"
                             onclick="toggleInput('childrenInput')">
                         <label class="form-check-label" for="children_qty">เด็ก : {{ $selectedActivity->children_price }} บาท/คน</label>
@@ -258,7 +257,7 @@
                     </div>
 
                     <!-- นักเรียน/นักศึกษา -->
-                    <div class="col-3">
+                    <div class="col-md-3">
                         <input class="form-check-input" type="checkbox" id="students_qty" name="students_qty"
                             onclick="toggleInput('studentInput')">
                         <label class="form-check-label" for="students_qty">นักเรียน/นักศึกษา :
@@ -268,7 +267,7 @@
                     </div>
 
                     <!-- ครู / อาจารย์ -->
-                    <div class="col-3">
+                    <div class="col-md-3">
                         <input class="form-check-input" type="checkbox" id="adults_qty" name="adults_qty"
                             onclick="toggleInput('adultsInput')">
                         <label class="form-check-label" for="adults_qty">ผู้ใหญ่ / คุณครู :
@@ -278,10 +277,10 @@
                     </div>
                 </div>
 
-                <label>สวัสดิการเข้าชมฟรี</label>
-                <div class="row pt-3">
+                <p>สวัสดิการเข้าชมฟรี</p>
+                <div class="row">
                     <!-- ผู้พิการ -->
-                    <div class="col-3">
+                    <div class="col-md-3">
                         <input class="form-check-input" type="checkbox" id="disabled_qty" name="disabled_qty"
                             onclick="toggleInput('disabledInput')">
                         <label class="form-check-label" for="disabled_qty">
@@ -291,7 +290,7 @@
                     </div>
 
                     <!-- ผู้สูงอายุ -->
-                    <div class="col-3">
+                    <div class="col-md-3">
                         <input class="form-check-input" type="checkbox" id="elderly_qty" name="elderly_qty"
                             onclick="toggleInput('elderlyInput')">
                         <label class="form-check-label" for="elderly_qty">
@@ -301,7 +300,7 @@
                     </div>
 
                     <!-- พระภิกษุสงฆ์ /สามเณร -->
-                    <div class="col-3">
+                    <div class="col-md-3">
                         <input class="form-check-input" type="checkbox" id="monk_qty" name="monk_qty"
                             onclick="toggleInput('monkInput')">
                         <label class="form-check-label" for="monk_qty">
@@ -379,6 +378,5 @@
     window.maxSubactivities = {{ $maxSubactivities }};
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 <script src="{{ asset('js/form_bookings.js') }}"></script>
 @endsection

@@ -16,7 +16,7 @@
         </div>
     </div>
     @if ($activities->count())
-        <div class="container pb-5 d-flex justify-content-center flex-wrap gap-3">
+        <div class="container pb-5 d-flex justify-content-center flex-wrap gap-4">
             @foreach ($activities as $item)
                 <div class="w-full sm:w-1/2 lg:w-1/4">
                     <x-card-group>

@@ -68,4 +68,7 @@ $(document).ready(function() {
             }
         });
     });
+    $('#EditMaxSubactivitiesModal .close').on('click', function() {
+        $('#EditMaxSubactivitiesModal').modal('hide');
+    });
 });

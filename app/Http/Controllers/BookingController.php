@@ -753,6 +753,6 @@ class BookingController extends Controller
         
         $booking->subactivities()->sync($request->sub_activity_id ?? []);
 
-        return redirect()->route('bookings.edit', $booking_id)->with('success', 'อัปเดตข้อมูลการจองสำเร็จ');
+        return back()->with('showSuccessModal', true);
     }
 }

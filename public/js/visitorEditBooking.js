@@ -193,17 +193,54 @@ function confirmSubmission() {
         elderlyQty == 0 &&
         monkQty == 0
     ) {
-        document.getElementById("errorMessage").innerText = "*กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท";
+        document.getElementById("errorMessage").innerText =
+            "*กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท";
         document.getElementById("errorMessage").style.display = "block";
         return;
     } else {
         document.getElementById("errorMessage").style.display = "none";
     }
-    document.querySelectorAll('input[disabled]').forEach(input => {
-        input.disabled = false;
+
+    const formInput = {
+        zipcode: document.getElementById("zipcode").value.trim(),
+        subdistrict: document.getElementById("subdistrict").value.trim().toLowerCase(),
+        district: document.getElementById("district").value.trim().toLowerCase(),
+        province: document.getElementById("province").value.trim().toLowerCase(),
+    };
+
+    $.getJSON("/raw_database.json", function (data) {
+        const filteredByZipcode = data.filter(
+            (item) => String(item.zipcode) === formInput.zipcode
+        );
+    
+        console.log("ค่าจากฟอร์ม:", formInput);
+        console.log("ข้อมูลที่กรองด้วยรหัสไปรษณีย์:", filteredByZipcode);
+    
+        const isValid = filteredByZipcode.some((item) => {
+            console.log("ตรวจสอบรายการ:", item);
+            return (
+                item.district.trim().toLowerCase() === formInput.subdistrict.toLowerCase() && 
+                item.amphoe.trim().toLowerCase() === formInput.district.toLowerCase() &&
+                item.province.trim().toLowerCase() === formInput.province.toLowerCase()
+            );
+        });
+    
+        if (!isValid) {
+            alert(
+                "ข้อมูลที่อยู่ของคุณไม่ถูกต้อง กรุณาตรวจสอบให้แน่ใจว่ารหัสไปรษณีย์, ตำบล, อำเภอ และจังหวัดให้ถูกต้อง"
+            );
+            return;
+        }
+
+        document.querySelectorAll("input[disabled]").forEach((input) => {
+            input.disabled = false;
+        });
+
+        const isConfirmed = confirm("คุณต้องการยืนยันการส่งข้อมูลใช่หรือไม่?");
+        if (isConfirmed) {
+            document.querySelector("form").submit();
+        }
+    }).fail(function () {
+        alert("ไม่สามารถโหลดข้อมูลจากระบบได้ กรุณาลองใหม่");
     });
-    const isConfirmed = confirm("คุณต้องการยืนยันการส่งข้อมูลใช่หรือไม่?");
-    if (isConfirmed) {
-        document.querySelector('form').submit();
-    }
 }

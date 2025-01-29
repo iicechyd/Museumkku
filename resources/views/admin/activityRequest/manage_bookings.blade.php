@@ -96,8 +96,17 @@
                                     style="display: inline;" id="statusForm_{{ $item->booking_id }}">
                                     @csrf
                                     <input type="hidden" name="status" value="approve" id="status_{{ $item->booking_id }}">
-                                    <input type="hidden" name="number_of_visitors"
-                                        id="number_of_visitors_{{ $item->booking_id }}">
+                                    <input type="hidden" name="actual_children_qty"
+                                        id="actual_children_qty_{{ $item->booking_id }}">
+                                    <input type="hidden" name="actual_students_qty"
+                                        id="actual_students_qty_{{ $item->booking_id }}">
+                                    <input type="hidden" name="actual_adults_qty"
+                                        id="actual_adults_qty_{{ $item->booking_id }}">
+                                    <input type="hidden" name="actual_disabled_qty"
+                                        id="actual_disabled_qty_{{ $item->booking_id }}">
+                                    <input type="hidden" name="actual_elderly_qty"
+                                        id="actual_elderly_qty_{{ $item->booking_id }}">
+                                    <input type="hidden" name="actual_monk_qty" id="actual_monk_qty_{{ $item->booking_id }}">
                                     <input type="hidden" name="comments" id="comments_{{ $item->booking_id }}">
 
                                     <div class="flex items-center space-x-3">
@@ -134,12 +143,33 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <label for="visitor_count_{{ $item->booking_id }}">จำนวนผู้เข้าชม</label>
-                                            <input type="number" id="visitor_count_{{ $item->booking_id }}"
-                                                class="form-control" min="0" required>
+                                            <label for="children_qty_{{ $item->booking_id }}">จำนวนเด็ก</label>
+                                            <input type="number" id="children_qty_{{ $item->booking_id }}"
+                                                class="form-control" min="0" value="0" required>
+
+                                            <label for="students_qty_{{ $item->booking_id }}">จำนวนนักเรียน</label>
+                                            <input type="number" id="students_qty_{{ $item->booking_id }}"
+                                                class="form-control" min="0" value="0" required>
+
+                                            <label for="adults_qty_{{ $item->booking_id }}">จำนวนผู้ใหญ่</label>
+                                            <input type="number" id="adults_qty_{{ $item->booking_id }}"
+                                                class="form-control" min="0" value="0" required>
+
+                                            <label for="disabled_qty_{{ $item->booking_id }}">จำนวนผู้พิการ</label>
+                                            <input type="number" id="disabled_qty_{{ $item->booking_id }}"
+                                                class="form-control" min="0" value="0" required>
+
+                                            <label for="elderly_qty_{{ $item->booking_id }}">จำนวนผู้สูงอายุ</label>
+                                            <input type="number" id="elderly_qty_{{ $item->booking_id }}"
+                                                class="form-control" min="0" value="0" required>
+
+                                            <label for="monk_qty_{{ $item->booking_id }}">จำนวนพระสงฆ์</label>
+                                            <input type="number" id="monk_qty_{{ $item->booking_id }}" class="form-control"
+                                                min="0" value="0" required>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">ปิด</button>
                                             <button type="button" class="btn btn-success"
                                                 onclick="submitVisitorCount({{ $item->booking_id }})">บันทึก</button>
                                         </div>

@@ -247,10 +247,16 @@ class BookingController extends Controller
 
     public function updateStatus(Request $request, $booking_id)
     {
+
         $request->validate([
             'status' => 'required|in:pending,approve,checkin,cancel',
             'comments' => 'nullable|string',
-            'number_of_visitors' => 'nullable|integer|min:1',
+            'actual_children_qty' => 'integer|min:0',
+            'actual_students_qty' => 'integer|min:0',
+            'actual_adults_qty' => 'integer|min:0',
+            'actual_disabled_qty' => 'integer|min:0',
+            'actual_elderly_qty' => 'integer|min:0',
+            'actual_monk_qty' => 'integer|min:0',
         ]);
 
         $booking = Bookings::where('booking_id', $booking_id)->firstOrFail();
@@ -280,7 +286,12 @@ class BookingController extends Controller
             $statusChange->old_status = $oldStatus;
             $statusChange->new_status = $newStatus;
             $statusChange->comments = $request->input('comments', $statusChange->comments);
-            $statusChange->number_of_visitors = $request->input('number_of_visitors', $statusChange->number_of_visitors);
+            $statusChange->actual_children_qty = $request->input('actual_children_qty', 0);
+            $statusChange->actual_students_qty = $request->input('actual_students_qty', 0);
+            $statusChange->actual_adults_qty = $request->input('actual_adults_qty', 0);
+            $statusChange->actual_disabled_qty = $request->input('actual_disabled_qty', 0);
+            $statusChange->actual_elderly_qty = $request->input('actual_elderly_qty', 0);
+            $statusChange->actual_monk_qty = $request->input('actual_monk_qty', 0);
             $statusChange->changed_by = Auth::user()->name;
             $statusChange->save();
         } else {
@@ -289,7 +300,12 @@ class BookingController extends Controller
                 'old_status' => $oldStatus,
                 'new_status' => $newStatus,
                 'comments' => $request->input('comments', null),
-                'number_of_visitors' => $request->input('number_of_visitors', null),
+                'actual_children_qty' => $request->input('actual_children_qty', 0),
+                'actual_students_qty' => $request->input('actual_students_qty', 0),
+                'actual_adults_qty' => $request->input('actual_adults_qty', 0),
+                'actual_disabled_qty' => $request->input('actual_disabled_qty', 0),
+                'actual_elderly_qty' => $request->input('actual_elderly_qty', 0),
+                'actual_monk_qty' => $request->input('actual_monk_qty', 0),
                 'changed_by' => Auth::user()->name,
             ]);
         }
@@ -558,12 +574,12 @@ class BookingController extends Controller
                 $q->where('new_status', $request->status);
             });
         }
-
         $histories = $query->get();
         $activities = Activity::orderBy('activity_name')->pluck('activity_name', 'activity_id');
 
         return view('admin.history', compact('histories', 'activities'));
     }
+
     //CustomerEditBookings
     public function showBookingEdit($booking_id)
     {
@@ -585,7 +601,7 @@ class BookingController extends Controller
             'fk_timeslots_id' => 'nullable|exists:timeslots,timeslots_id',
             'sub_activity_id' => 'nullable|array',
             'sub_activity_id.*' => 'nullable|exists:sub_activities,sub_activity_id',
-            'booking_date' => 'required|date_format:d/m/Y',
+            'booking_date' => 'required|date_format:Y-m-d',
             'instituteName' => 'required',
             'instituteAddress' => 'required',
             'province' => 'required',
@@ -602,7 +618,7 @@ class BookingController extends Controller
             'elderly_qty' => 'nullable|integer|min:0',
             'monk_qty' => 'nullable|integer|min:0',
         ];
-        
+
         if (in_array($request->fk_activity_id, [1, 2, 3])) {
             $rules['fk_timeslots_id'] = 'required|exists:timeslots,timeslots_id';
         }
@@ -653,11 +669,7 @@ class BookingController extends Controller
             return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
         }
 
-        $bookingDate = DateTime::createFromFormat('d/m/Y', $request->booking_date);
-        if (!$bookingDate) {
-            return back()->with('error', 'รูปแบบวันที่ไม่ถูกต้อง')->withInput();
-        }
-        $formattedDate = $bookingDate->format('Y-m-d');
+        $formattedDate = $request->booking_date;
 
         if ($request->filled('fk_timeslots_id')) {
             $timeslot = Timeslots::find($request->fk_timeslots_id);

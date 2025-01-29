@@ -1,24 +1,23 @@
-function confirmUpdateStatus(event, bookingId) {
-    var confirmAction = confirm("คุณต้องการอัปเดตสถานะการจองนี้ใช่หรือไม่?");
-    if (!confirmAction) {
-        event.preventDefault();
-        return false;
-    }
-
-    document.getElementById('status_' + bookingId).value = 'approve';
-    document.getElementById('statusForm_' + bookingId).submit();
-}
-
 function openVisitorModal(bookingId) {
     $('#visitorModal_' + bookingId).modal('show');
 }
 
 function submitVisitorCount(bookingId) {
-    var visitorCount = document.getElementById('visitor_count_' + bookingId).value;
+    var childrenQty = document.getElementById('children_qty_' + bookingId).value;
+    var studentsQty = document.getElementById('students_qty_' + bookingId).value;
+    var adultsQty = document.getElementById('adults_qty_' + bookingId).value;
+    var disabledQty = document.getElementById('disabled_qty_' + bookingId).value;
+    var elderlyQty = document.getElementById('elderly_qty_' + bookingId).value;
+    var monkQty = document.getElementById('monk_qty_' + bookingId).value;
     
-    if(visitorCount > 0) {
-        document.getElementById('number_of_visitors_' + bookingId).value = visitorCount;
-        document.getElementById('status_' + bookingId).value = 'checkin'; // Set status to checkin
+    if (childrenQty >= 0 && studentsQty >= 0 && adultsQty >= 0 && disabledQty >= 0 && elderlyQty >= 0 && monkQty >= 0) {
+        document.getElementById('actual_children_qty_' + bookingId).value = childrenQty;
+        document.getElementById('actual_students_qty_' + bookingId).value = studentsQty;
+        document.getElementById('actual_adults_qty_' + bookingId).value = adultsQty;
+        document.getElementById('actual_disabled_qty_' + bookingId).value = disabledQty;
+        document.getElementById('actual_elderly_qty_' + bookingId).value = elderlyQty;
+        document.getElementById('actual_monk_qty_' + bookingId).value = monkQty;
+        document.getElementById('status_' + bookingId).value = 'checkin';
         document.getElementById('statusForm_' + bookingId).submit();
     } else {
         alert('กรุณากรอกจำนวนผู้เข้าชมที่ถูกต้อง');
@@ -37,8 +36,16 @@ function submitCancelForm(bookingId) {
         alert("กรุณากรอกหมายเหตุการยกเลิก");
         return;
     }
-    document.getElementById('status_' + bookingId).value = 'cancel';
     document.getElementById('comments_' + bookingId).value = reason;
+    document.getElementById('status_' + bookingId).value = 'cancel';
+
+    var fields = ['actual_children_qty', 'actual_students_qty', 'actual_adults_qty', 'actual_disabled_qty', 'actual_elderly_qty', 'actual_monk_qty'];
+    fields.forEach(function (field) {
+        var input = document.getElementById(field + '_' + bookingId);
+        if (!input.value) {
+            input.value = 0;
+        }
+    });
 
     document.getElementById('statusForm_' + bookingId).submit();
     $('#cancelModal_' + bookingId).modal('hide');

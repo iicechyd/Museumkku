@@ -29,25 +29,25 @@ class DashboardController extends Controller
             ->whereIn('bookings.activity_id', [1, 2, 3])
             ->whereDate('bookings.booking_date', $today)
             ->where('bookings.status', 2)
-            ->sum('status_changes.number_of_visitors');
+            ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
 
         $totalVisitorsThisWeek = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
         ->whereIn('bookings.activity_id', [1, 2, 3])
         ->whereBetween('bookings.booking_date', [$weekStart, $weekEnd])
         ->where('bookings.status', 2)
-        ->sum('status_changes.number_of_visitors');
+        ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
         
         $totalVisitorsThisMonth = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
         ->whereIn('bookings.activity_id', [1, 2, 3])
         ->whereBetween('bookings.booking_date', [$monthStart, $monthEnd])
         ->where('bookings.status', 2)
-        ->sum('status_changes.number_of_visitors');
+        ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
 
         $totalVisitorsThisYear = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
         ->whereIn('bookings.activity_id', [1, 2, 3])
         ->whereBetween('bookings.booking_date', [$yearStart, $yearEnd])
         ->where('bookings.status', 2)
-        ->sum('status_changes.number_of_visitors');
+        ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
 
         $totalVisitorsPerMonthThisYear = [];
         for ($month = 1; $month <= 12; $month++) {
@@ -57,8 +57,8 @@ class DashboardController extends Controller
             $totalVisitorsPerMonthThisYear[$month] = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
                 ->whereBetween('bookings.booking_date', [$startOfMonth, $endOfMonth])
                 ->where('bookings.status', 2)
-                ->sum('status_changes.number_of_visitors');
-        }
+                ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
+            }
 
         $yearlyRevenueGeneral = [];
         $currentDate = $startMonth->copy();
@@ -67,20 +67,19 @@ class DashboardController extends Controller
             $monthEnd = $currentDate->copy()->endOfMonth()->format('Y-m-d');
             $monthLabel = $currentDate->copy()->translatedFormat('M Y');
 
-            $yearlyRevenueGeneral[$monthLabel] = Bookings::whereHas('activity', function ($query) {
-                $query->where('activity_type_id', 1);
-            })
-                ->join('activities', 'bookings.activity_id', '=', 'activities.activity_id')
-                ->whereBetween('booking_date', [$monthStart, $monthEnd])
-                ->where('bookings.status', 2)
-                ->sum(DB::raw(
-                    '(children_qty * children_price) + 
-                    (students_qty * student_price) + 
-                    (adults_qty * adult_price) + 
-                    (disabled_qty * disabled_price) + 
-                    (elderly_qty * elderly_price) + 
-                    (monk_qty * monk_price)'
-                ));
+            $yearlyRevenueGeneral[$monthLabel] = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+        ->join('activities', 'bookings.activity_id', '=', 'activities.activity_id')
+        ->whereBetween('bookings.booking_date', [$monthStart, $monthEnd])
+        ->where('bookings.status', 2)
+        ->where('activities.activity_type_id', 1)
+        ->sum(DB::raw(
+            '(status_changes.actual_children_qty * activities.children_price) + 
+            (status_changes.actual_students_qty * activities.student_price) + 
+            (status_changes.actual_adults_qty * activities.adult_price) + 
+            (status_changes.actual_disabled_qty * activities.disabled_price) + 
+            (status_changes.actual_elderly_qty * activities.elderly_price) + 
+            (status_changes.actual_monk_qty * activities.monk_price)'
+        ));
             $currentDate->addMonth();
         }
 

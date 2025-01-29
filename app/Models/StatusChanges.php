@@ -18,7 +18,12 @@ class StatusChanges extends Model
         'old_status',
         'new_status',
         'comments',
-        'number_of_visitors',
+        'actual_children_qty',
+        'actual_students_qty',
+        'actual_adults_qty',
+        'actual_disabled_qty',
+        'actual_elderly_qty',
+        'actual_monk_qty',
         'changed_by',
     ];
 

@@ -49,7 +49,6 @@
             style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); ">
             แก้ไขข้อมูลการจองเข้าชมพิพิธภัณฑ์</h2>
         <div class="card shadow p-4">
-
             <form method="POST" action="{{ route('bookings.update', $booking->booking_id) }}"  class="row g-3">
                 @csrf
                 @method('PUT')
@@ -64,8 +63,8 @@
                 <div class="form-group col-4">
                     <label for="booking_date" class="form-label">วันที่จอง</label>
                     <div class="input-group">
-                        <input type="date" class="form-control" id="booking_date" name="booking_date"
-                            min="{{ date('Y-m-d', strtotime('+3 days')) }}" required
+                        <input type="date" class="form-control" id="booking_date" name="booking_date" 
+                        value="{{ old('booking_date', $booking->booking_date ?? '') }}" required
                             placeholder="กรุณาเลือกวันที่ต้องการจอง (วัน/เดือน/ปี)">
                         <div class="input-group-append">
                             <label for="booking_date" class="input-group-text" style="cursor: pointer;">
@@ -111,7 +110,7 @@
 
                 @if ($timeslots->isNotEmpty())
                     <div class="form-group col-md-3">
-                        <label for="fk_timeslots_id" class="form-label">รอบการเข้าชม:</label>
+                        <label for="fk_timeslots_id" class="form-label">รอบการเข้าชม</label>
                         <select id="fk_timeslots_id" class="form-select @error('fk_timeslots_id') is-invalid @enderror"
                             name="fk_timeslots_id">
                             <option value="">เลือกรอบการเข้าชม</option>
@@ -123,7 +122,7 @@
                         @enderror
                     </div>
                 @endif
-
+                
                 <div class="col-md-4">
                     <label for="instituteName" class="form-label">ชื่อหน่วยงาน</label>
                     <input type="text" class="form-control @error('instituteName') is-invalid @enderror"
@@ -235,10 +234,10 @@
 
                 <p>ระบุจำนวนผู้เข้าชม</p>
                 <p class="custom-gray-text mt-0">
-                    @if ($selectedActivity->max_capacity)
-                        <span class="indent-line">จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $selectedActivity->max_capacity }} คน และ
+                    @if ($booking->activity->max_capacity)
+                        <span class="indent-line">จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $booking->activity->max_capacity }} คน และ
                             ไม่ต่ำกว่า 50 คนต่อการจอง</span>
-                        <span class="new-line">(หากผู้เข้าชมเกิน {{ $selectedActivity->max_capacity }} คน
+                        <span class="new-line">(หากผู้เข้าชมเกิน {{ $booking->activity->max_capacity }} คน
                             กรุณาติดต่อเจ้าหน้าที่ 0XX-XXXX )</span>
                     @else
                         <span>ไม่จำกัดจำนวนผู้เข้าชม และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>

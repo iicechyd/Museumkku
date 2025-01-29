@@ -13,7 +13,13 @@ return new class extends Migration {
             $table->tinyInteger('old_status');
             $table->tinyInteger('new_status');
             $table->text('comments')->nullable();
-            $table->integer('number_of_visitors')->nullable();
+            $table->integer('actual_children_qty')->default(0);
+            $table->integer('actual_students_qty')->default(0);
+            $table->integer('actual_adults_qty')->default(0);
+            $table->integer('actual_disabled_qty')->default(0);
+            $table->integer('actual_elderly_qty')->default(0);
+            $table->integer('actual_monk_qty')->default(0);
+
             $table->string(column: 'changed_by')->nullable();
             $table->timestamp('status_updated_at');
 

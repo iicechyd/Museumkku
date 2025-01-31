@@ -35,14 +35,13 @@
             </form>
         </div>
         
-
         @isset($bookings)
-            <h3>ผลการค้นหา:</h3>
+            <h3>ผลการค้นหา</h3>
             @if ($bookings->isNotEmpty())
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>ชื่อกิจกรรม</th>
+                            <th>ประเภทการเข้าชม</th>
                             <th>วันที่จอง</th>
                             <th>รอบการเข้าชม</th>
                             <th>ชื่อหน่วยงาน</th>
@@ -72,13 +71,8 @@
                                         @case(0)
                                             <button type="button" class="status-btn-request">รออนุมัติ</button>
                                         @break
-
                                         @case(1)
                                             <button type="button" class="status-btn-approved">อนุมัติ</button>
-                                        @break
-
-                                        @case(2)
-                                            <button type="button" class="status-btn-except">ยกเลิก</button>
                                         @break
                                     @endswitch
                                 </td>

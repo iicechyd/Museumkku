@@ -314,6 +314,7 @@ class BookingController extends Controller
 
         if ($newStatus === 1 && $visitorEmail) {
             $uploadLink = route('documents.upload', ['booking_id' => $booking->booking_id]);
+            $cancelLink = route('bookings.cancel', ['booking_id' => $booking->booking_id]);
             Mail::to($visitorEmail)->send(new BookingApprovedMail($booking, $uploadLink));
         } elseif ($newStatus === 3 && $visitorEmail) {
             Mail::to($visitorEmail)->send(new BookingCancelledMail($booking));
@@ -499,7 +500,8 @@ class BookingController extends Controller
         }
 
         $editLink = route('bookings.edit', ['booking_id' => $booking->booking_id]);
-        Mail::to($request->visitorEmail)->send(new BookingPendingMail($booking, $editLink));
+        $cancelLink = route('bookings.cancel', ['booking_id' => $booking->booking_id]);
+        Mail::to($request->visitorEmail)->send(new BookingPendingMail($booking));
         return back()->with('showSuccessModal', true);
     }
 
@@ -536,9 +538,12 @@ class BookingController extends Controller
         ]);
 
         $email = $request->input('email');
-        $bookings = Bookings::whereHas('visitor', function ($query) use ($email) {
+
+        $bookings = Bookings::whereIn('status', [0, 1])
+        ->whereHas('visitor', function ($query) use ($email) {
             $query->where('visitorEmail', $email);
-        })->get();
+        })
+        ->get();
 
         if ($bookings->isEmpty()) {
             return redirect()->route('checkBookingStatus')
@@ -591,7 +596,7 @@ class BookingController extends Controller
         $timeslots = Timeslots::where('activity_id', $booking->activity_id)->get();
         $activity = Activity::findOrFail($booking->activity_id);
         $maxSubactivities = $activity->max_subactivities;
-        
+
         return view('visitorEditBooking', compact('booking', 'institutes', 'visitors', 'activities', 'subactivities', 'timeslots', 'maxSubactivities'));
     }
     public function update(Request $request, $booking_id)
@@ -726,13 +731,13 @@ class BookingController extends Controller
                 return back()->with('error', 'จำนวนเกินความจุต่อรอบการเข้าชม')->withInput();
             }
         }
-        
+
         $booking = Bookings::findOrFail($booking_id);
 
         $institute = Institutes::firstOrNew([
             'instituteName' => $request->instituteName,
         ]);
-                if ($institute->exists) {
+        if ($institute->exists) {
             $institute->instituteAddress = $request->instituteAddress;
             $institute->province = $request->province;
             $institute->district = $request->district;
@@ -762,8 +767,30 @@ class BookingController extends Controller
             'elderly_qty' => $request->elderly_qty ?? 0,
             'monk_qty' => $request->monk_qty ?? 0,
         ]);
-        
+
         $booking->subactivities()->sync($request->sub_activity_id ?? []);
+
+        return back()->with('showSuccessModal', true);
+    }
+    public function showCancel($booking_id)
+    {
+        $booking = Bookings::with('activity')->findOrFail($booking_id);
+
+        $childrenPrice = $booking->children_qty * ($booking->activity->children_price ?? 0);
+    $studentPrice = $booking->students_qty * ($booking->activity->student_price ?? 0);
+    $adultPrice = $booking->adults_qty * ($booking->activity->adult_price ?? 0);
+    $disabledPrice = $booking->disabled_qty * ($booking->activity->disabled_price ?? 0);
+    $elderlyPrice = $booking->elderly_qty * ($booking->activity->elderly_price ?? 0);
+    $monkPrice = $booking->monk_qty * ($booking->activity->monk_price ?? 0);
+    $totalPrice = $childrenPrice + $studentPrice + $adultPrice + $disabledPrice + $elderlyPrice + $monkPrice;
+
+        return view('emails.ShowCancelledBooking', compact('booking', 'totalPrice'));
+    }
+    public function cancel(Request $request, $booking_id)
+    {
+        $booking = Bookings::findOrFail($booking_id);
+        $booking->status = 3;
+        $booking->save();
 
         return back()->with('showSuccessModal', true);
     }

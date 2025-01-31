@@ -3,10 +3,7 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class BookingApprovedMail extends Mailable
@@ -15,11 +12,25 @@ class BookingApprovedMail extends Mailable
 
     public $booking;
     public $uploadLink;
+    public $totalPrice;
+    public $cancelLink;
+
+
 
     public function __construct($booking, $uploadLink)
     {
         $this->booking = $booking;
         $this->uploadLink = $uploadLink;
+        $this->cancelLink = route('bookings.cancel', ['booking_id' => $booking->booking_id]);
+
+        $childrenPrice = $booking->children_qty * ($booking->activity->children_price ?? 0);
+        $studentPrice = $booking->students_qty * ($booking->activity->student_price ?? 0);
+        $adultPrice = $booking->adults_qty * ($booking->activity->adult_price ?? 0);
+        $disabledPrice = $booking->disabled_qty * ($booking->activity->disabled_price ?? 0);
+        $elderlyPrice = $booking->elderly_qty * ($booking->activity->elderly_price ?? 0);
+        $monkPrice = $booking->monk_qty * ($booking->activity->monk_price ?? 0);
+
+        $this->totalPrice = $childrenPrice + $studentPrice + $adultPrice + $disabledPrice + $elderlyPrice + $monkPrice;
     }
 
     public function build()
@@ -29,6 +40,8 @@ class BookingApprovedMail extends Mailable
                     ->with([
                         'booking' => $this->booking,
                         'uploadLink' => $this->uploadLink,
+                        'cancelLink' => $this->cancelLink,
+                        'totalPrice' => $this->totalPrice,
                     ]);
     }
 }

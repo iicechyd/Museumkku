@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en">
 @extends('layouts.layout_admin')
 @section('title', 'อนุมัติการจองเข้าชมพิพิธภัณฑ์')
 @section('content')
@@ -29,7 +31,7 @@
                             {{ request('activity_id') == $activity->activity_id ? 'selected' : '' }}>
                             {{ $activity->activity_name }}
                             @if ($activity->countBookings > 0)
-                                ({{ $activity->countBookings}})
+                                ({{ $activity->countBookings }})
                             @endif
                         </option>
                     @endforeach
@@ -78,9 +80,11 @@
                                     @case(0)
                                         <button type="button" class="btn btn-warning text-white">รออนุมัติ</button>
                                     @break
+
                                     @case(1)
                                         <button type="button" class="status-btn">อนุมัติ</button>
                                     @break
+
                                     @case(2)
                                         <button type="button" class="status-btn-except">ยกเลิก</button>
                                     @break
@@ -129,8 +133,7 @@
                                             <textarea id="reason_{{ $item->booking_id }}" class="form-control"></textarea>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">ปิด</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
                                             <button type="button" class="btn btn-danger"
                                                 onclick="submitCancelForm({{ $item->booking_id }})">บันทึก</button>
                                         </div>
@@ -213,7 +216,8 @@
                                             </p>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">ปิด</button>
                                         </div>
                                     </div>
                                 </div>
@@ -228,9 +232,10 @@
 @else
     <h1 class="text text-center py-5 ">กรุณาเลือกกิจกรรมเพื่อตรวจสอบข้อมูล</h1>
     @endif
-@endsection
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-<script id="approvedBookingsData" type="application/json"> @json($approvedBookings->pluck('booking_id'))</script>
-<script src="{{ asset('js/approved_bookings.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script id="approvedBookingsData" type="application/json"> @json($approvedBookings->pluck('booking_id'))</script>
+    <script src="{{ asset('js/approved_bookings.js') }}"></script>
+@endsection
+</html>

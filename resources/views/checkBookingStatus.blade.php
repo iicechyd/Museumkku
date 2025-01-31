@@ -38,18 +38,7 @@
         @isset($bookings)
             <h3>ผลการค้นหา</h3>
             @if ($bookings->isNotEmpty())
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ประเภทการเข้าชม</th>
-                            <th>วันที่จอง</th>
-                            <th>รอบการเข้าชม</th>
-                            <th>ชื่อหน่วยงาน</th>
-                            <th>จำนวนผู้เข้าชมทั้งหมด</th>
-                            <th>สถานะ</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                @component('components.table_checkbookings') 
                         @foreach ($bookings as $item)
                             <tr>
                                 <td>{{ $item->activity->activity_name }}</td>
@@ -78,8 +67,7 @@
                                 </td>
                             </tr>
                         @endforeach
-                    </tbody>
-                </table>
+                    @endcomponent
             @else
                 <p class="text-center text-muted">ไม่มีข้อมูลการจองสำหรับอีเมลนี้</p>
             @endif

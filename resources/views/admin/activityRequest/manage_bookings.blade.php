@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en">
 @extends('layouts.layout_admin')
 @section('title', 'อนุมัติการจองเข้าชมพิพิธภัณฑ์')
 @section('content')
@@ -293,7 +295,7 @@
 @else
     <h1 class="text text-center py-5 ">กรุณาเลือกกิจกรรมเพื่อตรวจสอบข้อมูล</h1>
     @endif
-@endsection
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
@@ -310,3 +312,5 @@
     });
 </script>
 <script src="{{ asset('js/manage_bookings.js') }}"></script>
+@endsection
+</html>

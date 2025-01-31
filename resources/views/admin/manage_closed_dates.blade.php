@@ -1,5 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
 @extends('layouts.layout_admin')
-
 @section('content')
 
     <head>
@@ -159,3 +160,4 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/manage_closed_dates.js') }}"></script>
 @endsection
+</html>

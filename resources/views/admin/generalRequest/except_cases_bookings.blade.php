@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
+
 @extends('layouts.layout_admin')
 @section('title', 'การจองกรณีพิเศษ')
 @section('content')
@@ -31,7 +34,7 @@
                             {{ request('activity_id') == $activity->activity_id ? 'selected' : '' }}>
                             {{ $activity->activity_name }}
                             @if ($activity->countBookings > 0)
-                                ({{ $activity->countBookings}})
+                                ({{ $activity->countBookings }})
                             @endif
                         </option>
                     @endforeach
@@ -149,26 +152,9 @@
 @else
     <h1 class="text text-center py-5 ">กรุณาเลือกกิจกรรมเพื่อตรวจสอบข้อมูล</h1>
     @endif
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 @endsection
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('js/except_cases_bookings.js') }}"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var exceptBookings = @json($exceptBookings->pluck('booking_id'));
-        exceptBookings.forEach(function(booking_id) {
-            toggleCommentsField(booking_id);
-        });
-    });
-
-    function toggleCommentsField(booking_id) {
-        var status = document.getElementById("statusSelect_" + booking_id).value;
-        var commentsField = document.getElementById("commentsField_" + booking_id);
-        if (status === "cancel") {
-            commentsField.style.display = "block";
-        } else {
-            commentsField.style.display = "none";
-        }
-    }
-</script>
+</html>

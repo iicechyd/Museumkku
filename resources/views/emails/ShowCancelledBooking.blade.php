@@ -13,18 +13,7 @@
     @else
         <p class="text-center mb-3">คุณต้องการยกเลิกการจองนี้หรือไม่?</p>
     @endif
-            <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ประเภทการเข้าชม</th>
-                    <th>วันที่จอง</th>
-                    <th>รอบการเข้าชม</th>
-                    <th>รายละเอียดการจอง</th>
-                    <th>จำนวนผู้เข้าชมทั้งหมด</th>
-                    <th>สถานะ</th>
-                </tr>
-            </thead>
-            <tbody>
+        @component('components.table_checkbookings') 
                 <tr>
                     <td>{{ $booking->activity->activity_name }}</td>
                     <td>{{ \Carbon\Carbon::parse($booking->booking_date)->locale('th')->translatedFormat('j F') }}
@@ -58,8 +47,7 @@
                         @endswitch
                     </td>
                 </tr>
-            </tbody>
-        </table>
+        @endcomponent
         <!-- Modal สำหรับแสดงรายละเอียด -->
         <div class="modal fade" id="detailsModal_{{ $booking->booking_id }}" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalLabel" aria-hidden="true">

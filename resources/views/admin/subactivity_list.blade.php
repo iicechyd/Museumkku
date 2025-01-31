@@ -139,7 +139,7 @@
                         @csrf
                         <input type="hidden" name="activity_id" id="editActivityId">
                         <div class="form-group">
-                            <label for="max_subactivities">จำนวนหลักสูตรที่เลือกได้</label>
+                            <label for="maxSubactivitiesInput">จำนวนหลักสูตรที่เลือกได้</label>
                             <input type="number" class="form-control" id="maxSubactivitiesInput"
                                 name="max_subactivities" min="0" required>
                         </div>
@@ -152,7 +152,6 @@
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/subactivity_list.js') }}"></script>
 @endsection

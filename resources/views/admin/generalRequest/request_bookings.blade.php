@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en">
 @extends('layouts.layout_admin')
 @section('title', 'จองเข้าชมพิพิธภัณฑ์')
 @section('content')
@@ -31,7 +33,7 @@
                             {{ request('activity_id') == $activity->activity_id ? 'selected' : '' }}>
                             {{ $activity->activity_name }}
                             @if ($activity->countBookings > 0)
-                                ({{ $activity->countBookings}})
+                                ({{ $activity->countBookings }})
                             @endif
                         </option>
                     @endforeach
@@ -207,21 +209,22 @@
 @else
     <h1 class="text text-center py-5 ">กรุณาเลือกกิจกรรมเพื่อตรวจสอบข้อมูล</h1>
     @endif
-@endsection
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    var requestBookings = @json($requestBookings->pluck('booking_id'));
-</script>
-<script>
-    $(document).ready(function() {
-        $('[data-dismiss="modal"]').on('click', function() {
-            var modalId = $(this).closest('.modal').attr('id');
-            $('#' + modalId).modal('hide');
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var requestBookings = @json($requestBookings->pluck('booking_id'));
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('[data-dismiss="modal"]').on('click', function() {
+                var modalId = $(this).closest('.modal').attr('id');
+                $('#' + modalId).modal('hide');
+            });
         });
-    });
-</script>
-<script src="{{ asset('js/request_bookings.js') }}"></script>
+    </script>
+    <script src="{{ asset('js/request_bookings.js') }}"></script>
+@endsection
+</html>

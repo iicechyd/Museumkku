@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en">
 @extends('layouts.layout_admin')
 @section('title', 'แก้ไขรอบการเข้าชม')
 @section('content')
@@ -177,3 +179,4 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/timeslots_list.js') }}"></script>
 @endsection
+</html>

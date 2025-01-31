@@ -83,13 +83,8 @@
                                     @case(0)
                                         <button type="button" class="btn btn-warning text-white">รออนุมัติ</button>
                                     @break
-
                                     @case(1)
                                         <button type="button" class="status-btn">อนุมัติ</button>
-                                    @break
-
-                                    @case(2)
-                                        <button type="button" class="status-btn-except">ยกเลิก</button>
                                     @break
                                 @endswitch
                             </td>
@@ -145,29 +140,61 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <label for="children_qty_{{ $item->booking_id }}">จำนวนเด็ก</label>
-                                            <input type="number" id="children_qty_{{ $item->booking_id }}"
-                                                class="form-control" min="0" value="0" required>
+                                            @php
+                                                $prices = [
+                                                    'children' => $item->activity->children_price ?? 0,
+                                                    'students' => $item->activity->student_price ?? 0,
+                                                    'adults' => $item->activity->adult_price ?? 0,
+                                                    'disabled' => $item->activity->disabled_price ?? 0,
+                                                    'elderly' => $item->activity->elderly_price ?? 0,
+                                                    'monk' => $item->activity->monk_price ?? 0,
+                                                ];
 
-                                            <label for="students_qty_{{ $item->booking_id }}">จำนวนนักเรียน</label>
-                                            <input type="number" id="students_qty_{{ $item->booking_id }}"
-                                                class="form-control" min="0" value="0" required>
-
-                                            <label for="adults_qty_{{ $item->booking_id }}">จำนวนผู้ใหญ่</label>
-                                            <input type="number" id="adults_qty_{{ $item->booking_id }}"
-                                                class="form-control" min="0" value="0" required>
-
-                                            <label for="disabled_qty_{{ $item->booking_id }}">จำนวนผู้พิการ</label>
-                                            <input type="number" id="disabled_qty_{{ $item->booking_id }}"
-                                                class="form-control" min="0" value="0" required>
-
-                                            <label for="elderly_qty_{{ $item->booking_id }}">จำนวนผู้สูงอายุ</label>
-                                            <input type="number" id="elderly_qty_{{ $item->booking_id }}"
-                                                class="form-control" min="0" value="0" required>
-
-                                            <label for="monk_qty_{{ $item->booking_id }}">จำนวนพระสงฆ์</label>
-                                            <input type="number" id="monk_qty_{{ $item->booking_id }}" class="form-control"
-                                                min="0" value="0" required>
+                                                $labels = [
+                                                    'children' => 'เด็ก',
+                                                    'students' => 'นร / นศ',
+                                                    'adults' => 'ผู้ใหญ่ / คุณครู',
+                                                    'disabled' => 'ผู้พิการ',
+                                                    'elderly' => 'ผู้สูงอายุ',
+                                                    'monk' => 'พระสงฆ์ / เณร',
+                                                ];
+                                            @endphp
+                                            @foreach ($prices as $type => $price)
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <label class="mr-2 mb-0"
+                                                            for="{{ $type }}_qty_{{ $item->booking_id }}"
+                                                            style="width: 100px;">
+                                                            {{ $labels[$type] }}
+                                                        </label>
+                                                        <input type="number"
+                                                            id="{{ $type }}_qty_{{ $item->booking_id }}"
+                                                            class="form-control visitor-input text-center"
+                                                            style="width: 70px; padding: 5px;" min="0" value="0"
+                                                            data-price="{{ $price }}"
+                                                            data-booking-id="{{ $item->booking_id }}"
+                                                            oninput="calculateTotal({{ $item->booking_id }})" required>
+                                                        <label class="ml-3"
+                                                            style="margin-left: 10px;">{{ $type === 'monk' ? 'รูป' : 'คน' }}</label>
+                                                    </div>
+                                                    <span class="ml-auto"
+                                                        style="text-align: right; width: 120px; margin-left: auto;">
+                                                        @if ($price == 0)
+                                                            ฟรี
+                                                        @else
+                                                            {{ number_format($price) }}
+                                                            {{ $type === 'monk' ? 'บาท/รูป' : 'บาท/คน' }}
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                            @endforeach
+                                            <div class="col-12 mt-4">
+                                                <h5>จำนวนผู้เข้าชมทั้งหมด: <span
+                                                        id="totalVisitors_{{ $item->booking_id }}">0</span> <span
+                                                        id="totalUnit_{{ $item->booking_id }}">คน</span></h5>
+                                                <h5>ราคารวม: <span id="totalPrice_{{ $item->booking_id }}">0.00</span> บาท
+                                                </h5>
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"

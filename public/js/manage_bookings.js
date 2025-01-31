@@ -50,3 +50,19 @@ function submitCancelForm(bookingId) {
     document.getElementById('statusForm_' + bookingId).submit();
     $('#cancelModal_' + bookingId).modal('hide');
 }
+
+function calculateTotal(bookingId) {
+    let totalVisitors = 0;
+    let totalPrice = 0;
+
+    document.querySelectorAll(`#visitorModal_${bookingId} .visitor-input`).forEach(input => {
+        let qty = parseInt(input.value) || 0;
+        let price = parseFloat(input.dataset.price) || 0;
+
+        totalVisitors += qty;
+        totalPrice += qty * price;
+    });
+
+    document.getElementById(`totalVisitors_${bookingId}`).textContent = totalVisitors;
+    document.getElementById(`totalPrice_${bookingId}`).textContent = totalPrice.toFixed(2);
+}

@@ -11,8 +11,17 @@ class DocumentController extends Controller
 {
     public function showUploadForm($booking_id)
     {
-        $booking = Bookings::findOrFail($booking_id);
-        return view('documents.upload', compact('booking'));
+        $booking = Bookings::with('activity')->findOrFail($booking_id);
+        
+        $childrenPrice = $booking->children_qty * ($booking->activity->children_price ?? 0);
+        $studentPrice = $booking->students_qty * ($booking->activity->student_price ?? 0);
+        $adultPrice = $booking->adults_qty * ($booking->activity->adult_price ?? 0);
+        $disabledPrice = $booking->disabled_qty * ($booking->activity->disabled_price ?? 0);
+        $elderlyPrice = $booking->elderly_qty * ($booking->activity->elderly_price ?? 0);
+        $monkPrice = $booking->monk_qty * ($booking->activity->monk_price ?? 0);
+        $totalPrice = $childrenPrice + $studentPrice + $adultPrice + $disabledPrice + $elderlyPrice + $monkPrice;
+
+        return view('emails.upload', compact('booking','totalPrice'));
     }
 
     public function uploadDocument(Request $request, $booking_id)
@@ -33,6 +42,6 @@ class DocumentController extends Controller
             'file_name' => $fileName,
         ]);
 
-        return redirect()->route('documents.upload', ['booking_id' => $booking_id])->with('success', 'เอกสารถูกอัปโหลดเรียบร้อยแล้ว');
+        return redirect()->route('emails.upload', ['booking_id' => $booking_id])->with('success', 'เอกสารถูกอัปโหลดเรียบร้อยแล้ว');
     }
 }

@@ -25,7 +25,7 @@
 
         <div class="form col-6">
             <form method="GET" action="{{ route('except_bookings.activity') }}">
-                <label for="activity_id">เลือกกิจกรรม:</label>
+                <label for="activity_id">เลือกกิจกรรม</label>
                 <select name="activity_id" id="activity_id" class="form-select" onchange="this.form.submit()">
                     <option value="">กรุณาเลือกประเภทการเข้าชม</option>
                     @foreach ($activities as $activity)
@@ -66,11 +66,9 @@
                                     ไม่มีรอบการเข้าชม
                                 @endif
                             </td>
-                                <td>
-                                    @if ($item->status == 3)
-                                        <button type="button" class="btn-except">ยกเลิก</button>
-                                    @endif
-                                </td>
+                            <td>
+                                {!! $item->status == 3 ? '<button type="button" class="btn-except">ยกเลิก</button>' : '' !!}
+                            </td>
                             <td>{{ $item->latestStatusChange->comments ?? 'ไม่มีความคิดเห็น' }}</td>
                             <td>
                                 <a href="#detailsModal_{{ $item->booking_id }}" class="text-blue-500" data-toggle="modal">

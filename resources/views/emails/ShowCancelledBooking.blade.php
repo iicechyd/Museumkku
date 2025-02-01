@@ -27,7 +27,7 @@
                         @endif
                     </td>
                     <td>
-                        <a href="#detailsModal_{{ $booking->booking_id }}" class="text-blue-500" data-bs-toggle="modal">
+                        <a href="#detailsModal_{{ $booking->booking_id }}" class="text-blue-500 no-underline" data-bs-toggle="modal">
                             รายละเอียด
                         </a>
                     </td>

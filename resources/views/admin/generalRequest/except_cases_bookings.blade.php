@@ -26,7 +26,7 @@
 
         <div class="form col-6">
             <form method="GET" action="{{ route('except_bookings.general') }}">
-                <label for="activity_id">เลือกกิจกรรม:</label>
+                <label for="activity_id">เลือกกิจกรรม</label>
                 <select name="activity_id" id="activity_id" class="form-select" onchange="this.form.submit()">
                     <option value="">กรุณาเลือกประเภทการเข้าชม</option>
                     @foreach ($activities as $activity)
@@ -64,9 +64,7 @@
                                 {{ \Carbon\Carbon::parse($item->timeslot->end_time)->format('H:i') }} น.
                             </td>
                             <td>
-                                @if ($item->status == 3)
-                                    <button type="button" class="btn-except">ยกเลิก</button>
-                                @endif
+                                {!! $item->status == 3 ? '<button type="button" class="btn-except">ยกเลิก</button>' : '' !!}
                             </td>
                             <td>{{ $item->latestStatusChange->comments ?? 'ไม่มีความคิดเห็น' }}</td>
                             <td>

@@ -80,19 +80,7 @@
                                 @endif
                             </td>
                             <td>
-                                @switch($item->status)
-                                    @case(0)
-                                        <button type="button" class="btn btn-warning text-white">รออนุมัติ</button>
-                                    @break
-
-                                    @case(1)
-                                        <button type="button" class="status-btn">อนุมัติ</button>
-                                    @break
-
-                                    @case(2)
-                                        <button type="button" class="status-btn-except">ยกเลิก</button>
-                                    @break
-                                @endswitch
+                                {!! $item->status == 1 ? '<button type="button" class="status-btn">อนุมัติ</button>' : '' !!}
                             </td>
                             <td>
                                 <form action="{{ route('bookings.updateStatus', $item->booking_id) }}" method="POST"

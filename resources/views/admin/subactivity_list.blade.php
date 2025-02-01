@@ -24,7 +24,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th data-type="text-long">ชื่อกิจกรรม<span class="resize-handle"></span></th>
+                        <th data-type="text-long">กิจกรรม<span class="resize-handle"></span></th>
                         <th data-type="text-short">หลักสูตร<span class="resize-handle"></span></th>
                         <th data-type="text-short">สถานะ<span class="resize-handle"></span></th>
                     </tr>

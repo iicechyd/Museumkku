@@ -35,7 +35,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th data-type="text-long">ชื่อกิจกรรม<span class="resize-handle"></span></th>
+                            <th data-type="text-long">กิจกรรม<span class="resize-handle"></span></th>
                             <th data-type="text-short">รอบที่<span class="resize-handle"></span></th>
                             <th data-type="text-short">รอบการเข้าชม<span class="resize-handle"></span></th>
                             <th data-type="text-short">แก้ไขเวลา<span class="resize-handle"></span></th>

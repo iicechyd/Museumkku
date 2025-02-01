@@ -135,7 +135,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        การยกเลิกการจองของคุณเสร็จสมบูรณ์แล้ว
+                        ยกเลิกการจองของคุณเสร็จสมบูรณ์แล้ว
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ปิด</button>

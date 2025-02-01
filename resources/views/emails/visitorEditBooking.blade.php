@@ -48,6 +48,11 @@
         <h2 class="text-center py-3"
             style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); ">
             แก้ไขข้อมูลการจองเข้าชมพิพิธภัณฑ์</h2>
+            @if ($booking->status == 1)
+            <p class="text-center">ไม่สามารถแก้ไขข้อมูลการจองเข้าชมพิพิธภัณฑ์ได้ เนื่องจากการจองได้รับการอนุมัติแล้ว</p>
+            @elseif ($booking->status == 3)
+            <p class="text-center">ไม่สามารถแก้ไขข้อมูลการจองเข้าชมพิพิธภัณฑ์ได้ เนื่องจากการจองถูกยกเลิกแล้ว</p>
+        @else
         <div class="card shadow p-4">
             <form method="POST" action="{{ route('bookings.update', $booking->booking_id) }}"  class="row g-3">
                 @csrf
@@ -352,6 +357,7 @@
                 </div>
             </div>
         </div>
+        @endif
     </div>
     <script>
         window.subactivities = @json($subactivities);

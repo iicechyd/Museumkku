@@ -1,11 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
 @extends('layouts.layout')
+@section('title', 'ยืนยันตัวตนผู้จองเข้าชม')
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>ยืนยันตัวตน</title>
+    <title>ยืนยันตัวตนผู้จองเข้าชม</title>
 </head>
 
 @section('content')
@@ -45,7 +48,6 @@
                     </div>
                 </div>
     </section>
-@endsection
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('google-login-img').addEventListener('click', function() {
@@ -53,3 +55,5 @@
         });
     });
 </script>
+@endsection
+</html>

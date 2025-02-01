@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Bookings;
- use Carbon\Carbon;
+use Carbon\Carbon;
 
 class AdminCalendarController extends Controller
 {

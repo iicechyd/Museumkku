@@ -540,10 +540,10 @@ class BookingController extends Controller
         $email = $request->input('email');
 
         $bookings = Bookings::whereIn('status', [0, 1])
-        ->whereHas('visitor', function ($query) use ($email) {
-            $query->where('visitorEmail', $email);
-        })
-        ->get();
+            ->whereHas('visitor', function ($query) use ($email) {
+                $query->where('visitorEmail', $email);
+            })
+            ->get();
 
         if ($bookings->isEmpty()) {
             return redirect()->route('checkBookingStatus')
@@ -597,7 +597,7 @@ class BookingController extends Controller
         $activity = Activity::findOrFail($booking->activity_id);
         $maxSubactivities = $activity->max_subactivities;
 
-        return view('visitorEditBooking', compact('booking', 'institutes', 'visitors', 'activities', 'subactivities', 'timeslots', 'maxSubactivities'));
+        return view('emails.visitorEditBooking', compact('booking', 'institutes', 'visitors', 'activities', 'subactivities', 'timeslots', 'maxSubactivities'));
     }
     public function update(Request $request, $booking_id)
     {
@@ -777,12 +777,12 @@ class BookingController extends Controller
         $booking = Bookings::with('activity')->findOrFail($booking_id);
 
         $childrenPrice = $booking->children_qty * ($booking->activity->children_price ?? 0);
-    $studentPrice = $booking->students_qty * ($booking->activity->student_price ?? 0);
-    $adultPrice = $booking->adults_qty * ($booking->activity->adult_price ?? 0);
-    $disabledPrice = $booking->disabled_qty * ($booking->activity->disabled_price ?? 0);
-    $elderlyPrice = $booking->elderly_qty * ($booking->activity->elderly_price ?? 0);
-    $monkPrice = $booking->monk_qty * ($booking->activity->monk_price ?? 0);
-    $totalPrice = $childrenPrice + $studentPrice + $adultPrice + $disabledPrice + $elderlyPrice + $monkPrice;
+        $studentPrice = $booking->students_qty * ($booking->activity->student_price ?? 0);
+        $adultPrice = $booking->adults_qty * ($booking->activity->adult_price ?? 0);
+        $disabledPrice = $booking->disabled_qty * ($booking->activity->disabled_price ?? 0);
+        $elderlyPrice = $booking->elderly_qty * ($booking->activity->elderly_price ?? 0);
+        $monkPrice = $booking->monk_qty * ($booking->activity->monk_price ?? 0);
+        $totalPrice = $childrenPrice + $studentPrice + $adultPrice + $disabledPrice + $elderlyPrice + $monkPrice;
 
         return view('emails.ShowCancelledBooking', compact('booking', 'totalPrice'));
     }
@@ -792,6 +792,12 @@ class BookingController extends Controller
         $booking->status = 3;
         $booking->save();
 
+        $visitorEmail = $booking->visitor ? $booking->visitor->visitorEmail : null;
+        if ($visitorEmail) {
+            Mail::to($visitorEmail)->send(new BookingCancelledMail($booking));
+        } else {
+            Log::warning("ไม่พบอีเมลสำหรับการจองหมายเลข {$booking->booking_id}");
+        }
         return back()->with('showSuccessModal', true);
     }
 }

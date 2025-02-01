@@ -156,8 +156,9 @@
 
                 <div class="col-md-2">
                     <label for="zipcode" class="form-label">รหัสไปรษณีย์</label>
-                    <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode"
-                        name="zipcode" placeholder="กรอกรหัสไปรษณีย์" value="{{ old('zipcode') }}" pattern="\d{5}"
+                    <input type="text" class="form-control @error('zipcode') is-invalid @enderror" 
+                        id="zipcode" name="zipcode" placeholder="กรอกรหัสไปรษณีย์" 
+                        value="{{ old('zipcode') }}" pattern="\d{5}"
                         maxlength="5" minlength="5" inputmode="numeric" required>
                     @error('zipcode')
                         <div class="my-2">

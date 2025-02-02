@@ -3,35 +3,41 @@
 
     <head>
         <link rel="stylesheet" href="{{ asset('css/history.css') }}">
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     </head>
 
     <div class="container">
         <h1 class="text-center pt-3" style="color: #489085; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);">
             ประวัติการจองทั้งหมด</h1>
-        <form action="{{ route('booking.history.all') }}" method="GET" class="form-inline mb-4 justify-content-center">
-            <div class="form-group">
-                <label for="activity_name" class="mr-2">ชื่อกิจกรรม:</label>
-                <select name="activity_name" id="activity_name" class="form-control">
-                    <option value="">ทั้งหมด</option>
-                    @foreach ($activities as $activity_id => $activity_name)
-                        <option value="{{ $activity_name }}"
-                            {{ request('activity_name') == $activity_name ? 'selected' : '' }}>
-                            {{ $activity_name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="status" class="mr-2">สถานะการจอง:</label>
-                <select name="status" id="status" class="form-control">
-                    <option value="">ทั้งหมด</option>
-                    <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>เข้าชม</option>
-                    <option value="3" {{ request('status') == '3' ? 'selected' : '' }}>ยกเลิก</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">ค้นหา</button>
-        </form>
+            <form action="{{ route('booking.history.all') }}" method="GET" class="mb-4">
+                <div class="row g-3 justify-content-center">
+                    <!-- เลือกกิจกรรม -->
+                    <div class="col-12 col-md-auto d-flex flex-column flex-md-row align-items-md-center">
+                        <label for="activity_name" class="me-md-2 mb-0 text-nowrap">กิจกรรม</label>
+                        <select name="activity_name" id="activity_name" class="form-control w-100 w-md-auto">
+                            <option value="">ทั้งหมด</option>
+                            @foreach ($activities as $activity_id => $activity_name)
+                                <option value="{{ $activity_name }}" {{ request('activity_name') == $activity_name ? 'selected' : '' }}>
+                                    {{ $activity_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+            
+                    <!-- เลือกสถานะการจอง -->
+                    <div class="col-12 col-md-auto d-flex flex-column flex-md-row align-items-md-center">
+                        <label for="status" class="me-md-2 mb-0 text-nowrap">สถานะการจอง</label>
+                        <select name="status" id="status" class="form-control w-100 w-md-auto">
+                            <option value="">ทั้งหมด</option>
+                            <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>เข้าชม</option>
+                            <option value="3" {{ request('status') == '3' ? 'selected' : '' }}>ยกเลิก</option>
+                        </select>
+                    </div>
+                     <div class="col-12 col-md-auto text-center">
+                        <button type="submit" class="btn btn-primary w-100 w-md-auto">ค้นหา</button>
+                    </div>
+                </div>
+            </form>
+            
 
         @if ($histories->isEmpty())
             <h2 class="text-center">ไม่มีประวัติการจอง</h2>
@@ -109,7 +115,6 @@
                                                         <td>{{ $statusChange->comments ? $statusChange->comments . ' ' : '-' }}
                                                         </td>
                                                     </tr>
-
                                                     <!-- Modal for details -->
                                                     <div class="modal fade" id="detailsModal_{{ $item->booking_id }}"
                                                         tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

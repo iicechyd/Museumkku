@@ -2,25 +2,28 @@
 @section('title', 'อัปโหลดไฟล์ขอความอนุเคราะห์')
 @section('content')
 
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-    @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
-
     <head>
         <link rel="stylesheet" href="{{ asset('css/checkbookingstatus.css') }}">
     </head>
+
+    @if (session('showSuccessModal'))
+        <script>
+            var myModal = new bootstrap.Modal(document.getElementById('successModal'), {
+                keyboard: false
+            });
+            myModal.show();
+        </script>
+    @endif
 
     <div class="container mt-5">
         <h2 class="text-center" style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);">
             ตรวจสอบสถานะการจอง
         </h2>
+        @if ($booking->documents->isNotEmpty())
+            <p class="text-center">หากต้องการแก้ไขข้อมูลเพิ่มเติม กรุณาติดต่อ
+                096-XXX-XXXX เจ้าหน้าที่ฝ่ายกิจกรรม</p>
+        @else
+        @endif
         @if ($booking->status == 3)
             <p class="text-center mb-3 ">ไม่สามารถอัปโหลดไฟล์ได้เนื่องจากการจองถูกยกเลิกแล้ว</p>
         @else
@@ -56,6 +59,10 @@
                             <button type="button" class="status-btn-approved">อนุมัติ</button>
                         @break
 
+                        @case(2)
+                            <button type="button" class="status-btn">เข้าชม</button>
+                        @break
+
                         @case(3)
                             <button type="button" class="status-btn-except">ยกเลิก</button>
                         @break
@@ -77,11 +84,12 @@
                             <div class="mb-3">
                                 <div class="d-flex align-items-center">
                                     <input type="file" name="document" accept=".pdf" id="document" class="form-control"
-                                        required style="flex-grow: 1; margin-right: 10px;">
+                                        required style="flex-grow: 1; margin-right: 10px;" onchange="previewFile()">
                                     <button type="submit" class="btn btn-primary ml-3"
                                         style="min-width: 100px;">อัปโหลด</button>
                                 </div>
                                 <label for="document" class="form-label text-danger mt-2">อัปโหลดเอกสาร (PDF เท่านั้น)</label>
+                                <div id="file-preview"></div>
                             </div>
                         </form>
                     @endif
@@ -133,4 +141,21 @@
             </div>
         </div>
     </div>
+    <script>
+        function previewFile() {
+            const file = document.getElementById('document').files[0];
+            const preview = document.getElementById('file-preview');
+            preview.innerHTML = '';
+
+            if (file) {
+                const reader = new FileReader();
+
+            }
+            if (file.type === 'application/pdf') {
+                const iframe = document.createElement('iframe');
+                iframe.src = URL.createObjectURL(file);
+                preview.appendChild(iframe);
+            }
+        }
+    </script>
 @endsection

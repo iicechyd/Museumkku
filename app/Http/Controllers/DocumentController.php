@@ -42,6 +42,6 @@ class DocumentController extends Controller
             'file_name' => $fileName,
         ]);
 
-        return redirect()->route('emails.upload', ['booking_id' => $booking_id])->with('success', 'เอกสารถูกอัปโหลดเรียบร้อยแล้ว');
+        return redirect()->route('documents.store', ['booking_id' => $booking_id]);
     }
 }

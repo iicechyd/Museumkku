@@ -12,7 +12,7 @@
     <x-layout bodyClass>
         <div class="container">
             <div id="activityCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner p-1">
+                <div class="carousel-inner p-3">
                     @foreach ($activities as $activity)
                         @if ($activity->activity_id == 1 || $activity->activity_id == 2)
                             <div class="carousel-item @if ($loop->first) active @endif">
@@ -203,7 +203,7 @@
             <h4 class="mb-4">จำนวนผู้เข้าชมตามการจองปีนี้</h4>
             <div class="row mb-4">
                 @foreach ($activities->whereIn('activity_id', [1, 2]) as $activity)
-                    <div class="col-md-3">
+                    <div class="col-md-3 pt-3">
                         <div class="card text-center">
                             <div class="card-body">
                                 <h5>{{ $activity->activity_name }}</h5>
@@ -217,7 +217,7 @@
                 @php
                     $totalVisitorsActivityBooked = isset($totalVisitorsBooked[3]) ? $totalVisitorsBooked[3] : 0;
                 @endphp
-                <div class="col-md-3">
+                <div class="col-md-3 pt-3">
                     <div class="card text-center">
                         <div class="card-body">
                             <h5>เข้าชมทั้งสองพิพิธภัณฑ์</h5>
@@ -226,7 +226,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 pt-3">
                     <div class="card text-center">
                         <div class="card-body">
                             <h5>ผู้เข้าชมทั้งหมด</h5>

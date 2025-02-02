@@ -146,6 +146,18 @@ h1 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.status-btn {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #f0fff8;
+    color: #18ab56;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    border: 2px solid #f0fff8;
+  }
+
 .alert {
     text-align: center;
     font-weight: bold;
@@ -166,4 +178,14 @@ h1 {
 }
 .no-underline {
     text-decoration: none;
+}
+
+#file-preview {
+    text-align: center;
+}
+
+#file-preview iframe {
+    width: 30%;
+    height: 100%;
+    border: none;
 }

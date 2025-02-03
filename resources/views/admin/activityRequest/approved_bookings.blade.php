@@ -32,7 +32,7 @@
                             {{ request('activity_id') == $activity->activity_id ? 'selected' : '' }}>
                             {{ $activity->activity_name }}
                             @if ($activity->countBookings > 0)
-                                ({{ $activity->countBookings}})
+                                ({{ $activity->countBookings }})
                             @endif
                         </option>
                     @endforeach
@@ -79,7 +79,7 @@
                             </td>
                             <td>
                                 {!! $item->status == 1 ? '<button type="button" class="status-btn">อนุมัติ</button>' : '' !!}
-                            </td>                            
+                            </td>
                             <td>
                                 <form action="{{ route('bookings.updateStatus', $item->booking_id) }}" method="POST"
                                     style="display: inline;" id="statusForm_{{ $item->booking_id }}">
@@ -123,8 +123,7 @@
                                             <textarea id="reason_{{ $item->booking_id }}" class="form-control"></textarea>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">ปิด</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
                                             <button type="button" class="btn btn-danger"
                                                 onclick="submitCancelForm({{ $item->booking_id }})">บันทึก</button>
                                         </div>
@@ -144,15 +143,13 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <p><strong>หลักสูตร:</strong>
-                                                @if ($item->subActivities->isEmpty())
-                                                    -
-                                                @else
+                                            @if (!$item->subActivities->isEmpty())
+                                                <p><strong>หลักสูตร:</strong>
                                                     @foreach ($item->subActivities as $subactivity)
                                                         {{ $subactivity->sub_activity_name }}
                                                     @endforeach
-                                                @endif
-                                            </p>
+                                                </p>
+                                            @endif
                                             <p><strong>วันเวลาที่จองเข้ามา:
                                                 </strong>{{ \Carbon\Carbon::parse($item->created_at)->locale('th')->translatedFormat('j F') }}
                                                 {{ \Carbon\Carbon::parse($item->created_at)->year + 543 }} เวลา
@@ -164,19 +161,34 @@
                                             <p><strong>ชื่อผู้ประสานงาน: </strong>{{ $item->visitor->visitorName }}</p>
                                             <p><strong>อีเมลผู้ประสานงาน: </strong>{{ $item->visitor->visitorEmail }}</p>
                                             <p><strong>เบอร์โทรศัพท์: </strong>{{ $item->visitor->tel }}</p>
-                                            <p><strong>เด็ก (คน):
-                                                </strong>{{ $item->children_qty > 0 ? $item->children_qty . ' คน' : '-' }}</p>
-                                            <p><strong>นร / นศ (คน):
-                                                </strong>{{ $item->students_qty > 0 ? $item->students_qty . ' คน' : '-' }}</p>
-                                            <p><strong>ผู้ใหญ่ / คุณครู (คน):
-                                                </strong>{{ $item->adults_qty > 0 ? $item->adults_qty . ' คน' : '-' }}</p>
-                                            <p><strong>ผู้พิการ (คน):
-                                                </strong>{{ $item->disabled_qty > 0 ? $item->disabled_qty . ' คน' : '-' }}</p>
-                                            <p><strong>ผู้สูงอายุ (คน):
-                                                </strong>{{ $item->elderly_qty > 0 ? $item->elderly_qty . ' คน' : '-' }}</p>
-                                            <p><strong>พระภิกษุสงฆ์ / สามเณร (คน):
-                                                </strong>{{ $item->monk_qty > 0 ? $item->monk_qty . ' รูป' : '-' }}</p>
-                                            <p><strong>จำนวนคนทั้งหมด:
+                                            @if ($item->children_qty > 0)
+                                                <p><strong>เด็ก :
+                                                    </strong>{{ $item->children_qty }} คน</p>
+                                            @endif
+                                            @if ($item->students_qty > 0)
+                                                <p><strong>นร / นศ :
+                                                    </strong>{{ $item->students_qty }} คน</p>
+                                            @endif
+                                            @if ($item->adults_qty > 0)
+                                                <p><strong>ผู้ใหญ่ / คุณครู :
+                                                    </strong>{{ $item->adults_qty }} คน</p>
+                                            @endif
+                                            @if ($item->disabled_qty > 0)
+                                                <p><strong>ผู้พิการ :
+                                                    </strong>{{ $item->disabled_qty }} คน</p>
+                                            @endif
+                                            @if ($item->elderly_qty > 0)
+                                                <p><strong>ผู้สูงอายุ (คน):
+                                                    </strong>{{ $item->elderly_qty }} คน</p>
+                                            @endif
+                                            @if ($item->monk_qty > 0)
+                                                <p><strong>พระภิกษุสงฆ์ / สามเณร (คน):
+                                                    </strong>{{ $item->monk_qty }} รูป</p>
+                                            @endif
+                                            @if (!empty($item->note))
+                                                <p><strong>*หมายเหตุ: </strong>{{ $item->note }}</p>
+                                            @endif
+                                            <p><strong>จำนวนผู้เข้าชมทั้งหมด:
                                                 </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
                                                 คน</p>
                                             <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
@@ -208,7 +220,8 @@
                                             </p>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">ปิด</button>
                                         </div>
                                     </div>
                                 </div>
@@ -223,8 +236,9 @@
 @else
     <h1 class="text text-center py-5 ">กรุณาเลือกกิจกรรมเพื่อตรวจสอบข้อมูล</h1>
     @endif
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('js/approved_bookings.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/approved_bookings.js') }}"></script>
 @endsection
+
 </html>

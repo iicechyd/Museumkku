@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->integer('disabled_qty')->default(0);
             $table->integer('elderly_qty')->default(0);
             $table->integer('monk_qty')->default(0);
-
+            $table->string('note')->nullable();
             $table->tinyInteger('status')->default(0);
 
             $table->foreign('activity_id')->references('activity_id')->on('activities')->onDelete('cascade');

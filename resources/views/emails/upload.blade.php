@@ -108,12 +108,13 @@
                         {{ $booking->activity->activity_name }}</h5>
                 </div>
                 <div class="modal-body">
-                    @if ($booking->subActivities->isEmpty())
-                    @else
-                        @foreach ($booking->subActivities as $subactivity)
-                            <p><strong>หลักสูตร: {{ $subactivity->sub_activity_name }}</strong></p>
-                        @endforeach
-                    @endif
+                    @if (!$booking->subActivities->isEmpty())
+                            <p>หลักสูตร:
+                                @foreach ($booking->subActivities as $subactivity)
+                                    {{ $subactivity->sub_activity_name }}
+                                @endforeach
+                            </p>
+                        @endif
                     <p><strong>ชื่อหน่วยงาน: </strong>{{ $booking->institute->instituteName }}</p>
                     <p><strong>ที่อยู่หน่วยงาน: </strong>{{ $booking->institute->instituteAddress }}
                         {{ $booking->institute->subdistrict }} {{ $booking->institute->district }}
@@ -121,18 +122,32 @@
                     <p><strong>ชื่อผู้ประสานงาน: </strong>{{ $booking->visitor->visitorName }}</p>
                     <p><strong>อีเมลผู้ประสานงาน: </strong>{{ $booking->visitor->visitorEmail }}</p>
                     <p><strong>เบอร์โทรศัพท์: </strong>{{ $booking->visitor->tel }}</p>
-                    <p><strong>เด็ก (คน):
-                        </strong>{{ $booking->children_qty > 0 ? $booking->children_qty . ' คน' : '-' }}</p>
-                    <p><strong>นร / นศ (คน):
-                        </strong>{{ $booking->students_qty > 0 ? $booking->students_qty . ' คน' : '-' }}</p>
-                    <p><strong>ผู้ใหญ่ / คุณครู (คน):
-                        </strong>{{ $booking->adults_qty > 0 ? $booking->adults_qty . ' คน' : '-' }}</p>
-                    <p><strong>ผู้พิการ (คน):
-                        </strong>{{ $booking->disabled_qty > 0 ? $booking->disabled_qty . ' คน' : '-' }}</p>
-                    <p><strong>ผู้สูงอายุ (คน):
-                        </strong>{{ $booking->elderly_qty > 0 ? $booking->elderly_qty . ' คน' : '-' }}</p>
-                    <p><strong>พระภิกษุสงฆ์ / สามเณร (คน):
-                        </strong>{{ $booking->monk_qty > 0 ? $booking->monk_qty . ' รูป' : '-' }}</p>
+                    @if ($booking->children_qty > 0)
+                            <p>เด็ก : {{ $booking->children_qty }} คน</p>
+                        @endif
+
+                        @if ($booking->students_qty > 0)
+                            <p>นร / นศ : {{ $booking->students_qty }} คน</p>
+                        @endif
+
+                        @if ($booking->adults_qty > 0)
+                            <p>ผู้ใหญ่ / คุณครู : {{ $booking->adults_qty }} คน</p>
+                        @endif
+
+                        @if ($booking->disabled_qty > 0)
+                            <p>ผู้พิการ : {{ $booking->disabled_qty }} คน</p>
+                        @endif
+
+                        @if ($booking->elderly_qty > 0)
+                            <p>ผู้สูงอายุ : {{ $booking->elderly_qty }} คน</p>
+                        @endif
+
+                        @if ($booking->monk_qty > 0)
+                            <p>พระภิกษุสงฆ์ / สามเณร : {{ $booking->monk_qty }} รูป</p>
+                        @endif
+                        @if (!empty($booking->note))
+                            <p>*หมายเหตุ: {{ $booking->note }}</p>
+                        @endif
                     <p><strong>ยอดรวมราคา:</strong> {{ number_format($totalPrice, 2) }} บาท</p>
                 </div>
                 <div class="modal-footer">

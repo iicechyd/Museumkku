@@ -14,6 +14,13 @@
     <p>รายละเอียดการจองเข้าชมมีดังนี้</p>
     <p>วันที่จอง: {{ \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y') }}</p>
     <p>ประเภทการเข้าชม: {{ $booking->activity->activity_name }} </p>
+    @if (!$booking->subActivities->isEmpty())
+        <p>หลักสูตร:
+            @foreach ($booking->subActivities as $subactivity)
+                {{ $subactivity->sub_activity_name }}
+            @endforeach
+        </p>
+    @endif
     <p>ชื่อหน่วยงาน: {{ $booking->institute->instituteName }}</p>
     <p>ที่อยู่หน่วยงาน: {{ $booking->institute->instituteAddress }} {{ $booking->institute->subdistrict }}
         {{ $booking->institute->district }} {{ $booking->institute->province }} {{ $booking->institute->zipcode }}</p>
@@ -42,8 +49,10 @@
     @if ($booking->monk_qty > 0)
         <p>พระภิกษุสงฆ์ / สามเณร : {{ $booking->monk_qty }} รูป</p>
     @endif
-
-    <p>ยอดรวมราคาทั้งหมด: {{ number_format($totalPrice, 2) }} บาท</p>
+    @if (!empty($booking->note))
+        <p>*หมายเหตุ: {{ $booking->note }}</p>
+    @endif
+    <p>ยอดรวมราคา: {{ number_format($totalPrice, 2) }} บาท</p>
     <p>โปรดแนบเอกสารใบขอความอนุเคราะห์โดยคลิกที่ลิงก์ด้านล่าง:</p>
     <p><a href="{{ $uploadLink }}">คลิกที่นี่เพื่อแนบเอกสารขอความอนุเคราะห์</a></p>
     <p>หากต้องการยกเลิกการจอง คลิกที่นี่</p>
@@ -56,4 +65,5 @@
     <p>ศูนย์พิพิธภัณฑ์และแหล่งเรียนรู้ตลอดชีวิต มหาวิทยาลัยขอนแก่น</p>
     <p>หมายเลขโทรศัพท์ 06X-XXX-XXXX เจ้าหน้าที่ฝ่ายกิจกรรม</p>
 </body>
+
 </html>

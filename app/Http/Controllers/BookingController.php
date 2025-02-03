@@ -347,6 +347,7 @@ class BookingController extends Controller
             'disabled_qty' => 'nullable|integer|min:0',
             'elderly_qty' => 'nullable|integer|min:0',
             'monk_qty' => 'nullable|integer|min:0',
+            'note' => 'nullable|string'
         ];
 
         if (in_array($request->fk_activity_id, [1, 2, 3])) {
@@ -492,6 +493,7 @@ class BookingController extends Controller
         $booking->disabled_qty = $request->disabled_qty ?? 0;
         $booking->elderly_qty = $request->elderly_qty ?? 0;
         $booking->monk_qty = $request->monk_qty ?? 0;
+        $booking->note = $request->note ?? null;
         $booking->status = false;
         $booking->save();
 
@@ -622,6 +624,7 @@ class BookingController extends Controller
             'disabled_qty' => 'nullable|integer|min:0',
             'elderly_qty' => 'nullable|integer|min:0',
             'monk_qty' => 'nullable|integer|min:0',
+            'note' => 'nullable|string'
         ];
 
         if (in_array($request->fk_activity_id, [1, 2, 3])) {
@@ -766,6 +769,8 @@ class BookingController extends Controller
             'disabled_qty' => $request->disabled_qty ?? 0,
             'elderly_qty' => $request->elderly_qty ?? 0,
             'monk_qty' => $request->monk_qty ?? 0,
+            'note' => $request->note ?? null
+
         ]);
 
         $booking->subactivities()->sync($request->sub_activity_id ?? []);

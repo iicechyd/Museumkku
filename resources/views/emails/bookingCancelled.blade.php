@@ -15,6 +15,13 @@
     <p>รายละเอียดการจองเข้าชมมีดังนี้</p>
     <p>วันที่จอง: {{ \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y') }}</p>
     <p>ประเภทการเข้าชม: {{ $booking->activity->activity_name }} </p>
+    @if (!$booking->subActivities->isEmpty())
+    <p>หลักสูตร:
+        @foreach ($booking->subActivities as $subactivity)
+            {{ $subactivity->sub_activity_name }}
+        @endforeach
+    </p>
+@endif
     <p>ชื่อหน่วยงาน: {{ $booking->institute->instituteName }}</p>
     <p>ที่อยู่หน่วยงาน: {{ $booking->institute->instituteAddress }} {{ $booking->institute->subdistrict }}
         {{ $booking->institute->district }} {{ $booking->institute->province }} {{ $booking->institute->zipcode }}</p>
@@ -44,7 +51,9 @@
     @if ($booking->monk_qty > 0)
         <p>พระภิกษุสงฆ์ / สามเณร : {{ $booking->monk_qty }} รูป</p>
     @endif
-
+    @if (!empty($booking->note))
+        <p>*หมายเหตุ: {{ $booking->note }}</p>
+    @endif
     <p>ยอดรวมราคาทั้งหมด: {{ number_format($totalPrice, 2) }} บาท</p>
     <p>หากมีข้อสงสัยใดๆ โปรดติดต่อเจ้าหน้าที่</p>
     <br>

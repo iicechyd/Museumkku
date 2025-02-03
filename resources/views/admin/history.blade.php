@@ -123,7 +123,7 @@
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <h5 class="modal-title" id="exampleModalLabel">
-                                                                        รายละเอียดการจอง - {{ $item->activity_name }}</h5>
+                                                                        รายละเอียดการจอง - {{ $item->activity->activity_name }}</h5>
                                                                     <button type="button" class="close"
                                                                         data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">&times;</span>
@@ -138,15 +138,13 @@
                                                                         น.</p>
                                                                     <p><strong>กิจกรรม:</strong>
                                                                         {{ $item->activity->activity_name }}</p>
-                                                                    <p><strong>หลักสูตร:</strong>
-                                                                        @if ($item->subActivities->isEmpty())
-                                                                            -
-                                                                        @else
+                                                                    @if (!$item->subActivities->isEmpty())
+                                                                        <p><strong>หลักสูตร:</strong>
                                                                             @foreach ($item->subActivities as $subactivity)
                                                                                 {{ $subactivity->sub_activity_name }}
                                                                             @endforeach
-                                                                        @endif
-                                                                    </p>
+                                                                        </p>
+                                                                    @endif
                                                                     <p><strong>ชื่อหน่วยงาน:</strong>
                                                                         {{ $item->institute->instituteName }}</p>
                                                                     <p><strong>ที่อยู่หน่วยงาน:</strong>
@@ -161,26 +159,35 @@
                                                                         {{ $item->visitor->visitorEmail }}</p>
                                                                     <p><strong>เบอร์โทรศัพท์:</strong>
                                                                         {{ $item->visitor->tel }}</p>
-                                                                    <p><strong>เด็ก (คน):</strong>
-                                                                        {{ $item->children_qty > 0 ? $item->children_qty . ' คน' : '-' }}
-                                                                    </p>
-                                                                    <p><strong>นร / นศ (คน):</strong>
-                                                                        {{ $item->students_qty > 0 ? $item->students_qty . ' คน' : '-' }}
-                                                                    </p>
-                                                                    <p><strong>ผู้ใหญ่ / คุณครู (คน):</strong>
-                                                                        {{ $item->adults_qty > 0 ? $item->adults_qty . ' คน' : '-' }}
-                                                                    </p>
-                                                                    <p><strong>ผู้พิการ (คน):</strong>
-                                                                        {{ $item->disabled_qty > 0 ? $item->disabled_qty . ' คน' : '-' }}
-                                                                    </p>
-                                                                    <p><strong>ผู้สูงอายุ (คน):</strong>
-                                                                        {{ $item->elderly_qty > 0 ? $item->elderly_qty . ' คน' : '-' }}
-                                                                    </p>
-                                                                    <p><strong>พระภิกษุสงฆ์ / สามเณร (คน):</strong>
-                                                                        {{ $item->monk_qty > 0 ? $item->monk_qty . ' รูป' : '-' }}
-                                                                    </p>
-                                                                    <p><strong>จำนวนคนทั้งหมด:</strong>
-                                                                        {{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
+                                                                        @if ($item->children_qty > 0)
+                                                                        <p><strong>เด็ก :
+                                                                            </strong>{{ $item->children_qty }} คน</p>
+                                                                    @endif
+                                                                    @if ($item->students_qty > 0)
+                                                                        <p><strong>นร / นศ :
+                                                                            </strong>{{ $item->students_qty }} คน</p>
+                                                                    @endif
+                                                                    @if ($item->adults_qty > 0)
+                                                                        <p><strong>ผู้ใหญ่ / คุณครู :
+                                                                            </strong>{{ $item->adults_qty }} คน</p>
+                                                                    @endif
+                                                                    @if ($item->disabled_qty > 0)
+                                                                        <p><strong>ผู้พิการ :
+                                                                            </strong>{{ $item->disabled_qty }} คน</p>
+                                                                    @endif
+                                                                    @if ($item->elderly_qty > 0)
+                                                                        <p><strong>ผู้สูงอายุ (คน):
+                                                                            </strong>{{ $item->elderly_qty }} คน</p>
+                                                                    @endif
+                                                                    @if ($item->monk_qty > 0)
+                                                                        <p><strong>พระภิกษุสงฆ์ / สามเณร (คน):
+                                                                            </strong>{{ $item->monk_qty }} รูป</p>
+                                                                    @endif
+                                                                    @if (!empty($item->note))
+                                                                        <p><strong>*หมายเหตุ: </strong>{{ $item->note }}</p>
+                                                                    @endif
+                                                                    <p><strong>จำนวนผู้เข้าชมทั้งหมด:
+                                                                        </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
                                                                         คน</p>
                                                                     <p><strong>ยอดรวมราคา:</strong>
                                                                         {{ number_format($item->totalPrice, 2) }} บาท</p>

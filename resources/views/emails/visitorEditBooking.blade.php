@@ -219,7 +219,7 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label for="visitorEmail" class="form-label">อีเมล์ผู้ประสานงาน</label>
                         <input type="email" class="form-control @error('visitorEmail') is-invalid @enderror"
                             id="visitorEmail" name="visitorEmail"
@@ -238,6 +238,19 @@
                             minlength="10" inputmode="numeric" title="กรุณากรอกเบอร์โทร 10 หลัก" required
                             autocomplete="tel">
                         @error('tel')
+                            <div class="my-2">
+                                <span class="text-danger">{{ $message }}</span>
+                            </div>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="note" class="form-label">หมายเหตุ</label>
+                        <input type="text" class="form-control @error('note') is-invalid @enderror" 
+                            id="note" name="note" placeholder="กรอกหมายเหตุ (ถ้ามี)"
+                            value="{{ old('note', $booking->note ?? $booking->note) }}" pattern="\d{10}" maxlength="10"
+                            minlength="10" title="ระบุหมายเหตุ (ถ้ามี)" required autocomplete="note">
+                        @error('note')
                             <div class="my-2">
                                 <span class="text-danger">{{ $message }}</span>
                             </div>

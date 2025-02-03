@@ -203,7 +203,6 @@
                     @enderror
                 </div>
                 
-                <div class="row pt-3">
                 <div class="col-md-3">
                     <label for="visitorName" class="form-label">ชื่อผู้ประสานงาน</label>
                     <input type="text" class="form-control @error('visitorName') is-invalid @enderror" id="visitorName"
@@ -239,7 +238,20 @@
                         </div>
                     @enderror
                 </div>
-            </div>
+
+                <div class="col-md-4">
+                    <label for="note" class="form-label">หมายเหตุ</label>
+                    <input type="text" class="form-control @error('note') is-invalid @enderror" 
+                        id="note" name="note" placeholder="กรอกหมายเหตุ (ถ้ามี)" 
+                        value="{{ old('note') }}" pattern="\d{10}" maxlength="10"
+                        minlength="10" title="ระบุหมายเหตุ (ถ้ามี)" required autocomplete="note">
+                    @error('note')
+                        <div class="my-2">
+                            <span class="text-danger">{{ $message }}</span>
+                        </div>
+                    @enderror
+                </div>
+
                 <p>ระบุจำนวนผู้เข้าชม</p>
                 <p class="custom-gray-text mt-0">
                     @if ($selectedActivity->max_capacity)

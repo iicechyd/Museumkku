@@ -13,8 +13,7 @@
 </head>
 
 @section('content')
-<section class="ftco-section">
-    <div class="container">
+    <div class="container py-5">
         <div class="card border-light-subtle shadow-sm">
             <div class="row justify-content-center">
                 <div class="col-10 col-md-6" style="background-color: #ECECEC;">
@@ -106,7 +105,6 @@
             </div>
         </div>
     </div>
-</section>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelector('.gsi-material-button').addEventListener('click', function () {

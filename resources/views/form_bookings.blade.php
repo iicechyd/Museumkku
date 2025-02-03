@@ -76,9 +76,9 @@
                             min="{{ date('Y-m-d', strtotime('+3 days')) }}" required
                             placeholder="กรุณาเลือกวันที่ต้องการจอง (วัน/เดือน/ปี)">
                         <div class="input-group-append">
-                            <label for="booking_date" class="input-group-text" style="cursor: pointer;">
+                            <button type="button" class="input-group-text" onclick="document.getElementById('booking_date').focus();">
                                 <i class="fas fa-calendar-alt" style="font-size: 1.5rem;"></i>
-                            </label>
+                            </button>
                         </div>
                     </div>
                     @error('booking_date')
@@ -170,7 +170,8 @@
                 <div class="col-md-2">
                     <label for="subdistrict" class="form-label">แขวน/ตำบล</label>
                     <input type="text" class="form-control @error('subdistrict') is-invalid @enderror" id="subdistrict"
-                        name="subdistrict" value="{{ old('subdistrict') }}" disabled required>
+                        name="subdistrict" placeholder="กรอกแขวน/ตำบล"
+                        value="{{ old('subdistrict') }}" required>
                     @error('subdistrict')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -181,7 +182,8 @@
                 <div class="col-md-3">
                     <label for="district" class="form-label">เขต/อำเภอ</label>
                     <input type="text" class="form-control @error('district') is-invalid @enderror" id="district"
-                        name="district" value="{{ old('district') }}" disabled required>
+                        name="district" placeholder="กรอกเขต/อำเภอ"
+                        value="{{ old('district') }}" required>
                     @error('district')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -192,7 +194,8 @@
                 <div class="col-md-2">
                     <label for="province" class="form-label">จังหวัด</label>
                     <input type="text" class="form-control @error('province') is-invalid @enderror" id="province"
-                        name="province" value="{{ old('province') }}" disabled required>
+                        name="province" placeholder="กรอกจังหวัด"
+                        value="{{ old('province') }}" required>
                     @error('inputProvince')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
@@ -224,8 +227,9 @@
 
                 <div class="col-md-2">
                     <label for="tel" class="form-label">เบอร์โทรผู้ประสานงาน</label>
-                    <input type="text" class="form-control @error('tel') is-invalid @enderror" id="tel" name="tel"
-                        placeholder="หมายเลขโทรศัพท์" value="{{ old('tel') }}" pattern="\d{10}" maxlength="10"
+                    <input type="text" class="form-control @error('tel') is-invalid @enderror" 
+                        id="tel" name="tel" placeholder="หมายเลขโทรศัพท์" 
+                        value="{{ old('tel') }}" pattern="\d{10}" maxlength="10"
                         minlength="10" inputmode="numeric" title="กรุณากรอกเบอร์โทร 10 หลัก" required autocomplete="tel">
                     @error('tel')
                         <div class="my-2">
@@ -363,9 +367,8 @@
             </div>
             <div class="modal-body">
                 <h4 id="eventTitle"></h4>
-                <p><strong id="eventTimeslotLabel"></strong>
+                <p><strong id="eventTimeslotLabel"></strong></p>
                 <p id="eventTimeslot"></p>
-                </p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>

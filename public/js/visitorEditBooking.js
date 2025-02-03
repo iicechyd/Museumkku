@@ -106,6 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let timeslotsSelect = document.getElementById("fk_timeslots_id");
     let activityId = document.getElementById("fk_activity_id").value;
     let existingDate = bookingInput.value;
+    let selectedTimeslotId = timeslotsSelect.getAttribute("data-selected"); // Get previously selected value from attribute
 
     function fetchTimeslots(dateStr) {
         if (!dateStr) return;
@@ -159,6 +160,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         } else {
                             option.text += ` (เหลือ ${timeslot.remaining_capacity} ที่นั่ง)`;
                         }
+
+                        // Set the previously selected timeslot as selected if it matches
+                        if (timeslot.timeslots_id == selectedTimeslotId) {
+                            option.selected = true;
+                        }
+
                         timeslotsSelect.appendChild(option);
                     });
 
@@ -182,11 +189,21 @@ document.addEventListener("DOMContentLoaded", function () {
             },
         ],
         onChange: function (selectedDates, dateStr, instance) {
-            fetchTimeslots(dateStr);
+            // Reset the timeslot selection when the date changes
+            timeslotsSelect.innerHTML = "<option value=''>เลือกรอบการเข้าชม</option>";
+            selectedTimeslotId = '';  // Reset the selected timeslot
+            fetchTimeslots(dateStr);  // Fetch new timeslots for the selected date
         },
         onReady: function (selectedDates, dateStr, instance) {
+            instance.altInput.setAttribute("id", "booking_date_alt");
+
+            const label = document.querySelector("label[for='booking_date']");
+            if (label) {
+                label.setAttribute("for", "booking_date_alt");
+            }
+
             document.querySelector(".input-group-text").addEventListener("click", () => {
-                document.querySelector("#booking_date")._flatpickr.open();
+                instance.open();
             });
 
             if (existingDate) {
@@ -195,6 +212,8 @@ document.addEventListener("DOMContentLoaded", function () {
         },
     });
 });
+
+
 
 function confirmSubmission() {
     const childrenQty = document.getElementById("childrenInput").value || 0;
@@ -262,10 +281,6 @@ function confirmSubmission() {
             );
             return;
         }
-
-        document.querySelectorAll("input[disabled]").forEach((input) => {
-            input.disabled = false;
-        });
 
         const isConfirmed = confirm("คุณต้องการยืนยันการส่งข้อมูลใช่หรือไม่?");
         if (isConfirmed) {

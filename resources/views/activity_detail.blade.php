@@ -45,6 +45,42 @@
                                 <div id="carouselIndicator" class="carousel-indicator">1/{{ count($activity->images) }}
                                 </div>
                             </div>
+                            <div class="d-flex flex-wrap gap-2 py-2 pb-3">
+                                @foreach ($activity->images->take(4) as $image)
+                                    <div class="position-relative">
+                                        <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
+                                            style="width: 114px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
+                                            onclick="showLargeImage('{{ asset('storage/' . $image->image_path) }}')">
+                                            <img src="{{ asset('storage/' . $image->image_path) }}" alt="Activity Image"
+                                                class="img-fluid" style="object-fit: cover; width: 100%; height: 100%;">
+                                        </div>
+                                    </div>
+                                @endforeach
+                            
+                                @if ($activity->images->count() > 5)
+                                    <div class="position-relative">
+                                        <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
+                                            style="width: 114px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
+                                            onclick="openGalleryModal()">
+                                            <img src="{{ asset('storage/' . $activity->images[4]->image_path) }}" alt="Activity Image"
+                                                class="img-fluid" style="object-fit: cover; width: 100%; height: 100%; filter: brightness(0.6);">
+                                            <div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center"
+                                                style="top: 0; left: 0; background: rgba(0, 0, 0, 0.5); font-size: 20px;">
+                                                +{{ $activity->images->count() - 5 }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                @elseif($activity->images->count() == 5)
+                                    <div class="position-relative">
+                                        <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
+                                            style="width: 114px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
+                                            onclick="showLargeImage('{{ asset('storage/' . $activity->images[4]->image_path) }}')">
+                                            <img src="{{ asset('storage/' . $activity->images[4]->image_path) }}" alt="Activity Image"
+                                                class="img-fluid" style="object-fit: cover; width: 100%; height: 100%;">
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                         <div class="col-lg-6 col-md-12">
                             <div class="card-body">
@@ -90,44 +126,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex flex-wrap gap-2 px-3 py-2 pb-3">
-                            @foreach ($activity->images->take(4) as $image)
-                                <div class="position-relative">
-                                    <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
-                                        style="width: 114px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
-                                        onclick="showLargeImage('{{ asset('storage/' . $image->image_path) }}')">
-                                        <img src="{{ asset('storage/' . $image->image_path) }}" alt="Activity Image"
-                                            class="img-fluid" style="object-fit: cover; width: 100%; height: 100%;">
-                                    </div>
-                                </div>
-                            @endforeach
-                        
-                            @if ($activity->images->count() > 5)
-                                <!-- รูปที่ 5 เป็น +x -->
-                                <div class="position-relative">
-                                    <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
-                                        style="width: 114px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
-                                        onclick="openGalleryModal()">
-                                        <img src="{{ asset('storage/' . $activity->images[4]->image_path) }}" alt="Activity Image"
-                                            class="img-fluid" style="object-fit: cover; width: 100%; height: 100%; filter: brightness(0.6);">
-                                        <div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center"
-                                            style="top: 0; left: 0; background: rgba(0, 0, 0, 0.5); font-size: 20px;">
-                                            +{{ $activity->images->count() - 5 }}
-                                        </div>
-                                    </div>
-                                </div>
-                            @elseif($activity->images->count() == 5)
-                                <!-- ถ้ามี 5 รูปพอดีให้แสดงรูปที่ 5 -->
-                                <div class="position-relative">
-                                    <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
-                                        style="width: 114px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
-                                        onclick="showLargeImage('{{ asset('storage/' . $activity->images[4]->image_path) }}')">
-                                        <img src="{{ asset('storage/' . $activity->images[4]->image_path) }}" alt="Activity Image"
-                                            class="img-fluid" style="object-fit: cover; width: 100%; height: 100%;">
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
                         
                         <!-- Modal สำหรับแสดงภาพทั้งหมด -->
                         <div id="galleryModal" class="modal fade" tabindex="-1" aria-hidden="true">
@@ -141,7 +139,7 @@
                                             @foreach ($activity->images->slice(5) as $image)
                                                 <div class="position-relative">
                                                     <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
-                                                        style="width: 250px; height: 180px; border-radius: 3px; overflow: hidden; cursor: pointer;"
+                                                        style="width: 250px; height: 200px; border-radius: 3px; overflow: hidden; cursor: pointer;"
                                                         onclick="showLargeImage('{{ asset('storage/' . $image->image_path) }}')">
                                                         <img src="{{ asset('storage/' . $image->image_path) }}" alt="Activity Image"
                                                             class="img-fluid" style="object-fit: cover; width: 100%; height: 100%;">

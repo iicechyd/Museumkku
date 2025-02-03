@@ -121,7 +121,7 @@ td.custom-td {
     height: 200px;
     object-fit: cover;
     border-radius: 8px;
-    margin-bottom: 10px; /* เว้นระยะระหว่างรูปภาพและปุ่มลบ */
+    margin-bottom: 10px;
 }
 
 .text-center {

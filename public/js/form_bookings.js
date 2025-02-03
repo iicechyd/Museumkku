@@ -266,10 +266,6 @@ function confirmSubmission() {
             return;
         }
 
-        document.querySelectorAll("input[disabled]").forEach((input) => {
-            input.disabled = false;
-        });
-
         const isConfirmed = confirm("คุณต้องการยืนยันการส่งข้อมูลใช่หรือไม่?");
         if (isConfirmed) {
             document.querySelector("form").submit();

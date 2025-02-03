@@ -41,8 +41,11 @@
                             @case(1)
                                 <button type="button" class="status-btn-approved">อนุมัติ</button>
                             @break
+                            @case(2)
+                                <button type="button" class="status-btn-approved">เข้าชม</button>
+                            @break
                             @case(3)
-                                        <button type="button" class="status-btn-except">ยกเลิก</button>
+                                <button type="button" class="status-btn-except">ยกเลิก</button>
                                     @break
                         @endswitch
                     </td>

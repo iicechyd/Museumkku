@@ -118,7 +118,7 @@
 
                 @if ($timeslots->isNotEmpty())
                     <div class="form-group col-md-3">
-                        <label for="fk_timeslots_id" class="form-label">รอบการเข้าชม:</label>
+                        <label for="fk_timeslots_id" class="form-label">รอบการเข้าชม</label>
                         <select id="fk_timeslots_id" class="form-select @error('fk_timeslots_id') is-invalid @enderror"
                             name="fk_timeslots_id">
                             <option value="">เลือกรอบการเข้าชม</option>
@@ -131,7 +131,7 @@
                     </div>
                 @endif
 
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <label for="instituteName" class="form-label">ชื่อหน่วยงาน</label>
                     <input type="text" class="form-control @error('instituteName') is-invalid @enderror" id="instituteName"
                         name="instituteName" placeholder="กรอกชื่อหน่วยงาน" value="{{ old('instituteName') }}" required>
@@ -142,25 +142,12 @@
                     @enderror
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <label for="instituteAddress" class="form-label">ที่อยู่หน่วยงาน</label>
                     <input type="text" class="form-control @error('instituteAddress') is-invalid @enderror"
                         id="instituteAddress" name="instituteAddress" placeholder="บ้านเลขที่, ซอย, หมู่, ถนน"
                         value="{{ old('instituteAddress') }}">
                     @error('instituteAddress')
-                        <div class="my-2">
-                            <span class="text-danger">{{ $message }}</span>
-                        </div>
-                    @enderror
-                </div>
-
-                <div class="col-md-2">
-                    <label for="zipcode" class="form-label">รหัสไปรษณีย์</label>
-                    <input type="text" class="form-control @error('zipcode') is-invalid @enderror" 
-                        id="zipcode" name="zipcode" placeholder="กรอกรหัสไปรษณีย์" 
-                        value="{{ old('zipcode') }}" pattern="\d{5}"
-                        maxlength="5" minlength="5" inputmode="numeric" required>
-                    @error('zipcode')
                         <div class="my-2">
                             <span class="text-danger">{{ $message }}</span>
                         </div>
@@ -179,7 +166,7 @@
                     @enderror
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="district" class="form-label">เขต/อำเภอ</label>
                     <input type="text" class="form-control @error('district') is-invalid @enderror" id="district"
                         name="district" placeholder="กรอกเขต/อำเภอ"
@@ -202,6 +189,21 @@
                         </div>
                     @enderror
                 </div>
+                
+                <div class="col-md-2">
+                    <label for="zipcode" class="form-label">รหัสไปรษณีย์</label>
+                    <input type="text" class="form-control @error('zipcode') is-invalid @enderror" 
+                        id="zipcode" name="zipcode" placeholder="กรอกรหัสไปรษณีย์" 
+                        value="{{ old('zipcode') }}" pattern="\d{5}"
+                        maxlength="5" minlength="5" inputmode="numeric" required>
+                    @error('zipcode')
+                        <div class="my-2">
+                            <span class="text-danger">{{ $message }}</span>
+                        </div>
+                    @enderror
+                </div>
+                
+                <div class="row pt-3">
                 <div class="col-md-3">
                     <label for="visitorName" class="form-label">ชื่อผู้ประสานงาน</label>
                     <input type="text" class="form-control @error('visitorName') is-invalid @enderror" id="visitorName"
@@ -213,7 +215,7 @@
                     @enderror
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="visitorEmail" class="form-label">อีเมล์ผู้ประสานงาน</label>
                     <input type="email" class="form-control @error('visitorEmail') is-invalid @enderror" id="visitorEmail"
                         name="visitorEmail" placeholder="Test@email.com" value="{{ session('email', old('visitorEmail')) }}"
@@ -237,7 +239,7 @@
                         </div>
                     @enderror
                 </div>
-
+            </div>
                 <p>ระบุจำนวนผู้เข้าชม</p>
                 <p class="custom-gray-text mt-0">
                     @if ($selectedActivity->max_capacity)

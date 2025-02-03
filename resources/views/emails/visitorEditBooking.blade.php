@@ -133,7 +133,7 @@
                         </div>
                     @endif
 
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <label for="instituteName" class="form-label">ชื่อหน่วยงาน</label>
                         <input type="text" class="form-control @error('instituteName') is-invalid @enderror"
                             id="instituteName" name="instituteName" placeholder="กรอกชื่อหน่วยงาน"
@@ -146,25 +146,12 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <label for="instituteAddress" class="form-label">ที่อยู่หน่วยงาน</label>
                         <input type="text" class="form-control @error('instituteAddress') is-invalid @enderror"
                             id="instituteAddress" name="instituteAddress" placeholder="บ้านเลขที่, ซอย, หมู่, ถนน"
                             value="{{ old('instituteAddress', $institutes->instituteAddress ?? $booking->instituteAddress) }}">
                         @error('instituteAddress')
-                            <div class="my-2">
-                                <span class="text-danger">{{ $message }}</span>
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-2">
-                        <label for="zipcode" class="form-label">รหัสไปรษณีย์</label>
-                        <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode"
-                            name="zipcode" placeholder="กรอกรหัสไปรษณีย์"
-                            value="{{ old('zipcode', $institutes->zipcode ?? $booking->zipcode) }}" pattern="\d{5}"
-                            maxlength="5" minlength="5" inputmode="numeric" required>
-                        @error('zipcode')
                             <div class="my-2">
                                 <span class="text-danger">{{ $message }}</span>
                             </div>
@@ -183,7 +170,7 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label for="district" class="form-label">เขต/อำเภอ</label>
                         <input type="text" class="form-control @error('district') is-invalid @enderror" id="district"
                             name="district" placeholder="กรอกเขต/อำเภอ"
@@ -206,6 +193,20 @@
                             </div>
                         @enderror
                     </div>
+
+                    <div class="col-md-2">
+                        <label for="zipcode" class="form-label">รหัสไปรษณีย์</label>
+                        <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode"
+                            name="zipcode" placeholder="กรอกรหัสไปรษณีย์"
+                            value="{{ old('zipcode', $institutes->zipcode ?? $booking->zipcode) }}" pattern="\d{5}"
+                            maxlength="5" minlength="5" inputmode="numeric" required>
+                        @error('zipcode')
+                            <div class="my-2">
+                                <span class="text-danger">{{ $message }}</span>
+                            </div>
+                        @enderror
+                    </div>
+
                     <div class="col-md-3">
                         <label for="visitorName" class="form-label">ชื่อผู้ประสานงาน</label>
                         <input type="text" class="form-control @error('visitorName') is-invalid @enderror"

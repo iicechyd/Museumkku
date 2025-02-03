@@ -106,14 +106,15 @@ document.addEventListener("DOMContentLoaded", function () {
     let timeslotsSelect = document.getElementById("fk_timeslots_id");
     let activityId = document.getElementById("fk_activity_id").value;
     let existingDate = bookingInput.value;
-    let selectedTimeslotId = timeslotsSelect.getAttribute("data-selected"); // Get previously selected value from attribute
+    let selectedTimeslotId = timeslotsSelect?.getAttribute("data-selected") || null;
 
     function fetchTimeslots(dateStr) {
-        if (!dateStr) return;
+        if (!dateStr || !timeslotsSelect) return;
 
         fetch(`/available-timeslots/${activityId}/${dateStr}`)
             .then((response) => response.json())
             .then((timeslots) => {
+                if (!timeslotsSelect) return;
                 timeslotsSelect.innerHTML = "";
 
                 if (timeslots.length === 0) {
@@ -161,7 +162,6 @@ document.addEventListener("DOMContentLoaded", function () {
                             option.text += ` (เหลือ ${timeslot.remaining_capacity} ที่นั่ง)`;
                         }
 
-                        // Set the previously selected timeslot as selected if it matches
                         if (timeslot.timeslots_id == selectedTimeslotId) {
                             option.selected = true;
                         }
@@ -189,10 +189,9 @@ document.addEventListener("DOMContentLoaded", function () {
             },
         ],
         onChange: function (selectedDates, dateStr, instance) {
-            // Reset the timeslot selection when the date changes
             timeslotsSelect.innerHTML = "<option value=''>เลือกรอบการเข้าชม</option>";
-            selectedTimeslotId = '';  // Reset the selected timeslot
-            fetchTimeslots(dateStr);  // Fetch new timeslots for the selected date
+            selectedTimeslotId = '';
+            fetchTimeslots(dateStr);
         },
         onReady: function (selectedDates, dateStr, instance) {
             instance.altInput.setAttribute("id", "booking_date_alt");

@@ -5,6 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\URL;
 
 class BookingPendingMail extends Mailable
 {
@@ -17,8 +18,8 @@ class BookingPendingMail extends Mailable
     public function __construct($booking)
     {
         $this->booking = $booking;
-        $this->editLink = route('bookings.edit', ['booking_id' => $booking->booking_id]);
-        $this->cancelLink = route('bookings.cancel', ['booking_id' => $booking->booking_id]);
+        $this->editLink = URL::signedRoute('bookings.edit', ['booking_id' => $booking->booking_id]);
+        $this->cancelLink = URL::signedRoute('bookings.cancel', ['booking_id' => $booking->booking_id]);
 
         $childrenPrice = $booking->children_qty * ($booking->activity->children_price ?? 0);
         $studentPrice = $booking->students_qty * ($booking->activity->student_price ?? 0);

@@ -107,7 +107,7 @@ Route::get('/guest_verify', function () {
     return view('guest_verify'); 
 })->name('guest.verify');
 
-Route::get('/bookings/edit/{booking_id}', [BookingController::class, 'showBookingEdit'])->name('bookings.edit');
-Route::put('/bookings/update/{booking_id}', [BookingController::class, 'update'])->name('bookings.update');
+Route::get('/bookings/edit/{booking_id}', [BookingController::class, 'showBookingEdit'])->name('bookings.edit')->middleware('signed');
+Route::put('/bookings/update/{booking_id}', [BookingController::class, 'updateBooking'])->name('bookings.update');
 Route::get('/bookings/cancel/{booking_id}', [BookingController::class, 'showCancel'])->name('bookings.cancel');
 Route::post('/bookings/cancel/{booking_id}', [BookingController::class, 'cancel'])->name('bookings.cancel.confirm');

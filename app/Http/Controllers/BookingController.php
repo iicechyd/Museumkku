@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -585,7 +586,6 @@ class BookingController extends Controller
         return view('admin.history', compact('histories', 'activities'));
     }
 
-    //CustomerEditBookings
     public function showBookingEdit($booking_id)
     {
         $booking = Bookings::findOrFail($booking_id);
@@ -599,7 +599,7 @@ class BookingController extends Controller
 
         return view('emails.visitorEditBooking', compact('booking', 'institutes', 'visitors', 'activities', 'subactivities', 'timeslots', 'maxSubactivities'));
     }
-    public function update(Request $request, $booking_id)
+    public function updateBooking(Request $request, $booking_id)
     {
         $rules = [
             'fk_activity_id' => 'required|exists:activities,activity_id',

@@ -111,3 +111,9 @@ Route::get('/bookings/edit/{booking_id}', [BookingController::class, 'showBookin
 Route::put('/bookings/update/{booking_id}', [BookingController::class, 'updateBooking'])->name('bookings.update');
 Route::get('/bookings/cancel/{booking_id}', [BookingController::class, 'showCancel'])->name('bookings.cancel');
 Route::post('/bookings/cancel/{booking_id}', [BookingController::class, 'cancel'])->name('bookings.cancel.confirm');
+
+
+Route::post('/send-otp', [AuthController::class, 'sendOtp'])->name('sendOtp');
+Route::get('/verify-otp', action: [AuthController::class, 'showOtpForm'])->name('verifyOtp');
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verifyOtp.submit');
+Route::get('/clear-email', [AuthController::class, 'clearEmailSession'])->name('clear.email');

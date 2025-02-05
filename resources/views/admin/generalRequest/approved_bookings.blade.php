@@ -77,7 +77,7 @@
                             </td>
                             <td>
                                 {!! $item->status == 1 ? '<button type="button" class="status-btn">อนุมัติ</button>' : '' !!}
-                            </td>                            
+                            </td>
                             <td>
                                 <form action="{{ route('bookings.updateStatus', $item->booking_id) }}" method="POST"
                                     style="display: inline;" id="statusForm_{{ $item->booking_id }}">
@@ -98,6 +98,9 @@
                             <td>
                                 <a href="#detailsModal_{{ $item->booking_id }}" class="text-blue-500" data-toggle="modal">
                                     รายละเอียด
+                                </a>
+                                <a href="{{ route('admin.edit_booking', ['booking_id' => $item->booking_id]) }}">
+                                    <i class="fas fa-edit" style="color: #5e81ff;"></i>
                                 </a>
                                 @if ($item->documents->isNotEmpty())
                                     <p class="text-success pt-2">แนบไฟล์เอกสารเรียบร้อย</p>
@@ -239,4 +242,5 @@
     <script id="approvedBookingsData" type="application/json"> @json($approvedBookings->pluck('booking_id'))</script>
     <script src="{{ asset('js/approved_bookings.js') }}"></script>
 @endsection
+
 </html>

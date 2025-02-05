@@ -601,6 +601,21 @@ class BookingController extends Controller
 
         return view('emails.visitorEditBooking', compact('booking', 'institutes', 'visitors', 'activities', 'subactivities', 'timeslots', 'maxSubactivities'));
     }
+
+    public function showBookingAdminEdit($booking_id)
+    {
+        $booking = Bookings::findOrFail($booking_id);
+        $institutes = Institutes::findOrFail($booking->institute_id);
+        $visitors = Visitors::findOrFail($booking->visitor_id);
+        $activities = Activity::all();
+        $subactivities = Subactivity::where('activity_id', $booking->activity_id)->get();
+        $timeslots = Timeslots::where('activity_id', $booking->activity_id)->get();
+        $activity = Activity::findOrFail($booking->activity_id);
+        $maxSubactivities = $activity->max_subactivities;
+
+        return view('admin.AdminEditBooking', compact('booking', 'institutes', 'visitors', 'activities', 'subactivities', 'timeslots', 'maxSubactivities'));
+    }
+
     public function updateBooking(Request $request, $booking_id)
     {
         $rules = [

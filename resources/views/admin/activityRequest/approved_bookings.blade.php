@@ -101,6 +101,9 @@
                                 <a href="#detailsModal_{{ $item->booking_id }}" class="text-blue-500" data-toggle="modal">
                                     รายละเอียด
                                 </a>
+                                <a href="{{ route('admin.edit_booking', ['booking_id' => $item->booking_id]) }}">
+                                    <i class="fas fa-edit" style="color: #5e81ff;"></i>
+                                </a>
                                 @if ($item->documents->isNotEmpty())
                                     <p class="text-success pt-2">แนบไฟล์เอกสารเรียบร้อย</p>
                                 @else

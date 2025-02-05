@@ -5,25 +5,21 @@
 @section('content')
 
     <head>
-    <link rel="stylesheet" href="{{ asset('css/form_bookings.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    {{-- Dependencies Thailand location --}}
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript"
-        src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/JQL.min.js"></script>
-    <script type="text/javascript"
-        src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/typeahead.bundle.js"></script>
-    {{-- jquery.Thailand.js --}}
-    <link rel="stylesheet"
-        href="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.css">
-    <script type="text/javascript"
-        src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+        <link rel="stylesheet" href="{{ asset('css/form_bookings.css') }}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        {{-- Dependencies Thailand location --}}
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript"
+            src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/JQL.min.js"></script>
+        <script type="text/javascript"
+            src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/typeahead.bundle.js"></script>
+        {{-- jquery.Thailand.js --}}
+        <link rel="stylesheet"
+            href="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.css">
+        <script type="text/javascript"
+            src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
     </head>
 
     <div class="container mt-4 pb-5">
@@ -49,13 +45,6 @@
         <h2 class="text-center py-3 pt-5"
             style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); ">
             แก้ไขข้อมูลการจองเข้าชมพิพิธภัณฑ์</h2>
-        @if ($booking->status == 1)
-            <p class="text-center">ไม่สามารถแก้ไขข้อมูลการจองเข้าชมพิพิธภัณฑ์ได้ เนื่องจากการจองได้รับการอนุมัติแล้ว</p>
-            <p class="text-center">หากต้องการแก้ไขข้อมูลเพิ่มเติม กรุณาติดต่อ
-                096-XXX-XXXX เจ้าหน้าที่ฝ่ายกิจกรรม</p>
-        @elseif ($booking->status == 3)
-            <p class="text-center">ไม่สามารถแก้ไขข้อมูลการจองเข้าชมพิพิธภัณฑ์ได้ เนื่องจากการจองถูกยกเลิกแล้ว</p>
-        @else
             <div class="card shadow p-4">
                 <form method="POST" action="{{ route('bookings.update', $booking->booking_id) }}" class="row g-3">
                     @csrf
@@ -355,6 +344,9 @@
                             value="{{ $booking->activity->monk_price }}">
 
                         <div class="col-12 d-flex justify-content-center pt-2">
+                            <button type="button" class="btn btn-secondary btn-lg ms-2" onclick="goBack()">
+                                ย้อนกลับ
+                            </button>                          
                             <button type="button" class="btn btn-primary btn-lg ms-2" onclick="confirmSubmission()">
                                 ยืนยันข้อมูล
                             </button>
@@ -370,8 +362,7 @@
                                 </button>
                             </div>
                             <div class="modal-body text-center">
-                                กรุณารอการติดต่อกลับจากเจ้าหน้าที่ทางอีเมล ภายใน 24 ชั่วโมง<br> หากมีข้อสงสัย กรุณาติดต่อ
-                                096-XXX-XXXX เจ้าหน้าที่ฝ่ายกิจกรรม
+                                แก้ไข้ข้อมูลการจองของผู้เข้าชมสำเร็จ
                             </div>
                             <div class="modal-footer">
                                 <a href="/checkBookingStatus" class="btn btn-primary">ตรวจสอบสถานะการจอง</a>
@@ -381,13 +372,22 @@
                     </div>
                 </div>
             </div>
-        @endif
-    </div>
+        </div>
     <script>
         window.subactivities = @json($subactivities);
         window.maxSubactivities = {{ $maxSubactivities }};
     </script>
     <script src="{{ asset('js/visitorEditBooking.js') }}"></script>
+    <script>
+        function goBack() {
+            var activityTypeId = {{ $booking->activity->activity_type_id }};
+            if (activityTypeId === 1) {
+                window.location = '{{ route('approved_bookings.general') }}';
+            } else if (activityTypeId === 2) {
+                window.location = '{{ route('approved_bookings.activity') }}';
+            }
+        }
+    </script>
 @endsection
 
 </html>

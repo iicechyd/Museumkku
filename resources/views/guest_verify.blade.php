@@ -93,18 +93,6 @@
                                                     <span style="display: none;">Continue with Google</span>
                                                 </div>
                                             </button>
-                                            <button class="gsi-material-button">
-                                                <div class="gsi-material-button-state"></div>
-                                                <div class="gsi-material-button-content-wrapper">
-                                                    <div class="gsi-material-button-icon">
-                                                        <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"
-                                                            alt="Microsoft Logo">
-                                                    </div>
-                                                    <span class="gsi-material-button-contents">Sign in with
-                                                        Microsoft</span>
-                                                    <span style="display: none;">Sign in with Microsoft</span>
-                                                </div>
-                                            </button>
                                         </div>
                                     </div>
                                 </div>

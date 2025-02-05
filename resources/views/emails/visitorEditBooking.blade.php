@@ -131,7 +131,9 @@
                                 </div>
                             @enderror
                         </div>
-                    @endif
+                        @else
+                            <div class="w-100"></div>
+                        @endif
 
                     <div class="col-md-2">
                         <label for="instituteName" class="form-label">ชื่อหน่วยงาน</label>

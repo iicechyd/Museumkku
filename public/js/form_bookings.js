@@ -234,31 +234,57 @@ function confirmSubmission() {
         document.getElementById("errorMessage").style.display = "none";
     }
 
-    // ดึงค่าที่ผู้ใช้กรอกจากฟอร์ม
+    const selectedSubactivities = document.querySelectorAll(
+        'input[name="sub_activity_id[]"]:checked'
+    );
+    const maxSubactivities = window.maxSubactivities;
+
+    if (selectedSubactivities.length === 0) {
+        alert("กรุณาเลือกหลักสูตร");
+        return;
+    }
+
+    if (selectedSubactivities.length < maxSubactivities) {
+        alert(`กรุณาเลือกให้ครบ ${maxSubactivities} หลักสูตร`);
+        return;
+    }
+
     const formInput = {
         zipcode: document.getElementById("zipcode").value.trim(),
-        subdistrict: document.getElementById("subdistrict").value.trim().toLowerCase(),
-        district: document.getElementById("district").value.trim().toLowerCase(),
-        province: document.getElementById("province").value.trim().toLowerCase(),
+        subdistrict: document
+            .getElementById("subdistrict")
+            .value.trim()
+            .toLowerCase(),
+        district: document
+            .getElementById("district")
+            .value.trim()
+            .toLowerCase(),
+        province: document
+            .getElementById("province")
+            .value.trim()
+            .toLowerCase(),
     };
 
     $.getJSON("/raw_database.json", function (data) {
         const filteredByZipcode = data.filter(
             (item) => String(item.zipcode) === formInput.zipcode
         );
-    
+
         console.log("ค่าจากฟอร์ม:", formInput);
         console.log("ข้อมูลที่กรองด้วยรหัสไปรษณีย์:", filteredByZipcode);
-    
+
         const isValid = filteredByZipcode.some((item) => {
             console.log("ตรวจสอบรายการ:", item);
             return (
-                item.district.trim().toLowerCase() === formInput.subdistrict.toLowerCase() && 
-                item.amphoe.trim().toLowerCase() === formInput.district.toLowerCase() &&
-                item.province.trim().toLowerCase() === formInput.province.toLowerCase()
+                item.district.trim().toLowerCase() ===
+                    formInput.subdistrict.toLowerCase() &&
+                item.amphoe.trim().toLowerCase() ===
+                    formInput.district.toLowerCase() &&
+                item.province.trim().toLowerCase() ===
+                    formInput.province.toLowerCase()
             );
         });
-    
+
         if (!isValid) {
             alert(
                 "ข้อมูลที่อยู่ของคุณไม่ถูกต้อง กรุณาตรวจสอบให้แน่ใจว่ารหัสไปรษณีย์, ตำบล, อำเภอ และจังหวัดให้ถูกต้อง"

@@ -120,6 +120,8 @@
                                 </div>
                             @enderror
                         </div>
+                        @else
+                            <div class="w-100"></div>
                     @endif
 
                     <div class="col-md-2">

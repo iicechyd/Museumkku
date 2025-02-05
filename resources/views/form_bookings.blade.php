@@ -130,7 +130,9 @@
                                 </div>
                             @enderror
                         </div>
-                    @endif
+                        @else
+                            <div class="w-100"></div>
+                        @endif
 
                     <div class="col-md-2">
                         <label for="instituteName" class="form-label">ชื่อหน่วยงาน</label>
@@ -397,10 +399,9 @@
             </div>
         </div>
     </div>
-
     <script>
         window.subactivities = @json($subactivities);
-        window.maxSubactivities = {{ $maxSubactivities }};
+        window.maxSubactivities = @json($maxSubactivities);
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="{{ asset('js/form_bookings.js') }}"></script>

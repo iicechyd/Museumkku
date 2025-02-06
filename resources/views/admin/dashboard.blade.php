@@ -150,7 +150,7 @@
                         </div>
                         <div class="card-body">
                             <h6 class="mb-0 ">ยอดผู้เข้าชมทั้งหมดในปีนี้</h6>
-                            <p class="text-sm">ตั้งแต่ มกราคม - ธันวาคม</p>
+                            <p class="text-sm">ปีงบประมาณ {{ $startMonthThai }} - {{ $endMonthThai }}</p>
                             <hr class="dark horizontal">
                             <div class="d-flex">
                                 <i class="material-icons text-sm my-auto me-1">schedule</i>
@@ -170,7 +170,7 @@
                         </div>
                         <div class="card-body">
                             <h6 class="mb-0 ">รายได้การเข้าชมทั้งหมดในปีนี้</h6>
-                            <p class="text-sm ">ปีงบประมาณ ตั้งแต่ ตุลาคม - กันยายน</p>
+                            <p class="text-sm">ปีงบประมาณ {{ $startMonthThai }} - {{ $endMonthThai }}</p>
                             <hr class="dark horizontal">
                             <div class="d-flex ">
                                 <i class="material-icons text-sm my-auto me-1">schedule</i>
@@ -190,7 +190,7 @@
                         </div>
                         <div class="card-body">
                             <h6 class="mb-0 ">รายได้การจัดกิจกรรมทั้งหมดในปีนี้</h6>
-                            <p class="text-sm ">ปีงบประมาณ ตุลาคม - กันยายน</p>
+                            <p class="text-sm">ปีงบประมาณ {{ $startMonthThai }} - {{ $endMonthThai }}</p>
                             <hr class="dark horizontal">
                             <div class="d-flex ">
                                 <i class="material-icons text-sm my-auto me-1">schedule</i>
@@ -200,7 +200,9 @@
                     </div>
                 </div>
             </div>
-            <h4 class="mb-4">จำนวนผู้เข้าชมตามการจองปีนี้</h4>
+            <h4 class="mb-4">จำนวนผู้เข้าชมตามการจองในปีนี้
+                <p class="text-sm">ปีงบประมาณ {{ $startMonthThai }} - {{ $endMonthThai }}</p>
+            </h4>
             <div class="row mb-4">
                 @foreach ($activities->whereIn('activity_id', [1, 2]) as $activity)
                     <div class="col-md-3 pt-3">
@@ -242,6 +244,7 @@
                             <div class="row">
                                 <div class="col-lg-6 col-7">
                                     <h6>ยอดการจัดกิจกรรม และจำนวนผู้เข้าร่วมปีนี้</h6>
+                                    <p class="text-sm">ปีงบประมาณ {{ $startMonthThai }} - {{ $endMonthThai }}</p>
                                 </div>
                                 <div class="col-lg-6 col-5 my-auto text-end">
                                     <div class="dropdown float-lg-end pe-4">
@@ -308,6 +311,7 @@
                     <div class="card">
                         <div class="card-header pb-0">
                             <h6>สถิติประเภทผู้เข้าชมปีนี้</h6>
+                            <p class="text-sm">ปีงบประมาณ {{ $startMonthThai }} - {{ $endMonthThai }}</p>
                         </div>
                     </div>
                     <div class="card align-items-center">
@@ -328,7 +332,7 @@
                 var disabled_qty = {{ $visitorStats->disabled_qty ?? 0 }};
                 var elderly_qty = {{ $visitorStats->elderly_qty ?? 0 }};
                 var monk_qty = {{ $visitorStats->monk_qty ?? 0 }};
-                var totalVisitorsPerMonthThisYear = @json(array_values($totalVisitorsPerMonthThisYear));
+                var totalVisitorsPerMonthThisYear = @json($totalVisitorsPerMonthThisYear);
                 var yearlyRevenueGeneral = @json($yearlyRevenueGeneral);
                 var yearlyRevenueActivity = @json($yearlyRevenueActivity);
             </script>

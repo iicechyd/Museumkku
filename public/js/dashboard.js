@@ -6,20 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     new Chart(ctxBars, {
         type: "bar",
         data: {
-            labels: [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-            ],
+            labels: Object.keys(totalVisitorsPerMonthThisYear),
             datasets: [
                 {
                     label: "ผู้เข้าชม",
@@ -28,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     borderRadius: 4,
                     borderSkipped: false,
                     backgroundColor: "rgba(255, 255, 255, .8)",
-                    data: totalVisitorsPerMonthThisYear,
+                    data: Object.values(totalVisitorsPerMonthThisYear),
                     maxBarThickness: 6,
                     hoverBorderColor: "#9F2B68",
                     hoverBorderWidth: 0.5,
@@ -88,8 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         font: {
                             size: 14,
                             weight: 300,
-                            family: "Roboto",
-                            style: "normal",
+                            family: "Noto Sans Thai",
                             lineHeight: 2,
                         },
                         color: "#fff",
@@ -111,8 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         font: {
                             size: 14,
                             weight: 300,
-                            family: "Roboto",
-                            style: "normal",
+                            family: "Noto Sans Thai",
                             lineHeight: 2,
                         },
                     },
@@ -190,8 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         font: {
                             size: 14,
                             weight: 300,
-                            family: "Roboto",
-                            style: "normal",
+                            family: "Noto Sans Thai",
                             lineHeight: 2,
                         },
                     },
@@ -211,8 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         font: {
                             size: 14,
                             weight: 300,
-                            family: "Roboto",
-                            style: "normal",
+                            family: "Noto Sans Thai",
                             lineHeight: 2,
                         },
                     },
@@ -292,8 +275,7 @@ new Chart(ctx3, {
                     font: {
                         size: 14,
                         weight: 300,
-                        family: "Roboto",
-                        style: "normal",
+                        family: "Noto Sans Thai",
                         lineHeight: 2,
                     },
                 },
@@ -313,8 +295,7 @@ new Chart(ctx3, {
                     font: {
                         size: 14,
                         weight: 300,
-                        family: "Roboto",
-                        style: "normal",
+                        family: "Noto Sans Thai",
                         lineHeight: 2,
                     },
                 },
@@ -372,6 +353,11 @@ document.addEventListener("DOMContentLoaded", function () {
             plugins: {
                 legend: {
                     position: "top",
+                    labels: {
+                        font: {
+                            family: "'Noto Sans Thai', sans-serif",
+                        },
+                    },
                 },
                 tooltip: {
                     callbacks: {
@@ -380,6 +366,12 @@ document.addEventListener("DOMContentLoaded", function () {
                             let percentage = ((value / total) * 100).toFixed(2);
                             return `${tooltipItem.label}: ${value} คน (${percentage}%)`;
                         },
+                    },
+                    titleFont: {
+                        family: "'Noto Sans Thai', sans-serif",
+                    },
+                    bodyFont: {
+                        family: "'Noto Sans Thai', sans-serif",
                     },
                 },
             },

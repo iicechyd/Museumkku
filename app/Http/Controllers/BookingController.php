@@ -192,6 +192,7 @@ class BookingController extends Controller
             $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
             $monkPrice = $item->monk_qty * $item->activity->monk_price;
             $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
+            $item->signed_edit_url = URL::signedRoute('admin.edit_booking', ['booking_id' => $item->booking_id]);
         }
 
         return view('admin.generalRequest.approved_bookings', compact('approvedBookings', 'activities'));
@@ -613,6 +614,7 @@ class BookingController extends Controller
         $activity = Activity::findOrFail($booking->activity_id);
         $maxSubactivities = $activity->max_subactivities;
 
+        
         return view('admin.AdminEditBooking', compact('booking', 'institutes', 'visitors', 'activities', 'subactivities', 'timeslots', 'maxSubactivities'));
     }
 

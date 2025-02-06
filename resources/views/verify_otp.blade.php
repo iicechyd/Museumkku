@@ -19,18 +19,24 @@
                                 <div class="col-10 justify-content-center">
                                     <div class="mb-5 text-center">
                                         <h2 class="h3">ยืนยัน OTP</h2>
-                                        <h3 class="fs-6 fw-normal text-secondary m-0">กรุณากรอกรหัส OTP ที่ได้รับทางอีเมลเพื่อดำเนินการต่อ
+                                        <h3 class="fs-6 fw-normal text-secondary m-0">กรุณากรอกรหัส OTP
+                                            ที่ได้รับทางอีเมลเพื่อดำเนินการต่อ
                                         </h3>
                                         <form method="POST" action="{{ route('verifyOtp.submit') }}">
                                             @csrf
                                             <div class="form-group pt-4">
                                                 <label for="otp" class="mb-2">รหัส OTP</label>
                                                 <div class="d-flex justify-content-center">
-                                                    <input type="text" id="otp1" name="otp[]" class="form-control mx-1 text-center" maxlength="1" required>
-                                                    <input type="text" id="otp2" name="otp[]" class="form-control mx-1 text-center" maxlength="1" required>
-                                                    <input type="text" id="otp3" name="otp[]" class="form-control mx-1 text-center" maxlength="1" required>
-                                                    <input type="text" id="otp4" name="otp[]" class="form-control mx-1 text-center" maxlength="1" required>
-                                                    <input type="text" id="otp5" name="otp[]" class="form-control mx-1 text-center" maxlength="1" required>
+                                                    <input type="text" id="otp1" name="otp[]"
+                                                        class="form-control mx-1 text-center" maxlength="1" required>
+                                                    <input type="text" id="otp2" name="otp[]"
+                                                        class="form-control mx-1 text-center" maxlength="1" required>
+                                                    <input type="text" id="otp3" name="otp[]"
+                                                        class="form-control mx-1 text-center" maxlength="1" required>
+                                                    <input type="text" id="otp4" name="otp[]"
+                                                        class="form-control mx-1 text-center" maxlength="1" required>
+                                                    <input type="text" id="otp5" name="otp[]"
+                                                        class="form-control mx-1 text-center" maxlength="1" required>
                                                 </div>
                                             </div>
                                             <div class="text-center pt-4">
@@ -39,6 +45,11 @@
                                                 </button>
                                             </div>
                                         </form>
+                                        @if (session('error'))
+                                        <div class="pt-2">
+                                        <p class="text-danger text-center">{{ session('error') }}</p>
+                                    </div>
+                                        @endif                                    
                                     </div>
                                 </div>
                             </div>

@@ -108,13 +108,13 @@ Route::get('/guest_verify', function () {
 })->name('guest.verify');
 
 Route::get('/bookings/edit/{booking_id}', [BookingController::class, 'showBookingEdit'])->name('bookings.edit')->middleware('signed');
-Route::get('/admin/edit-booking/{booking_id}', [BookingController::class, 'showBookingAdminEdit'])->name('admin.edit_booking');
+Route::get('/admin/edit-booking/{booking_id}', [BookingController::class, 'showBookingAdminEdit'])->name('admin.edit_booking')->middleware('signed');
 Route::put('/bookings/update/{booking_id}', [BookingController::class, 'updateBooking'])->name('bookings.update');
 Route::get('/bookings/cancel/{booking_id}', [BookingController::class, 'showCancel'])->name('bookings.cancel');
 Route::post('/bookings/cancel/{booking_id}', [BookingController::class, 'cancel'])->name('bookings.cancel.confirm');
 
 
 Route::post('/send-otp', [AuthController::class, 'sendOtp'])->name('sendOtp');
-Route::get('/verify-otp', action: [AuthController::class, 'showOtpForm'])->name('verifyOtp');
+Route::get('/verify-otp', [AuthController::class, 'showOtpForm'])->name('verifyOtp');
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verifyOtp.submit');
 Route::get('/clear-email', [AuthController::class, 'clearEmailSession'])->name('clear.email');

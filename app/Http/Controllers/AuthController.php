@@ -90,10 +90,11 @@ class AuthController extends Controller
         $enteredOtp = implode('', $request->input('otp'));
         $storedOtp = session('otp');
         $email = session('email');
+        $redirectUrl = session('redirect_url');
 
         if ($enteredOtp == $storedOtp) {
-            session()->forget('otp');
-            return redirect()->route('form_bookings.activity', ['activity_id' => 1]);
+            session()->forget(['otp', 'redirect_url']);
+            return redirect($redirectUrl ?? route('form_bookings.activity', ['activity_id' => 1]));
         } else {
             return redirect()->back()
                 ->with('error', 'รหัส OTP ไม่ถูกต้อง กรุณาลองอีกครั้ง');

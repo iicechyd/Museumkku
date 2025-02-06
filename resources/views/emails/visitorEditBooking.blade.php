@@ -387,7 +387,7 @@
     </div>
     <script>
         window.subactivities = @json($subactivities);
-        window.maxSubactivities = {{ $maxSubactivities }};
+        window.maxSubactivities = @json($maxSubactivities);
     </script>
     <script src="{{ asset('js/visitorEditBooking.js') }}"></script>
 @endsection

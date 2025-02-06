@@ -154,34 +154,30 @@
                                                 ];
                                             @endphp
                                             @foreach ($prices as $type => $price)
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <div class="d-flex align-items-center">
-                                                        <label class="mr-2 mb-0"
-                                                            for="{{ $type }}_qty_{{ $item->booking_id }}"
-                                                            style="width: 100px;">
-                                                            {{ $labels[$type] }}
-                                                        </label>
-                                                        <input type="number"
-                                                            id="{{ $type }}_qty_{{ $item->booking_id }}"
-                                                            class="form-control visitor-input text-center"
-                                                            style="width: 70px; padding: 5px;" min="0" value="0"
-                                                            data-price="{{ $price }}"
-                                                            data-booking-id="{{ $item->booking_id }}"
-                                                            oninput="calculateTotal({{ $item->booking_id }})" required>
-                                                        <label class="ml-3"
-                                                            style="margin-left: 10px;">{{ $type === 'monk' ? 'รูป' : 'คน' }}</label>
-                                                    </div>
-                                                    <span class="ml-auto"
-                                                        style="text-align: right; width: 120px; margin-left: auto;">
-                                                        @if ($price == 0)
-                                                            ฟรี
-                                                        @else
-                                                            {{ number_format($price) }}
-                                                            {{ $type === 'monk' ? 'บาท/รูป' : 'บาท/คน' }}
-                                                        @endif
-                                                    </span>
+                                            <div class="d-flex justify-content-center align-items-center mb-2">
+                                                <div class="d-flex align-items-center">
+                                                    <label class="mr-2 mb-0"
+                                                        for="{{ $type }}_qty_{{ $item->booking_id }}"
+                                                        style="width: 100px;">
+                                                        {{ $labels[$type] }}
+                                                    </label>
+                                                    <input type="number"
+                                                        id="{{ $type }}_qty_{{ $item->booking_id }}"
+                                                        class="form-control visitor-input text-center"
+                                                        style="width: 70px; padding: 5px;" min="0" value="0"
+                                                        data-price="{{ $price }}"
+                                                        data-booking-id="{{ $item->booking_id }}"
+                                                        oninput="calculateTotal({{ $item->booking_id }})" required>
+                                                    <label class="ml-3"
+                                                        style="margin-left: 10px;">{{ $type === 'monk' ? 'รูป' : 'คน' }}</label>
                                                 </div>
-                                            @endforeach
+                                                <span class="text-right" style="margin-left: 80px; width: 120px;">
+                                                    @if ($price != 0)
+                                                        {{ number_format($price) }} {{ $type === 'monk' ? 'บาท/รูป' : 'บาท/คน' }}
+                                                    @endif
+                                                </span>
+                                            </div>
+                                        @endforeach
                                             <div class="col-12 mt-4">
                                                 <h5>จำนวนผู้เข้าชมทั้งหมด: <span
                                                         id="totalVisitors_{{ $item->booking_id }}">0</span> <span

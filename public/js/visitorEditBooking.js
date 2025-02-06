@@ -238,6 +238,23 @@ function confirmSubmission() {
         document.getElementById("errorMessage").style.display = "none";
     }
 
+    if (window.subactivities.length > 0) {
+        const selectedSubactivities = document.querySelectorAll(
+            'input[name="sub_activity_id[]"]:checked'
+        );
+        const maxSubactivities = window.maxSubactivities;
+
+        if (selectedSubactivities.length === 0) {
+            alert("กรุณาเลือกหลักสูตร");
+            return;
+        }
+
+        if (selectedSubactivities.length < maxSubactivities) {
+            alert(`กรุณาเลือกให้ครบ ${maxSubactivities} หลักสูตร`);
+            return;
+        }
+    }
+    
     const formInput = {
         zipcode: document.getElementById("zipcode").value.trim(),
         subdistrict: document

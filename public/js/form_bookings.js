@@ -234,19 +234,21 @@ function confirmSubmission() {
         document.getElementById("errorMessage").style.display = "none";
     }
 
-    const selectedSubactivities = document.querySelectorAll(
-        'input[name="sub_activity_id[]"]:checked'
-    );
-    const maxSubactivities = window.maxSubactivities;
+    if (window.subactivities.length > 0) {
+        const selectedSubactivities = document.querySelectorAll(
+            'input[name="sub_activity_id[]"]:checked'
+        );
+        const maxSubactivities = window.maxSubactivities;
 
-    if (selectedSubactivities.length === 0) {
-        alert("กรุณาเลือกหลักสูตร");
-        return;
-    }
+        if (selectedSubactivities.length === 0) {
+            alert("กรุณาเลือกหลักสูตร");
+            return;
+        }
 
-    if (selectedSubactivities.length < maxSubactivities) {
-        alert(`กรุณาเลือกให้ครบ ${maxSubactivities} หลักสูตร`);
-        return;
+        if (selectedSubactivities.length < maxSubactivities) {
+            alert(`กรุณาเลือกให้ครบ ${maxSubactivities} หลักสูตร`);
+            return;
+        }
     }
 
     const formInput = {

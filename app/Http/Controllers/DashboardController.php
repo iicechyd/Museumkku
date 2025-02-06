@@ -13,9 +13,12 @@ class DashboardController extends Controller
 {
     public function showDashboard()
     {
-        $today = Carbon::today();
+        $today = Carbon::today()->toDateString();
+        $yesterday = Carbon::yesterday()->toDateString();
         $weekStart = Carbon::today()->startOfWeek();
         $weekEnd = Carbon::today()->endOfWeek();
+        $lastWeekStart = Carbon::parse($weekStart)->subWeek()->format('Y-m-d');
+        $lastWeekEnd = Carbon::parse($weekEnd)->subWeek()->format('Y-m-d');
         $monthStart = Carbon::today()->startOfMonth();
         $monthEnd = Carbon::today()->endOfMonth();
         $currentYear = Carbon::now()->year;
@@ -25,30 +28,240 @@ class DashboardController extends Controller
         $startMonthThai = $startMonth->locale('th')->isoFormat('MMMM') . ' ' . ($startMonth->year + 543);
         $endMonthThai = $endMonth->locale('th')->isoFormat('MMMM') . ' ' . ($endMonth->year + 543);
 
-        $totalVisitorsToday = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
-            ->whereIn('bookings.activity_id', [1, 2, 3])
+        $visitorsToday = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+            ->whereIn('bookings.activity_id', [1, 2])
+            ->whereDate('bookings.booking_date', $today)
+            ->where('bookings.status', 2)
+            ->select(
+                'bookings.activity_id',
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total')
+            )
+            ->groupBy('bookings.activity_id')
+            ->pluck('total', 'bookings.activity_id');
+
+        $visitorsActivity3Today = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+            ->where('bookings.activity_id', 3)
             ->whereDate('bookings.booking_date', $today)
             ->where('bookings.status', 2)
             ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
 
-        $totalVisitorsThisWeek = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+        $totalVisitorsToday = [
+            1 => ($visitorsToday[1] ?? 0) + $visitorsActivity3Today,
+            2 => ($visitorsToday[2] ?? 0) + $visitorsActivity3Today
+        ];
+
+        $visitorsYesterday = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+            ->whereIn('bookings.activity_id', [1, 2])
+            ->whereDate('bookings.booking_date', $yesterday)
+            ->where('bookings.status', 2)
+            ->select(
+                'bookings.activity_id',
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total')
+            )
+            ->groupBy('bookings.activity_id')
+            ->pluck('total', 'bookings.activity_id');
+
+        $visitorsActivity3Yesterday = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+            ->where('bookings.activity_id', 3)
+            ->whereDate('bookings.booking_date', $yesterday)
+            ->where('bookings.status', 2)
+            ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
+
+        $totalVisitorsYesterday = [
+            1 => ($visitorsYesterday[1] ?? 0) + $visitorsActivity3Yesterday,
+            2 => ($visitorsYesterday[2] ?? 0) + $visitorsActivity3Yesterday
+        ];
+
+        $percentageChangeToday = [];
+        foreach ([1, 2] as $activity_id) {
+            $previous = $totalVisitorsYesterday[$activity_id] ?? 0;
+            $current = $totalVisitorsToday[$activity_id] ?? 0;
+
+            if ($previous > 0) {
+                $percentageChangeToday[$activity_id] = (($current - $previous) / $previous) * 100;
+            } else {
+                $percentageChangeToday[$activity_id] = $current > 0 ? 100 : 0;
+            }
+        }
+
+        $activityVisitorCountsWeek = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
             ->whereIn('bookings.activity_id', [1, 2, 3])
             ->whereBetween('bookings.booking_date', [$weekStart, $weekEnd])
             ->where('bookings.status', 2)
-            ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
+            ->select(
+                'bookings.activity_id',
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+            )
+            ->groupBy('bookings.activity_id')
+            ->pluck('total_visitors', 'bookings.activity_id');
 
-        $totalVisitorsThisMonth = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+        $activity1Visitors = $activityVisitorCountsWeek[1] ?? 0;
+        $activity2Visitors = $activityVisitorCountsWeek[2] ?? 0;
+        $activity3Visitors = $activityVisitorCountsWeek[3] ?? 0;
+
+        if ($activity3Visitors > 0) {
+            $activity1Visitors += $activity3Visitors;
+            $activity2Visitors += $activity3Visitors;
+        }
+        $totalVisitorsThisWeek = [
+            1 => $activity1Visitors,
+            2 => $activity2Visitors
+        ];
+
+        $activityVisitorCountsLastWeek = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+            ->whereIn('bookings.activity_id', [1, 2, 3])
+            ->whereBetween('bookings.booking_date', [$lastWeekStart, $lastWeekEnd])
+            ->where('bookings.status', 2)
+            ->select(
+                'bookings.activity_id',
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+            )
+            ->groupBy('bookings.activity_id')
+            ->pluck('total_visitors', 'bookings.activity_id');
+
+        $percentageChangeThisWeek = [];
+        foreach ([1, 2] as $activity_id) {
+            $previous = $activityVisitorCountsLastWeek[$activity_id] ?? 0;
+            $current = $totalVisitorsThisWeek[$activity_id] ?? 0;
+            if ($previous > 0) {
+                $percentageChangeThisWeek[$activity_id] = (($current - $previous) / $previous) * 100;
+            } else {
+                $percentageChangeThisWeek[$activity_id] = $current > 0 ? 100 : 0;
+            }
+        }
+
+        $activityVisitorCountsMonth = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
             ->whereIn('bookings.activity_id', [1, 2, 3])
             ->whereBetween('bookings.booking_date', [$monthStart, $monthEnd])
             ->where('bookings.status', 2)
-            ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
+            ->select(
+                'bookings.activity_id',
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+            )
+            ->groupBy('bookings.activity_id')
+            ->pluck('total_visitors', 'bookings.activity_id');
 
-        $totalVisitorsThisYear = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+        $activity1VisitorsMonth = $activityVisitorCountsMonth[1] ?? 0;
+        $activity2VisitorsMonth = $activityVisitorCountsMonth[2] ?? 0;
+        $activity3VisitorsMonth = $activityVisitorCountsMonth[3] ?? 0;
+
+        if ($activity3VisitorsMonth > 0) {
+            $activity1VisitorsMonth += $activity3VisitorsMonth;
+            $activity2VisitorsMonth += $activity3VisitorsMonth;
+        }
+
+        $totalVisitorsThisMonth = [
+            1 => $activity1VisitorsMonth,
+            2 => $activity2VisitorsMonth
+        ];
+
+        $lastMonthStart = $monthStart->clone()->subMonth()->startOfMonth();
+        $lastMonthEnd = $monthStart->clone()->subMonth()->endOfMonth();
+
+        $activityVisitorCountsLastMonth = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+            ->whereIn('bookings.activity_id', [1, 2, 3])
+            ->whereBetween('bookings.booking_date', [$lastMonthStart, $lastMonthEnd])
+            ->where('bookings.status', 2)
+            ->select(
+                'bookings.activity_id',
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+            )
+            ->groupBy('bookings.activity_id')
+            ->pluck('total_visitors', 'bookings.activity_id');
+
+        $activity1VisitorsLastMonth = $activityVisitorCountsLastMonth[1] ?? 0;
+        $activity2VisitorsLastMonth = $activityVisitorCountsLastMonth[2] ?? 0;
+        $activity3VisitorsLastMonth = $activityVisitorCountsLastMonth[3] ?? 0;
+
+        if ($activity3VisitorsLastMonth > 0) {
+            $activity1VisitorsLastMonth += $activity3VisitorsLastMonth;
+            $activity2VisitorsLastMonth += $activity3VisitorsLastMonth;
+        }
+
+        $totalVisitorsLastMonth = [
+            1 => $activity1VisitorsLastMonth,
+            2 => $activity2VisitorsLastMonth
+        ];
+        $percentageChangeMonth = [];
+        foreach ([1, 2] as $activity_id) {
+            $previous = $totalVisitorsLastMonth[$activity_id] ?? 0;
+            $current = $totalVisitorsThisMonth[$activity_id] ?? 0;
+
+            if ($previous > 0) {
+                $percentageChangeMonth[$activity_id] = (($current - $previous) / $previous) * 100;
+            } elseif ($previous == 0 && $current > 0) {
+                $percentageChangeMonth[$activity_id] = 100;
+            } elseif ($previous == 0 && $current == 0) {
+                $percentageChangeMonth[$activity_id] = 0;
+            } else {
+                $percentageChangeMonth[$activity_id] = null;
+            }
+        }
+
+        $activityVisitorCountsYear = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
             ->whereIn('bookings.activity_id', [1, 2, 3])
             ->whereBetween('bookings.booking_date', [$startMonth, $endMonth])
             ->where('bookings.status', 2)
-            ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
+            ->select(
+                'bookings.activity_id',
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+            )
+            ->groupBy('bookings.activity_id')
+            ->pluck('total_visitors', 'bookings.activity_id');
 
+        $activity1VisitorsYear = $activityVisitorCountsYear[1] ?? 0;
+        $activity2VisitorsYear = $activityVisitorCountsYear[2] ?? 0;
+        $activity3VisitorsYear = $activityVisitorCountsYear[3] ?? 0;
+
+        if ($activity3VisitorsYear > 0) {
+            $activity1VisitorsYear += $activity3VisitorsYear;
+            $activity2VisitorsYear += $activity3VisitorsYear;
+        }
+
+        $totalVisitorsThisYear = [
+            1 => $activity1VisitorsYear,
+            2 => $activity2VisitorsYear
+        ];
+
+        $startMonthLastYear = $startMonth->copy()->subYear();
+        $endMonthLastYear = $endMonth->copy()->subYear();
+
+        $activityVisitorCountsLastYear = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+            ->whereIn('bookings.activity_id', [1, 2, 3])
+            ->whereBetween('bookings.booking_date', [$startMonthLastYear, $endMonthLastYear])
+            ->where('bookings.status', 2)
+            ->select(
+                'bookings.activity_id',
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+            )
+            ->groupBy('bookings.activity_id')
+            ->pluck('total_visitors', 'bookings.activity_id');
+
+        $activity1VisitorsLastYear = $activityVisitorCountsLastYear[1] ?? 0;
+        $activity2VisitorsLastYear = $activityVisitorCountsLastYear[2] ?? 0;
+        $activity3VisitorsLastYear = $activityVisitorCountsLastYear[3] ?? 0;
+        if ($activity3VisitorsLastYear > 0) {
+            $activity1VisitorsLastYear += $activity3VisitorsLastYear;
+            $activity2VisitorsLastYear += $activity3VisitorsLastYear;
+        }
+
+        $totalVisitorsLastYear = [
+            1 => $activity1VisitorsLastYear,
+            2 => $activity2VisitorsLastYear
+        ];
+
+        $percentageChangeYear = [];
+        foreach ([1, 2] as $activityId) {
+            $lastYear = $totalVisitorsLastYear[$activityId] ?? 0;
+            $thisYear = $totalVisitorsThisYear[$activityId] ?? 0;
+
+            if ($lastYear > 0) {
+                $percentageChangeYear[$activityId] = (($thisYear - $lastYear) / $lastYear) * 100;
+            } else {
+                $percentageChangeYear[$activityId] = $thisYear > 0 ? 100 : 0;
+            }
+        }
+        
         $totalVisitorsPerMonthThisYear = [];
         $currentDate = $startMonth->copy();
         while ($currentDate <= $endMonth) {
@@ -69,7 +282,7 @@ class DashboardController extends Controller
         while ($currentDate <= $endMonth) {
             $monthStart = $currentDate->copy()->startOfMonth()->format('Y-m-d');
             $monthEnd = $currentDate->copy()->endOfMonth()->format('Y-m-d');
-            $monthLabel = $currentDate->copy()->translatedFormat('M Y');
+            $monthLabel = $currentDate->copy()->translatedFormat('M') . ' ' . ($currentDate->year + 543);
 
             $yearlyRevenueGeneral[$monthLabel] = Bookings::whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
@@ -90,7 +303,7 @@ class DashboardController extends Controller
         while ($currentDate <= $endMonth) {
             $monthStart = $currentDate->copy()->startOfMonth()->format('Y-m-d');
             $monthEnd = $currentDate->copy()->endOfMonth()->format('Y-m-d');
-            $monthLabel = $currentDate->copy()->translatedFormat('M Y');
+            $monthLabel = $currentDate->copy()->translatedFormat('M') . ' ' . ($currentDate->year + 543);
 
             $yearlyRevenueActivity[$monthLabel] = Bookings::whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 2);
@@ -156,9 +369,13 @@ class DashboardController extends Controller
         return view('admin.dashboard', compact(
             'activities',
             'totalVisitorsToday',
+            'percentageChangeToday',
             'totalVisitorsThisWeek',
+            'percentageChangeThisWeek',
             'totalVisitorsThisMonth',
+            'percentageChangeMonth',
             'totalVisitorsThisYear',
+            'percentageChangeYear',
             'totalVisitorsPerMonthThisYear',
             'yearlyRevenueGeneral',
             'yearlyRevenueActivity',

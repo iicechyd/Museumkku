@@ -35,7 +35,7 @@ class AuthController extends Controller
         $verificationLink = route('verifyLink', ['token' => $token]);
         session(['verification_email' => $email]);
 
-        Mail::send('emails.verify_link', ['url' => $verificationLink], function ($message) use ($email) {
+        Mail::send('emails.verify_link', ['url' => $verificationLink, 'email' => $email], function ($message) use ($email) {
             $message->to($email)->subject('ลิงก์ยืนยันตัวตน');
         });
 

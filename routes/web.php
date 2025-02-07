@@ -118,3 +118,5 @@ Route::get('/waiting-for-verification', [AuthController::class, 'waitingForVerif
 
 Route::get('/check-verification/{email}', [AuthController::class, 'checkVerification'])->name('checkVerification');
 Route::get('/clear-email', [AuthController::class, 'clearEmailSession'])->name('clear.email');
+
+Route::get('/booking/details/{booking_id}', [BookingController::class, 'showDetails'])->name('bookings.details');

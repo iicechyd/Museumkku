@@ -822,4 +822,8 @@ class BookingController extends Controller
         }
         return back()->with('showSuccessModal', true);
     }
+    public function showDetails($booking_id) {
+        $booking = Bookings::findOrFail($booking_id);
+        return view('bookingDetails', compact('booking'));
+    }
 }

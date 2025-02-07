@@ -11,6 +11,7 @@ class BookingPendingMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $booking;
+    public $detailsLink;
     public $editLink;
     public $cancelLink;
     public $totalPrice;
@@ -18,6 +19,7 @@ class BookingPendingMail extends Mailable
     public function __construct($booking)
     {
         $this->booking = $booking;
+        $this->detailsLink = route('bookings.details', ['booking_id' => $booking->booking_id]);
         $this->editLink = URL::signedRoute('bookings.edit', ['booking_id' => $booking->booking_id]);
         $this->cancelLink = URL::signedRoute('bookings.cancel', ['booking_id' => $booking->booking_id]);
 
@@ -36,6 +38,7 @@ class BookingPendingMail extends Mailable
             ->view('emails.bookingPending')
             ->with([
                 'booking' => $this->booking,
+                'detailsLink' => $this->detailsLink,
                 'editLink' => $this->editLink,
                 'cancelLink' => $this->cancelLink,
                 'totalPrice' => $this->totalPrice,

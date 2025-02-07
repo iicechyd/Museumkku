@@ -1,70 +1,34 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>รออนุมัติการจองเข้าชม</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/bookingPending.css') }}">
+    <title>Booking Confirmation</title>
 </head>
 
 <body>
-    <h2>ระบบได้รับการจองของคุณเรียบร้อยแล้ว โดยสถานะปัจจุบันคือ<span
-            style="color: rgb(228, 168, 3);">รออนุมัติการจอง</span></h2>
-    <p>เรียนคุณ {{ $booking->visitor->visitorName }}</p>
-    <p>ขอแจ้งให้ท่านทราบว่าการจองเข้าชมพิพิธภัณฑ์ของคุณได้รับการตอบรับการจองแล้ว</p>
-    <p>รายละเอียดการจองเข้าชมมีดังนี้</p>
-    <p>วันที่จอง: {{ \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y') }}</p>
-    <p>ประเภทการเข้าชม: {{ $booking->activity->activity_name }} </p>
-    @if (!$booking->subActivities->isEmpty())
-        <p>หลักสูตร:
-            @foreach ($booking->subActivities as $subactivity)
-                {{ $subactivity->sub_activity_name }}
-            @endforeach
-        </p>
-    @endif
-    <p>ชื่อหน่วยงาน: {{ $booking->institute->instituteName }}</p>
-    <p>ที่อยู่หน่วยงาน: {{ $booking->institute->instituteAddress }} {{ $booking->institute->subdistrict }}
-        {{ $booking->institute->district }} {{ $booking->institute->province }} {{ $booking->institute->zipcode }}
-    </p>
-    <p>อีเมลผู้ประสานงาน: {{ $booking->visitor->visitorEmail }}</p>
-    <p>เบอร์โทรศัพท์: {{ $booking->visitor->tel }}</p>
-    @if ($booking->children_qty > 0)
-        <p>เด็ก : {{ $booking->children_qty }} คน</p>
-    @endif
-
-    @if ($booking->students_qty > 0)
-        <p>นร / นศ : {{ $booking->students_qty }} คน</p>
-    @endif
-
-    @if ($booking->adults_qty > 0)
-        <p>ผู้ใหญ่ / คุณครู : {{ $booking->adults_qty }} คน</p>
-    @endif
-
-    @if ($booking->disabled_qty > 0)
-        <p>ผู้พิการ : {{ $booking->disabled_qty }} คน</p>
-    @endif
-
-    @if ($booking->elderly_qty > 0)
-        <p>ผู้สูงอายุ : {{ $booking->elderly_qty }} คน</p>
-    @endif
-
-    @if ($booking->monk_qty > 0)
-        <p>พระภิกษุสงฆ์ / สามเณร : {{ $booking->monk_qty }} รูป</p>
-    @endif
-    @if (!empty($booking->note))
-        <p>*หมายเหตุ: {{ $booking->note }}</p>
-    @endif
-    <p>ยอดรวมราคาทั้งหมด: {{ number_format($totalPrice, 2) }} บาท</p>
-    <p>คุณสามารถแก้ไขข้อมูลการจองได้ที่ลิงก์ด้านล่าง:</p>
-    <a href="{{ $editLink }}">แก้ไขข้อมูลการจอง</a>
+    <div class="container">
+        <h2>ระบบได้รับการจองของคุณเรียบร้อยแล้ว โดยสถานะปัจจุบันคือ <span class="status">รออนุมัติการจอง</span></h2>
+        <p>เรียนคุณ <span class="highlight">{{ $booking->visitor->visitorName }}</span></p>
+        <p>ขอแจ้งให้ท่านทราบว่าการจองเข้าชมพิพิธภัณฑ์ของคุณได้รับการตอบรับการจองแล้ว</p>
+        <a href="{{ $detailsLink }}" 
+     style="background-color: #3673cf; color: white; padding: 10px 20px; 
+            text-decoration: none; border-radius: 5px; display: inline-block;">
+    รายละเอียดการจอง
+  </a>
+    <p>คุณสามารถแก้ไขข้อมูลการจองได้ที่:</p>
+    <a href="{{ $editLink }}" class="button">แก้ไขข้อมูลการจอง</a>
     <p>หากต้องการยกเลิกการจอง คลิกที่นี่:</p>
-    <a href="{{ $cancelLink }}" style="color: red;">
-        ยกเลิกการจอง
-    </a>
+    <a href="{{ $cancelLink }}" class="button cancel">ยกเลิกการจอง</a>
+
     <p>หากมีข้อสงสัยใดๆ โปรดติดต่อเจ้าหน้าที่</p>
     <br>
     <p>ขอแสดงความนับถือ</p>
-    <p>ศูนย์พิพิธภัณฑ์และแหล่งเรียนรู้ตลอดชีวิต มหาวิทยาลัยขอนแก่น</p>
+    <p><strong>ศูนย์พิพิธภัณฑ์และแหล่งเรียนรู้ตลอดชีวิต มหาวิทยาลัยขอนแก่น</strong></p>
     <p>หมายเลขโทรศัพท์ 06X-XXX-XXXX เจ้าหน้าที่ฝ่ายกิจกรรม</p>
 </body>
 

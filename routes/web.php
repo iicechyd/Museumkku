@@ -103,9 +103,7 @@ Route::delete('/admin/activity_images/{image_id}', [ActivityController::class, '
 Route::post('/add-target', [ActivityController::class, 'addTarget']);
 Route::get('/auth/redirect', [AuthController::class, 'redirectToGoogle']);
 Route::get('/auth/callback', [AuthController::class, 'handleGoogleCallback']);
-Route::get('/guest_verify', function () {
-    return view('guest_verify'); 
-})->name('guest.verify');
+Route::get('/guest_verify', [AuthController::class, 'showGuestVerify'])->name('guest.verify');
 
 Route::get('/bookings/edit/{booking_id}', [BookingController::class, 'showBookingEdit'])->name('bookings.edit')->middleware('signed');
 Route::get('/admin/edit-booking/{booking_id}', [BookingController::class, 'showBookingAdminEdit'])->name('admin.edit_booking')->middleware('signed');
@@ -113,8 +111,10 @@ Route::put('/bookings/update/{booking_id}', [BookingController::class, 'updateBo
 Route::get('/bookings/cancel/{booking_id}', [BookingController::class, 'showCancel'])->name('bookings.cancel');
 Route::post('/bookings/cancel/{booking_id}', [BookingController::class, 'cancel'])->name('bookings.cancel.confirm');
 
+Route::get('/guest_verify', [AuthController::class, 'showGuestVerify'])->name('guest.verify');
+Route::post('/api/send-verification-link', [AuthController::class, 'sendVerificationLink'])->name('sendVerificationLink');
+Route::get('/verify-link/{token}', [AuthController::class, 'verifyLink'])->name('verifyLink');
+Route::get('/waiting-for-verification', [AuthController::class, 'waitingForVerification'])->name('waiting_for_verification');
 
-Route::post('/send-otp', [AuthController::class, 'sendOtp'])->name('sendOtp');
-Route::get('/verify-otp', [AuthController::class, 'showOtpForm'])->name('verifyOtp');
-Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verifyOtp.submit');
+Route::get('/check-verification/{email}', [AuthController::class, 'checkVerification'])->name('checkVerification');
 Route::get('/clear-email', [AuthController::class, 'clearEmailSession'])->name('clear.email');

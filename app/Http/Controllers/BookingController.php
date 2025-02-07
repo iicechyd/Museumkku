@@ -511,7 +511,7 @@ class BookingController extends Controller
 
     public function showBookingForm($activity_id)
     {
-        if (!session()->has('email')) {
+        if (!session()->has('verification_email')) {
             session(['redirect_url' => route('form_bookings.activity', ['activity_id' => $activity_id])]);
             return redirect()->route('guest.verify');
         }

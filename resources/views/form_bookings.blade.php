@@ -43,7 +43,7 @@
                 });
             </script>
         @endif
-        @if (session('email'))
+        @if (session('verification_email'))
             <h2 class="text-center py-3"
                 style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); ">
                 แบบฟอร์มจองเข้าชมพิพิธภัณฑ์</h2>
@@ -220,7 +220,7 @@
                         <label for="visitorEmail" class="form-label">อีเมล์ผู้ประสานงาน</label>
                         <input type="email" class="form-control @error('visitorEmail') is-invalid @enderror"
                             id="visitorEmail" name="visitorEmail" placeholder="Test@email.com"
-                            value="{{ session('email', old('visitorEmail')) }}" readonly>
+                            value="{{ session('verification_email', old('visitorEmail')) }}" readonly>
                         @error('visitorEmail')
                             <div class="my-2">
                                 <span class="text-danger">{{ $message }}</span>

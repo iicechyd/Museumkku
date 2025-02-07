@@ -3,107 +3,72 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use League\OAuth2\Client\Provider\Google;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use App\Models\Verification;
 
 class AuthController extends Controller
 {
-    protected $provider;
-
-    public function __construct()
-    {
-        $this->provider = new Google([
-            'clientId'     => env('GOOGLE_CLIENT_ID'),
-            'clientSecret' => env('GOOGLE_CLIENT_SECRET'),
-            'redirectUri'  => env('GOOGLE_REDIRECT_URI'),
-            'scopes'       => ['email', 'profile'],
-        ]);
-    }
-
-    public function redirectToGoogle()
-    {
-        $authorizationUrl = $this->provider->getAuthorizationUrl();
-        session(['oauth2state' => $this->provider->getState()]);
-
-        return redirect($authorizationUrl);
-    }
-
-    public function handleGoogleCallback(Request $request)
-    {
-        if ($request->input('state') !== session('oauth2state')) {
-            session()->forget('oauth2state');
-            return redirect('/')->with('error', 'Invalid state.');
-        }
-
-        $token = $this->provider->getAccessToken('authorization_code', [
-            'code' => $request->input('code'),
-        ]);
-
-        $user = $this->provider->getResourceOwner($token);
-        $email = $user->toArray()['email'] ?? null;
-
-        if ($email) {
-            session(['email' => $email]);
-            $redirectUrl = session('redirect_url', route('form_bookings.activity', ['activity_id' => 1]));
-            session()->forget('redirect_url');
-            return redirect($redirectUrl);
-        } else {
-            return redirect('/')->with('error', 'Failed to retrieve email.');
-        }
-    }
     public function showGuestVerify()
     {
         return view('guest_verify');
     }
-    public function sendOtp(Request $request)
+    public function waitingForVerification()
+    {
+        return view('waiting_for_verification');
+    }
+
+    public function sendVerificationLink(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
         ]);
 
         $email = $request->input('email');
-        $otp = str_pad(rand(10000, 99999), 5, '0', STR_PAD_LEFT);
+        $token = Str::random(40);
 
-        session(['otp' => $otp, 'email' => $email]);
+        Verification::updateOrCreate(
+            ['email' => $email],
+            ['token' => $token, 'verified' => false]
+        );
 
-        Mail::send('emails.sendOTP', ['otp' => $otp], function ($message) use ($email) {
-            $message->to($email)
-                ->subject('รหัส OTP สำหรับการยืนยันตัวตน');
+        $verificationLink = route('verifyLink', ['token' => $token]);
+        session(['verification_email' => $email]);
+
+        Mail::send('emails.verify_link', ['url' => $verificationLink], function ($message) use ($email) {
+            $message->to($email)->subject('ลิงก์ยืนยันตัวตน');
         });
 
-        return redirect()->route('verifyOtp');
+        return redirect()->route('waiting_for_verification');
     }
 
-    public function showOtpForm()
+    public function verifyLink($token)
     {
-        return view('verify_otp');
-    }
+        $verification = Verification::where('token', $token)->first();
 
-    public function verifyOtp(Request $request)
-    {
-        $request->validate([
-            'otp' => 'required|array|min:5|max:5',
-            'otp.*' => 'required|numeric',
-        ]);
-
-        $enteredOtp = implode('', $request->input('otp'));
-        $storedOtp = session('otp');
-        $email = session('email');
-        $redirectUrl = session('redirect_url');
-
-        if ($enteredOtp == $storedOtp) {
-            session()->forget(['otp', 'redirect_url']);
-            return redirect($redirectUrl ?? route('form_bookings.activity', ['activity_id' => 1]));
-        } else {
-            return redirect()->back()
-                ->with('error', 'รหัส OTP ไม่ถูกต้อง กรุณาลองอีกครั้ง');
+        if (!$verification) {
+            return redirect('/')->with('error', 'ลิงก์ยืนยันไม่ถูกต้องหรือหมดอายุ');
         }
-    }
-    public function clearEmailSession()
-{
-    session()->forget('email');
-    return redirect()->route('guest.verify')->with('success', 'เคลียร์อีเมลเรียบร้อยแล้ว');
-}
 
+        $verification->update(['verified' => true]);
+
+        session(['verification_email' => $verification->email]);
+
+        session(['redirect_url' => route('form_bookings.activity', ['activity_id' => 1])]);
+
+    return view('verified');
+    }
+
+    public function checkVerification($email)
+    {
+        $verification = Verification::where('email', $email)->first();
+
+        return response()->json(['verified' => $verification ? $verification->verified : false]);
+    }
+
+    public function clearEmailSession()
+    {
+        session()->forget('verification_email');
+        return redirect()->route('guest.verify')->with('success', 'เคลียร์อีเมลเรียบร้อยแล้ว');
+    }
 }

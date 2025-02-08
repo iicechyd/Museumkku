@@ -613,6 +613,7 @@ class BookingController extends Controller
         $timeslots = Timeslots::where('activity_id', $booking->activity_id)->get();
         $activity = Activity::findOrFail($booking->activity_id);
         $maxSubactivities = $activity->max_subactivities;
+        $signed_edit_url = URL::signedRoute('admin.edit_booking', ['booking_id' => $booking->booking_id]);
 
         
         return view('admin.AdminEditBooking', compact('booking', 'institutes', 'visitors', 'activities', 'subactivities', 'timeslots', 'maxSubactivities'));

@@ -110,11 +110,9 @@
                 <div class="modal-body">
                     @if (!$booking->subActivities->isEmpty())
                             <p>หลักสูตร:
-                                @foreach ($booking->subActivities as $subactivity)
-                                    {{ $subactivity->sub_activity_name }}
-                                @endforeach
+                                {{ $booking->subActivities->pluck('sub_activity_name')->implode(', ') }}
                             </p>
-                        @endif
+                    @endif
                     <p><strong>ชื่อหน่วยงาน: </strong>{{ $booking->institute->instituteName }}</p>
                     <p><strong>ที่อยู่หน่วยงาน: </strong>{{ $booking->institute->instituteAddress }}
                         {{ $booking->institute->subdistrict }} {{ $booking->institute->district }}

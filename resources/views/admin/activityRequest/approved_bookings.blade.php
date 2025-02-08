@@ -148,9 +148,7 @@
                                         <div class="modal-body">
                                             @if (!$item->subActivities->isEmpty())
                                                 <p><strong>หลักสูตร:</strong>
-                                                    @foreach ($item->subActivities as $subactivity)
-                                                        {{ $subactivity->sub_activity_name }}
-                                                    @endforeach
+                                                    {{ $item->subActivities->pluck('sub_activity_name')->implode(', ') }}
                                                 </p>
                                             @endif
                                             <p><strong>วันเวลาที่จองเข้ามา:

@@ -66,9 +66,7 @@
                     <div class="modal-body">
                         @if (!$booking->subActivities->isEmpty())
                             <p>หลักสูตร:
-                                @foreach ($booking->subActivities as $subactivity)
-                                    {{ $subactivity->sub_activity_name }}
-                                @endforeach
+                                {{ $booking->subActivities->pluck('sub_activity_name')->implode(', ') }}
                             </p>
                         @endif
                         <p><strong>ชื่อหน่วยงาน: </strong>{{ $booking->institute->instituteName }}</p>

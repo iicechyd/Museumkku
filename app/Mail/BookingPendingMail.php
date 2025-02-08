@@ -19,7 +19,7 @@ class BookingPendingMail extends Mailable
     public function __construct($booking)
     {
         $this->booking = $booking;
-        $this->detailsLink = route('bookings.details', ['booking_id' => $booking->booking_id]);
+        $this->detailsLink = URL::signedRoute('bookings.details', ['booking_id' => $booking->booking_id]);
         $this->editLink = URL::signedRoute('bookings.edit', ['booking_id' => $booking->booking_id]);
         $this->cancelLink = URL::signedRoute('bookings.cancel', ['booking_id' => $booking->booking_id]);
 

@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/bookingPending.css') }}">
-    <title>Booking Confirmation</title>
+    <title>รายละเอียดการจองเข้าชม</title>
 </head>
 
 <body>
@@ -40,11 +40,15 @@
                 <h3 style="color: #489085;">รายละเอียดการจองเข้าชม</h3>
                 <p>วันที่จอง: {{ \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y') }}</p>
                 <p>ประเภทการเข้าชม: {{ $booking->activity->activity_name }}</p>
+                @if ($booking->timeslot)
+                <p>รอบการเข้าชม
+                {{ \Carbon\Carbon::parse($booking->timeslot->start_time)->format('H:i') }} น. -
+                {{ \Carbon\Carbon::parse($booking->timeslot->end_time)->format('H:i') }} น.</p>
+                </p>
+            @endif
                 @if (!$booking->subActivities->isEmpty())
-                    <p><strong>หลักสูตร:</strong>
-                        @foreach ($booking->subActivities as $subactivity)
-                            {{ $subactivity->sub_activity_name }}
-                        @endforeach
+                    <p>หลักสูตร:
+                        {{ $booking->subActivities->pluck('sub_activity_name')->implode(', ') }}
                     </p>
                 @endif
                 <p>ชื่อหน่วยงาน: {{ $booking->institute->instituteName }}</p>

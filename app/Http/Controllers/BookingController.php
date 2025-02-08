@@ -824,6 +824,6 @@ class BookingController extends Controller
     }
     public function showDetails($booking_id) {
         $booking = Bookings::findOrFail($booking_id);
-        return view('bookingDetails', compact('booking'));
+        return view('emails.bookingDetails', compact('booking'));
     }
 }

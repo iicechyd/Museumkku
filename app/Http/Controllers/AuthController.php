@@ -56,7 +56,7 @@ class AuthController extends Controller
 
         session(['redirect_url' => route('form_bookings.activity', ['activity_id' => 1])]);
 
-    return view('verified');
+    return view('emails.verified');
     }
 
     public function checkVerification($email)

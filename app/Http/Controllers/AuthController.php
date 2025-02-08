@@ -26,10 +26,11 @@ class AuthController extends Controller
 
         $email = $request->input('email');
         $token = Str::random(40);
+        $expiresAt = now()->addMinutes(30);
 
         Verification::updateOrCreate(
             ['email' => $email],
-            ['token' => $token, 'verified' => false]
+            ['token' => $token, 'verified' => false, 'expires_at' => $expiresAt]
         );
 
         $verificationLink = route('verifyLink', ['token' => $token]);
@@ -48,6 +49,9 @@ class AuthController extends Controller
 
         if (!$verification) {
             return redirect('/')->with('error', 'ลิงก์ยืนยันไม่ถูกต้องหรือหมดอายุ');
+        }
+        if ($verification->expires_at < now()) {
+            return redirect('/')->with('error', 'ลิงก์ยืนยันหมดอายุ');
         }
 
         $verification->update(['verified' => true]);

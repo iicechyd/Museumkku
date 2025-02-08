@@ -13,7 +13,7 @@
                         <tr>
                             <td>
                                 <h2 style="margin: 10px 0; font-size: 24px; color: #000;">ยืนยันตัวตน</h2>
-                                <p style="color: #555; font-size: 14px;">คลิกปุ่มด้านล่างเพื่อยืนยันอีเมล ปุ่มนี้จะหมดอายุใน 20 นาที</p>
+                                <p style="color: #555; font-size: 14px;">คลิกปุ่มด้านล่างเพื่อยืนยันอีเมล ปุ่มนี้จะหมดอายุใน 30 นาที</p>
                                 <a href="{{ $url }}" style="display: inline-block; background-color: #736EFE; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-size: 16px; margin-top: 10px;">ยืนยัน</a>
                                 <p style="margin-top: 20px; font-size: 14px; color: #555;">การยืนยันตัวตนนี้จะตรวจสอบอีเมล<br> <strong style="color: #736EFE;">{{ $email }}</strong></p>
                                 <p style="font-size: 12px; color: #999;">หากคุณไม่ได้เป็นผู้ดำเนินการ กรุณาเพิกเฉยต่ออีเมลฉบับนี้ </p>

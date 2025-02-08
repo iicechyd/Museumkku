@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use App\Models\Bookings;
 use App\Models\Timeslots;
 use App\Models\Activity;
@@ -179,6 +180,8 @@ class BookingActivityController extends Controller
             $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
             $monkPrice = $item->monk_qty * $item->activity->monk_price;
             $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
+            $item->signed_edit_url = URL::signedRoute('admin.edit_booking', ['booking_id' => $item->booking_id]);
+
         }
         return view('admin.activityRequest.approved_bookings', compact('approvedBookings', 'activities'));
     }

@@ -24,7 +24,7 @@ class BookingApprovedMail extends Mailable
         $this->booking = $booking;
         $this->detailsLink = URL::signedRoute('bookings.details', ['booking_id' => $booking->booking_id]);
         $this->uploadLink = $uploadLink;
-        $this->cancelLink = route('bookings.cancel', ['booking_id' => $booking->booking_id]);
+        $this->cancelLink =  URL::signedRoute('bookings.cancel', ['booking_id' => $booking->booking_id]);
 
         $childrenPrice = $booking->children_qty * ($booking->activity->children_price ?? 0);
         $studentPrice = $booking->students_qty * ($booking->activity->student_price ?? 0);

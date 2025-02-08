@@ -42,6 +42,19 @@ class DocumentController extends Controller
             'file_name' => $fileName,
         ]);
 
-        return redirect()->route('documents.store', ['booking_id' => $booking_id]);
+        return back()->with('success', 'อัปโหลดเอกสารเรียบร้อยแล้ว');
     }
+    public function destroy($document_id)
+{
+    $document = Documents::findOrFail($document_id);
+
+    if (Storage::disk('public')->exists($document->file_path)) {
+        Storage::disk('public')->delete($document->file_path);
+    }
+
+    $document->delete();
+
+    return back()->with('success', 'ลบเอกสารเรียบร้อยแล้ว');
+}
+
 }

@@ -94,29 +94,24 @@ Route::post('/UpdateActivity', [ActivityController::class, 'updateActivity'])->n
 Route::get('/getActivityPrice/{activity_id}', [ActivityController::class, 'getActivityPrice']);
 Route::get('activity/toggle-status/{id}', [ActivityController::class, 'toggleStatus'])->name('toggle.status');
 Route::post('activity/toggle-status/{id}', [ActivityController::class, 'toggleStatus'])->name('toggle.status');
-
-
-Route::get('/admin/activity_images/{activity_id}', [ActivityController::class, 'getImages']);
-Route::get('/admin/activity/{activity_id}/images', [ActivityController::class, 'getImages']);
 Route::delete('/admin/activity_images/{image_id}', [ActivityController::class, 'deleteImage'])->name('deleteImage');
-
 Route::post('/add-target', [ActivityController::class, 'addTarget']);
-Route::get('/auth/redirect', [AuthController::class, 'redirectToGoogle']);
-Route::get('/auth/callback', [AuthController::class, 'handleGoogleCallback']);
-Route::get('/guest_verify', [AuthController::class, 'showGuestVerify'])->name('guest.verify');
-
-Route::get('/bookings/edit/{booking_id}', [BookingController::class, 'showBookingEdit'])->name('bookings.edit')->middleware('signed');
-Route::get('/admin/edit-booking/{booking_id}', [BookingController::class, 'showBookingAdminEdit'])->name('admin.edit_booking')->middleware('signed');
-Route::put('/bookings/update/{booking_id}', [BookingController::class, 'updateBooking'])->name('bookings.update');
-Route::get('/bookings/cancel/{booking_id}', [BookingController::class, 'showCancel'])->name('bookings.cancel');
-Route::post('/bookings/cancel/{booking_id}', [BookingController::class, 'cancel'])->name('bookings.cancel.confirm');
-
+//Route อัปโหลดไฟล์
+Route::get('/documents/upload/{booking_id}', [DocumentController::class, 'showUploadForm'])->name('documents.upload');
+Route::post('/documents/upload/{booking_id}', [DocumentController::class, 'uploadDocument'])->name('documents.store');
+Route::delete('delete/documents/{document_id}', [DocumentController::class, 'destroy'])->name('documents.destroy');
+//Route ยืนยันอีเมล
 Route::get('/guest_verify', [AuthController::class, 'showGuestVerify'])->name('guest.verify');
 Route::post('/api/send-verification-link', [AuthController::class, 'sendVerificationLink'])->name('sendVerificationLink');
 Route::get('/verify-link/{token}', [AuthController::class, 'verifyLink'])->name('verifyLink');
 Route::get('/waiting-for-verification', [AuthController::class, 'waitingForVerification'])->name('waiting_for_verification');
-
 Route::get('/check-verification/{email}', [AuthController::class, 'checkVerification'])->name('checkVerification');
 Route::get('/clear-email', [AuthController::class, 'clearEmailSession'])->name('clear.email');
 
+//Route แก้ไขแบบฟอร์ม
 Route::get('/booking/details/{booking_id}', [BookingController::class, 'showDetails'])->name('bookings.details')->middleware('signed');
+Route::get('/bookings/edit/{booking_id}', [BookingController::class, 'showBookingEdit'])->name('bookings.edit')->middleware('signed');
+Route::get('/admin/edit-booking/{booking_id}', [BookingController::class, 'showBookingAdminEdit'])->name('admin.edit_booking')->middleware('signed');
+Route::put('/bookings/update/{booking_id}', [BookingController::class, 'updateBooking'])->name('bookings.update');
+Route::get('/bookings/cancel/{booking_id}', [BookingController::class, 'showCancel'])->name('bookings.cancel')->middleware('signed');
+Route::post('/bookings/cancel/{booking_id}', [BookingController::class, 'cancel'])->name('bookings.cancel.confirm');

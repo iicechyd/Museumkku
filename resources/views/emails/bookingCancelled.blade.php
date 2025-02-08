@@ -3,63 +3,44 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ยกเลิกการจองเข้าชม</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>ยกเลิกการจอง</title>
 </head>
 
-<body>
-    <h2>การจองเข้าชมของคุณ<span style="color: red;">ได้รับการยกเลิกการจองเข้าชม</span></h2>
-    <p>เรียน {{ $booking->visitor->visitorName }},</p>
-    <p>ขอแจ้งให้ท่านทราบว่าการจองเข้าชมพิพิธภัณฑ์ของคุณ <span
-            style="color: red;">ได้รับการยกเลิกการจองเข้าชมเป็นที่เรียบร้อย</span></p>
-    <p>รายละเอียดการจองเข้าชมมีดังนี้</p>
-    <p>วันที่จอง: {{ \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y') }}</p>
-    <p>ประเภทการเข้าชม: {{ $booking->activity->activity_name }} </p>
-    @if (!$booking->subActivities->isEmpty())
-    <p>หลักสูตร:
-        @foreach ($booking->subActivities as $subactivity)
-            {{ $subactivity->sub_activity_name }}
-        @endforeach
-    </p>
-@endif
-    <p>ชื่อหน่วยงาน: {{ $booking->institute->instituteName }}</p>
-    <p>ที่อยู่หน่วยงาน: {{ $booking->institute->instituteAddress }} {{ $booking->institute->subdistrict }}
-        {{ $booking->institute->district }} {{ $booking->institute->province }} {{ $booking->institute->zipcode }}</p>
-    <p>อีเมลผู้ประสานงาน: {{ $booking->visitor->visitorEmail }}</p>
-    <p>เบอร์โทรศัพท์: {{ $booking->visitor->tel }}</p>
+<body style="font-family: Noto Sans Thai, sans-serif; background-color: #f9f9f9; padding: 20px; text-align: center;">
+    <div class="container">
+        <h2>การจองของท่านได้รับการ<span class="status" style="color: red;">ยกเลิกการจอง</span>
+        </h2>
+        <p>เรียน <span class="highlight"></span>{{ $booking->visitor->visitorName }}</p>
+        <p>ขอแจ้งให้ท่านทราบว่าการจองเข้าชมพิพิธภัณฑ์ของท่านได้รับการยกเลิกการจองเป็นที่เรียบร้อย</p>
+    </div>
 
-    @if ($booking->children_qty > 0)
-        <p>เด็ก : {{ $booking->children_qty }} คน</p>
-    @endif
-
-    @if ($booking->students_qty > 0)
-        <p>นร / นศ : {{ $booking->students_qty }} คน</p>
-    @endif
-
-    @if ($booking->adults_qty > 0)
-        <p>ผู้ใหญ่ / คุณครู : {{ $booking->adults_qty }} คน</p>
-    @endif
-
-    @if ($booking->disabled_qty > 0)
-        <p>ผู้พิการ : {{ $booking->disabled_qty }} คน</p>
-    @endif
-
-    @if ($booking->elderly_qty > 0)
-        <p>ผู้สูงอายุ : {{ $booking->elderly_qty }} คน</p>
-    @endif
-
-    @if ($booking->monk_qty > 0)
-        <p>พระภิกษุสงฆ์ / สามเณร : {{ $booking->monk_qty }} รูป</p>
-    @endif
-    @if (!empty($booking->note))
-        <p>*หมายเหตุ: {{ $booking->note }}</p>
-    @endif
-    <p>ยอดรวมราคาทั้งหมด: {{ number_format($totalPrice, 2) }} บาท</p>
-    <p>หากมีข้อสงสัยใดๆ โปรดติดต่อเจ้าหน้าที่</p>
-    <br>
-    <p>ขอแสดงความนับถือ</p>
-    <p>ศูนย์พิพิธภัณฑ์และแหล่งเรียนรู้ตลอดชีวิต มหาวิทยาลัยขอนแก่น</p>
-    <p>หมายเลขโทรศัพท์ 06X-XXX-XXXX เจ้าหน้าที่ฝ่ายกิจกรรม</p>
+    <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+            <td align="center">
+                <table width="400"
+                    style="background: #ffffff; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);">
+                    <tr>
+                        <td>
+                            {{-- <img src="{{ asset('img/clock_icon.png') }}">--}}
+                            <h2 style="margin: 20px 0; font-size: 24px; color: red;">ยกเลิก</h2>
+                            <a href="{{ $detailsLink }}"
+                                style="color: red; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-size: 16px; border: 2px solid red; display: inline-block;">
+                                รายละเอียดการจอง</a>
+                            <p>หากมีข้อสงสัยใดๆ โปรดติดต่อเจ้าหน้าที่</p>
+                            {{-- <img src="{{ asset('img/phone_icon.png') }}">--}}
+                            <span>094-278-4222, 0-4300-9700 ต่อ 45596</span>
+                            <p style="color: #489085;">
+                                <strong>ศูนย์พิพิธภัณฑ์<span style="color: #E6A732;">และแหล่งเรียนรู้ตลอดชีวิต</span>
+                                    <br> <span style="color: #C06628;">มหาวิทยาลัยขอนแก่น</span></strong>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 
 </html>

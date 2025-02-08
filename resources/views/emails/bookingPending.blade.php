@@ -10,11 +10,11 @@
 
 <body style="font-family: Noto Sans Thai, sans-serif; background-color: #f9f9f9; padding: 20px; text-align: center;">
     <div class="container">
-        <h2>ระบบได้รับการจองของคุณเรียบร้อยแล้ว โดยสถานะปัจจุบัน คือ
+        <h2>ระบบได้รับการจองของท่านเรียบร้อยแล้ว โดยสถานะปัจจุบัน คือ
             <span class="status" style="color: #E6A732;">รออนุมัติการจอง</span>
         </h2>
-        <p>เรียนคุณ <span class="highlight">{{ $booking->visitor->visitorName }}</span></p>
-        <p>ขอแจ้งให้ท่านทราบว่าการจองเข้าชมพิพิธภัณฑ์ของคุณได้รับการตอบรับการจองแล้ว</p>
+        <p>เรียน <span class="highlight">{{ $booking->visitor->visitorName }}</span></p>
+        <p>ขอแจ้งให้ท่านทราบว่าการจองเข้าชมพิพิธภัณฑ์ของท่านได้รับการตอบรับการจองแล้ว</p>
     </div>
 
     <table width="100%" cellspacing="0" cellpadding="0">

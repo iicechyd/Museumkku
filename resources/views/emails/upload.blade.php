@@ -109,7 +109,7 @@
                 </div>
                 <div class="modal-body">
                     @if (!$booking->subActivities->isEmpty())
-                            <p>หลักสูตร:
+                            <p><strong>หลักสูตร:</strong>
                                 {{ $booking->subActivities->pluck('sub_activity_name')->implode(', ') }}
                             </p>
                     @endif
@@ -129,7 +129,7 @@
                         @endif
 
                         @if ($booking->adults_qty > 0)
-                            <p>ผู้ใหญ่ / คุณครู : {{ $booking->adults_qty }} คน</p>
+                            <p><strong>ผู้ใหญ่ / คุณครู : </strong>{{ $booking->adults_qty }} คน</p>
                         @endif
 
                         @if ($booking->disabled_qty > 0)

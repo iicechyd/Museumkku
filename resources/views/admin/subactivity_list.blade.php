@@ -52,7 +52,7 @@
                                         data-id="{{ $subActivity->sub_activity_id }}"
                                         data-name="{{ $subActivity->sub_activity_name }}"
                                         data-status="{{ $subActivity->status }}">
-                                        @if ($subActivity->status === 'active')
+                                        @if ($subActivity->status === 1)
                                             <i class="fas fa-toggle-on text-success" style="font-size: 24px;"
                                                 title="Active"></i>
                                         @else
@@ -70,7 +70,7 @@
                                         data-id="{{ $subActivity->sub_activity_id }}"
                                         data-name="{{ $subActivity->sub_activity_name }}"
                                         data-status="{{ $subActivity->status }}">
-                                        @if ($subActivity->status === 'active')
+                                        @if ($subActivity->status === 1)
                                             <i class="fas fa-toggle-on text-success" style="font-size: 24px;"
                                                 title="Active"></i>
                                         @else

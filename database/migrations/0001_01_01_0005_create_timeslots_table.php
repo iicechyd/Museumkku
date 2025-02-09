@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->foreignId('activity_id')->constrained('activities', 'activity_id')->onDelete('cascade'); // Foreign Key
             $table->time('start_time');
             $table->time('end_time');
-            $table->string('status')->default('active');
+            $table->tinyInteger('status')->default(1);
 
             $table->timestamps();
         });

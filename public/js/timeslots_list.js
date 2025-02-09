@@ -58,11 +58,11 @@ $(document).on('click', '.toggle-status', function(e) {
             _token: $('meta[name="csrf-token"]').attr('content'),
         },
         success: function(response) {
-            if (response.status === 'active') {
+            if (response.status === 1) {
                 button.find('i').removeClass('fa-toggle-off text-secondary')
                     .addClass('fa-toggle-on text-success')
                     .attr('title', 'Active');
-                button.data('status', 'active');
+                button.data('status', 1);
             } else {
                 button.find('i').removeClass('fa-toggle-on text-success')
                     .addClass('fa-toggle-off text-secondary')

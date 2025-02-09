@@ -192,10 +192,10 @@
                                                                     <p><strong>ยอดรวมราคา:</strong>
                                                                         {{ number_format($item->totalPrice, 2) }} บาท</p>
                                                                     <p><strong>แก้ไขสถานะ:</strong>
-                                                                        {{ \Carbon\Carbon::parse($item->status_updated_at)->locale('th')->translatedFormat('j F') }}
-                                                                        {{ \Carbon\Carbon::parse($item->status_updated_at)->year + 543 }}
+                                                                        {{ \Carbon\Carbon::parse($item->updated_at)->locale('th')->translatedFormat('j F') }}
+                                                                        {{ \Carbon\Carbon::parse($item->updated_at)->year + 543 }}
                                                                         เวลา
-                                                                        {{ \Carbon\Carbon::parse($item->status_updated_at)->format('H:i') }}
+                                                                        {{ \Carbon\Carbon::parse($item->updated_at)->format('H:i') }}
                                                                         น. โดยเจ้าหน้าที่:
                                                                         {{ $statusChange->changed_by ?? 'N/A' }}</p>
                                                                 </div>

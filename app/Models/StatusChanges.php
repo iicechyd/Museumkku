@@ -15,6 +15,7 @@ class StatusChanges extends Model
     protected $keyType = 'int';
     protected $fillable = [
         'booking_id',
+        'user_id',
         'old_status',
         'new_status',
         'comments',
@@ -31,4 +32,9 @@ class StatusChanges extends Model
     {
         return $this->belongsTo(Bookings::class, 'booking_id', 'booking_id');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
+
 }

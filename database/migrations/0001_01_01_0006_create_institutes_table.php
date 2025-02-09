@@ -11,9 +11,9 @@ return new class extends Migration {
             $table->id('institute_id');
             $table->string('instituteName');
             $table->string('instituteAddress');
-            $table->string('province');
-            $table->string('district');
-            $table->string('subdistrict');
+            $table->string('province', 100);
+            $table->string('district', 100);
+            $table->string('subdistrict', 100);
             $table->string('zipcode', 5);
             $table->timestamps();
         });

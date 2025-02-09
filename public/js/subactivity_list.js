@@ -15,20 +15,20 @@ $(document).on('click', '.toggle-status', function(e) {
         type: 'POST',
         data: {
             _token: $('meta[name="csrf-token"]').attr('content'),
-            status: currentStatus === 'active' ? 'inactive' : 'active'
+            status: currentStatus === 1 ? 0 : 1
         },
         success: function(response) {
             if (response.success) {
-                if (currentStatus === 'active') {
+                if (currentStatus === 1) {
                     button.find('i').removeClass('fa-toggle-on text-success')
                         .addClass('fa-toggle-off text-secondary')
                         .attr('title', 'Inactive');
-                    button.data('status', 'inactive');
+                    button.data('status', 0);
                 } else {
                     button.find('i').removeClass('fa-toggle-off text-secondary')
                         .addClass('fa-toggle-on text-success')
                         .attr('title', 'Active');
-                    button.data('status', 'active');
+                    button.data('status', 1);
                 }
                 alert('สถานะถูกเปลี่ยนเรียบร้อยแล้ว');
             } else {

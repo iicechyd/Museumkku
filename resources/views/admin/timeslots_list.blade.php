@@ -72,14 +72,13 @@
                                            class="toggle-status" 
                                            data-id="{{ $timeslot->timeslots_id }}" 
                                            data-status="{{ $timeslot->status }}">
-                                            @if($timeslot->status === 'active')
+                                            @if($timeslot->status === 1)
                                                 <i class="fas fa-toggle-on text-success" style="font-size: 24px;" title="Active"></i>
                                             @else
                                                 <i class="fas fa-toggle-off text-secondary" style="font-size: 24px;" title="Inactive"></i>
                                             @endif
                                         </a>
                                     </td>
-                                    
                                 </tr>
                                 <!-- Modal สำหรับการแก้ไขรอบการเข้าชม -->
                                 <div class="modal fade" id="EditTimeslotModal{{ $timeslot->timeslots_id }}" tabindex="-1"

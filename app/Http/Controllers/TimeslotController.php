@@ -50,7 +50,7 @@ class TimeslotController extends Controller
     public function toggleStatus($id)
     {
         $timeslot = Timeslots::findOrFail($id);
-        $timeslot->status = ($timeslot->status === 'active') ? 'inactive' : 'active';
+        $timeslot->status = ($timeslot->status === 1) ? 0 : 1;
         $timeslot->save();
 
         return response()->json([

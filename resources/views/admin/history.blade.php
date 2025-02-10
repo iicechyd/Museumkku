@@ -262,8 +262,8 @@
                                                                                 $kidTotal =
                                                                                     $statusChange->actual_kid_qty *
                                                                                     $item->activity->kid_price;
-                                                                                    $totalPrice += $kidTotal;
-                                                                                    $totalParticipants +=
+                                                                                $totalPrice += $kidTotal;
+                                                                                $totalParticipants +=
                                                                                     $statusChange->actual_kid_qty;
                                                                             }
                                                                             if ($item->activity->disabled_price > 0) {
@@ -298,6 +298,7 @@
                                                                                 $statusChange->actual_children_qty +
                                                                                 $statusChange->actual_students_qty +
                                                                                 $statusChange->actual_elderly_qty +
+                                                                                $statusChange->actual_kid_qty +
                                                                                 $statusChange->actual_monk_qty;
                                                                         @endphp
                                                                         @if ($statusChange->actual_children_qty > 0 && $item->activity->children_price > 0)

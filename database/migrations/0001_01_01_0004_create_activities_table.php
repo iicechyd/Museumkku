@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->integer('children_price')->nullable()->default(0);
             $table->integer('student_price')->nullable()->default(0);
             $table->integer('adult_price')->nullable()->default(0);
+            $table->integer('kid_price')->nullable()->default(0);
             $table->integer('disabled_price')->nullable()->default(0);
             $table->integer('elderly_price')->nullable()->default(0);
             $table->integer('monk_price')->nullable()->default(0);

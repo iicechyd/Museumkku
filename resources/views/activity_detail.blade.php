@@ -89,24 +89,23 @@
                                 <div class="mt-3">
                                     <p>ราคาเข้าชม</p>
                                     <p>
-                                        เด็ก:
+                                        เด็ก ( 3 ขวบ - ประถม ) :
                                         {{ $activity->children_price > 0 ? $activity->children_price . ' บาท/คน' : 'ฟรี' }}
                                         |
-                                        นักเรียน/นักศึกษา:
+                                        นักเรียนมัธยม/นักศึกษา :
                                         {{ $activity->student_price > 0 ? $activity->student_price . ' บาท/คน' : 'ฟรี' }} |
-                                        ผู้ใหญ่:
+                                        ผู้ใหญ่ :
                                         {{ $activity->adult_price > 0 ? $activity->adult_price . ' บาท/คน' : 'ฟรี' }}
                                     </p>
+                                    <p>สวัสดิการ</p>
                                     <p>
-                                        เด็กเล็ก ( ต่ำกว่า 3 ขวบ ): {{ $activity->kid_price > 0 ? $activity->kid_price . ' บาท/คน' : 'ฟรี' }}
+                                        เด็กเล็ก ( ต่ำกว่า 3 ขวบ )
                                         |
-                                        ผู้พิการ:
-                                        {{ $activity->disabled_price > 0 ? $activity->disabled_price . ' บาท/คน' : 'ฟรี' }}
+                                        ผู้พิการ
                                         |
-                                        ผู้สูงอายุ:
-                                        {{ $activity->elderly_price > 0 ? $activity->elderly_price . ' บาท/คน' : 'ฟรี' }} |
-                                        พระภิกษุสงฆ์ /สามเณร:
-                                        {{ $activity->monk_price > 0 ? $activity->monk_price . ' บาท/รูป' : 'ฟรี' }}
+                                        ผู้สูงอายุ
+                                        |
+                                        พระภิกษุสงฆ์ /สามเณร
                                     </p>
                                 </div>
                                 <p class="custom-gray-text">

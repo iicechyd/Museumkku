@@ -118,7 +118,7 @@ class ActivityController extends Controller
                 ]);
             }
         }
-        return redirect('/admin/activity_list')->with('success', 'เพิ่มกิจกรรมเรียบร้อยแล้ว!');
+        return redirect('/admin/activity_list')->with('success', 'เพิ่มกิจกรรมสำเร็จ');
     }
 
     public function updateActivity(Request $request)
@@ -155,7 +155,7 @@ class ActivityController extends Controller
                 ]);
             }
         }
-        return redirect()->back()->with('success', 'แก้ไขกิจกรรมเรียบร้อยแล้ว');
+        return redirect()->back()->with('success', 'แก้ไขกิจกรรมสำเร็จ');
     }
 
     public function editActivity($activity_id)

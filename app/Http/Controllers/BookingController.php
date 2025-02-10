@@ -358,6 +358,15 @@ class BookingController extends Controller
         $messages = [
             'fk_timeslots_id.required' => 'กรุณาเลือกรอบการเข้าชม',
             'booking_date.required' => 'กรุณาระบุวันที่จองเข้าชม',
+            'instituteName.required'=> 'กรุณากรอกชื่อหน่วยงาน',
+            'instituteAddress.required' => 'กรุณากรอกที่อยู่หน่วยงาน',
+            'province.required' => 'กรุณากรอกจังหวัด',
+            'district.required' => 'กรุณากรอกเขต/อำเภอ',
+            'subdistrict.required' => 'กรุณากรอกแขวน/ตำบล',
+            'zipcode.required' => 'กรุณกรอกรหัสไปรษณีย์',
+            'visitorName.required' => 'กรุณกรอกชื่อผู้ประสานงาน',
+            'visitorEmail.required' => 'กรุณกรอกอีเมล์ผู้ประสานงาน',
+            'tel.required' => 'กรุณกรอกเบอร์โทรผู้ประสานงาน',
             'at_least_one_quantity.required' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท',
         ];
 
@@ -424,13 +433,13 @@ class BookingController extends Controller
                         ->whereIn('bookings.activity_id', [1, 2])
                         ->where('bookings.booking_date', $formattedDate)
                         ->where(function ($query) use ($timeslot) {
-                            $query->whereBetween('timeslots.start_time', [$timeslot->start_time, $timeslot->end_time])
-                                ->orWhereBetween('timeslots.end_time', [$timeslot->start_time, $timeslot->end_time]);
+                            $query->where('timeslots.start_time', '<', $timeslot->end_time)
+                            ->where('timeslots.end_time', '>', $timeslot->start_time);
                         })
                         ->exists();
 
                     if ($conflictingBooking) {
-                        return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีกิจกรรมที่จองในช่วงเวลาใกล้เคียงกันจากกิจกรรมอื่น')->withInput();
+                        return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีกิจกรรมที่จองในช่วงเวลาใกล้เคียงกันจากกิจกรรมอื่น กรุณาจองช่วงเวลาอื่น')->withInput();
                     }
                 }
             }
@@ -444,13 +453,13 @@ class BookingController extends Controller
                         ->where('bookings.activity_id', 3)
                         ->where('bookings.booking_date', $formattedDate)
                         ->where(function ($query) use ($timeslot) {
-                            $query->whereBetween('timeslots.start_time', [$timeslot->start_time, $timeslot->end_time])
-                                ->orWhereBetween('timeslots.end_time', [$timeslot->start_time, $timeslot->end_time]);
+                            $query->where('timeslots.start_time', '<', $timeslot->end_time)
+                            ->where('timeslots.end_time', '>', $timeslot->start_time);
                         })
                         ->exists();
 
                     if ($conflictingBooking) {
-                        return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีการจองกิจกรรมอื่นในช่วงเวลาใกล้เคียง')->withInput();
+                        return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีการจองกิจกรรมอื่นในช่วงเวลาใกล้เคียง กรุณาจองช่วงเวลาอื่น')->withInput();
                     }
                 }
             }
@@ -712,8 +721,8 @@ class BookingController extends Controller
                         ->whereIn('bookings.activity_id', [1, 2])
                         ->where('bookings.booking_date', $formattedDate)
                         ->where(function ($query) use ($timeslot) {
-                            $query->whereBetween('timeslots.start_time', [$timeslot->start_time, $timeslot->end_time])
-                                ->orWhereBetween('timeslots.end_time', [$timeslot->start_time, $timeslot->end_time]);
+                            $query->where('timeslots.start_time', '<', $timeslot->end_time)
+                            ->where('timeslots.end_time', '>', $timeslot->start_time);
                         })
                         ->exists();
 
@@ -732,8 +741,8 @@ class BookingController extends Controller
                         ->where('bookings.activity_id', 3)
                         ->where('bookings.booking_date', $formattedDate)
                         ->where(function ($query) use ($timeslot) {
-                            $query->whereBetween('timeslots.start_time', [$timeslot->start_time, $timeslot->end_time])
-                                ->orWhereBetween('timeslots.end_time', [$timeslot->start_time, $timeslot->end_time]);
+                            $query->where('timeslots.start_time', '<', $timeslot->end_time)
+                      ->where('timeslots.end_time', '>', $timeslot->start_time);
                         })
                         ->exists();
 

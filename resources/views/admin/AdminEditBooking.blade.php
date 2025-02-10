@@ -359,12 +359,12 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="successModalLabel">แก้ไข้ข้อมูลสำเร็จ</h5>
+                                <h5 class="modal-title" id="successModalLabel">แก้ไขข้อมูลสำเร็จ</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 </button>
                             </div>
                             <div class="modal-body text-center">
-                                แก้ไข้ข้อมูลการจองของผู้เข้าชมสำเร็จ
+                                แก้ไขข้อมูลการจองของผู้เข้าชมสำเร็จ
                             </div>
                             <div class="modal-footer">
                                 <a href="/checkBookingStatus" class="btn btn-primary">ตรวจสอบสถานะการจอง</a>

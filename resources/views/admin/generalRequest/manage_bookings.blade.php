@@ -117,9 +117,19 @@
                                     รายละเอียด
                                 </a>
                                 @if ($item->documents->isNotEmpty())
-                                    <p class="text-success pt-2">แนบไฟล์เอกสารเรียบร้อย</p>
+                                    <p class="text-success pt-2">แนบไฟล์เอกสารเรียบร้อย
+                                    <a class="ml-2" data-bs-toggle="modal"
+                                            data-bs-target="#documentModal-{{ $item->booking_id }}">
+                                            <i class="fas fa-edit" style="color: #5e81ff;"></i>
+                                        </a>
+                                    </p>
                                 @else
-                                    <p class="text-danger pt-2">รอแนบเอกสาร</p>
+                                    <p class="text-danger pt-2">รอแนบเอกสาร
+                                    <a class="ml-2" data-bs-toggle="modal"
+                                            data-bs-target="#documentModal-{{ $item->booking_id }}">
+                                            <i class="fas fa-edit" style="color: #5e81ff;"></i>
+                                        </a>
+                                    </p>
                                 @endif
                             </td>
                             <!-- Modal สำหรับกรอกจำนวนผู้เข้าชม -->
@@ -309,6 +319,58 @@
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
                                                 data-dismiss="modal">ปิด</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Modal ไฟล์เอกสาร-->
+                            <div class="modal fade" id="documentModal-{{ $item->booking_id }}" tabindex="-1"
+                                aria-labelledby="documentModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="documentModalLabel">เอกสารแนบ</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            @foreach ($item->documents as $document)
+                                                <p>
+                                                    <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank"
+                                                        class="text-primary">
+                                                        {{ $document->file_name }}
+                                                    </a>
+                                                    <form action="{{ route('documents.destroy', $document->document_id) }}" method="POST" class="d-inline"
+                                                        onsubmit="return confirm('คุณต้องการลบเอกสารนี้หรือไม่?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="border-0 bg-transparent delete-button">
+                                                            <i class="fa-solid fa-circle-xmark text-danger" style="font-size: 1.2rem;"></i>
+                                                        </button>
+                                                    </form>
+                                                </p>
+                                            @endforeach
+                                            <form action="{{ route('documents.store', $item->booking_id) }}" method="POST"
+                                                enctype="multipart/form-data">
+                                                @csrf
+                                                <div class="mb-3">
+                                                    <div class="d-flex align-items-center">
+                                                        <input type="file" name="document" accept=".pdf" id="document"
+                                                            class="form-control" required
+                                                            style="flex-grow: 1; margin-right: 10px;"
+                                                            onchange="previewFile()">
+                                                        <button type="submit" class="btn btn-primary ml-3"
+                                                            style="min-width: 100px;">อัปโหลด</button>
+                                                    </div>
+                                                    <label for="document" class="form-label text-danger mt-2">อัปโหลดเอกสาร
+                                                        (PDF เท่านั้น)</label>
+                                                    <div id="file-preview"></div>
+                                                </div>
+                                            </form>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">ปิด</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

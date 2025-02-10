@@ -30,7 +30,7 @@
             </div>
         @endif
         @if (session('error'))
-            <div class="alert alert-danger">
+            <div class="alert alert-danger mt-5">
                 {{ session('error') }}
             </div>
         @endif
@@ -267,7 +267,7 @@
                         <div class="col-md-3">
                             <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"
                                 onclick="toggleInput('childrenInput')" {{ $booking->children_qty > 0 ? 'checked' : '' }}>
-                            <label class="form-check-label" for="children_qty">เด็ก :
+                            <label class="form-check-label" for="children_qty">เด็ก ( 3 ขวบ - ประถม ) :
                                 {{ $booking->activity->children_price }} บาท/คน</label>
                             <input type="number" class="form-control mt-2" id="childrenInput" name="children_qty"
                                 min="0" value="{{ $booking->children_qty > 0 ? $booking->children_qty : '' }}"
@@ -278,7 +278,7 @@
                         <div class="col-md-3">
                             <input class="form-check-input" type="checkbox" id="students_qty" name="students_qty"
                                 onclick="toggleInput('studentInput')" {{ $booking->students_qty > 0 ? 'checked' : '' }}>
-                            <label class="form-check-label" for="students_qty">นักเรียน/นักศึกษา :
+                            <label class="form-check-label" for="students_qty">นักเรียนมัธยม/นักศึกษา :
                                 {{ $booking->activity->student_price }} บาท/คน</label>
                             <input type="number" class="form-control mt-2" id="studentInput" name="students_qty"
                                 min="0" value="{{ $booking->students_qty > 0 ? $booking->students_qty : '' }}"

@@ -81,9 +81,6 @@
                                 จัดการรอบการเข้าชม
                             </a>
                         </li>
-                        <li class="sidebar-item">
-                            <a href="#" class="sidebar-link">จัดการข้อมูลพิพิธภัณฑ์</a>
-                        </li>
                     </ul>
                 </li>
                 <li class="border-top my-3" style="border-top: 1px solid gray !important;"></li>

@@ -31,7 +31,7 @@
             </div>
         @endif
         @if (session('error'))
-            <div class="alert alert-danger">
+            <div class="alert alert-danger mt-5">
                 {{ session('error') }}
             </div>
         @endif
@@ -273,7 +273,7 @@
                         <div class="col-md-3">
                             <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"
                                 onclick="toggleInput('childrenInput')">
-                            <label class="form-check-label" for="children_qty">เด็ก :
+                            <label class="form-check-label" for="children_qty">เด็ก ( 3 ขวบ - ประถม ) :
                                 {{ $selectedActivity->children_price }} บาท/คน</label>
                             <input type="number" class="form-control mt-2" id="childrenInput" name="children_qty"
                                 min="0" disabled oninput="calculateTotal()">
@@ -283,7 +283,7 @@
                         <div class="col-md-3">
                             <input class="form-check-input" type="checkbox" id="students_qty" name="students_qty"
                                 onclick="toggleInput('studentInput')">
-                            <label class="form-check-label" for="students_qty">นักเรียน/นักศึกษา :
+                            <label class="form-check-label" for="students_qty">นักเรียนมัธยม/นักศึกษา :
                                 {{ $selectedActivity->student_price }} บาท/คน</label>
                             <input type="number" class="form-control mt-2" id="studentInput" name="students_qty"
                                 min="0" disabled oninput="calculateTotal()">
@@ -402,6 +402,14 @@
     <script>
         window.subactivities = @json($subactivities);
         window.maxSubactivities = @json($maxSubactivities);
+
+        setTimeout(() => {
+            const alertBox = document.querySelector('.alert');
+            if (alertBox) {
+                alertBox.classList.add('opacity-0');
+                setTimeout(() => alertBox.remove(), 500); // ลบ alert หลังจาก 0.5 วินาที
+            }
+        }, 3000); // แจ้งเตือนหายไปหลังจาก 3 วินาที
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="{{ asset('js/form_bookings.js') }}"></script>

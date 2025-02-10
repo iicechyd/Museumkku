@@ -217,21 +217,20 @@ function confirmSubmission() {
     const disabledQty = document.getElementById("disabledInput").value || 0;
     const elderlyQty = document.getElementById("elderlyInput").value || 0;
     const monkQty = document.getElementById("monkInput").value || 0;
+    const totalVisitors = childrenQty + studentsQty + adultsQty + disabledQty + elderlyQty + monkQty;
 
-    if (
-        childrenQty == 0 &&
-        studentsQty == 0 &&
-        adultsQty == 0 &&
-        disabledQty == 0 &&
-        elderlyQty == 0 &&
-        monkQty == 0
-    ) {
+    if (totalVisitors === 0) {
         document.getElementById("errorMessage").innerText =
             "*กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท";
         document.getElementById("errorMessage").style.display = "block";
         return;
     } else {
         document.getElementById("errorMessage").style.display = "none";
+    }
+
+    if (totalVisitors < 50) {
+        alert("จำนวนผู้เข้าชมต้องไม่น้อยกว่า 50 คน");
+        return;
     }
 
     if (window.subactivities.length > 0) {

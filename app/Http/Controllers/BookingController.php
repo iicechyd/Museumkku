@@ -358,7 +358,7 @@ class BookingController extends Controller
         $messages = [
             'fk_timeslots_id.required' => 'กรุณาเลือกรอบการเข้าชม',
             'booking_date.required' => 'กรุณาระบุวันที่จองเข้าชม',
-            'instituteName.required'=> 'กรุณากรอกชื่อหน่วยงาน',
+            'instituteName.required' => 'กรุณากรอกชื่อหน่วยงาน',
             'instituteAddress.required' => 'กรุณากรอกที่อยู่หน่วยงาน',
             'province.required' => 'กรุณากรอกจังหวัด',
             'district.required' => 'กรุณากรอกเขต/อำเภอ',
@@ -393,11 +393,13 @@ class BookingController extends Controller
         ];
 
         $isAtLeastOneQuantityFilled = false;
+        $totalToBook = 0;
+
         foreach ($quantityFields as $field) {
             if ($request->$field > 0) {
                 $isAtLeastOneQuantityFilled = true;
-                break;
             }
+            $totalToBook += $request->$field ?? 0;
         }
 
         if (!$isAtLeastOneQuantityFilled) {
@@ -405,7 +407,10 @@ class BookingController extends Controller
                 'at_least_one_quantity' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท'
             ])->withInput();
         }
-
+        if ($totalToBook < 50) {
+            session()->flash('error', 'กรุณาจองขั้นต่ำ 50 คน');
+            return back()->withInput();
+        }
         $activity = Activity::with('activityType')->find($request->fk_activity_id);
         if (!$activity) {
             return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
@@ -434,7 +439,7 @@ class BookingController extends Controller
                         ->where('bookings.booking_date', $formattedDate)
                         ->where(function ($query) use ($timeslot) {
                             $query->where('timeslots.start_time', '<', $timeslot->end_time)
-                            ->where('timeslots.end_time', '>', $timeslot->start_time);
+                                ->where('timeslots.end_time', '>', $timeslot->start_time);
                         })
                         ->exists();
 
@@ -454,7 +459,7 @@ class BookingController extends Controller
                         ->where('bookings.booking_date', $formattedDate)
                         ->where(function ($query) use ($timeslot) {
                             $query->where('timeslots.start_time', '<', $timeslot->end_time)
-                            ->where('timeslots.end_time', '>', $timeslot->start_time);
+                                ->where('timeslots.end_time', '>', $timeslot->start_time);
                         })
                         ->exists();
 
@@ -463,7 +468,12 @@ class BookingController extends Controller
                     }
                 }
             }
-            $totalToBook = ($request->children_qty ?? 0) + ($request->students_qty ?? 0) + ($request->adults_qty ?? 0);
+            $totalToBook = ($request->children_qty ?? 0)
+                + ($request->students_qty ?? 0)
+                + ($request->adults_qty ?? 0)
+                + ($request->disabled_qty ?? 0)
+                + ($request->elderly_qty ?? 0)
+                + ($request->monk_qty ?? 0);
             $totalBooked = Bookings::where('booking_date', $formattedDate)
                 ->where('timeslots_id', $timeslot->timeslots_id)
                 ->whereIn('status', [0, 1])
@@ -623,7 +633,7 @@ class BookingController extends Controller
         $timeslots = Timeslots::where('activity_id', $booking->activity_id)->get();
         $activity = Activity::findOrFail($booking->activity_id);
         $maxSubactivities = $activity->max_subactivities;
-        
+
         return view('admin.AdminEditBooking', compact('booking', 'institutes', 'visitors', 'activities', 'subactivities', 'timeslots', 'maxSubactivities'));
     }
 
@@ -685,11 +695,13 @@ class BookingController extends Controller
         ];
 
         $isAtLeastOneQuantityFilled = false;
+        $totalToBook = 0;
+
         foreach ($quantityFields as $field) {
             if ($request->$field > 0) {
                 $isAtLeastOneQuantityFilled = true;
-                break;
             }
+            $totalToBook += $request->$field ?? 0;
         }
 
         if (!$isAtLeastOneQuantityFilled) {
@@ -697,7 +709,10 @@ class BookingController extends Controller
                 'at_least_one_quantity' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท'
             ])->withInput();
         }
-
+        if ($totalToBook < 50) {
+            session()->flash('error', 'กรุณาจองขั้นต่ำ 50 คน');
+            return back()->withInput();
+        }
         $activity = Activity::with('activityType')->find($request->fk_activity_id);
         if (!$activity) {
             return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
@@ -722,7 +737,7 @@ class BookingController extends Controller
                         ->where('bookings.booking_date', $formattedDate)
                         ->where(function ($query) use ($timeslot) {
                             $query->where('timeslots.start_time', '<', $timeslot->end_time)
-                            ->where('timeslots.end_time', '>', $timeslot->start_time);
+                                ->where('timeslots.end_time', '>', $timeslot->start_time);
                         })
                         ->exists();
 
@@ -742,7 +757,7 @@ class BookingController extends Controller
                         ->where('bookings.booking_date', $formattedDate)
                         ->where(function ($query) use ($timeslot) {
                             $query->where('timeslots.start_time', '<', $timeslot->end_time)
-                      ->where('timeslots.end_time', '>', $timeslot->start_time);
+                                ->where('timeslots.end_time', '>', $timeslot->start_time);
                         })
                         ->exists();
 
@@ -751,7 +766,17 @@ class BookingController extends Controller
                     }
                 }
             }
-            $totalToBook = ($request->children_qty ?? 0) + ($request->students_qty ?? 0) + ($request->adults_qty ?? 0);
+            $totalToBook = ($request->children_qty ?? 0)
+                + ($request->students_qty ?? 0)
+                + ($request->adults_qty ?? 0)
+                + ($request->disabled_qty ?? 0)
+                + ($request->elderly_qty ?? 0)
+                + ($request->monk_qty ?? 0);
+            if ($totalToBook < 50) {
+                return back()->withErrors([
+                    'minimum_attendees' => 'กรุณาจองจำนวนผู้เข้าชมอย่างน้อย 50 คน'
+                ])->withInput();
+            }
             $totalBooked = Bookings::where('booking_date', $formattedDate)
                 ->where('timeslots_id', $timeslot->timeslots_id)
                 ->whereIn('status', [0, 1])
@@ -831,7 +856,8 @@ class BookingController extends Controller
         }
         return back()->with('showSuccessModal', true);
     }
-    public function showDetails($booking_id) {
+    public function showDetails($booking_id)
+    {
         $booking = Bookings::findOrFail($booking_id);
         return view('emails.bookingDetails', compact('booking'));
     }

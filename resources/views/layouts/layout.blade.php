@@ -65,13 +65,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="info">
-                            <button class="btn nav-item nav-link">
-                                ข้อมูลพิพิธภัณฑ์
-                            </button>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         @auth
                             @if (Auth::user()->is_approved)
                                 @if (Auth::user()->role && Auth::user()->role->role_name === 'Super Admin')

@@ -54,7 +54,7 @@
                                     @endif
                                 </td>
                                 <td>{{ $item->institute->instituteName }}</td>
-                                <td>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty}} คน</td>
+                                <td>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->kid_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty}} คน</td>
                                 <td>
                                     @switch($item->status)
                                         @case(0)

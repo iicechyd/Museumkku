@@ -34,7 +34,7 @@ class DashboardController extends Controller
             ->where('bookings.status', 2)
             ->select(
                 'bookings.activity_id',
-                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total')
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total')
             )
             ->groupBy('bookings.activity_id')
             ->pluck('total', 'bookings.activity_id');
@@ -43,7 +43,7 @@ class DashboardController extends Controller
             ->where('bookings.activity_id', 3)
             ->whereDate('bookings.booking_date', $today)
             ->where('bookings.status', 2)
-            ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
+            ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
 
         $totalVisitorsToday = [
             1 => ($visitorsToday[1] ?? 0) + $visitorsActivity3Today,
@@ -56,7 +56,7 @@ class DashboardController extends Controller
             ->where('bookings.status', 2)
             ->select(
                 'bookings.activity_id',
-                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total')
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total')
             )
             ->groupBy('bookings.activity_id')
             ->pluck('total', 'bookings.activity_id');
@@ -65,7 +65,7 @@ class DashboardController extends Controller
             ->where('bookings.activity_id', 3)
             ->whereDate('bookings.booking_date', $yesterday)
             ->where('bookings.status', 2)
-            ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
+            ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
 
         $totalVisitorsYesterday = [
             1 => ($visitorsYesterday[1] ?? 0) + $visitorsActivity3Yesterday,
@@ -90,7 +90,7 @@ class DashboardController extends Controller
             ->where('bookings.status', 2)
             ->select(
                 'bookings.activity_id',
-                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
             )
             ->groupBy('bookings.activity_id')
             ->pluck('total_visitors', 'bookings.activity_id');
@@ -114,7 +114,7 @@ class DashboardController extends Controller
             ->where('bookings.status', 2)
             ->select(
                 'bookings.activity_id',
-                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
             )
             ->groupBy('bookings.activity_id')
             ->pluck('total_visitors', 'bookings.activity_id');
@@ -136,7 +136,7 @@ class DashboardController extends Controller
             ->where('bookings.status', 2)
             ->select(
                 'bookings.activity_id',
-                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
             )
             ->groupBy('bookings.activity_id')
             ->pluck('total_visitors', 'bookings.activity_id');
@@ -164,7 +164,7 @@ class DashboardController extends Controller
             ->where('bookings.status', 2)
             ->select(
                 'bookings.activity_id',
-                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
             )
             ->groupBy('bookings.activity_id')
             ->pluck('total_visitors', 'bookings.activity_id');
@@ -204,7 +204,7 @@ class DashboardController extends Controller
             ->where('bookings.status', 2)
             ->select(
                 'bookings.activity_id',
-                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
             )
             ->groupBy('bookings.activity_id')
             ->pluck('total_visitors', 'bookings.activity_id');
@@ -232,7 +232,7 @@ class DashboardController extends Controller
             ->where('bookings.status', 2)
             ->select(
                 'bookings.activity_id',
-                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
             )
             ->groupBy('bookings.activity_id')
             ->pluck('total_visitors', 'bookings.activity_id');
@@ -272,7 +272,7 @@ class DashboardController extends Controller
             $totalVisitorsPerMonthThisYear[$monthLabel] = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
                 ->whereBetween('bookings.booking_date', [$monthStart, $monthEnd])
                 ->where('bookings.status', 2)
-                ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
+                ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
 
             $currentDate->addMonth();
         }
@@ -293,7 +293,7 @@ class DashboardController extends Controller
                 ->whereIn('bookings.status', [2])
                 ->sum(DB::raw(
                     '(actual_children_qty * children_price) + (actual_students_qty * student_price) + 
-                 (actual_adults_qty * adult_price) + (actual_disabled_qty * disabled_price) + 
+                 (actual_adults_qty * adult_price) + (actual_kid_qty * kid_price) + (actual_disabled_qty * disabled_price) + 
                  (actual_elderly_qty * elderly_price) + (actual_monk_qty * monk_price)'
                 ));
             $currentDate->addMonth();
@@ -314,8 +314,8 @@ class DashboardController extends Controller
                 ->whereIn('bookings.status', [2])
                 ->sum(DB::raw(
                     '(actual_children_qty * children_price) + (actual_students_qty * student_price) + 
-                     (actual_adults_qty * adult_price) + (actual_disabled_qty * disabled_price) + 
-                     (actual_elderly_qty * elderly_price) + (actual_monk_qty * monk_price)'
+                     (actual_adults_qty * adult_price) + (actual_disabled_qty * disabled_price) +
+                     (actual_kid_qty * kid_price) + (actual_elderly_qty * elderly_price) + (actual_monk_qty * monk_price)'
                 ));
             $currentDate->addMonth();
         }
@@ -328,7 +328,7 @@ class DashboardController extends Controller
                 ->where('activity_id', $activity->activity_id)
                 ->whereIn('status', [0, 1, 2, 3])
                 ->whereBetween('booking_date', [$startMonth, $endMonth])
-                ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
+                ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
         }
 
         $totalSpecialActivity = DB::table('activities')
@@ -344,7 +344,7 @@ class DashboardController extends Controller
                 'activities.target_yearly_count',
                 DB::raw('
             COALESCE(SUM(status_changes.actual_children_qty + status_changes.actual_students_qty + 
-            status_changes.actual_adults_qty + status_changes.actual_disabled_qty + 
+            status_changes.actual_adults_qty + status_changes.actual_kid_qty + status_changes.actual_disabled_qty + 
             status_changes.actual_elderly_qty + status_changes.actual_monk_qty), 0) as total_visitors
         '),
                 DB::raw('COALESCE(COUNT(DISTINCT status_changes.booking_id), 0) as total_bookings')
@@ -357,7 +357,8 @@ class DashboardController extends Controller
             ->selectRaw('
                 SUM(actual_children_qty) as children_qty, 
                 SUM(actual_students_qty) as students_qty, 
-                SUM(actual_adults_qty) as adults_qty, 
+                SUM(actual_adults_qty) as adults_qty,
+                SUM(actual_kid_qty) as kid_qty, 
                 SUM(actual_disabled_qty) as disabled_qty, 
                 SUM(actual_elderly_qty) as elderly_qty, 
                 SUM(actual_monk_qty) as monk_qty

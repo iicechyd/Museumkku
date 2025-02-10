@@ -16,6 +16,7 @@ class Activity extends Model
         'children_price',
         'student_price',
         'adult_price',
+        'kid_price',
         'disabled_price',
         'elderly_price',
         'monk_price',

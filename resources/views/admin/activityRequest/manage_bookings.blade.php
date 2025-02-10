@@ -92,12 +92,16 @@
                                         id="actual_students_qty_{{ $item->booking_id }}">
                                     <input type="hidden" name="actual_adults_qty"
                                         id="actual_adults_qty_{{ $item->booking_id }}">
+                                    <input type="hidden" name="actual_kid_qty"
+                                        id="actual_kid_qty_{{ $item->booking_id }}">
                                     <input type="hidden" name="actual_disabled_qty"
                                         id="actual_disabled_qty_{{ $item->booking_id }}">
                                     <input type="hidden" name="actual_elderly_qty"
                                         id="actual_elderly_qty_{{ $item->booking_id }}">
-                                    <input type="hidden" name="actual_monk_qty" id="actual_monk_qty_{{ $item->booking_id }}">
-                                    <input type="hidden" name="comments" id="comments_{{ $item->booking_id }}">
+                                    <input type="hidden" name="actual_monk_qty" 
+                                        id="actual_monk_qty_{{ $item->booking_id }}">
+                                    <input type="hidden" name="comments" 
+                                        id="comments_{{ $item->booking_id }}">
 
                                     <div class="flex items-center space-x-3">
                                         <button type="button" class="btn btn-primary"
@@ -138,6 +142,7 @@
                                                     'children' => $item->activity->children_price ?? 0,
                                                     'students' => $item->activity->student_price ?? 0,
                                                     'adults' => $item->activity->adult_price ?? 0,
+                                                    'kid' => $item->activity->kid_price ?? 0,
                                                     'disabled' => $item->activity->disabled_price ?? 0,
                                                     'elderly' => $item->activity->elderly_price ?? 0,
                                                     'monk' => $item->activity->monk_price ?? 0,
@@ -147,6 +152,7 @@
                                                     'children' => 'เด็ก',
                                                     'students' => 'นร / นศ',
                                                     'adults' => 'ผู้ใหญ่ / คุณครู',
+                                                    'kid' => 'เด็กเล็ก',
                                                     'disabled' => 'ผู้พิการ',
                                                     'elderly' => 'ผู้สูงอายุ',
                                                     'monk' => 'พระสงฆ์ / เณร',
@@ -259,6 +265,10 @@
                                                 <p><strong>ผู้ใหญ่ / คุณครู :
                                                     </strong>{{ $item->adults_qty }} คน</p>
                                             @endif
+                                            @if ($item->kid_qty > 0)
+                                            <p><strong>เด็กเล็ก :
+                                                </strong>{{ $item->disabled_qty }} คน</p>
+                                            @endif
                                             @if ($item->disabled_qty > 0)
                                                 <p><strong>ผู้พิการ :
                                                     </strong>{{ $item->disabled_qty }} คน</p>
@@ -275,7 +285,7 @@
                                                 <p><strong>*หมายเหตุ: </strong>{{ $item->note }}</p>
                                             @endif
                                             <p><strong>จำนวนผู้เข้าชมทั้งหมด:
-                                                </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
+                                                </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->kid_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
                                                 คน</p>
                                             <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
                                             <p><strong>แก้ไขสถานะ: </strong>

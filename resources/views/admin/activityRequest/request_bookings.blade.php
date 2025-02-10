@@ -171,6 +171,10 @@
                                                 <p><strong>ผู้ใหญ่ / คุณครู :
                                                     </strong>{{ $item->adults_qty }} คน</p>
                                             @endif
+                                            @if ($item->kid_qty > 0)
+                                                <p><strong>เด็กเล็ก :
+                                                    </strong>{{ $item->kid_qty }} คน</p>
+                                            @endif
                                             @if ($item->disabled_qty > 0)
                                                 <p><strong>ผู้พิการ :
                                                     </strong>{{ $item->disabled_qty }} คน</p>
@@ -187,7 +191,7 @@
                                                 <p><strong>*หมายเหตุ: </strong>{{ $item->note }}</p>
                                             @endif
                                             <p><strong>จำนวนผู้เข้าชมทั้งหมด:
-                                                </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
+                                                </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->kid_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
                                                 คน</p>
                                             <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
                                         </div>

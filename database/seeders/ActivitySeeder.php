@@ -96,17 +96,10 @@ class ActivitySeeder extends Seeder
                 'adult_price' => 2000,
                 'max_capacity' => null,
                 'status' => 'active',
-                // 'image' => 'activity_20241128_150343.jpg',
                 'duration_days' => 1,
             ],
         ];
         foreach ($activity as $item) {
-//             $filePath = 'images/' . $item['image'];
-// if (!Storage::disk('public')->exists($filePath)) {
-//     $this->command->warn("ไม่พบไฟล์: {$item['image']}");
-//     continue;
-// }
-
             Activity::create([
                 'activity_type_id' => $item['activity_type_id'],
                 'activity_name' => $item['activity_name'],
@@ -116,7 +109,6 @@ class ActivitySeeder extends Seeder
                 'adult_price' => $item['adult_price'],
                 'max_capacity' => $item['max_capacity'],
                 'status' => $item['status'],
-                // 'image' => 'images/' . $item['image'],
                 'duration_days' => $item['duration_days'],
                 'max_subactivities' => $item['max_subactivities'] ?? 0,
             ]);

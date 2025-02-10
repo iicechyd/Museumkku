@@ -263,7 +263,7 @@
                     <p id="errorMessage" style="color: red; display: none;"></p>
 
                     <div class="row">
-                        <!-- เนอสเซอรี่ - อนุบาล -->
+                        <!-- เด็กโต -->
                         <div class="col-md-3">
                             <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"
                                 onclick="toggleInput('childrenInput')" {{ $booking->children_qty > 0 ? 'checked' : '' }}>
@@ -298,6 +298,16 @@
                     </div>
                     <p>สวัสดิการเข้าชมฟรี</p>
                     <div class="row">
+                    <!-- เด็กเล็ก-->
+                    <div class="col-md-3">
+                        <input class="form-check-input" type="checkbox" id="kid_qty" name="kid_qty"
+                            onclick="toggleInput('kidInput')">
+                        <label class="form-check-label" for="kid_qty">
+                            เด็กเล็ก ( ต่ำกว่า 3 ขวบ )</label>
+                        <input type="number" class="form-control mt-2" id="kidInput" name="kid_qty"
+                            min="0" disabled oninput="calculateTotal()">
+                    </div>
+
                         <!-- ผู้พิการ -->
                         <div class="col-md-3">
                             <input class="form-check-input" type="checkbox" id="disabled_qty" name="disabled_qty"
@@ -338,6 +348,8 @@
                             value="{{ $booking->activity->student_price }}">
                         <input type="hidden" id="adult_price" name="adult_price"
                             value="{{ $booking->activity->adult_price }}">
+                        <input type="hidden" id="kid_price" name="kid_price"
+                            value="{{ $booking->activity->kid_price }}">
                         <input type="hidden" id="disabled_price" name="disabled_price"
                             value="{{ $booking->activity->disabled_price }}">
                         <input type="hidden" id="elderly_price" name="elderly_price"

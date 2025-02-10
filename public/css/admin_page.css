@@ -131,7 +131,7 @@ a.sidebar-link {
     content: "";
     position: relative;
     top: -7px;
-    transition: all 0.15s ease-out;/*taken down to hide quicker*/
+    transition: all 0.15s ease-out;
     transform-origin: center;
   }
   
@@ -166,46 +166,42 @@ a.sidebar-link {
   }
 
   .sidebar-item:hover {
-    background-color: #e0e0e0 !important; /* เปลี่ยนสีพื้นหลังเมื่อ hover */
+    background-color: #e0e0e0 !important;
 }
 
 .sidebar-item:hover .sidebar-link {
-    color: #C06628 !important; /* เปลี่ยนสีข้อความเมื่อ hover */
+    color: #C06628 !important;
 }
 
 .sidebar-footer .sidebar-link {
-    display: flex; /* ทำให้ไอคอนและข้อความอยู่ในแถวเดียวกัน */
-    align-items: center; /* จัดแนวกลางแนวตั้ง */
-    transition: background-color 0.3s ease, color 0.3s ease; /* เพิ่มการเปลี่ยนแปลง */
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .sidebar-footer .sidebar-link:hover {
-    background-color: #e0e0e0 !important; /* เปลี่ยนสีพื้นหลังเมื่อ hover */
-    color: #C06628 !important; /* เปลี่ยนสีข้อความเมื่อ hover */
-}
-/* สีของเมนูหลักเมื่อ hover */
-.sidebar-item > .sidebar-link:hover {
-    background-color: #f0f0f0; /* สีพื้นหลังของเมนูหลักเมื่อ hover */
-    color: #C06628; /* สีข้อความของเมนูหลักเมื่อ hover */
+    background-color: #e0e0e0 !important;
+    color: #C06628 !important;
 }
 
-/* เมนูย่อย */
+.sidebar-item > .sidebar-link:hover {
+    background-color: #f0f0f0;
+    color: #C06628;
+}
+
 .sidebar-dropdown .sidebar-link {
-    transition: background-color 0.3s ease, color 0.3s ease; /* เพิ่มการเปลี่ยนแปลง */
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .sidebar-dropdown .sidebar-link:hover {
-    background-color: #D6D6D6; /* สีพื้นหลังเมื่อ hover เมนูย่อย */
-    color: #C06628; /* สีข้อความเมื่อ hover เมนูย่อย */
+    background-color: #D6D6D6;
+    color: #C06628;
 }
 
-/* หากต้องการเปลี่ยนสีข้อความเมนูหลักเมื่อเปิดเมนู */
 .sidebar-dropdown.show > .sidebar-link {
-    background-color: #f0f0f0; /* สีพื้นหลังเมนูหลักเมื่อเมนูย่อยเปิด */
-    color: #C06628; /* สีข้อความเมนูหลักเมื่อเมนูย่อยเปิด */
+    background-color: #f0f0f0;
+    color: #C06628;
 }
-
-/* Responsive */
 
 @media (min-width:768px) {
     .content {

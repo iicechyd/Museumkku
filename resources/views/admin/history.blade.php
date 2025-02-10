@@ -38,7 +38,6 @@
                 </div>
             </form>
             
-
         @if ($histories->isEmpty())
             <h2 class="text-center">ไม่มีประวัติการจอง</h2>
         @else
@@ -99,6 +98,7 @@
                                                                     $statusChange->actual_children_qty +
                                                                     $statusChange->actual_students_qty +
                                                                     $statusChange->actual_adults_qty +
+                                                                    $statusChange->actual_kid_qty +
                                                                     $statusChange->actual_disabled_qty +
                                                                     $statusChange->actual_elderly_qty +
                                                                     $statusChange->actual_monk_qty;
@@ -171,6 +171,10 @@
                                                                         <p><strong>ผู้ใหญ่ / คุณครู :
                                                                             </strong>{{ $item->adults_qty }} คน</p>
                                                                     @endif
+                                                                    @if ($item->kid_qty > 0)
+                                                                    <p><strong>เด็กเล็ก :
+                                                                        </strong>{{ $item->kid_qty }} คน</p>
+                                                                @endif
                                                                     @if ($item->disabled_qty > 0)
                                                                         <p><strong>ผู้พิการ :
                                                                             </strong>{{ $item->disabled_qty }} คน</p>
@@ -187,7 +191,7 @@
                                                                         <p><strong>*หมายเหตุ: </strong>{{ $item->note }}</p>
                                                                     @endif
                                                                     <p><strong>จำนวนผู้เข้าชมทั้งหมด:
-                                                                        </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
+                                                                        </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->kid_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
                                                                         คน</p>
                                                                     <p><strong>ยอดรวมราคา:</strong>
                                                                         {{ number_format($item->totalPrice, 2) }} บาท</p>
@@ -225,6 +229,7 @@
                                                                             $childrenTotal = 0;
                                                                             $studentTotal = 0;
                                                                             $adultTotal = 0;
+                                                                            $kidTotal = 0;
                                                                             $disabledTotal = 0;
                                                                             $elderlyTotal = 0;
                                                                             $monkTotal = 0;
@@ -252,6 +257,14 @@
                                                                                 $totalPrice += $adultTotal;
                                                                                 $totalParticipants +=
                                                                                     $statusChange->actual_adults_qty;
+                                                                            }
+                                                                            if ($item->activity->kid_price > 0) {
+                                                                                $kidTotal =
+                                                                                    $statusChange->actual_kid_qty *
+                                                                                    $item->activity->kid_price;
+                                                                                    $totalPrice += $kidTotal;
+                                                                                    $totalParticipants +=
+                                                                                    $statusChange->actual_kid_qty;
                                                                             }
                                                                             if ($item->activity->disabled_price > 0) {
                                                                                 $disabledTotal =
@@ -320,6 +333,17 @@
                                                                         @elseif ($statusChange->actual_adults_qty > 0)
                                                                             <p>ผู้ใหญ่
                                                                                 {{ $statusChange->actual_adults_qty }} คน
+                                                                            </p>
+                                                                        @endif
+                                                                        @if ($statusChange->actual_kid_qty > 0 && $item->activity->kid_price > 0)
+                                                                            <p>เด็กเล็ก
+                                                                                {{ $statusChange->actual_kid_qty }} คน x
+                                                                                {{ number_format($item->activity->kid_price) }}
+                                                                                บาท = {{ number_format($kidTotal) }} บาท
+                                                                            </p>
+                                                                        @elseif ($statusChange->actual_kid_qty > 0)
+                                                                            <p>เด็กเล็ก
+                                                                                {{ $statusChange->actual_kid_qty }} คน
                                                                             </p>
                                                                         @endif
                                                                         @if ($statusChange->actual_disabled_qty > 0 && $item->activity->disabled_price > 0)

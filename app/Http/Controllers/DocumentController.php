@@ -16,10 +16,11 @@ class DocumentController extends Controller
         $childrenPrice = $booking->children_qty * ($booking->activity->children_price ?? 0);
         $studentPrice = $booking->students_qty * ($booking->activity->student_price ?? 0);
         $adultPrice = $booking->adults_qty * ($booking->activity->adult_price ?? 0);
+        $kidPrice = $booking->kid_qty * ($booking->activity->kid_price ?? 0);
         $disabledPrice = $booking->disabled_qty * ($booking->activity->disabled_price ?? 0);
         $elderlyPrice = $booking->elderly_qty * ($booking->activity->elderly_price ?? 0);
         $monkPrice = $booking->monk_qty * ($booking->activity->monk_price ?? 0);
-        $totalPrice = $childrenPrice + $studentPrice + $adultPrice + $disabledPrice + $elderlyPrice + $monkPrice;
+        $totalPrice = $childrenPrice + $studentPrice + $adultPrice + $kidPrice + $disabledPrice + $elderlyPrice + $monkPrice;
 
         return view('emails.upload', compact('booking','totalPrice'));
     }

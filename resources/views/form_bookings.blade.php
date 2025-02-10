@@ -269,7 +269,7 @@
                     <p id="errorMessage" style="color: red; display: none;"></p>
 
                     <div class="row">
-                        <!-- เนอสเซอรี่ - อนุบาล -->
+                        <!-- เด็กโต -->
                         <div class="col-md-3">
                             <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"
                                 onclick="toggleInput('childrenInput')">
@@ -302,6 +302,16 @@
 
                     <p>สวัสดิการเข้าชมฟรี</p>
                     <div class="row">
+                        <!-- เด็กเล็ก-->
+                        <div class="col-md-3">
+                            <input class="form-check-input" type="checkbox" id="kid_qty" name="kid_qty"
+                                onclick="toggleInput('kidInput')">
+                            <label class="form-check-label" for="kid_qty">
+                                เด็กเล็ก ( ต่ำกว่า 3 ขวบ )</label>
+                            <input type="number" class="form-control mt-2" id="kidInput" name="kid_qty"
+                                min="0" disabled oninput="calculateTotal()">
+                        </div>
+
                         <!-- ผู้พิการ -->
                         <div class="col-md-3">
                             <input class="form-check-input" type="checkbox" id="disabled_qty" name="disabled_qty"
@@ -344,6 +354,8 @@
                         value="{{ $selectedActivity->student_price }}">
                     <input type="hidden" id="adult_price" name="adult_price"
                         value="{{ $selectedActivity->adult_price }}">
+                    <input type="hidden" id="kid_price" name="kid_price"
+                        value="{{ $selectedActivity->kid_price }}">
                     <input type="hidden" id="disabled_price" name="disabled_price"
                         value="{{ $selectedActivity->disabled_price }}">
                     <input type="hidden" id="elderly_price" name="elderly_price"
@@ -402,14 +414,6 @@
     <script>
         window.subactivities = @json($subactivities);
         window.maxSubactivities = @json($maxSubactivities);
-
-        setTimeout(() => {
-            const alertBox = document.querySelector('.alert');
-            if (alertBox) {
-                alertBox.classList.add('opacity-0');
-                setTimeout(() => alertBox.remove(), 500); // ลบ alert หลังจาก 0.5 วินาที
-            }
-        }, 3000); // แจ้งเตือนหายไปหลังจาก 3 วินาที
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="{{ asset('js/form_bookings.js') }}"></script>

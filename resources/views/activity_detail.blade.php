@@ -98,6 +98,8 @@
                                         {{ $activity->adult_price > 0 ? $activity->adult_price . ' บาท/คน' : 'ฟรี' }}
                                     </p>
                                     <p>
+                                        เด็กเล็ก ( ต่ำกว่า 3 ขวบ ): {{ $activity->kid_price > 0 ? $activity->kid_price . ' บาท/คน' : 'ฟรี' }}
+                                        |
                                         ผู้พิการ:
                                         {{ $activity->disabled_price > 0 ? $activity->disabled_price . ' บาท/คน' : 'ฟรี' }}
                                         |

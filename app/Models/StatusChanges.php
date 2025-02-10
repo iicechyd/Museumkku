@@ -22,6 +22,7 @@ class StatusChanges extends Model
         'actual_children_qty',
         'actual_students_qty',
         'actual_adults_qty',
+        'actual_kid_qty',
         'actual_disabled_qty',
         'actual_elderly_qty',
         'actual_monk_qty',

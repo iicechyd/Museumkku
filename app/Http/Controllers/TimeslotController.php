@@ -27,7 +27,7 @@ class TimeslotController extends Controller
         $timeslot->end_time = $request->input('end_time');
         $timeslot->save();
 
-        return redirect()->back()->with('success', 'แก้ไขรอบการเข้าชมเรียบร้อยแล้ว!');
+        return redirect()->back()->with('success', 'แก้ไขรอบการเข้าชมเรียบร้อยแล้ว');
     }
 
     public function InsertTimeslots(Request $request)
@@ -145,7 +145,7 @@ class TimeslotController extends Controller
                 ->where('activity_id', $activity_id)
                 ->where('timeslots_id', $timeslot->timeslots_id)
                 ->whereIn('status', [0, 1])
-                ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
+                ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
 
             if ($timeslot->activity->max_capacity !== null) {
                 $remainingCapacity = $timeslot->activity->max_capacity - $totalApproved;

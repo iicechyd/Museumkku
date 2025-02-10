@@ -45,14 +45,14 @@ class BookingActivityController extends Controller
             $totalApproved = Bookings::where('booking_date', $item->booking_date)
                 ->where('activity_id', $item->activity_id)
                 ->where('status', 1)
-                ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty +  monk_qty'));
+                ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
 
             if ($item->timeslot && $item->timeslot->timeslots_id) {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('activity_id', $item->activity_id)
                     ->where('timeslots_id', $item->timeslot->timeslots_id)
                     ->where('status', 1)
-                    ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty +  monk_qty'));
+                    ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
 
             if ($item->activity->max_capacity !== null) {
@@ -64,6 +64,7 @@ class BookingActivityController extends Controller
             $childrenPrice = $item->children_qty * $item->activity->children_price;
             $studentPrice = $item->students_qty * $item->activity->student_price;
             $adultPrice = $item->adults_qty * $item->activity->adult_price;
+            $kidPrice = $item->kid_qty * $item->activity->kid_price;
             $disabledPrice = $item->disabled_qty * $item->activity->disabled_price;
             $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
             $monkPrice = $item->monk_qty * $item->activity->monk_price;
@@ -104,12 +105,12 @@ class BookingActivityController extends Controller
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('timeslots_id', $item->timeslot->timeslots_id)
                     ->where('status', 1)
-                    ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
+                    ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
             } else {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('activity_id', $item->activity_id)
                     ->where('status', 1)
-                    ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty +  monk_qty'));
+                    ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
             $maxCapacity = $item->activity->max_capacity;
             
@@ -122,6 +123,7 @@ class BookingActivityController extends Controller
             $childrenPrice = $item->children_qty * $item->activity->children_price;
             $studentPrice = $item->students_qty * $item->activity->student_price;
             $adultPrice = $item->adults_qty * $item->activity->adult_price;
+            $kidPrice = $item->kid_qty * $item->activity->kid_price;
             $disabledPrice = $item->disabled_qty * $item->activity->disabled_price;
             $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
             $monkPrice = $item->monk_qty * $item->activity->monk_price;
@@ -158,14 +160,14 @@ class BookingActivityController extends Controller
             $totalApproved = Bookings::where('booking_date', $item->booking_date)
                 ->where('activity_id', $item->activity_id) 
                 ->where('status', 1)
-                ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty + monk_qty'));
+                ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
 
             if ($item->timeslot && $item->timeslot->timeslots_id) {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('activity_id', $item->activity_id)
                     ->where('timeslots_id', $item->timeslot->timeslots_id)
                     ->where('status', 1)
-                    ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty +  monk_qty'));
+                    ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
 
             if ($item->activity->max_capacity !== null) {
@@ -176,6 +178,7 @@ class BookingActivityController extends Controller
             $childrenPrice = $item->children_qty * $item->activity->children_price;
             $studentPrice = $item->students_qty * $item->activity->student_price;
             $adultPrice = $item->adults_qty * $item->activity->adult_price;
+            $kidPrice = $item->kid_qty * $item->activity->kid_price;
             $disabledPrice = $item->disabled_qty * $item->activity->disabled_price;
             $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
             $monkPrice = $item->monk_qty * $item->activity->monk_price;
@@ -216,17 +219,18 @@ class BookingActivityController extends Controller
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('timeslots_id', $item->timeslot->timeslots_id)
                     ->where('status', 1)
-                    ->sum(DB::raw('children_qty + students_qty + adults_qty + disabled_qty + elderly_qty +  monk_qty'));
+                    ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
             if ($item->activity) {
                 $item->remaining_capacity = $item->activity->max_capacity - $totalApproved;
-                $item->remaining_capacity += $item->children_qty + $item->students_qty + $item->adults_qty + $item->disabled_qty + $item->elderly_qty +  $item->monk_qty;
+                $item->remaining_capacity += $item->children_qty + $item->students_qty + $item->adults_qty + $item->kid_qty + $item->disabled_qty + $item->elderly_qty +  $item->monk_qty;
             } else {
                 $item->remaining_capacity = 'N/A';
             }
             $childrenPrice = $item->children_qty * $item->activity->children_price;
             $studentPrice = $item->students_qty * $item->activity->student_price;
             $adultPrice = $item->adults_qty * $item->activity->adult_price;
+            $kidPrice = $item->kid_qty * $item->activity->kid_price;
             $disabledPrice = $item->disabled_qty * $item->activity->disabled_price;
             $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
             $monkPrice = $item->monk_qty * $item->activity->monk_price;

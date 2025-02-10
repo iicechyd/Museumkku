@@ -21,10 +21,6 @@ class Visitors extends Model
     {
         return $this->belongsTo(Institutes::class, 'institute_id');
     }
-    // public function bookings()
-    // {
-    //     return $this->hasMany(Bookings::class, 'booking_id', 'booking_id');
-    // }
     public function bookings()
     {
         return $this->hasMany(Bookings::class, 'visitor_id');

@@ -6,14 +6,16 @@ function submitVisitorCount(bookingId) {
     var childrenQty = document.getElementById('children_qty_' + bookingId).value;
     var studentsQty = document.getElementById('students_qty_' + bookingId).value;
     var adultsQty = document.getElementById('adults_qty_' + bookingId).value;
+    var kidQty = document.getElementById('kid_qty_' + bookingId).value;
     var disabledQty = document.getElementById('disabled_qty_' + bookingId).value;
     var elderlyQty = document.getElementById('elderly_qty_' + bookingId).value;
     var monkQty = document.getElementById('monk_qty_' + bookingId).value;
     
-    if (childrenQty >= 0 && studentsQty >= 0 && adultsQty >= 0 && disabledQty >= 0 && elderlyQty >= 0 && monkQty >= 0) {
+    if (childrenQty >= 0 && studentsQty >= 0 && adultsQty >= 0 && kidQty >= 0 && disabledQty >= 0 && elderlyQty >= 0 && monkQty >= 0) {
         document.getElementById('actual_children_qty_' + bookingId).value = childrenQty;
         document.getElementById('actual_students_qty_' + bookingId).value = studentsQty;
         document.getElementById('actual_adults_qty_' + bookingId).value = adultsQty;
+        document.getElementById('actual_kid_qty_' + bookingId).value = kidQty;
         document.getElementById('actual_disabled_qty_' + bookingId).value = disabledQty;
         document.getElementById('actual_elderly_qty_' + bookingId).value = elderlyQty;
         document.getElementById('actual_monk_qty_' + bookingId).value = monkQty;
@@ -23,7 +25,6 @@ function submitVisitorCount(bookingId) {
         alert('กรุณากรอกจำนวนผู้เข้าชมที่ถูกต้อง');
     }
 }
-
 
 function openCancelModal(bookingId) {
     $('#cancelModal_' + bookingId).modal('show');
@@ -39,7 +40,7 @@ function submitCancelForm(bookingId) {
     document.getElementById('comments_' + bookingId).value = reason;
     document.getElementById('status_' + bookingId).value = 'cancel';
 
-    var fields = ['actual_children_qty', 'actual_students_qty', 'actual_adults_qty', 'actual_disabled_qty', 'actual_elderly_qty', 'actual_monk_qty'];
+    var fields = ['actual_children_qty', 'actual_students_qty', 'actual_adults_qty', 'actual_kid_qty', 'actual_disabled_qty', 'actual_elderly_qty', 'actual_monk_qty'];
     fields.forEach(function (field) {
         var input = document.getElementById(field + '_' + bookingId);
         if (!input.value) {

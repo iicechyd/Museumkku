@@ -318,8 +318,9 @@ document.addEventListener("DOMContentLoaded", function () {
         data: {
             labels: [
                 "เด็ก",
-                "นักเรียน",
+                "นักเรียน/นักศึกษา",
                 "ผู้ใหญ่",
+                "เด็กเล็ก",
                 "ผู้พิการ",
                 "ผู้สูงอายุ",
                 "พระสงฆ์",
@@ -331,6 +332,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         children_qty,
                         students_qty,
                         adults_qty,
+                        kid_qty,
                         disabled_qty,
                         elderly_qty,
                         monk_qty,

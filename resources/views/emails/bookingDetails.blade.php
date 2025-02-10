@@ -126,6 +126,15 @@
                 </tr>
                 @php $totalPrice += $booking->adults_qty * $booking->activity->adult_price; @endphp
             @endif
+            @if ($booking->kid_qty > 0)
+                <tr>
+                    <td>เด็กเล็ก</td>
+                    <td>{{ $booking->kid_qty }} คน</td>
+                    <td>{{ number_format($booking->activity->kid_price, 2) }} บาท</td>
+                    <td>{{ number_format($booking->kid_qty * $booking->activity->kid_price, 2) }} บาท</td>
+                </tr>
+                @php $totalPrice += $booking->kid_qty * $booking->activity->kid_price; @endphp
+            @endif
             @if ($booking->disabled_qty > 0)
                 <tr>
                     <td>ผู้พิการ</td>

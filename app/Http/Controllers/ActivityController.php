@@ -68,6 +68,7 @@ class ActivityController extends Controller
                 'children_price' => 'required',
                 'student_price' => 'required',
                 'adult_price' => 'required',
+                'kid_price' => 'required',
                 'disabled_price' => 'required',
                 'elderly_price' => 'required',
                 'monk_price' => 'required',
@@ -80,6 +81,7 @@ class ActivityController extends Controller
                 'children_price.required' => 'กรุณาป้อนราคาเด็ก',
                 'student_price.required' => 'กรุณาป้อนราคานร/นศ',
                 'adult_price.required' => 'กรุณาป้อนราคาผู้ใหญ่',
+                'kid_price.required' => 'กรุณาป้อนราคาเด็กเล็ก',
                 'disabled_price.required' => 'กรุณาป้อนราคาผู้พิการ',
                 'elderly_price.required' => 'กรุณาป้อนราคาผู้สูงอายุ',
                 'monk_price.required' => 'กรุณาป้อนราคาพระภิกษุสงฆ์ /สามเณร',
@@ -94,6 +96,7 @@ class ActivityController extends Controller
         $activity->children_price = $request->children_price;
         $activity->student_price = $request->student_price;
         $activity->adult_price = $request->adult_price;
+        $activity->kid_price = $request->kid_price;
         $activity->disabled_price = $request->disabled_price;
         $activity->elderly_price = $request->elderly_price;
         $activity->monk_price = $request->monk_price;
@@ -133,6 +136,7 @@ class ActivityController extends Controller
         $activity->children_price = $request->children_price;
         $activity->student_price = $request->student_price;
         $activity->adult_price = $request->adult_price;
+        $activity->kid_price = $request->kid_price;
         $activity->disabled_price = $request->disabled_price;
         $activity->elderly_price = $request->elderly_price;
         $activity->monk_price = $request->monk_price;

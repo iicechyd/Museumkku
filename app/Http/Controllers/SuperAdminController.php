@@ -19,12 +19,12 @@ class SuperAdminController extends Controller
     {
         $user = User::find($user_id);
         if (Auth::user()->role_id === $user->role_id && $user->role_id == 1) {
-            return redirect()->route('showAllUsers')->with('error', 'Superadmin cannot change their own role.');
+            return redirect()->route('showAllUsers')->with('error', 'Superadmin ไม่สามารถเปลี่ยนบทบาทตัวเอง');
         }
         $user->is_approved = true;
         $user->role_id = $request->role_id;
         $user->save();
-        return redirect()->route('showAllUsers')->with('success', 'User approved successfully.');
+        return redirect()->route('showAllUsers')->with('success', 'บัญชีผู้ใช้งานได้รับการอนุมัติเสร็จสิ้น');
     }
 
     public function showAllUsers()

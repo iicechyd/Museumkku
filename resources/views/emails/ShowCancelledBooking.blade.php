@@ -32,7 +32,7 @@
                         รายละเอียด
                     </a>
                 </td>
-                <td>{{ $booking->children_qty + $booking->students_qty + $booking->adults_qty + $booking->disabled_qty + $booking->elderly_qty + $booking->monk_qty }}
+                <td>{{ $booking->children_qty + $booking->students_qty + $booking->adults_qty + $booking->kid_qty + $booking->disabled_qty + $booking->elderly_qty + $booking->monk_qty }}
                     คน</td>
                 <td>
                     @switch($booking->status)
@@ -87,6 +87,10 @@
 
                         @if ($booking->adults_qty > 0)
                             <p><strong>ผู้ใหญ่ / คุณครู : </strong>{{ $booking->adults_qty }} คน</p>
+                        @endif
+
+                        @if ($booking->kid_qty > 0)
+                            <p>เด็กเล็ก : {{ $booking->kid_qty }} คน</p>
                         @endif
 
                         @if ($booking->disabled_qty > 0)

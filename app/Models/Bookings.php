@@ -18,6 +18,7 @@ class Bookings extends Model
         'children_qty',
         'students_qty',
         'adults_qty',
+        'kid_qty',
         'disabled_qty',
         'elderly_qty',
         'monk_qty',
@@ -87,6 +88,7 @@ class Bookings extends Model
         $total += ($this->children_qty ?? 0) * ($activity->children_price ?? 0);
         $total += ($this->students_qty ?? 0) * ($activity->student_price ?? 0);
         $total += ($this->adults_qty ?? 0) * ($activity->adult_price ?? 0);
+        $total += ($this->kid_qty ?? 0) * ($activity->kid_price ?? 0);
         $total += ($this->disabled_qty ?? 0) * ($activity->disabled_price ?? 0);
         $total += ($this->elderly_qty ?? 0) * ($activity->elderly_price ?? 0);
         $total += ($this->monk_qty ?? 0) * ($activity->monk_price ?? 0);

@@ -77,6 +77,7 @@
                                         data-children_price="{{ $item->children_price }}"
                                         data-student_price="{{ $item->student_price }}"
                                         data-adult_price="{{ $item->adult_price }}"
+                                        data-kid_price="{{ $item->kid_price }}"
                                         data-disabled_price="{{ $item->disabled_price }}"
                                         data-elderly_price="{{ $item->elderly_price }}"
                                         data-monk_price="{{ $item->monk_price }}"
@@ -164,6 +165,9 @@
                                         <p><strong>ผู้ใหญ่
                                             </strong>{{ $item->adult_price == 0 ? 'ฟรี' : $item->adult_price . ' บาท /คน' }}
                                         </p>
+                                        <p><strong>เด็กเล็ก
+                                        </strong>{{ $item->kid_price == 0 ? 'ฟรี' : $item->kid_price . ' บาท /คน' }}
+                                        </p>
                                         <p><strong>ผู้พิการ
                                             </strong>{{ $item->disabled_price == 0 ? 'ฟรี' : $item->disabled_price . ' บาท /คน' }}
                                         </p>
@@ -243,6 +247,11 @@
                         <div class="form-group">
                             <label for="adult_price">ราคาผู้ใหญ่</label>
                             <input type="number" class="form-control" id="adult_price" name="adult_price"
+                                min="0" placeholder="กรุณาระบุราคา" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="kid_price">ราคาเด็ก</label>
+                            <input type="number" class="form-control" id="kid_price" name="kid_price"
                                 min="0" placeholder="กรุณาระบุราคา" required>
                         </div>
                         <div class="form-group">
@@ -328,6 +337,11 @@
                         <div class="form-group">
                             <label for="edit_adultprice">ราคาผู้ใหญ่</label>
                             <input type="number" class="form-control" id="edit_adultprice" name="adult_price"
+                                min="0" placeholder="กรุณาระบุราคา" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_kidprice">ราคาเด็กเล็ก</label>
+                            <input type="number" class="form-control" id="edit_kidprice" name="kid_price"
                                 min="0" placeholder="กรุณาระบุราคา" required>
                         </div>
                         <div class="form-group">
@@ -424,5 +438,4 @@
             }
         });
     </script>
-
 @endsection

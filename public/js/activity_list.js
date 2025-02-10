@@ -7,6 +7,7 @@ $(document).ready(function () {
         var activityChildrenPrice = $(this).data("children_price");
         var activityStudentPrice = $(this).data("student_price");
         var activityAdultPrice = $(this).data("adult_price");
+        var activityKidPrice = $(this).data("kid_price");
         var activityDisabledPrice = $(this).data("disabled_price");
         var activityElderlyPrice = $(this).data("elderly_price");
         var activityMonkPrice = $(this).data("monk_price");
@@ -20,6 +21,7 @@ $(document).ready(function () {
         $("#edit_childrenprice").val(activityChildrenPrice);
         $("#edit_studentprice").val(activityStudentPrice);
         $("#edit_adultprice").val(activityAdultPrice);
+        $("#edit_kidprice").val(activityKidPrice);
         $("#edit_disabledprice").val(activityDisabledPrice);
         $("#edit_elderlyprice").val(activityElderlyPrice);
         $("#edit_monkprice").val(activityMonkPrice);

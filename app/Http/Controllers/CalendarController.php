@@ -10,7 +10,6 @@ class CalendarController extends Controller
 {
     public function getEvents(Request $request)
     {
-        // ดึงข้อมูลการจองที่มี activity_type_id = 2
         $bookingsQuery = Bookings::with(['activity', 'timeslot', 'institute'])
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 2);
@@ -19,7 +18,6 @@ class CalendarController extends Controller
 
         $bookings = $bookingsQuery->get();
 
-        // ดึงข้อมูลการจองสำหรับ activity_type_id = 1 และ activity_id = 1, 2, 3
         $filteredBookings = Bookings::with('activity', 'timeslot', 'institute')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1)
@@ -28,14 +26,12 @@ class CalendarController extends Controller
             ->where('status', 1)
             ->get();
 
-        // คำนวณจำนวนผู้เข้าชมรวมสำหรับ activity_type_id = 1
         $dailyTotalVisitors = $filteredBookings->groupBy('booking_date')->map(function ($bookingsByDate) {
             return $bookingsByDate->sum(function ($booking) {
                 return $this->calculateTotalApproved($booking);
             });
         });
 
-         // Create events for total visitors
          $totalVisitorEvents = $dailyTotalVisitors->map(function ($total, $date) use ($filteredBookings) {
             $bookingDetails = $filteredBookings->where('booking_date', $date)->map(function ($booking) { 
                 return [
@@ -85,7 +81,7 @@ class CalendarController extends Controller
 
     private function calculateTotalApproved($booking)
     {
-        return $booking->children_qty + $booking->students_qty + $booking->adults_qty + $booking->disabled_qty + $booking->elderly_qty + $booking->monk_qty;
+        return $booking->children_qty + $booking->students_qty + $booking->adults_qty + $booking->kid_qty + $booking->disabled_qty + $booking->elderly_qty + $booking->monk_qty;
     }
 
     private function createEvent($booking, $totalApproved)

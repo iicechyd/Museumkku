@@ -391,6 +391,7 @@
             var children_qty = {{ $visitorStats->children_qty ?? 0 }};
             var students_qty = {{ $visitorStats->students_qty ?? 0 }};
             var adults_qty = {{ $visitorStats->adults_qty ?? 0 }};
+            var kid_qty = {{ $visitorStats->kid_qty ?? 0 }};
             var disabled_qty = {{ $visitorStats->disabled_qty ?? 0 }};
             var elderly_qty = {{ $visitorStats->elderly_qty ?? 0 }};
             var monk_qty = {{ $visitorStats->monk_qty ?? 0 }};

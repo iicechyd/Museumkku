@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->integer('children_qty')->default(0);
             $table->integer('students_qty')->default(0);
             $table->integer('adults_qty')->default(0);
+            $table->integer('kid_qty')->default(0);
             $table->integer('disabled_qty')->default(0);
             $table->integer('elderly_qty')->default(0);
             $table->integer('monk_qty')->default(0);

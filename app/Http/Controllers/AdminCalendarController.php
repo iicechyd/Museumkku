@@ -47,7 +47,7 @@ class AdminCalendarController extends Controller
     }
     private function calculateTotalApproved($booking)
     {
-        return $booking->children_qty + $booking->students_qty + $booking->adults_qty + $booking->disabled_qty + $booking->elderly_qty + $booking->monk_qty;
+        return $booking->children_qty + $booking->students_qty + $booking->adults_qty + $booking->kid_qty + $booking->disabled_qty + $booking->elderly_qty + $booking->monk_qty;
     }
 
     private function createEvent($booking, $totalApproved)
@@ -67,7 +67,6 @@ class AdminCalendarController extends Controller
         $remainingCapacity = $booking->activity->max_capacity !== null
             ? max(0, $booking->activity->max_capacity - $totalApproved)
             : 'ไม่จำกัดจำนวนคน';
-
 
         return [
             'title' => $booking->activity->activity_name . " (สถานะการจอง: " . $this->getStatusText($booking->status) . ")",

@@ -319,7 +319,7 @@ document.addEventListener("DOMContentLoaded", function () {
             labels: [
                 "เด็ก",
                 "นักเรียน/นักศึกษา",
-                "ผู้ใหญ่",
+                "ผู้ใหญ่ / คุณครู",
                 "เด็กเล็ก",
                 "ผู้พิการ",
                 "ผู้สูงอายุ",
@@ -338,12 +338,13 @@ document.addEventListener("DOMContentLoaded", function () {
                         monk_qty,
                     ],
                     backgroundColor: [
-                        "#FF6F61",
                         "#6B5B95",
-                        "#88B04B",
-                        "#F1C40F",
+                        "#32CD32",
+                        "#EE82EE",
                         "#2980B9",
-                        "#8E44AD",
+                        "#0000FF",
+                        "#FF6F61",
+                        "#F1C40F",
                     ],
                     borderColor: "#fff",
                     borderWidth: 1,
@@ -356,6 +357,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 legend: {
                     position: "top",
                     labels: {
+                        boxWidth: 15,
+                        padding: 10,
                         font: {
                             family: "'Noto Sans Thai', sans-serif",
                         },

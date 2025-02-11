@@ -50,6 +50,8 @@ Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {
     Route::post('/admin/subactivities/store', [SubActivityController::class, 'storeSubActivity'])->name('admin.storeSubActivity');
     Route::post('/admin/toggle-subactivity-status/{subActivityId}', [SubActivityController::class, 'toggleSubactivityStatus']);
     Route::post('/admin/update-max-subactivities', [SubActivityController::class, 'updateMaxSubactivities'])->name('admin.updateMaxSubactivities');
+    Route::delete('/admin/deleteSubActivity/{id}', [SubActivityController::class, 'delete'])->name('admin.deleteSubActivity');
+    Route::put('/admin/sub-activity/{subActivityId}', [SubActivityController::class, 'update'])->name('admin.updateSubActivity');    
 });
 Route::middleware([RoleMiddleware::class . ':Executive'])->group(function () {
     Route::get('/executive/dashboard', [DashboardController::class, 'showDashboard'])->name('showDashboard');

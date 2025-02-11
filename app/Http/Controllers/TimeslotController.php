@@ -158,6 +158,7 @@ class TimeslotController extends Controller
             ->pluck('timeslots_id');
 
         $availableTimeslots = Timeslots::where('activity_id', $activity_id)
+            ->where('status', 1)    
             ->whereNotIn('timeslots_id', $closedTimeslotsIds)
             ->get();
 

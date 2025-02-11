@@ -553,7 +553,9 @@ class BookingController extends Controller
         }
 
         $timeslots = Timeslots::where('activity_id', $activity_id)->get();
-        $subactivities = SubActivity::where('activity_id', $activity_id)->get();
+        $subactivities = SubActivity::where('activity_id', $activity_id)
+            ->where('status', 1)
+            ->get();
         $hasSubactivities = $subactivities->isNotEmpty();
 
         return view('form_bookings', [
@@ -626,7 +628,9 @@ class BookingController extends Controller
         $institutes = Institutes::findOrFail($booking->institute_id);
         $visitors = Visitors::findOrFail($booking->visitor_id);
         $activities = Activity::all();
-        $subactivities = Subactivity::where('activity_id', $booking->activity_id)->get();
+        $subactivities = Subactivity::where('activity_id', $booking->activity_id)
+            ->where('status', 1)
+            ->get();
         $timeslots = Timeslots::where('activity_id', $booking->activity_id)->get();
         $activity = Activity::findOrFail($booking->activity_id);
         $maxSubactivities = $activity->max_subactivities;
@@ -640,7 +644,9 @@ class BookingController extends Controller
         $institutes = Institutes::findOrFail($booking->institute_id);
         $visitors = Visitors::findOrFail($booking->visitor_id);
         $activities = Activity::all();
-        $subactivities = Subactivity::where('activity_id', $booking->activity_id)->get();
+        $subactivities = Subactivity::where('activity_id', $booking->activity_id)
+            ->where('status', 1)
+            ->get();
         $timeslots = Timeslots::where('activity_id', $booking->activity_id)->get();
         $activity = Activity::findOrFail($booking->activity_id);
         $maxSubactivities = $activity->max_subactivities;

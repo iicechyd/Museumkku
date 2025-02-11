@@ -15,9 +15,8 @@
     @endif
     <div>
         <h1 class="table-heading text-center">หลักสูตร</h1>
-        <button type="button" class="btn my-3"
-            style="background-color: #8BC6EC; border-color: #8BC6EC; color: white;" data-toggle="modal"
-            data-target="#InsertSubacitivtyModal">
+        <button type="button" class="btn my-3" style="background-color: #8BC6EC; border-color: #8BC6EC; color: white;"
+            data-toggle="modal" data-target="#InsertSubacitivtyModal">
             เพิ่มหลักสูตร
         </button>
         <div class="table-responsive">
@@ -26,56 +25,67 @@
                     <tr>
                         <th data-type="text-long">กิจกรรม<span class="resize-handle"></span></th>
                         <th data-type="text-short">หลักสูตร<span class="resize-handle"></span></th>
+                        <th data-type="text-short">แก้ไขหลักสูตร<span class="resize-handle"></span></th>
                         <th data-type="text-short">สถานะ<span class="resize-handle"></span></th>
                     </tr>
                 </thead>
                 <tbody>
                     @php
-                        $groupedSubActivities = $subActivities->groupBy('activity_id');
+                        $groupedActivities = $subActivities->groupBy('activity_id'); // จัดกลุ่ม subActivities ตาม activity_id
                     @endphp
-                
-                    @foreach ($groupedSubActivities as $activity_id => $group)
+
+                    @foreach ($groupedActivities as $activityId => $group)
                         @php
-                            $firstSubActivity = $group->first();
+                            $rowspan = count($group); // นับจำนวน subActivities ในกลุ่ม
+                            $firstRow = true; // ใช้ตัวแปรตรวจสอบแถวแรกของกลุ่ม
                         @endphp
-                        <tr>
-                            <!-- คอลัมน์กิจกรรม ใช้ rowspan -->
-                            <td rowspan="{{ count($group) }}">
-                                {{ $firstSubActivity->activity->activity_name }}<br>
-                                จำนวนหลักสูตรที่เลือกได้ {{ $firstSubActivity->activity->max_subactivities }} หลักสูตร
-                                <i class="fas fa-edit" style="color: #3b44ff;" data-id="{{ $firstSubActivity->activity_id }}"
-                                    data-max="{{ $firstSubActivity->activity->max_subactivities }}"></i>
-                            </td>
-                
-                            <!-- คอลัมน์แรกของ subActivity -->
-                            <td>{{ $firstSubActivity->sub_activity_name }}</td>
-                            <td class="text-center">
-                                <a href="javascript:void(0);" class="toggle-status"
-                                    data-id="{{ $firstSubActivity->sub_activity_id }}"
-                                    data-name="{{ $firstSubActivity->sub_activity_name }}"
-                                    data-status="{{ $firstSubActivity->status }}">
-                                    @if ($firstSubActivity->status === 1)
-                                        <i class="fas fa-toggle-on text-success" style="font-size: 24px;" title="Active"></i>
-                                    @else
-                                        <i class="fas fa-toggle-off text-secondary" style="font-size: 24px;" title="Inactive"></i>
-                                    @endif
-                                </a>
-                            </td>
-                        </tr>
-                
-                        <!-- วนลูป subActivity ที่เหลือ -->
-                        @foreach ($group->skip(1) as $subActivity)
+
+                        @foreach ($group as $index => $item)
                             <tr>
-                                <td>{{ $subActivity->sub_activity_name }}</td>
+                                @if ($firstRow)
+                                    <td rowspan="{{ $rowspan }}">
+                                        {{ $item->activity->activity_name }}<br>
+                                        จำนวนหลักสูตรที่เลือกได้ {{ $item->activity->max_subactivities }} หลักสูตร
+                                        <i class="fas fa-edit" style="color: #3b44ff;" data-id="{{ $item->activity_id }}"
+                                            data-max="{{ $item->activity->max_subactivities }}"></i>
+                                    </td>
+                                    @php $firstRow = false; @endphp
+                                @endif
+
+                                <td>{{ $item->sub_activity_name }}</td>
+                                <td class="text-center">
+                                    <ul class="list-inline m-0">
+                                        <li class="list-inline-item">
+                                            <button class="btn btn-success btn-sm rounded-0 edit-activity-btn"
+                                                type="button" data-id="{{ $item->sub_activity_id }}"
+                                                data-name="{{ $item->sub_activity_name }}" data-toggle="modal"
+                                                data-target="#EditSubActivityModal">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <form action="{{ route('admin.deleteSubActivity', $item->sub_activity_id) }}"
+                                                method="POST" class="d-inline delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm rounded-0 delete-btn"
+                                                    onclick="return confirm('คุณต้องการลบหลักสูตรนี้หรือไม่?');">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </td>
                                 <td class="text-center">
                                     <a href="javascript:void(0);" class="toggle-status"
-                                        data-id="{{ $subActivity->sub_activity_id }}"
-                                        data-name="{{ $subActivity->sub_activity_name }}"
-                                        data-status="{{ $subActivity->status }}">
-                                        @if ($subActivity->status === 1)
-                                            <i class="fas fa-toggle-on text-success" style="font-size: 24px;" title="Active"></i>
+                                        data-id="{{ $item->sub_activity_id }}" data-name="{{ $item->sub_activity_name }}"
+                                        data-status="{{ $item->status }}">
+                                        @if ($item->status === 1)
+                                            <i class="fas fa-toggle-on text-success" style="font-size: 24px;"
+                                                title="Active"></i>
                                         @else
-                                            <i class="fas fa-toggle-off text-secondary" style="font-size: 24px;" title="Inactive"></i>
+                                            <i class="fas fa-toggle-off text-secondary" style="font-size: 24px;"
+                                                title="Inactive"></i>
                                         @endif
                                     </a>
                                 </td>
@@ -145,6 +155,34 @@
                         </div>
                         <div class="pt-2">
                             <button type="submit" class="btn btn-primary">บันทึก</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal แก้ไขหลักสูตร-->
+    <div class="modal fade" id="EditSubActivityModal" tabindex="-1" role="dialog"
+        aria-labelledby="EditSubActivityModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="EditSubActivityModalLabel">แก้ไขหลักสูตร</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('admin.updateSubActivity', $item->sub_activity_id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="row text-center justify-content-center">
+                            <div class="col-md-8">
+                                <input type="text" name="sub_activity_name" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary">บันทึกหลักสูตร</button>
+                            </div>
                         </div>
                     </form>
                 </div>

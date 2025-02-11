@@ -11,7 +11,6 @@ class SubActivityController extends Controller
     public function showSubActivities()
     {
         $activities = Activity::all();
-
         $subActivities = SubActivity::with('activity')->get();
         return view('admin.subactivity_list', compact('subActivities', 'activities'));
     }
@@ -53,5 +52,22 @@ class SubActivityController extends Controller
         $activity->save();
 
         return response()->json(['success' => 'แก้ไขจำนวนหลักสูตรที่เลือกได้เรียบร้อยแล้ว']);
+    }
+
+    public function update(Request $request, $subActivityId)
+    {
+        $subActivity = SubActivity::findOrFail($subActivityId);
+        $subActivity->sub_activity_name = $request->sub_activity_name;
+        $subActivity->save();
+    
+        return back()->with('success', 'แก้ไขหลักสูตรสำเร็จ');
+    }
+    
+    public function delete($id)
+    {
+        $subActivity = SubActivity::findOrFail($id);
+        $subActivity->delete();
+
+        return redirect()->back()->with('success', 'ลบหลักสูตรสำเร็จ');
     }
 }

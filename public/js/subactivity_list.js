@@ -72,3 +72,14 @@ $(document).ready(function() {
         $('#EditMaxSubactivitiesModal').modal('hide');
     });
 });
+
+$(document).ready(function() {
+    $('#EditSubActivityModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var subActivityId = button.data('id');
+        var subActivityName = button.data('name');
+        var modal = $(this);
+        modal.find('input[name="sub_activity_name"]').val(subActivityName);
+        modal.find('form').attr('action', '/admin/sub-activity/' + subActivityId);
+    });  
+});

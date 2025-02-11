@@ -176,7 +176,7 @@
                                     <input type="time" name="end_time" id="end_time" class="form-control" required>
                                 </div>
                                 <div class="pt-3">
-                                    <button type="submit" class="btn btn-primary ">เพิ่มรอบการเข้าชม</button>
+                                    <button type="submit" class="btn btn-primary">เพิ่มรอบการเข้าชม</button>
                                 </div>
                             </form>
                         </div>

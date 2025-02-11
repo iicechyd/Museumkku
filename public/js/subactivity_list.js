@@ -6,7 +6,7 @@ $(document).on('click', '.toggle-status', function(e) {
     var currentStatus = button.data('status');
     var subActivityName = button.data('name'); 
 
-    if (!confirm('คุณต้องการเปลี่ยนสถานะของกิจกรรมย่อย "' + subActivityName + '" หรือไม่?')) {
+    if (!confirm('คุณต้องการเปลี่ยนสถานะของหลักสูตร "' + subActivityName + '" หรือไม่?')) {
         return false;
     }
 

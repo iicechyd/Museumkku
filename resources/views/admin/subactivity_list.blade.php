@@ -1,5 +1,5 @@
 @extends('layouts.layout_admin')
-@section('title', 'กิจกรรมย่อย')
+@section('title', 'หลักสูตร')
 @section('content')
 
     <head>
@@ -16,7 +16,7 @@
     <div>
         <h1 class="table-heading text-center">หลักสูตร</h1>
         <button type="button" class="btn my-3"
-            style="background-color: rgb(85, 88, 218); border-color: rgb(85, 88, 218); color: white;" data-toggle="modal"
+            style="background-color: #FBAB7E; border-color: #FBAB7E; color: white;" data-toggle="modal"
             data-target="#InsertSubacitivtyModal">
             เพิ่มหลักสูตร
         </button>

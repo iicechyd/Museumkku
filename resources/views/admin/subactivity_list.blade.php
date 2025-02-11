@@ -16,7 +16,7 @@
     <div>
         <h1 class="table-heading text-center">หลักสูตร</h1>
         <button type="button" class="btn my-3"
-            style="background-color: #FBAB7E; border-color: #FBAB7E; color: white;" data-toggle="modal"
+            style="background-color: #8BC6EC; border-color: #8BC6EC; color: white;" data-toggle="modal"
             data-target="#InsertSubacitivtyModal">
             เพิ่มหลักสูตร
         </button>

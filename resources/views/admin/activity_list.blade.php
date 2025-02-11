@@ -32,7 +32,7 @@
                 เป้าหมาย
             </button>
             <button type="button" class="btn mb-3"
-                style="background-color: #FBAB7E; border-color: #FBAB7E; color: white;"
+                style="background-color: #8BC6EC; border-color: #8BC6EC; color: white;"
                 onclick="window.location='{{ url('/admin/subactivity_list') }}'">
                 หลักสูตร
             </button>

@@ -44,13 +44,23 @@ class ActivityController extends Controller
         return view('admin.activity_list', compact('requestListActivity', 'activityTypes', 'allActivities'));
     }
 
-    function delete($activity_id)
-    {
-        DB::table('activities')->where('activity_id', $activity_id)->delete();
-        session()->flash('success', 'ลบกิจกรรมเรียบร้อยแล้ว');
+        function delete($activity_id)
+        {
+        $hasPendingBookings = DB::table('bookings')
+        ->where('activity_id', $activity_id)
+        ->whereIn('status', [0, 1])
+        ->exists();
 
+    if ($hasPendingBookings) {
+        session()->flash('error', 'ไม่สามารถลบกิจกรรมนี้ได้ เนื่องจากมีการจองกิจกรรมนี้ที่รอดำเนินการในระบบ');
         return redirect('/admin/activity_list');
     }
+
+    DB::table('activities')->where('activity_id', $activity_id)->delete();
+    session()->flash('success', 'ลบกิจกรรมเรียบร้อยแล้ว');
+
+            return redirect('/admin/activity_list');
+        }
 
     public function deleteImage($image_id)
     {

@@ -50,6 +50,16 @@ class TimeslotController extends Controller
 
         public function delete($id)
     {
+        $hasPendingBookings = Bookings::whereHas('timeslot', function ($query) use ($id) {
+            $query->where('timeslots.timeslots_id', $id);
+        })
+        ->whereIn('status', [0, 1])
+        ->exists();
+    
+        if ($hasPendingBookings) {
+            return redirect()->back()->with('error', 'ไม่สามารถลบรอบการเข้าชมนี้ได้ เนื่องจากมีการจองรอบการเข้าชมของกิจกรรมนี้ที่รอดำเนินการในระบบ');
+        }
+
         $timeslot = Timeslots::findOrFail($id);
         $timeslot->delete();
 

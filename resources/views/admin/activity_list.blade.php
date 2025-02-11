@@ -156,26 +156,28 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <p><strong>เด็ก
-                                            </strong>{{ $item->children_price == 0 ? 'ฟรี' : $item->children_price . ' บาท /คน' }}
+                                        <p><strong>กลุ่มทั่วไป</strong></p>
+                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;เด็ก
+                                            {{ $item->children_price == 0 ? 'ฟรี' : $item->children_price . ' บาท /คน' }}
                                         </p>
-                                        <p><strong>นร/นศ
-                                            </strong>{{ $item->student_price == 0 ? 'ฟรี' : $item->student_price . ' บาท /คน' }}
+                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;นร/นศ
+                                            {{ $item->student_price == 0 ? 'ฟรี' : $item->student_price . ' บาท /คน' }}
                                         </p>
-                                        <p><strong>ผู้ใหญ่
-                                            </strong>{{ $item->adult_price == 0 ? 'ฟรี' : $item->adult_price . ' บาท /คน' }}
+                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ผู้ใหญ่ / คุณครู
+                                            {{ $item->adult_price == 0 ? 'ฟรี' : $item->adult_price . ' บาท /คน' }}
                                         </p>
-                                        <p><strong>เด็กเล็ก
-                                        </strong>{{ $item->kid_price == 0 ? 'ฟรี' : $item->kid_price . ' บาท /คน' }}
+                                        <p><strong>กลุ่มสวัสดิการ</strong></p>
+                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;เด็กเล็ก
+                                        {{ $item->kid_price == 0 ? '' : $item->kid_price . ' บาท /คน' }}
                                         </p>
-                                        <p><strong>ผู้พิการ
-                                            </strong>{{ $item->disabled_price == 0 ? 'ฟรี' : $item->disabled_price . ' บาท /คน' }}
+                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ผู้พิการ
+                                            {{ $item->disabled_price == 0 ? '' : $item->disabled_price . ' บาท /คน' }}
                                         </p>
-                                        <p><strong>ผู้สูงอายุ
-                                            </strong>{{ $item->elderly_price == 0 ? 'ฟรี' : $item->elderly_price . ' บาท /คน' }}
+                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ผู้สูงอายุ
+                                            {{ $item->elderly_price == 0 ? '' : $item->elderly_price . ' บาท /คน' }}
                                         </p>
-                                        <p><strong>พระภิกษุสงฆ์ /สามเณร
-                                            </strong>{{ $item->monk_price == 0 ? 'ฟรี' : $item->monk_price . ' บาท /รูป' }}</p>
+                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;พระภิกษุสงฆ์ /สามเณร
+                                            {{ $item->monk_price == 0 ? '' : $item->monk_price . ' บาท /รูป' }}</p>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>

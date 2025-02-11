@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\SubActivity;
 use App\Models\Activity;
+use App\Models\Bookings;
 
 class SubActivityController extends Controller
 {
@@ -65,6 +66,15 @@ class SubActivityController extends Controller
     
     public function delete($id)
     {
+        $hasPendingBookings = Bookings::whereHas('subActivities', function ($query) use ($id) {
+            $query->where('booking_subactivities.sub_activity_id', $id);
+        })
+        ->whereIn('status', [0, 1])
+        ->exists();
+    
+        if ($hasPendingBookings) {
+            return redirect()->back()->with('error', 'ไม่สามารถลบหลักสูตรนี้ได้ เนื่องจากมีการจองหลักสูตรนี้ที่รอดำเนินการในระบบ');
+        }
         $subActivity = SubActivity::findOrFail($id);
         $subActivity->delete();
 

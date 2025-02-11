@@ -15,7 +15,11 @@
             {{ session('success') }}
         </div>
     @endif
-
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
     <div>
         <h1 class="table-heading text-center">รอบการเข้าชม</h1>
         <button type="button" class="btn my-3"

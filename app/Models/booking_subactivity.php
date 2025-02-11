@@ -11,4 +11,8 @@ class booking_subactivity extends Model
     protected $table = 'booking_subactivities';
     protected $guarded = [];
     
+    public function booking()
+    {
+        return $this->belongsTo(Bookings::class, 'booking_id', 'booking_id');
+    }
 }

@@ -13,6 +13,11 @@
             {{ session('success') }}
         </div>
     @endif
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
     <div>
         <h1 class="table-heading text-center">หลักสูตร</h1>
         <button type="button" class="btn my-3" style="background-color: #8BC6EC; border-color: #8BC6EC; color: white;"
@@ -31,15 +36,13 @@
                 </thead>
                 <tbody>
                     @php
-                        $groupedActivities = $subActivities->groupBy('activity_id'); // จัดกลุ่ม subActivities ตาม activity_id
+                        $groupedActivities = $subActivities->groupBy('activity_id');
                     @endphp
-
                     @foreach ($groupedActivities as $activityId => $group)
                         @php
-                            $rowspan = count($group); // นับจำนวน subActivities ในกลุ่ม
-                            $firstRow = true; // ใช้ตัวแปรตรวจสอบแถวแรกของกลุ่ม
+                            $rowspan = count($group);
+                            $firstRow = true;
                         @endphp
-
                         @foreach ($group as $index => $item)
                             <tr>
                                 @if ($firstRow)

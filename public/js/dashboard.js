@@ -323,7 +323,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "เด็กเล็ก",
                 "ผู้พิการ",
                 "ผู้สูงอายุ",
-                "พระสงฆ์",
+                "เณร / พระสงฆ์",
             ],
             datasets: [
                 {

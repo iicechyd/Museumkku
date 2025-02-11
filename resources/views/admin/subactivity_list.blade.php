@@ -31,21 +31,41 @@
                 </thead>
                 <tbody>
                     @php
-                        $currentActivityId = null;
+                        $groupedSubActivities = $subActivities->groupBy('activity_id');
                     @endphp
-                    @foreach ($subActivities as $subActivity)
-                        @if ($currentActivityId != $subActivity->activity_id)
-                            @php
-                                $currentActivityId = $subActivity->activity_id;
-                            @endphp
+                
+                    @foreach ($groupedSubActivities as $activity_id => $group)
+                        @php
+                            $firstSubActivity = $group->first();
+                        @endphp
+                        <tr>
+                            <!-- คอลัมน์กิจกรรม ใช้ rowspan -->
+                            <td rowspan="{{ count($group) }}">
+                                {{ $firstSubActivity->activity->activity_name }}<br>
+                                จำนวนหลักสูตรที่เลือกได้ {{ $firstSubActivity->activity->max_subactivities }} หลักสูตร
+                                <i class="fas fa-edit" style="color: #3b44ff;" data-id="{{ $firstSubActivity->activity_id }}"
+                                    data-max="{{ $firstSubActivity->activity->max_subactivities }}"></i>
+                            </td>
+                
+                            <!-- คอลัมน์แรกของ subActivity -->
+                            <td>{{ $firstSubActivity->sub_activity_name }}</td>
+                            <td class="text-center">
+                                <a href="javascript:void(0);" class="toggle-status"
+                                    data-id="{{ $firstSubActivity->sub_activity_id }}"
+                                    data-name="{{ $firstSubActivity->sub_activity_name }}"
+                                    data-status="{{ $firstSubActivity->status }}">
+                                    @if ($firstSubActivity->status === 1)
+                                        <i class="fas fa-toggle-on text-success" style="font-size: 24px;" title="Active"></i>
+                                    @else
+                                        <i class="fas fa-toggle-off text-secondary" style="font-size: 24px;" title="Inactive"></i>
+                                    @endif
+                                </a>
+                            </td>
+                        </tr>
+                
+                        <!-- วนลูป subActivity ที่เหลือ -->
+                        @foreach ($group->skip(1) as $subActivity)
                             <tr>
-                                <td
-                                    rowspan="{{ $subActivities->where('activity_id', $subActivity->activity_id)->count() }}">
-                                    {{ $subActivity->activity->activity_name }}<br>
-                                    จำนวนหลักสูตรที่เลือกได้ {{ $subActivity->activity->max_subactivities }} หลักสูตร
-                                    <i class="fas fa-edit" style="color: #3b44ff;" data-id="{{ $subActivity->activity_id }}"
-                                        data-max="{{ $subActivity->activity->max_subactivities }}"></i>
-                                </td>
                                 <td>{{ $subActivity->sub_activity_name }}</td>
                                 <td class="text-center">
                                     <a href="javascript:void(0);" class="toggle-status"
@@ -53,34 +73,14 @@
                                         data-name="{{ $subActivity->sub_activity_name }}"
                                         data-status="{{ $subActivity->status }}">
                                         @if ($subActivity->status === 1)
-                                            <i class="fas fa-toggle-on text-success" style="font-size: 24px;"
-                                                title="Active"></i>
+                                            <i class="fas fa-toggle-on text-success" style="font-size: 24px;" title="Active"></i>
                                         @else
-                                            <i class="fas fa-toggle-off text-secondary" style="font-size: 24px;"
-                                                title="Inactive"></i>
+                                            <i class="fas fa-toggle-off text-secondary" style="font-size: 24px;" title="Inactive"></i>
                                         @endif
                                     </a>
                                 </td>
                             </tr>
-                        @else
-                            <tr>
-                                <td>{{ $subActivity->sub_activity_name }}</td>
-                                <td class="text-center">
-                                    <a href="javascript:void(0);" class="toggle-status"
-                                        data-id="{{ $subActivity->sub_activity_id }}"
-                                        data-name="{{ $subActivity->sub_activity_name }}"
-                                        data-status="{{ $subActivity->status }}">
-                                        @if ($subActivity->status === 1)
-                                            <i class="fas fa-toggle-on text-success" style="font-size: 24px;"
-                                                title="Active"></i>
-                                        @else
-                                            <i class="fas fa-toggle-off text-secondary" style="font-size: 24px;"
-                                                title="Inactive"></i>
-                                        @endif
-                                    </a>
-                                </td>
-                            </tr>
-                        @endif
+                        @endforeach
                     @endforeach
                 </tbody>
             </table>

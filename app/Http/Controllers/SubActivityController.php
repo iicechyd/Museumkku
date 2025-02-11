@@ -27,7 +27,7 @@ class SubActivityController extends Controller
         $subActivity->sub_activity_name = $request->sub_activity_name;
         $subActivity->save();
 
-        return redirect()->route('admin.subactivities')->with('success', 'เพิ่มกิจกรรมย่อยเรียบร้อยแล้ว');
+        return redirect()->route('admin.subactivities')->with('success', 'เพิ่มหลักสูตรเรียบร้อยแล้ว');
     }
     public function toggleSubactivityStatus(Request $request, $subActivityId)
     {
@@ -52,6 +52,6 @@ class SubActivityController extends Controller
         $activity->max_subactivities = $request->max_subactivities;
         $activity->save();
 
-        return response()->json(['success' => 'Max subactivities updated successfully.']);
+        return response()->json(['success' => 'แก้ไขจำนวนหลักสูตรที่เลือกได้เรียบร้อยแล้ว']);
     }
 }

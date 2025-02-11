@@ -47,6 +47,8 @@ class ActivityController extends Controller
     function delete($activity_id)
     {
         DB::table('activities')->where('activity_id', $activity_id)->delete();
+        session()->flash('success', 'ลบกิจกรรมเรียบร้อยแล้ว');
+
         return redirect('/admin/activity_list');
     }
 

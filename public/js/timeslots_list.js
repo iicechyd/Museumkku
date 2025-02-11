@@ -1,44 +1,13 @@
-function updateEndTime(startTimeInput) {
-    const startTime = startTimeInput.value;
-    const endTimeInput = startTimeInput
-        .closest(".modal-body")
-        .querySelector('input[name="end_time"]');
-
-    if (startTime) {
-        const startDate = new Date();
-        const [hours, minutes] = startTime.split(":");
-        startDate.setHours(hours);
-        startDate.setMinutes(minutes);
-        startDate.setMinutes(startDate.getMinutes() + 30);
-
-        const formattedHours = String(startDate.getHours()).padStart(2, "0");
-        const formattedMinutes = String(startDate.getMinutes()).padStart(
-            2,
-            "0"
-        );
-        endTimeInput.value = `${formattedHours}:${formattedMinutes}`;
-    }
-}
-
-function updateInsertEndTime(startTimeInput) {
-    const startTime = startTimeInput.value;
-    const endTimeInput = document.getElementById("insert_end_time");
-
-    if (startTime) {
-        const startDate = new Date();
-        const [hours, minutes] = startTime.split(":");
-        startDate.setHours(hours);
-        startDate.setMinutes(minutes);
-        startDate.setMinutes(startDate.getMinutes() + 30);
-
-        const formattedHours = String(startDate.getHours()).padStart(2, "0");
-        const formattedMinutes = String(startDate.getMinutes()).padStart(
-            2,
-            "0"
-        );
-        endTimeInput.value = `${formattedHours}:${formattedMinutes}`;
-    }
-}
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".delete-form").forEach(form => {
+        form.addEventListener("submit", function (event) {
+            event.preventDefault(); 
+            if (confirm("คุณแน่ใจหรือไม่ว่าต้องการลบรอบการเข้าชมนี้?")) {
+                this.submit();
+            }
+        });
+    });
+});
 
 $(document).on('click', '.toggle-status', function(e) {
     e.preventDefault();

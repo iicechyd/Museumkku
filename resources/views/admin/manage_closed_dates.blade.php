@@ -21,15 +21,15 @@
         </div>
     @endif
 
-    <div class="container mx-auto px-4 py-6">
+    <div class="container px-4 py-6">
         <h1 class="table-heading text-center">จัดการวันปิดรอบการเข้าชม</h1>
         <div class="card shadow p-4">
             <form action="{{ route('admin.saveClosedDates') }}" class="row g-3" method="POST">
                 @csrf
-                <div class="form-group col-4">
-                    <label for="activity_id" class="font-weight-bold">เลือกกิจกรรม</label>
+                <div class="form-group col-md-4">
+                    <label for="activity_id" class="font-weight-bold">เลือกประเภทการเข้าชม</label>
                     <select id="activity_id" name="activity_id" class="form-control" required>
-                        <option value="">กรุณาเลือกกิจกรรม</option>
+                        <option value="">กรุณาเลือกประเภทการเข้าชม</option>
                         @foreach ($activities as $activity)
                             <option value="{{ $activity->activity_id }}">{{ $activity->activity_name }}</option>
                         @endforeach
@@ -38,7 +38,7 @@
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
-                <div class="form-group col-3">
+                <div class="form-group col-md-3">
                     <label for="timeslots_id" class="font-weight-bold">เลือกรอบการเข้าชม</label>
                     <select id="timeslots_id" name="timeslots_id" class="form-control" required disabled>
                         <option value="">กรุณาเลือกรอบการเข้าชม</option>
@@ -48,7 +48,7 @@
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
-                <div class="form-group col-4">
+                <div class="form-group col-md-4">
                     <label for="closed_on" class="font-weight-bold">วันที่ปิดรอบการเข้าชม</label>
                     <div class="input-group">
                         <input type="date" id="closed_on" name="closed_on" class="form-control" required
@@ -63,7 +63,7 @@
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
-                <div class="form-group col-5">
+                <div class="form-group col-md-5">
                     <label for="comments" class="font-weight-bold">หมายเหตุ</label>
                     <textarea id="comments" name="comments" class="form-control" rows="3" placeholder="กรุณากรอกหมายเหตุ"></textarea>
                     @error('comments')
@@ -76,17 +76,17 @@
             </form>
         </div>
     </div>
-    <div class="container mx-auto px-4 py-6">
-        <h2 class="font-weight-bold mt-5">รายการวันที่ปิด</h2>
-        <div class="table-wrapper">
-            <table class="table  table-bordered mt-4 shadow-sm">
+    <div class="container px-4 py-6">
+        <h2 class="font-weight-bold mt-5">รายการวันที่ปิดรอบการเข้าชม</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered mt-4 shadow-sm">
                 <thead class="thead-light">
                     <tr>
-                        <th>กิจกรรม</th>
-                        <th>รอบเวลา</th>
-                        <th>วันที่ปิด</th>
-                        <th>หมายเหตุ</th>
-                        <th>การจัดการ</th>
+                        <th data-type="text-long">ประเภทการเข้าชม<span class="resize-handle"></span></th>
+                        <th data-type="text-short">รอบเวลา<span class="resize-handle"></span></th>
+                        <th data-type="text-short">วันที่ปิดรอบการเข้าชม<span class="resize-handle"></span></th>
+                        <th data-type="text-short">หมายเหตุ<span class="resize-handle"></span></th>
+                        <th data-type="text-short">การจัดการ<span class="resize-handle"></span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -106,7 +106,7 @@
                             <td>{{ $closed->comments }}</td>
                             <td>
                                 <form action="{{ route('admin.deleteClosedDate', $closed->closed_timeslots_id) }}"
-                                    method="POST" onsubmit="return confirm('ยืนยันการลบวันที่ปิดรอบนี้หรือไม่?');">
+                                    method="POST" onsubmit="return confirm('ยืนยันการยกเลิกวันที่ปิดรอบการเข้าชมนี้หรือไม่?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">
@@ -121,40 +121,8 @@
         </div>
     </div>
     <script>
-        document.getElementById('activity_id').addEventListener('change', function() {
-            const activityId = this.value;
-            const timeslotsDropdown = document.getElementById('timeslots_id');
-
-            if (activityId) {
-                fetch("{{ route('admin.getTimeslots') }}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                        },
-                        body: JSON.stringify({
-                            activity_id: activityId
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        timeslotsDropdown.innerHTML = '<option value="">-- เลือกรอบการเข้าชม --</option>';
-                        timeslotsDropdown.innerHTML += '<option value="all">ปิดทุกรอบ</option>';
-                        data.forEach(timeslot => {
-                            timeslotsDropdown.innerHTML +=
-                                `<option value="${timeslot.timeslots_id}">${timeslot.start_time} - ${timeslot.end_time}</option>`;
-                        });
-                        timeslotsDropdown.disabled = false;
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('ไม่สามารถโหลดข้อมูลรอบการเข้าชมได้');
-                    });
-            } else {
-                timeslotsDropdown.innerHTML = '<option value="">-- เลือกรอบการเข้าชม --</option>';
-                timeslotsDropdown.disabled = true;
-            }
-        });
+        var getTimeslotsUrl = "{{ route('admin.getTimeslots') }}";
+        var csrfToken = "{{ csrf_token() }}";
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>

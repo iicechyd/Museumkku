@@ -1,5 +1,25 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Thai&display=swap");
 
+body,
+.table-heading,
+.table-responsive table {
+    font-family: "Noto Sans Thai", sans-serif;
+}
+
+.table-responsive table th,
+.table-responsive table td {
+    background-color: white !important;
+}
+
+table th,
+table td {
+    background-color: white;
+}
+
+* {
+    box-sizing: border-box;
+}
+
 .table-heading {
     text-align: center;
     background: radial-gradient(
@@ -14,6 +34,17 @@
     font-size: 24px;
     font-weight: bold;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1000px;
 }
 
 th,

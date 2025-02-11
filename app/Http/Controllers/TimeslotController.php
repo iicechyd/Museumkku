@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\Activity;
 use App\Models\Timeslots;
@@ -47,6 +48,14 @@ class TimeslotController extends Controller
         return redirect()->back()->with('success', 'เพิ่มรอบการเข้าชมเรียบร้อยแล้ว');
     }
 
+        public function delete($id)
+    {
+        $timeslot = Timeslots::findOrFail($id);
+        $timeslot->delete();
+
+        return redirect()->back()->with('success', 'ลบรอบการเข้าชมเรียบร้อยแล้ว');
+    }
+
     public function toggleStatus($id)
     {
         $timeslot = Timeslots::findOrFail($id);
@@ -72,12 +81,24 @@ class TimeslotController extends Controller
 
     public function saveClosedDates(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'activity_id' => 'required|exists:activities,activity_id',
             'timeslots_id' => 'required',
             'closed_on' => 'required|date_format:d/m/Y',
             'comments' => 'required|string|max:255',
+        ], [
+            'activity_id.required' => 'กรุณาเลือกประเภทการเข้าชม',
+            'timeslots_id.required' => 'กรุณาเลือกรอบการเข้าชม',
+            'closed_on.required' => 'กรุณาเลือกวันที่ปิดรอบการเข้าชม',
+            'closed_on.date_format' => 'รูปแบบวันที่ต้องเป็น วัน/เดือน/ปี (เช่น 25/02/2025)',
+            'comments.required' => 'กรุณากรอกหมายเหตุการปิดรอบการเข้าชม',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }    
 
         $activityId = $request->input('activity_id');
         $timeslotsId = $request->input('timeslots_id');
@@ -105,7 +126,7 @@ class TimeslotController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'บันทึกข้อมูลการปิดรอบเรียบร้อยแล้ว');
+        return redirect()->back()->with('success', 'บันทึกข้อมูลการปิดรอบการเข้าชมเรียบร้อยแล้ว');
     }
     public function deleteClosedDate($id)
     {
@@ -113,9 +134,9 @@ class TimeslotController extends Controller
             $closedTimeslot = ClosedTimeslots::findOrFail($id);
             $closedTimeslot->delete();
 
-            return redirect()->back()->with('success', 'ลบวันที่ปิดรอบสำเร็จ');
+            return redirect()->back()->with('success', 'ยกเลิกวันที่ปิดรอบการเข้าชมสำเร็จ');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'เกิดข้อผิดพลาดในการลบวันที่ปิดรอบ');
+            return redirect()->back()->with('error', 'เกิดข้อผิดพลาดในการลบวันที่ปิดรอบการเข้าชม');
         }
     }
 

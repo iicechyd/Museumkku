@@ -24,18 +24,18 @@
             เพิ่มรอบการเข้าชม
         </button>
         <a href="{{ url('/admin/manage-closed-dates') }}" class="btn"
-        style="background-color: rgb(85, 88, 218); border-color: rgb(85, 88, 218); color: white;">
-                    ปิดรอบการเข้าชม</a>
+            style="background-color: rgb(85, 88, 218); border-color: rgb(85, 88, 218); color: white;">
+            ปิดรอบการเข้าชม</a>
         <div class="table-responsive">
             @if ($activities->isEmpty() || $activities->every(fn($activity) => $activity->timeslots->isEmpty()))
                 <div class="text-center mt-4">
-                    <h1 class="text text-center py-5 ">ไม่พบข้อมูลในระบบ</h1>
+                    <h1 class="text text-center py-5">ไม่พบข้อมูลในระบบ</h1>
                 </div>
             @else
                 <table>
                     <thead>
                         <tr>
-                            <th data-type="text-long">กิจกรรม<span class="resize-handle"></span></th>
+                            <th data-type="text-long">ประเภทการเข้าชม<span class="resize-handle"></span></th>
                             <th data-type="text-short">รอบที่<span class="resize-handle"></span></th>
                             <th data-type="text-short">รอบการเข้าชม<span class="resize-handle"></span></th>
                             <th data-type="text-short">แก้ไขเวลา<span class="resize-handle"></span></th>
@@ -65,17 +65,28 @@
                                                     <i class="fa fa-edit"></i>
                                                 </button>
                                             </li>
+                                            <li class="list-inline-item">
+                                                <form action="{{ route('timeslots.delete', $timeslot->timeslots_id) }}"
+                                                    method="POST" class="d-inline delete-form">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="btn btn-danger btn-sm rounded-0 delete-btn">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </li>
                                         </ul>
                                     </td>
-                                    <td class="text-center"> 
-                                        <a href="javascript:void(0);" 
-                                           class="toggle-status" 
-                                           data-id="{{ $timeslot->timeslots_id }}" 
-                                           data-status="{{ $timeslot->status }}">
-                                            @if($timeslot->status === 1)
-                                                <i class="fas fa-toggle-on text-success" style="font-size: 24px;" title="Active"></i>
+                                    <td class="text-center">
+                                        <a href="javascript:void(0);" class="toggle-status"
+                                            data-id="{{ $timeslot->timeslots_id }}" data-status="{{ $timeslot->status }}">
+                                            @if ($timeslot->status === 1)
+                                                <i class="fas fa-toggle-on text-success" style="font-size: 24px;"
+                                                    title="Active"></i>
                                             @else
-                                                <i class="fas fa-toggle-off text-secondary" style="font-size: 24px;" title="Inactive"></i>
+                                                <i class="fas fa-toggle-off text-secondary" style="font-size: 24px;"
+                                                    title="Inactive"></i>
                                             @endif
                                         </a>
                                     </td>
@@ -102,7 +113,7 @@
                                                     @csrf
                                                     @method('PUT')
                                                     <div class="form-group">
-                                                        <label for="start_time">เวลาเริ่มต้น:</label>
+                                                        <label for="start_time">เวลาเริ่มต้น</label>
                                                         <input type="time" name="start_time" id="start_time"
                                                             class="form-control"
                                                             value="{{ \Carbon\Carbon::parse($timeslot->start_time)->format('H:i') }}"
@@ -110,7 +121,7 @@
 
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="end_time">เวลาสิ้นสุด:</label>
+                                                        <label for="end_time">เวลาสิ้นสุด</label>
                                                         <input type="time" name="end_time" id="end_time"
                                                             class="form-control"
                                                             value="{{ \Carbon\Carbon::parse($timeslot->end_time)->format('H:i') }}"
@@ -136,17 +147,17 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="InsertTimeslotsModalLabel">เพิ่มรอบการเข้าชมของกิจกรรม</h5>
+                            <h5 class="modal-title" id="InsertTimeslotsModalLabel">เพิ่มรอบการเข้าชม</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <!-- ฟอร์มเพิ่มรอบการเข้าชม -->
-                            <form action="{{ route('InsertTimeslots') }}" method="POST">
+                            <form id="timeslotsForm" action="{{ route('InsertTimeslots') }}" method="POST">
                                 @csrf
                                 <div class="form-group">
-                                    <label for="activity_id">กิจกรรม:</label>
+                                    <label for="activity_id">ประเภทการเข้าชม</label>
                                     <select name="activity_id" id="activity_id" class="form-control">
                                         @foreach ($activities as $activity)
                                             <option value="{{ $activity->activity_id }}">
@@ -156,11 +167,12 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="start_time">เวลาเริ่มต้น:</label>
-                                    <input type="time" name="start_time" id="start_time" class="form-control" required>
+                                    <label for="start_time">เวลาเริ่มต้น</label>
+                                    <input type="time" name="start_time" id="start_time" class="form-control"
+                                        required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="end_time">เวลาสิ้นสุด:</label>
+                                    <label for="end_time">เวลาสิ้นสุด</label>
                                     <input type="time" name="end_time" id="end_time" class="form-control" required>
                                 </div>
                                 <div class="pt-3">
@@ -178,4 +190,5 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/timeslots_list.js') }}"></script>
 @endsection
+
 </html>

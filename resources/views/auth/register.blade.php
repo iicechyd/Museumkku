@@ -17,7 +17,7 @@
 @section('content')
     <div class="container py-4">
         <div class="wrapper">
-            <h2>สมัครสมาชิก</h2>
+            <h2>สมัครสมาชิก | เจ้าหน้าที่</h2>
             <form method="POST" action="{{ route('register') }}">
                 @csrf
                 <div class="input-box">

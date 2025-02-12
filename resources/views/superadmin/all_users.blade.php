@@ -4,7 +4,11 @@
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
-
+        @if (session('error'))
+        <div class="alert alert-danger mt-5">
+            {{ session('error') }}
+        </div>
+        @endif
         <x-layout bodyClass>
             <div class="row">
                 <div class="col-12">
@@ -50,7 +54,27 @@
                                                 </td>
                                                 <td>
                                                     <p class="text-xs font-weight-bold mb-0">
-                                                        {{ $user->role->role_name ?? 'No Role' }}</p>
+                                                        @isset($user->role)
+                                                            @switch($user->role->role_name)
+                                                                @case('Super Admin')
+                                                                    ผู้ดูแลระบบ
+                                                                @break
+
+                                                                @case('Admin')
+                                                                    เจ้าหน้าที่
+                                                                @break
+
+                                                                @case('Executive')
+                                                                    ผู้บริหาร
+                                                                @break
+
+                                                                @default
+                                                                    {{ $user->role->role_name }}
+                                                            @endswitch
+                                                        @else
+                                                            <span style="color: red;">รอกำหนดสิทธิ์</span>
+                                                        @endisset
+                                                    </p>
                                                 </td>
                                                 <td class="align-middle text-center text-sm">
                                                     <span
@@ -63,22 +87,61 @@
                                                         @if ($user->role_id !== 1)
                                                             <select name="role_id" class="form-control">
                                                                 <option value="" disabled selected>
-                                                                    เลือกสิทธิ์การใช้งาน</option>
+                                                                    กำหนดสิทธิ์การใช้งาน</option>
                                                                 @foreach ($roles as $role)
                                                                     <option value="{{ $role->role_id }}">
-                                                                        {{ $role->role_name }}</option>
+                                                                        @switch($role->role_name)
+                                                                            @case('Super Admin')
+                                                                                ผู้ดูแลระบบ
+                                                                            @break
+
+                                                                            @case('Executive')
+                                                                                ผู้บริหาร
+                                                                            @break
+
+                                                                            @case('Admin')
+                                                                                เจ้าหน้าที่
+                                                                            @break
+
+                                                                            @default
+                                                                                รอกำหนดสิทธิ์
+                                                                        @endswitch
+                                                                    </option>
                                                                 @endforeach
                                                             </select>
                                                         @else
                                                             <select name="role_id" class="form-control" disabled>
                                                                 <option value="{{ $user->role_id }}" selected>
-                                                                    {{ $user->role->role_name }}</option>
+                                                                    @switch($user->role->role_name ?? null)
+                                                                        @case('Super Admin')
+                                                                            ผู้ดูแลระบบ
+                                                                        @break
+                                                                        @case('Executive')
+                                                                            ผู้บริหาร
+                                                                        @break
+                                                                        @case('Admin')
+                                                                            เจ้าหน้าที่
+                                                                        @break
+                                                                        @default
+                                                                            <span class="text-danger">รอกำหนดสิทธิ์</span>
+                                                                    @endswitch
+                                                                </option>
                                                             </select>
                                                         @endif
-                                                </td>
-                                                <td>
-                                                    <button type="submit" class="btn btn-success">อนุมัติ</button>
                                                     </form>
+                                                    </td>
+                                                <td>
+                                                    @if($user->role->role_name !== 'Super Admin')
+                                                        <button type="submit" class="btn btn-success">อนุมัติ</button>
+                                                        <form action="{{ route('superadmin.delete_user', $user->user_id) }}" method="POST" style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger"
+                                                                onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีนี้?')">
+                                                                ลบ
+                                                            </button>
+                                                        </form>                                                        
+                                                        @endif
                                                 </td>
                                             </tr>
                                         @endforeach

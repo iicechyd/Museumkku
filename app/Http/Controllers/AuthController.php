@@ -65,10 +65,4 @@ class AuthController extends Controller
 
         return response()->json(['verified' => $verification ? $verification->verified : false]);
     }
-
-    public function clearEmailSession()
-    {
-        session()->forget('verification_email');
-        return redirect()->route('guest.verify')->with('success', 'เคลียร์อีเมลเรียบร้อยแล้ว');
-    }
 }

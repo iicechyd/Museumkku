@@ -23,6 +23,8 @@ Route::middleware([RoleMiddleware::class . ':Super Admin'])->group(function () {
     Route::get('/super_admin/all_users', [SuperAdminController::class, 'showAllUsers'])->name('showAllUsers');
     Route::get('/superadmin/logs', [SuperAdminController::class, 'showUserLogs'])->name('superadmin.logs');
     Route::post('/approve_user/{user_id}', [SuperAdminController::class, 'approveUsers'])->name('superadmin.approve_users');
+    Route::delete('/superadmin/users/{user_id}', [SuperAdminController::class, 'deleteUser'])
+        ->name('superadmin.delete_user');
 });
 Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'showDashboard'])->name('showDashboard');
@@ -51,7 +53,25 @@ Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {
     Route::post('/admin/toggle-subactivity-status/{subActivityId}', [SubActivityController::class, 'toggleSubactivityStatus']);
     Route::post('/admin/update-max-subactivities', [SubActivityController::class, 'updateMaxSubactivities'])->name('admin.updateMaxSubactivities');
     Route::delete('/admin/deleteSubActivity/{id}', [SubActivityController::class, 'delete'])->name('admin.deleteSubActivity');
-    Route::put('/admin/sub-activity/{subActivityId}', [SubActivityController::class, 'update'])->name('admin.updateSubActivity');    
+    Route::put('/admin/sub-activity/{subActivityId}', [SubActivityController::class, 'update'])->name('admin.updateSubActivity');
+    //Route รอบการเข้าชม
+    Route::get('/admin/timeslots_list', [TimeslotController::class, 'showTimeslots'])->name('showTimeslots');
+    Route::post('/InsertTimeslots', [TimeslotController::class, 'InsertTimeslots'])->name('InsertTimeslots');
+    Route::delete('/timeslots/{timeslots_id}', [TimeslotController::class, 'destroy'])->name('timeslots.destroy');
+    Route::put('timeslots/{id}', [TimeslotController::class, 'update'])->name('timeslots.update');
+    Route::get('/toggle-status/{id}', [TimeslotController::class, 'toggleStatus'])->name('toggle.status');
+    Route::post('/toggle-status/{id}', [TimeslotController::class, 'toggleStatus'])->name('toggle.status');
+    Route::get('/available-timeslots/{activity_id}/{date}', [TimeslotController::class, 'getAvailableTimeslots']);
+    Route::delete('/delete/timeslots/{id}', [TimeslotController::class, 'delete'])->name('timeslots.delete');
+    //Route กิจกรรม
+    Route::post('/InsertActivity', [ActivityController::class, 'InsertActivity'])->name('insert.activity');
+    Route::get('delete/{activity_id}', [ActivityController::class, 'delete'])->name('delete');
+    Route::post('/UpdateActivity', [ActivityController::class, 'updateActivity'])->name('updateActivity');
+    Route::get('/getActivityPrice/{activity_id}', [ActivityController::class, 'getActivityPrice']);
+    Route::get('activity/toggle-status/{id}', [ActivityController::class, 'toggleStatus'])->name('toggle.status');
+    Route::post('activity/toggle-status/{id}', [ActivityController::class, 'toggleStatus'])->name('toggle.status');
+    Route::delete('/admin/activity_images/{image_id}', [ActivityController::class, 'deleteImage'])->name('deleteImage');
+    Route::post('/add-target', [ActivityController::class, 'addTarget']);
 });
 Route::middleware([RoleMiddleware::class . ':Executive'])->group(function () {
     Route::get('/executive/dashboard', [DashboardController::class, 'showDashboard'])->name('showDashboard');
@@ -66,40 +86,20 @@ Route::get('/calendar', [HomeController::class, 'showCalendar'])->name('calendar
 Route::get('/calendar/events', [CalendarController::class, 'getEvents'])->name('calendar.events');
 Route::get('/admin_calendar/events', [AdminCalendarController::class, 'getEvents'])->name('admin_calendar.events');
 Route::get('/calendar/timeslots/{date}', [CalendarController::class, 'getTimeslotsForDate']);
-//Route ส่งค่าต่างๆ
+//Rpute เข้าสู่ระบบ ล็อคเอ้าท์
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
-Route::post('/InsertBooking', [BookingController::class, 'InsertBooking'])->name('InsertBooking');
-Route::post('change_status/{booking_id}', [BookingController::class, 'changeStatus'])->name('changeStatus');
 //Route สำหรับผู้เข้าชม หน้าเพจต่างๆ
 Route::get('/', [HomeController::class, 'showWelcome'])->name('showWelcome');
 Route::get('/preview', [HomeController::class, 'showPreview'])->name('showPreview');
 Route::get('/preview_activity', [ActivityController::class, 'previewActivity'])->name('preview_activity');
 Route::get('/preview_general', [ActivityController::class, 'previewGeneral'])->name('preview_general');
 Route::get('/activity/{activity_id}', [ActivityController::class, 'showDetail'])->name('activity_detail');
-Route::get('/form_bookings/activity/{activity_id}', [BookingController::class, 'showBookingForm'])
-->name('form_bookings.activity');
+Route::get('/form_bookings/activity/{activity_id}', [BookingController::class, 'showBookingForm'])->name('form_bookings.activity');
+Route::post('/InsertBooking', [BookingController::class, 'InsertBooking'])->name('InsertBooking');
+Route::post('change_status/{booking_id}', [BookingController::class, 'changeStatus'])->name('changeStatus');
 Route::get('/checkBookingStatus', [BookingController::class, 'checkBookingStatus'])->name('checkBookingStatus');
 Route::post('/checkBookingStatus', [BookingController::class, 'searchBookingByEmail'])->name('searchBookingByEmail');
-//Route รอบการเข้าชม
-Route::get('/admin/timeslots_list', [TimeslotController::class, 'showTimeslots'])->name('showTimeslots');
-Route::post('/InsertTimeslots', [TimeslotController::class, 'InsertTimeslots'])->name('InsertTimeslots');
-Route::delete('/timeslots/{timeslots_id}', [TimeslotController::class, 'destroy'])->name('timeslots.destroy');
-Route::put('timeslots/{id}', [TimeslotController::class, 'update'])->name('timeslots.update');
-Route::get('/toggle-status/{id}', [TimeslotController::class, 'toggleStatus'])->name('toggle.status');
-Route::post('/toggle-status/{id}', [TimeslotController::class, 'toggleStatus'])->name('toggle.status');
-Route::get('/available-timeslots/{activity_id}/{date}', [TimeslotController::class, 'getAvailableTimeslots']);
-Route::delete('/delete/timeslots/{id}', [TimeslotController::class, 'delete'])->name('timeslots.delete');
-
-//Route กิจกรรม
-Route::post('/InsertActivity', [ActivityController::class, 'InsertActivity'])->name('insert.activity');
-Route::get('delete/{activity_id}', [ActivityController::class, 'delete'])->name('delete');
-Route::post('/UpdateActivity', [ActivityController::class, 'updateActivity'])->name('updateActivity');
-Route::get('/getActivityPrice/{activity_id}', [ActivityController::class, 'getActivityPrice']);
-Route::get('activity/toggle-status/{id}', [ActivityController::class, 'toggleStatus'])->name('toggle.status');
-Route::post('activity/toggle-status/{id}', [ActivityController::class, 'toggleStatus'])->name('toggle.status');
-Route::delete('/admin/activity_images/{image_id}', [ActivityController::class, 'deleteImage'])->name('deleteImage');
-Route::post('/add-target', [ActivityController::class, 'addTarget']);
 //Route อัปโหลดไฟล์
 Route::get('/documents/upload/{booking_id}', [DocumentController::class, 'showUploadForm'])->name('documents.upload');
 Route::post('/documents/upload/{booking_id}', [DocumentController::class, 'uploadDocument'])->name('documents.store');
@@ -110,8 +110,6 @@ Route::post('/api/send-verification-link', [AuthController::class, 'sendVerifica
 Route::get('/verify-link/{token}', [AuthController::class, 'verifyLink'])->name('verifyLink');
 Route::get('/waiting-for-verification', [AuthController::class, 'waitingForVerification'])->name('waiting_for_verification');
 Route::get('/check-verification/{email}', [AuthController::class, 'checkVerification'])->name('checkVerification');
-Route::get('/clear-email', [AuthController::class, 'clearEmailSession'])->name('clear.email');
-
 //Route แก้ไขแบบฟอร์ม
 Route::get('/booking/details/{booking_id}', [BookingController::class, 'showDetails'])->name('bookings.details')->middleware('signed');
 Route::get('/bookings/edit/{booking_id}', [BookingController::class, 'showBookingEdit'])->name('bookings.edit')->middleware('signed');

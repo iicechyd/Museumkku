@@ -19,7 +19,7 @@ class SuperAdminController extends Controller
     {
         $user = User::find($user_id);
         if (Auth::user()->role_id === $user->role_id && $user->role_id == 1) {
-            return redirect()->route('showAllUsers')->with('error', 'Superadmin ไม่สามารถเปลี่ยนบทบาทตัวเอง');
+            return redirect()->route('showAllUsers')->with('error', 'ผู้ดูแลระบบไม่สามารถเปลี่ยนประเภทบัญชีผู้ใช้งานได้');
         }
         $user->is_approved = true;
         $user->role_id = $request->role_id;
@@ -52,5 +52,21 @@ class SuperAdminController extends Controller
         $log->ip_address = $request->ip();
         $log->login_at = now();
         $log->save();
+    }
+    public function deleteUser($user_id)
+    {
+        $user = User::find($user_id);
+    
+        if (!$user) {
+            return redirect()->route('showAllUsers')->with('error', 'ไม่พบบัญชีผู้ใช้งาน');
+        }
+    
+        if ($user->role_id == 1) {
+            return redirect()->route('showAllUsers')->with('error', 'ไม่สามารถลบบัญชี Super Admin');
+        }
+    
+        $user->delete();
+    
+        return redirect()->route('showAllUsers')->with('success', 'ลบบัญชีผู้ใช้งานเรียบร้อย');
     }
 }

@@ -126,7 +126,7 @@
                             </select>
                             @error('fk_timeslots_id')
                                 <div class="my-2">
-                                    <span class="text-danger">{{ $message }}</span>
+                                    <span class="text-danger">{{ $errors->first('fk_timeslots_id') }}</span>
                                 </div>
                             @enderror
                         </div>
@@ -141,7 +141,7 @@
                             value="{{ old('instituteName') }}" required>
                         @error('instituteName')
                             <div class="my-2">
-                                <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $errors->first('instituteName') }}</span>
                             </div>
                         @enderror
                     </div>
@@ -153,7 +153,7 @@
                             value="{{ old('instituteAddress') }}">
                         @error('instituteAddress')
                             <div class="my-2">
-                                <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $errors->first('instituteAddress') }}</span>
                             </div>
                         @enderror
                     </div>
@@ -165,7 +165,7 @@
                             value="{{ old('subdistrict') }}" required>
                         @error('subdistrict')
                             <div class="my-2">
-                                <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $errors->first('subdistrict') }}</span>
                             </div>
                         @enderror
                     </div>
@@ -176,7 +176,7 @@
                             name="district" placeholder="กรอกเขต/อำเภอ" value="{{ old('district') }}" required>
                         @error('district')
                             <div class="my-2">
-                                <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $errors->first('district') }}</span>
                             </div>
                         @enderror
                     </div>
@@ -187,7 +187,7 @@
                             name="province" placeholder="กรอกจังหวัด" value="{{ old('province') }}" required>
                         @error('inputProvince')
                             <div class="my-2">
-                                <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $errors->first('province') }}</span>
                             </div>
                         @enderror
                     </div>
@@ -199,7 +199,7 @@
                             maxlength="5" minlength="5" inputmode="numeric" required>
                         @error('zipcode')
                             <div class="my-2">
-                                <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $errors->first('zipcode') }}</span>
                             </div>
                         @enderror
                     </div>
@@ -211,7 +211,7 @@
                             value="{{ old('visitorName') }}">
                         @error('visitorName')
                             <div class="my-2">
-                                <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $errors->first('visitorName') }}</span>
                             </div>
                         @enderror
                     </div>
@@ -223,7 +223,7 @@
                             value="{{ session('verification_email', old('visitorEmail')) }}" readonly>
                         @error('visitorEmail')
                             <div class="my-2">
-                                <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $errors->first('visitorEmail') }}</span>
                             </div>
                         @enderror
                     </div>
@@ -236,7 +236,7 @@
                             autocomplete="tel">
                         @error('tel')
                             <div class="my-2">
-                                <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $errors->first('tel') }}</span>
                             </div>
                         @enderror
                     </div>
@@ -249,7 +249,7 @@
                             autocomplete="note">
                         @error('note')
                             <div class="my-2">
-                                <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $errors->first('note') }}</span>
                             </div>
                         @enderror
                     </div>

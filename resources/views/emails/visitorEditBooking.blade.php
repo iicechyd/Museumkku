@@ -127,7 +127,7 @@
                             </select>
                             @error('fk_timeslots_id')
                                 <div class="my-2">
-                                    <span class="text-danger">{{ $message }}</span>
+                                    <span class="text-danger">{{ $errors->first('fk_timeslots_id') }}</span>
                                 </div>
                             @enderror
                         </div>
@@ -378,7 +378,7 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="successModalLabel">แก้ไข้ข้อมูลสำเร็จ</h5>
+                                <h5 class="modal-title" id="successModalLabel">แก้ไขข้อมูลสำเร็จ</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 </button>
                             </div>

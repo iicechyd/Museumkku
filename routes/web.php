@@ -54,16 +54,7 @@ Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {
     Route::post('/admin/update-max-subactivities', [SubActivityController::class, 'updateMaxSubactivities'])->name('admin.updateMaxSubactivities');
     Route::delete('/admin/deleteSubActivity/{id}', [SubActivityController::class, 'delete'])->name('admin.deleteSubActivity');
     Route::put('/admin/sub-activity/{subActivityId}', [SubActivityController::class, 'update'])->name('admin.updateSubActivity');
-    //Route รอบการเข้าชม
-    Route::get('/admin/timeslots_list', [TimeslotController::class, 'showTimeslots'])->name('showTimeslots');
-    Route::post('/InsertTimeslots', [TimeslotController::class, 'InsertTimeslots'])->name('InsertTimeslots');
-    Route::delete('/timeslots/{timeslots_id}', [TimeslotController::class, 'destroy'])->name('timeslots.destroy');
-    Route::put('timeslots/{id}', [TimeslotController::class, 'update'])->name('timeslots.update');
-    Route::get('/toggle-status/{id}', [TimeslotController::class, 'toggleStatus'])->name('toggle.status');
-    Route::post('/toggle-status/{id}', [TimeslotController::class, 'toggleStatus'])->name('toggle.status');
-    Route::get('/available-timeslots/{activity_id}/{date}', [TimeslotController::class, 'getAvailableTimeslots']);
-    Route::delete('/delete/timeslots/{id}', [TimeslotController::class, 'delete'])->name('timeslots.delete');
-    //Route กิจกรรม
+     //Route กิจกรรม
     Route::post('/InsertActivity', [ActivityController::class, 'InsertActivity'])->name('insert.activity');
     Route::get('delete/{activity_id}', [ActivityController::class, 'delete'])->name('delete');
     Route::post('/UpdateActivity', [ActivityController::class, 'updateActivity'])->name('updateActivity');
@@ -72,6 +63,13 @@ Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {
     Route::post('activity/toggle-status/{id}', [ActivityController::class, 'toggleStatus'])->name('toggle.status');
     Route::delete('/admin/activity_images/{image_id}', [ActivityController::class, 'deleteImage'])->name('deleteImage');
     Route::post('/add-target', [ActivityController::class, 'addTarget']);
+    //Route รอบการเข้าชม
+    Route::get('/admin/timeslots_list', [TimeslotController::class, 'showTimeslots'])->name('showTimeslots');
+    Route::post('/InsertTimeslots', [TimeslotController::class, 'InsertTimeslots'])->name('InsertTimeslots');
+    Route::put('timeslots/{id}', [TimeslotController::class, 'update'])->name('timeslots.update');
+    Route::delete('/delete/timeslots/{id}', [TimeslotController::class, 'delete'])->name('timeslots.delete');
+    Route::get('/toggle-status/{id}', [TimeslotController::class, 'toggleStatus'])->name('toggle.status');
+    Route::post('/toggle-status/{id}', [TimeslotController::class, 'toggleStatus'])->name('toggle.status');
 });
 Route::middleware([RoleMiddleware::class . ':Executive'])->group(function () {
     Route::get('/executive/dashboard', [DashboardController::class, 'showDashboard'])->name('showDashboard');
@@ -97,6 +95,7 @@ Route::get('/preview_general', [ActivityController::class, 'previewGeneral'])->n
 Route::get('/activity/{activity_id}', [ActivityController::class, 'showDetail'])->name('activity_detail');
 Route::get('/form_bookings/activity/{activity_id}', [BookingController::class, 'showBookingForm'])->name('form_bookings.activity');
 Route::post('/InsertBooking', [BookingController::class, 'InsertBooking'])->name('InsertBooking');
+Route::get('/available-timeslots/{activity_id}/{date}', [TimeslotController::class, 'getAvailableTimeslots']);
 Route::post('change_status/{booking_id}', [BookingController::class, 'changeStatus'])->name('changeStatus');
 Route::get('/checkBookingStatus', [BookingController::class, 'checkBookingStatus'])->name('checkBookingStatus');
 Route::post('/checkBookingStatus', [BookingController::class, 'searchBookingByEmail'])->name('searchBookingByEmail');

@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
             'email' => 'admin2@gmail.com',
             'name' => 'นายเทสดี ก้องไกล',
             'password' => 'admin123',
-            'is_approved' => '0',
+            'is_approved' => '1',
         ]);
 
         User::create([

@@ -5,9 +5,9 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
         @if (session('error'))
-        <div class="alert alert-danger mt-5">
-            {{ session('error') }}
-        </div>
+            <div class="alert alert-danger mt-5">
+                {{ session('error') }}
+            </div>
         @endif
         <x-layout bodyClass>
             <div class="row">
@@ -84,64 +84,55 @@
                                                     <form method="POST"
                                                         action="{{ route('superadmin.approve_users', $user->user_id) }}">
                                                         @csrf
-                                                        @if ($user->role_id !== 1)
-                                                            <select name="role_id" class="form-control">
+                                                        <select name="role_id" class="form-control"
+                                                            @if ($user->role->role_name == 'Super Admin') disabled @endif>
+                                                            @if ($user->role->role_name == 'Super Admin')
                                                                 <option value="" disabled selected>
-                                                                    กำหนดสิทธิ์การใช้งาน</option>
-                                                                @foreach ($roles as $role)
-                                                                    <option value="{{ $role->role_id }}">
-                                                                        @switch($role->role_name)
-                                                                            @case('Super Admin')
-                                                                                ผู้ดูแลระบบ
-                                                                            @break
-
-                                                                            @case('Executive')
-                                                                                ผู้บริหาร
-                                                                            @break
-
-                                                                            @case('Admin')
-                                                                                เจ้าหน้าที่
-                                                                            @break
-
-                                                                            @default
-                                                                                รอกำหนดสิทธิ์
-                                                                        @endswitch
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        @else
-                                                            <select name="role_id" class="form-control" disabled>
-                                                                <option value="{{ $user->role_id }}" selected>
-                                                                    @switch($user->role->role_name ?? null)
+                                                                    ผู้ดูแลระบบ
+                                                                </option>
+                                                            @else
+                                                                <option value="" disabled selected>
+                                                                    กำหนดสิทธิ์การใช้งาน
+                                                                </option>
+                                                            @endif
+                                                            @foreach ($roles as $role)
+                                                                <option value="{{ $role->role_id }}">
+                                                                    @switch($role->role_name)
                                                                         @case('Super Admin')
                                                                             ผู้ดูแลระบบ
                                                                         @break
+
                                                                         @case('Executive')
                                                                             ผู้บริหาร
                                                                         @break
+
                                                                         @case('Admin')
                                                                             เจ้าหน้าที่
                                                                         @break
+
                                                                         @default
-                                                                            <span class="text-danger">รอกำหนดสิทธิ์</span>
+                                                                            รอกำหนดสิทธิ์
                                                                     @endswitch
                                                                 </option>
-                                                            </select>
-                                                        @endif
-                                                    </form>
-                                                    </td>
+                                                            @endforeach
+                                                        </select>
+                                                </td>
                                                 <td>
-                                                    @if($user->role->role_name !== 'Super Admin')
+                                                    @if ($user->role->role_name !== 'Super Admin')
                                                         <button type="submit" class="btn btn-success">อนุมัติ</button>
-                                                        <form action="{{ route('superadmin.delete_user', $user->user_id) }}" method="POST" style="display:inline;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger"
-                                                                onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีนี้?')">
-                                                                ลบ
-                                                            </button>
-                                                        </form>                                                        
-                                                        @endif
+                                                    @endif
+                                                    </form>
+                                                    @if ($user->role->role_name !== 'Super Admin')
+                                                    <form action="{{ route('superadmin.delete_user', $user->user_id) }}"
+                                                        method="POST" style="display:inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger"
+                                                            onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีนี้?')">
+                                                            ลบ
+                                                        </button>
+                                                    </form>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach

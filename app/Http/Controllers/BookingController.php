@@ -349,7 +349,7 @@ class BookingController extends Controller
             'zipcode' => ['required', 'regex:/^[0-9]{5}$/'],
             'visitorName' => 'required',
             'visitorEmail' => 'required|email',
-            'tel' => ['required', 'regex:/^[0-9]{10}$/'],
+            'tel' => ['required', 'regex:/^[0-9]{10}$/', 'starts_with:0'],
             'children_qty' => 'nullable|integer|min:0',
             'students_qty' => 'nullable|integer|min:0',
             'adults_qty' => 'nullable|integer|min:0',
@@ -375,10 +375,17 @@ class BookingController extends Controller
             'visitorName.required' => 'กรุณกรอกชื่อผู้ประสานงาน',
             'visitorEmail.required' => 'กรุณกรอกอีเมล์ผู้ประสานงาน',
             'tel.required' => 'กรุณกรอกเบอร์โทรผู้ประสานงาน',
+            'tel.regex' => 'กรุณากรอกเบอร์โทรในรูปแบบที่ถูกต้อง (10 หลัก)',
+            'tel.starts_with' => 'เบอร์โทรต้องขึ้นต้นด้วย 0',
             'at_least_one_quantity.required' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท',
         ];
 
-        $request->validate($rules, $messages);
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
 
         $activity = Activity::find($request->fk_activity_id);
         if (!$activity) {
@@ -684,13 +691,24 @@ class BookingController extends Controller
         if (in_array($request->fk_activity_id, [1, 2, 3])) {
             $rules['fk_timeslots_id'] = 'required|exists:timeslots,timeslots_id';
         }
-        $messages = [
+        $message = [
             'fk_timeslots_id.required' => 'กรุณาเลือกรอบการเข้าชม',
             'booking_date.required' => 'กรุณาระบุวันที่จองเข้าชม',
+            'instituteName.required' => 'กรุณากรอกชื่อหน่วยงาน',
+            'instituteAddress.required' => 'กรุณากรอกที่อยู่หน่วยงาน',
+            'province.required' => 'กรุณากรอกจังหวัด',
+            'district.required' => 'กรุณากรอกเขต/อำเภอ',
+            'subdistrict.required' => 'กรุณากรอกแขวน/ตำบล',
+            'zipcode.required' => 'กรุณกรอกรหัสไปรษณีย์',
+            'visitorName.required' => 'กรุณกรอกชื่อผู้ประสานงาน',
+            'visitorEmail.required' => 'กรุณกรอกอีเมล์ผู้ประสานงาน',
+            'tel.required' => 'กรุณกรอกเบอร์โทรผู้ประสานงาน',
+            'tel.regex' => 'กรุณกรอกเบอร์โทรในรูปแบบที่ถูกต้อง (10 หลัก)',
+            'tel.starts_with' => 'เบอร์โทรต้องขึ้นต้นด้วย 0',
             'at_least_one_quantity.required' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท',
         ];
 
-        $request->validate($rules, $messages);
+        $request->validate($rules, $message);
 
         $activity = Activity::find($request->fk_activity_id);
         if (!$activity) {

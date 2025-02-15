@@ -623,10 +623,82 @@ class BookingController extends Controller
                 $q->where('new_status', $request->status);
             });
         }
-        $histories = $query->get();
+
+        if ($request->filled('daily') && $request->daily == 'true') {
+            $query->whereDate('booking_date', Carbon::today());
+        }
+        
+        if ($request->filled('monthly') && $request->monthly == 'true') {
+            $query->whereMonth('booking_date', Carbon::now()->month)
+                  ->whereYear('booking_date', Carbon::now()->year);
+        }
+
+        if ($request->filled('start_date') && $request->filled('end_date') && !$request->filled('daily') && !$request->filled('monthly') && !$request->filled('fiscal_year')) {
+            $query->whereBetween('booking_date', [$request->start_date, $request->end_date]);
+        }
+        
+
+        if ($request->filled('fiscal_year')) {
+            $currentMonth = Carbon::now()->month;
+            $currentYear  = Carbon::now()->year;
+        
+            if ($currentMonth < 10) {
+                $startFiscalYear = Carbon::createFromDate($currentYear - 1, 10, 1)->startOfDay();
+                $endFiscalYear   = Carbon::createFromDate($currentYear, 9, 30)->endOfDay();
+            } else {
+                $startFiscalYear = Carbon::createFromDate($currentYear, 10, 1)->startOfDay();
+                $endFiscalYear   = Carbon::createFromDate($currentYear + 1, 9, 30)->endOfDay();
+            }
+            
+            $query->whereBetween('booking_date', [$startFiscalYear, $endFiscalYear]);
+        }
+        $histories = $query->paginate(5);
+        $totalBookings = $query->count();
+
+        $totalBookedVisitors = $query->sum(DB::raw("
+        COALESCE(children_qty, 0) +
+        COALESCE(students_qty, 0) +
+        COALESCE(adults_qty, 0) +
+        COALESCE(kid_qty, 0) +
+        COALESCE(disabled_qty, 0) +
+        COALESCE(elderly_qty, 0) +
+        COALESCE(monk_qty, 0)
+    "));
+
+    $totalRevenue = 0;
+    $totalActualVisitors = 0;
+
+    foreach ($histories as $booking) {
+        $prices = [
+            'children_price' => $booking->activity->children_price,
+            'student_price' => $booking->activity->student_price,
+            'adult_price' => $booking->activity->adult_price,
+            'disabled_price' => $booking->activity->disabled_price,
+            'elderly_price' => $booking->activity->elderly_price,
+            'monk_price' => $booking->activity->monk_price,
+        ];
+
+        foreach ($booking->statusChanges as $statusChange) {
+            $totalActualVisitors += $statusChange->actual_children_qty
+                                    + $statusChange->actual_students_qty
+                                    + $statusChange->actual_adults_qty
+                                    + $statusChange->actual_kid_qty
+                                    + $statusChange->actual_disabled_qty
+                                    + $statusChange->actual_elderly_qty
+                                    + $statusChange->actual_monk_qty;
+
+            $totalRevenue += ($statusChange->actual_children_qty * $prices['children_price'])
+                            + ($statusChange->actual_students_qty * $prices['student_price'])
+                            + ($statusChange->actual_adults_qty * $prices['adult_price'])
+                            + ($statusChange->actual_kid_qty * $prices['children_price'])
+                            + ($statusChange->actual_disabled_qty * $prices['disabled_price'])
+                            + ($statusChange->actual_elderly_qty * $prices['elderly_price'])
+                            + ($statusChange->actual_monk_qty * $prices['monk_price']);
+        }
+    }
         $activities = Activity::orderBy('activity_name')->pluck('activity_name', 'activity_id');
 
-        return view('admin.history', compact('histories', 'activities'));
+        return view('admin.history', compact('histories', 'activities', 'totalRevenue', 'totalBookings', 'totalBookedVisitors', 'totalActualVisitors'));
     }
 
     public function showBookingEdit($booking_id)

@@ -9,9 +9,21 @@
         <h1 class="text-center pt-3" style="color: #489085; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);">
             ประวัติการจองทั้งหมด</h1>
             <form action="{{ route('booking.history.all') }}" method="GET" class="mb-4">
+                <button type="submit" name="daily" value="true" class="btn btn-primary">รายวัน</button>
+                <button type="submit" name="monthly" value="true" class="btn btn-secondary">เดือนนี้</button>
+                <button type="submit" name="fiscal_year" value="true" class="btn btn-warning" style="color: white;">ปีงบประมาณ</button>
+                <button type="button" id="toggleDateRange" class="btn btn-success">ช่วงวันที่</button>
+                <!-- ส่วนของฟอร์มเลือกวันที่ (ถูกซ่อนไว้ตอนแรก) -->
+                <div id="dateRangeFields" class="flex gap-2 py-2" style="display: {{ request('start_date') || request('end_date') ? 'block' : 'none' }}; align-items: center;">
+                    <label for="start_date">เริ่ม</label>
+                    <input type="date" name="start_date" id="start_date" class="border p-1 rounded" value="{{ request('start_date') }}">
+                    <label for="end_date">สิ้นสุด</label>
+                    <input type="date" name="end_date" id="end_date" class="border p-1 rounded" value="{{ request('end_date') }}">
+                    <button type="submit" class="btn btn-success">ค้นหา</button>
+                </div>
                 <div class="row g-3 justify-content-center">
                     <!-- เลือกกิจกรรม -->
-                    <div class="col-12 col-md-auto d-flex flex-column flex-md-row align-items-md-center">
+                    <div class="col-12 col-md-auto d-flex flex-column flex-md-row align-items-md-center pt-2">
                         <label for="activity_name" class="me-md-2 mb-0 text-nowrap">กิจกรรม</label>
                         <select name="activity_name" id="activity_name" class="form-control w-100 w-md-auto">
                             <option value="">ทั้งหมด</option>
@@ -32,9 +44,6 @@
                             <option value="3" {{ request('status') == '3' ? 'selected' : '' }}>ยกเลิก</option>
                         </select>
                     </div>
-                     <div class="col-12 col-md-auto text-center">
-                        <button type="submit" class="btn btn-primary w-100 w-md-auto">ค้นหา</button>
-                    </div>
                 </div>
             </form>
             
@@ -46,6 +55,7 @@
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-12">
+                                {{ $histories->links() }}
                                 <div class="table-responsive bg-white shadow-sm rounded">
                                     <table class="table mb-0">
                                         <thead class="thead-white">
@@ -60,10 +70,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($histories as $item)
-                                                @foreach ($item->statusChanges as $statusChange)
+                                            @php
+                                                $cancelledBookings = 0;
+                                            @endphp
+                                            @foreach ($histories->sortBy('booking_date') as $index => $item)
+                                            @foreach ($item->statusChanges as $statusChange)
                                                     <tr>
-                                                        <th scope="row">{{ $item->booking_id }}</th>
+                                                        <th scope="row">{{ $loop->parent->iteration }}</th>
                                                         <td>{{ \Carbon\Carbon::parse($item->booking_date)->locale('th')->translatedFormat('j F') }}
                                                             {{ \Carbon\Carbon::parse($item->booking_date)->year + 543 }}
                                                         </td>
@@ -88,6 +101,9 @@
                                                                 <button type="button" class="status-btn">เข้าชม</button>
                                                             @elseif ($statusChange->new_status == 3)
                                                                 <button type="button" class="btn-except">ยกเลิก</button>
+                                                                @php
+                                                                    $cancelledBookings++;
+                                                                @endphp
                                                             @else
                                                                 {{ $statusChange->new_status }}
                                                             @endif
@@ -112,7 +128,7 @@
                                                                 -
                                                             @endif
                                                         </td>
-                                                        <td>{{ $statusChange->comments ? $statusChange->comments . ' ' : '-' }}
+                                                            <td>{{ $statusChange->comments ? $statusChange->comments . ' ' : '-' }}
                                                         </td>
                                                     </tr>
                                                     <!-- Modal for details -->
@@ -401,8 +417,46 @@
                                                     </div>
                                                 @endforeach
                                             @endforeach
+                                            <tr>
+                                                <th scope="row" colspan="5" class="text-center">รวมยอดรายได้ทั้งหมด</th>
+                                                <td class="font-bold">{{ number_format($totalRevenue, 2) }} บาท</td>
+                                            </tr>
                                         </tbody>
                                     </table>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-3 pt-3">
+                                        <div class="card text-center shadow-sm rounded">
+                                            <div class="card-body">
+                                                <h5 class="font-bold">จำนวนการจองทั้งหมด</h5> 
+                                                <h3 class="text-primary"> {{ $totalBookings }} รายการ</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 pt-3">
+                                        <div class="card text-center shadow-sm rounded">
+                                            <div class="card-body">
+                                                <h5 class="font-bold">จำนวนการจองที่ถูกเลิก</h5> 
+                                                <h3 class="text-danger"> {{ $cancelledBookings }} รายการ</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 pt-3">
+                                        <div class="card text-center shadow-sm rounded">
+                                            <div class="card-body">
+                                                <h5 class="font-bold">ยอดผู้เข้าชมที่จอง</h5> 
+                                                <h3 class="text-warning"> {{ $totalBookedVisitors }} คน</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 pt-3">
+                                        <div class="card text-center shadow-sm rounded">
+                                            <div class="card-body">
+                                                <h5 class="font-bold">ยอดผู้เข้าชมจริง</h5> 
+                                                <h3 class="text-success"> {{ $totalActualVisitors }} คน</h3>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -411,6 +465,34 @@
             </section>
         @endif
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('toggleDateRange').addEventListener('click', function() {
+                let dateRangeFields = document.getElementById('dateRangeFields');
+                if (dateRangeFields.style.display === "none" || dateRangeFields.style.display === "") {
+                    dateRangeFields.style.display = "flex";
+                } else {
+                    dateRangeFields.style.display = "none";
+                }
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('button[name=daily], button[name=monthly], button[name=fiscal_year]').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                let form = this.closest('form');
+                let url = new URL(form.action, window.location.origin);
+                
+                url.searchParams.set(this.name, this.value);
+                url.searchParams.delete('start_date');
+                url.searchParams.delete('end_date');
+
+                window.location.href = url.toString();
+            });
+        });
+    });
+    </script>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 @endsection

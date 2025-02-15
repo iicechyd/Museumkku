@@ -27,40 +27,6 @@ tbody td {
   border: 2px solid #f0fff8;
 }
 
-.btn-success {
-  display: inline-block;
-  padding: 7px 12px;
-  background-color: #18ab56;
-  color: #f0fff8;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 14px;
-  border: 2px solid #18ab56;
-}
-
-.btn-request-outline {
-  display: inline-block;
-  padding: 8px 12px;
-  background-color: transparent;
-  color: #ffbc10;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 14px;
-  border: 1px solid #ffbc10;
-  transition: color 0.3s, background-color 0.3s;
-}
-.btn-request-outline:hover {
-  color: white;
-  background-color: #ffbc10;
-}
-.btn-request-outline:active {
-  color: white;
-  background-color: #ffbc10;
-  border-color: #ffbc10;
-}
-
 .btn-except-outline {
   display: inline-block;
   padding: 8px 12px;
@@ -132,3 +98,130 @@ text-align: center;
   color: #d70202;
   text-decoration: none;
 }
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 0 solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.75rem; }
+  .card > hr {
+    margin-right: 0;
+    margin-left: 0; }
+  .card > .list-group {
+    border-top: inherit;
+    border-bottom: inherit; }
+    .card > .list-group:first-child {
+      border-top-width: 0;
+      border-top-left-radius: 0.75rem;
+      border-top-right-radius: 0.75rem; }
+    .card > .list-group:last-child {
+      border-bottom-width: 0;
+      border-bottom-right-radius: 0.75rem;
+      border-bottom-left-radius: 0.75rem; }
+  .card > .card-header + .list-group,
+  .card > .list-group + .card-footer {
+    border-top: 0; }
+
+.card-body {
+  flex: 1 1 auto;
+  padding: 1rem 1rem; }
+
+.card-title {
+  margin-bottom: 0.5rem; }
+
+.card-subtitle {
+  margin-top: -0.25rem;
+  margin-bottom: 0; }
+
+.card-text:last-child {
+  margin-bottom: 0; }
+
+.card-link + .card-link {
+  margin-left: 1rem; }
+
+.card-header {
+  padding: 0.5rem 1rem;
+  margin-bottom: 0;
+  background-color: #fff;
+  border-bottom: 0 solid rgba(0, 0, 0, 0.125); }
+  .card-header:first-child {
+    border-radius: 0.75rem 0.75rem 0 0; }
+
+.card-footer {
+  padding: 0.5rem 1rem;
+  background-color: #fff;
+  border-top: 0 solid rgba(0, 0, 0, 0.125); }
+  .card-footer:last-child {
+    border-radius: 0 0 0.75rem 0.75rem; }
+
+.card-header-tabs {
+  margin-right: -0.5rem;
+  margin-bottom: -0.5rem;
+  margin-left: -0.5rem;
+  border-bottom: 0; }
+
+.card-header-pills {
+  margin-right: -0.5rem;
+  margin-left: -0.5rem; }
+
+.card-img-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  border-radius: 0.75rem; }
+
+.card-img,
+.card-img-top,
+.card-img-bottom {
+  width: 100%; }
+
+.card-img,
+.card-img-top {
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem; }
+
+.card-img,
+.card-img-bottom {
+  border-bottom-right-radius: 0.75rem;
+  border-bottom-left-radius: 0.75rem; }
+
+.card-group > .card {
+  margin-bottom: 0.75rem; }
+
+@media (min-width: 576px) {
+  .card-group {
+    display: flex;
+    flex-flow: row wrap; }
+    .card-group > .card {
+      flex: 1 0 0%;
+      margin-bottom: 0; }
+      .card-group > .card + .card {
+        margin-left: 0;
+        border-left: 0; }
+      .card-group > .card:not(:last-child) {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0; }
+        .card-group > .card:not(:last-child) .card-img-top,
+        .card-group > .card:not(:last-child) .card-header {
+          border-top-right-radius: 0; }
+        .card-group > .card:not(:last-child) .card-img-bottom,
+        .card-group > .card:not(:last-child) .card-footer {
+          border-bottom-right-radius: 0; }
+      .card-group > .card:not(:first-child) {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0; }
+        .card-group > .card:not(:first-child) .card-img-top,
+        .card-group > .card:not(:first-child) .card-header {
+          border-top-left-radius: 0; }
+        .card-group > .card:not(:first-child) .card-img-bottom,
+        .card-group > .card:not(:first-child) .card-footer {
+          border-bottom-left-radius: 0; } }
+          

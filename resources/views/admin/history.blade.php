@@ -3,6 +3,8 @@
 
     <head>
         <link rel="stylesheet" href="{{ asset('css/history.css') }}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     </head>
 
     <div class="container">
@@ -13,16 +15,13 @@
                 <button type="submit" name="monthly" value="true" class="btn btn-secondary">เดือนนี้</button>
                 <button type="submit" name="fiscal_year" value="true" class="btn btn-warning" style="color: white;">ปีงบประมาณ</button>
                 <button type="button" id="toggleDateRange" class="btn btn-success">ช่วงวันที่</button>
-                <!-- ส่วนของฟอร์มเลือกวันที่ (ถูกซ่อนไว้ตอนแรก) -->
-                <div id="dateRangeFields" class="flex gap-2 py-2" style="display: {{ request('start_date') || request('end_date') ? 'block' : 'none' }}; align-items: center;">
-                    <label for="start_date">เริ่ม</label>
-                    <input type="date" name="start_date" id="start_date" class="border p-1 rounded" value="{{ request('start_date') }}">
-                    <label for="end_date">สิ้นสุด</label>
-                    <input type="date" name="end_date" id="end_date" class="border p-1 rounded" value="{{ request('end_date') }}">
+                <div id="dateRangeFields" class="flex gap-2 py-2 items-center" style="display: {{ request('date_range') ? 'flex' : 'none' }};">
+                    <input type="text" name="date_range" id="date_range" class="border p-1 rounded w-64" value="{{ request('date_range') }}"
+                    placeholder="กรุณาเลือกช่วงวันที่ (วัน/เดือน/ปี)">
                     <button type="submit" class="btn btn-success">ค้นหา</button>
-                </div>
+                </div>                
+                
                 <div class="row g-3 justify-content-center">
-                    <!-- เลือกกิจกรรม -->
                     <div class="col-12 col-md-auto d-flex flex-column flex-md-row align-items-md-center pt-2">
                         <label for="activity_name" class="me-md-2 mb-0 text-nowrap">กิจกรรม</label>
                         <select name="activity_name" id="activity_name" class="form-control w-100 w-md-auto">
@@ -465,34 +464,7 @@
             </section>
         @endif
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('toggleDateRange').addEventListener('click', function() {
-                let dateRangeFields = document.getElementById('dateRangeFields');
-                if (dateRangeFields.style.display === "none" || dateRangeFields.style.display === "") {
-                    dateRangeFields.style.display = "flex";
-                } else {
-                    dateRangeFields.style.display = "none";
-                }
-            });
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('button[name=daily], button[name=monthly], button[name=fiscal_year]').forEach(button => {
-            button.addEventListener('click', function(event) {
-                event.preventDefault();
-                let form = this.closest('form');
-                let url = new URL(form.action, window.location.origin);
-                
-                url.searchParams.set(this.name, this.value);
-                url.searchParams.delete('start_date');
-                url.searchParams.delete('end_date');
-
-                window.location.href = url.toString();
-            });
-        });
-    });
-    </script>
-    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-@endsection
+    <script src="{{ asset('js/history.js') }}"></script>
+    @endsection

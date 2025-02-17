@@ -632,12 +632,17 @@ class BookingController extends Controller
             $query->whereMonth('booking_date', Carbon::now()->month)
                   ->whereYear('booking_date', Carbon::now()->year);
         }
-
-        if ($request->filled('start_date') && $request->filled('end_date') && !$request->filled('daily') && !$request->filled('monthly') && !$request->filled('fiscal_year')) {
-            $query->whereBetween('booking_date', [$request->start_date, $request->end_date]);
+        if ($request->filled('date_range') && !$request->filled('daily') && !$request->filled('monthly') && !$request->filled('fiscal_year')) {
+            $dates = explode(" to ", $request->date_range);
+        
+            if (count($dates) === 2) {
+                $startDate = $dates[0];
+                $endDate = $dates[1];
+        
+                $query->whereBetween('booking_date', [$startDate, $endDate]);
+            }
         }
         
-
         if ($request->filled('fiscal_year')) {
             $currentMonth = Carbon::now()->month;
             $currentYear  = Carbon::now()->year;

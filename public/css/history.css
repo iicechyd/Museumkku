@@ -99,6 +99,7 @@ text-align: center;
   text-decoration: none;
 }
 
+
 .card {
   position: relative;
   display: flex;
@@ -225,3 +226,4 @@ text-align: center;
         .card-group > .card:not(:first-child) .card-footer {
           border-bottom-left-radius: 0; } }
           
+

@@ -11,7 +11,8 @@ class ActivityImages extends Model
     protected $primaryKey = 'image_id';
 
     protected $fillable = [
-        'image_path'
+        'image_path',
+        'activity_id'
     ];
     public function activity()
     {

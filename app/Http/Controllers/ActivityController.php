@@ -120,17 +120,13 @@ class ActivityController extends Controller
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $timestamp = now()->format('Ymd_His');
-                $extension = $image->getClientOriginalExtension();
-                $newFileName = "activity_{$activity->activity_id}_" . uniqid() . '.' . $extension;
-                $imagePath = $image->storeAs('images', $newFileName, 'public');
+                $newFileName = "activity_{$activity->activity_id}_" . uniqid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = $image->storeAs("activity_images/{$activity->activity_id}", $newFileName, 'public');
 
-                DB::table('activity_images')->insert([
-                    'activity_id' => $activity->activity_id,
-                    'image_path' => $imagePath,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                ActivityImages::create([
+                'activity_id' => $activity->activity_id,
+                'image_path' => $imagePath,
+            ]);
             }
         }
         return redirect('/admin/activity_list')->with('success', 'เพิ่มกิจกรรมสำเร็จ');
@@ -158,17 +154,13 @@ class ActivityController extends Controller
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $timestamp = now()->format('Ymd_His');
-                $extension = $image->getClientOriginalExtension();
-                $newFileName = "activity_{$activity->activity_id}_" . uniqid() . '.' . $extension;
-                $imagePath = $image->storeAs('images', $newFileName, 'public');
+                $newFileName = "activity_{$activity->activity_id}_" . uniqid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = $image->storeAs("activity_images/{$activity->activity_id}", $newFileName, 'public');
 
-                DB::table('activity_images')->insert([
-                    'activity_id' => $activity->activity_id,
-                    'image_path' => $imagePath,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                ActivityImages::create([
+                'activity_id' => $activity->activity_id,
+                'image_path' => $imagePath,
+            ]);
             }
         }
         return redirect()->back()->with('success', 'แก้ไขกิจกรรมสำเร็จ');

@@ -29,7 +29,7 @@ body, .table-heading, .table-responsive table {
 }
 
 table {
-    min-width: 130%;
+    min-width: 120%;
 }
 
 th,td {
@@ -104,6 +104,13 @@ td.custom-td {
     overflow: visible;
     text-overflow: clip;
     text-align: left;
+}
+
+.short-cell {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    text-align: center;
 }
 
 .fa-toggle-on {

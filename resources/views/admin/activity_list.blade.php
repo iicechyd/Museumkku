@@ -40,8 +40,7 @@
             @component('components.table_activity_list')
                 @foreach ($requestListActivity as $item)
                     <tr>
-                        <td>{{ $item->activity_id }}</td>
-                        <td class="long-cell">{{ $item->activity_name }}</td>
+                        <td class="short-cell">{{ $item->activity_name }}</td>
                         <td>{{ $item->activityType ? $item->activityType->type_name : 'N/A' }}</td>
                         <td class="long-cell">{{ $item->description }}</td>
                         <td>
@@ -122,7 +121,7 @@
                                             @foreach ($item->images as $image)
                                                 <div class="col-md-4 text-center">
                                                     <div class="pt-3">
-                                                        <img src="{{ Storage::url($image->image_path) }}"
+                                                        <img src="{{ asset('storage/' . $image->image_path) }}"
                                                             class="img-fluid mb-2 image-thumbnail" alt="Activity Image">
                                                         <form
                                                             action="{{ route('deleteImage', ['image_id' => $image->image_id]) }}"

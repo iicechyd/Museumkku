@@ -77,9 +77,7 @@
                             <a href="/admin/activity_list" class="sidebar-link">จัดการรายละเอียดกิจกรรม</a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="{{ url('/admin/timeslots_list') }}" class="sidebar-link">
-                                จัดการรอบการเข้าชม
-                            </a>
+                            <a href="{{ route('showTimeslots') }}" class="sidebar-link">จัดการรอบการเข้าชม</a>
                         </li>
                     </ul>
                 </li>
@@ -87,7 +85,7 @@
                 <div class="sidebar-footer">
                     <a href="{{ route('logout') }}" class="sidebar-link"
                         onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                        document.getElementById('logout-form').submit();">
                         <i class="fa-solid fa-right-from-bracket pe-2"></i>
                         <span>ออกจากระบบ</span>
                     </a>

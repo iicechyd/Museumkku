@@ -2,8 +2,7 @@
     <table>
         <thead>
             <tr>
-                <th data-type="numeric">รายการที่<span class="resize-handle"></span></th>
-                <th data-type="text-short">ชื่อกิจกรรม<span class="resize-handle"></span></th>
+                <th style="width: 220px;" data-type="text-short">ชื่อกิจกรรม<span class="resize-handle"></span></th>
                 <th data-type="text-short">ประเภทกิจกรรม<span class="resize-handle"></span></th>
                 <th data-type="text-long">คำอธิบายกิจกรรม<span class="resize-handle"></span></th>
                 <th data-type="numeric">ความจุคนต่อรอบ<span class="resize-handle"></span></th>

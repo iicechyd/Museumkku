@@ -20,6 +20,16 @@
             {{ session('error') }}
         </div>
     @endif
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
     <div>
         <h1 class="table-heading text-center">รอบการเข้าชม</h1>
         <button type="button" class="btn my-3"

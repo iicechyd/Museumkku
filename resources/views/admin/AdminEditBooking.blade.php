@@ -116,7 +116,7 @@
                             </select>
                             @error('fk_timeslots_id')
                                 <div class="my-2">
-                                    <span class="text-danger">{{ $message }}</span>
+                                    <span class="text-danger">{{ $errors->first('fk_timeslots_id') }}</span>
                                 </div>
                             @enderror
                         </div>
@@ -391,7 +391,7 @@
         window.subactivities = @json($subactivities);
         window.maxSubactivities = {{ $maxSubactivities }};
     </script>
-    <script src="{{ asset('js/visitorEditBooking.js') }}"></script>
+    <script src="{{ asset('js/EditBooking.js') }}"></script>
     <script>
         function goBack() {
             var activityTypeId = {{ $booking->activity->activity_type_id }};

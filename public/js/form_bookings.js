@@ -127,7 +127,7 @@ flatpickr("#booking_date", {
         let activityId = document.getElementById("fk_activity_id").value;
 
         if (formattedDate) {
-            fetch(`/available-timeslots/${activityId}/${formattedDate}`)
+            fetch(`/available-tms/${activityId}/${formattedDate}`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error(

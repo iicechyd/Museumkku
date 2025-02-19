@@ -1,4 +1,33 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("timeslotsForm");
+    const startTimeInput = document.getElementById("start_time");
+    const endTimeInput = document.getElementById("end_time");
+
+    function validateTimes(event) {
+        const startTime = startTimeInput.value;
+        const endTime = endTimeInput.value;
+
+        if (startTime && endTime && startTime >= endTime) {
+            event.preventDefault(); // ป้องกันการส่งฟอร์ม
+            alert("❌ เวลาเริ่มต้นต้องเร็วกกว่าเวลาสิ้นสุด กรุณาเลือกเวลาใหม่!");
+            return false;
+        }
+        return true;
+    }
+
+    // ตรวจสอบทุกครั้งที่ผู้ใช้เปลี่ยนค่า
+    startTimeInput.addEventListener("change", validateTimes);
+    endTimeInput.addEventListener("change", validateTimes);
+
+    // ตรวจสอบก่อนส่งฟอร์ม
+    form.addEventListener("submit", function (event) {
+        if (!validateTimes(event)) {
+            return;
+        }
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".delete-form").forEach(form => {
         form.addEventListener("submit", function (event) {
             event.preventDefault(); 

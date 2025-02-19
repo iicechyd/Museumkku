@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function fetchTimeslots(dateStr) {
         if (!dateStr || !timeslotsSelect) return;
 
-        fetch(`/available-timeslots/${activityId}/${dateStr}`)
+        fetch(`/available-tms/${activityId}/${dateStr}`)
             .then((response) => response.json())
             .then((timeslots) => {
                 if (!timeslotsSelect) return;

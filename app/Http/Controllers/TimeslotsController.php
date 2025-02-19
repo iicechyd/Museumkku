@@ -12,7 +12,7 @@ use App\Models\closedTimeslots;
 use Carbon\Carbon;
 use DateTime;
 
-class TimeslotController extends Controller
+class TimeslotsController extends Controller
 {
     public function showTimeslots()
     {
@@ -33,11 +33,14 @@ class TimeslotController extends Controller
 
     public function InsertTimeslots(Request $request)
     {
+        $messages = [
+            'end_time.after' => 'เวลาสิ้นสุดต้องช้ากว่าเวลาเริ่มต้น กรุณากรอกใหม่อีกครั้ง',
+        ];
         $request->validate([
             'activity_id' => 'required|exists:activities,activity_id',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|after:start_time',
-        ]);
+        ], $messages);
 
         $timeslot = new Timeslots();
         $timeslot->activity_id = $request->input('activity_id');

@@ -34,7 +34,7 @@ class TimeslotsController extends Controller
     public function InsertTimeslots(Request $request)
     {
         $messages = [
-            'end_time.after' => 'เวลาสิ้นสุดต้องช้ากว่าเวลาเริ่มต้น กรุณากรอกใหม่อีกครั้ง',
+            'end_time.after' => 'เวลาสิ้นสุดต้องช้ากว่าเวลาเริ่มต้น กรุณาเลือกเวลาใหม่อีกครั้ง',
         ];
         $request->validate([
             'activity_id' => 'required|exists:activities,activity_id',

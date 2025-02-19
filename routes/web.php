@@ -95,7 +95,7 @@ Route::get('/preview_general', [ActivityController::class, 'previewGeneral'])->n
 Route::get('/activity/{activity_id}', [ActivityController::class, 'showDetail'])->name('activity_detail');
 Route::get('/form_bookings/activity/{activity_id}', [BookingController::class, 'showBookingForm'])->name('form_bookings.activity');
 Route::post('/InsertBooking', [BookingController::class, 'InsertBooking'])->name('InsertBooking');
-Route::get('/available-timeslots/{activity_id}/{date}', [TimeslotsController::class, 'getAvailableTimeslots']);
+Route::get('/available-tms/{activity_id}/{date}', [TimeslotsController::class, 'getAvailableTimeslots']);
 Route::post('change_status/{booking_id}', [BookingController::class, 'changeStatus'])->name('changeStatus');
 Route::get('/checkBookingStatus', [BookingController::class, 'checkBookingStatus'])->name('checkBookingStatus');
 Route::post('/checkBookingStatus', [BookingController::class, 'searchBookingByEmail'])->name('searchBookingByEmail');

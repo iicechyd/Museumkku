@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Models\Verification;
+use App\Models\Visitors;
 
 class AuthController extends Controller
 {
@@ -52,11 +53,26 @@ class AuthController extends Controller
 
         $verification->update(['verified' => true]);
 
-        session(['verification_email' => $verification->email]);
+        $visitor = Visitors::where('visitorEmail', $verification->email)
+            ->with('institute')
+            ->first();
 
+        if ($visitor) {
+            session(['visitor_data' => [
+                'visitorName' => $visitor->visitorName ?? '',
+                'tel' => $visitor->tel ?? '',
+                'instituteName' => $visitor->institute->instituteName ?? '',
+                'instituteAddress' => $visitor->institute->instituteAddress ?? '',
+                'province' => $visitor->institute->province ?? '',
+                'district' => $visitor->institute->district ?? '',
+                'subdistrict' => $visitor->institute->subdistrict ?? '',
+                'zipcode' => $visitor->institute->zipcode ?? '',
+            ]]);
+        }
+        session(['verification_email' => $verification->email]);
         session(['redirect_url' => route('form_bookings.activity', ['activity_id' => 1])]);
 
-    return view('emails.verified');
+        return view('emails.verified');
     }
 
     public function checkVerification($email)

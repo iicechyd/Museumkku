@@ -14,7 +14,6 @@ return new class extends Migration {
             $table->string('visitorName');
             $table->string('visitorEmail')->unique();
             $table->string('tel', 10);
-
             $table->foreign('institute_id')->references('institute_id')->on('institutes')->onDelete('cascade');
             $table->timestamps();
         });

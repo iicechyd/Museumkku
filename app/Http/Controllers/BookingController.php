@@ -541,8 +541,9 @@ class BookingController extends Controller
             $booking->subActivities()->sync($subActivities);
         }
 
-        $editLink = route('bookings.edit', ['booking_id' => $booking->booking_id]);
-        $cancelLink = route('bookings.cancel', ['booking_id' => $booking->booking_id]);
+        // $editLink = route('bookings.edit', ['booking_id' => $booking->booking_id]);
+        // $cancelLink = route('bookings.cancel', ['booking_id' => $booking->booking_id]);
+        session()->forget('visitor_data');
         Mail::to($request->visitorEmail)->send(new BookingPendingMail($booking));
         return back()->with('showSuccessModal', true);
     }
@@ -565,6 +566,21 @@ class BookingController extends Controller
             ->get();
         $hasSubactivities = $subactivities->isNotEmpty();
 
+        $email = session('verification_email');
+        $visitor = Visitors::where('visitorEmail', $email)->with('institute')->first();
+
+        $visitorData = [
+            'visitorName' => $visitor->visitorName ?? '',
+            'visitorEmail' => $visitor->visitorEmail ?? '',
+            'tel' => $visitor->tel ?? '',
+            'instituteName' => $visitor->institute->instituteName ?? '',
+            'instituteAddress' => $visitor->institute->instituteAddress ?? '',
+            'province' => $visitor->institute->province ?? '',
+            'district' => $visitor->institute->district ?? '',
+            'subdistrict' => $visitor->institute->subdistrict ?? '',
+            'zipcode' => $visitor->institute->zipcode ?? '',
+        ];
+
         return view('form_bookings', [
             'activity_id' => $activity_id,
             'selectedActivity' => $selectedActivity,
@@ -572,6 +588,7 @@ class BookingController extends Controller
             'subactivities' => $subactivities,
             'hasSubactivities' => $hasSubactivities,
             'maxSubactivities' => $selectedActivity->max_subactivities,
+            'visitorData' => $visitorData,
         ]);
     }
 

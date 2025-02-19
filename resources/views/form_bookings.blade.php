@@ -138,7 +138,7 @@
                         <label for="instituteName" class="form-label">ชื่อหน่วยงาน</label>
                         <input type="text" class="form-control @error('instituteName') is-invalid @enderror"
                             id="instituteName" name="instituteName" placeholder="กรอกชื่อหน่วยงาน"
-                            value="{{ old('instituteName') }}" required>
+                            value="{{ old('instituteName', $visitorData['instituteName']) }}" required>
                         @error('instituteName')
                             <div class="my-2">
                                 <span class="text-danger">{{ $errors->first('instituteName') }}</span>
@@ -150,7 +150,7 @@
                         <label for="instituteAddress" class="form-label">ที่อยู่หน่วยงาน</label>
                         <input type="text" class="form-control @error('instituteAddress') is-invalid @enderror"
                             id="instituteAddress" name="instituteAddress" placeholder="บ้านเลขที่, ซอย, หมู่, ถนน"
-                            value="{{ old('instituteAddress') }}">
+                            value="{{ old('instituteAddress', $visitorData['instituteAddress']) }}">
                         @error('instituteAddress')
                             <div class="my-2">
                                 <span class="text-danger">{{ $errors->first('instituteAddress') }}</span>
@@ -162,7 +162,7 @@
                         <label for="subdistrict" class="form-label">แขวน/ตำบล</label>
                         <input type="text" class="form-control @error('subdistrict') is-invalid @enderror"
                             id="subdistrict" name="subdistrict" placeholder="กรอกแขวน/ตำบล"
-                            value="{{ old('subdistrict') }}" required>
+                            value="{{ old('subdistrict', $visitorData['subdistrict']) }}" required>
                         @error('subdistrict')
                             <div class="my-2">
                                 <span class="text-danger">{{ $errors->first('subdistrict') }}</span>
@@ -173,7 +173,7 @@
                     <div class="col-md-2">
                         <label for="district" class="form-label">เขต/อำเภอ</label>
                         <input type="text" class="form-control @error('district') is-invalid @enderror" id="district"
-                            name="district" placeholder="กรอกเขต/อำเภอ" value="{{ old('district') }}" required>
+                            name="district" placeholder="กรอกเขต/อำเภอ" value="{{ old('district', $visitorData['district']) }}" required>
                         @error('district')
                             <div class="my-2">
                                 <span class="text-danger">{{ $errors->first('district') }}</span>
@@ -184,7 +184,7 @@
                     <div class="col-md-2">
                         <label for="province" class="form-label">จังหวัด</label>
                         <input type="text" class="form-control @error('province') is-invalid @enderror" id="province"
-                            name="province" placeholder="กรอกจังหวัด" value="{{ old('province') }}" required>
+                            name="province" placeholder="กรอกจังหวัด" value="{{ old('province', $visitorData['province']) }}" required>
                         @error('inputProvince')
                             <div class="my-2">
                                 <span class="text-danger">{{ $errors->first('province') }}</span>
@@ -195,7 +195,7 @@
                     <div class="col-md-2">
                         <label for="zipcode" class="form-label">รหัสไปรษณีย์</label>
                         <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode"
-                            name="zipcode" placeholder="กรอกรหัสไปรษณีย์" value="{{ old('zipcode') }}" pattern="\d{5}"
+                            name="zipcode" placeholder="กรอกรหัสไปรษณีย์" value="{{ old('zipcode', $visitorData['zipcode']) }}" pattern="\d{5}"
                             maxlength="5" minlength="5" inputmode="numeric" required>
                         @error('zipcode')
                             <div class="my-2">
@@ -208,7 +208,7 @@
                         <label for="visitorName" class="form-label">ชื่อผู้ประสานงาน</label>
                         <input type="text" class="form-control @error('visitorName') is-invalid @enderror"
                             id="visitorName" name="visitorName" placeholder="ชื่อ-นามสกุล"
-                            value="{{ old('visitorName') }}">
+                            value="{{ old('visitorName', $visitorData['visitorName']) }}">
                         @error('visitorName')
                             <div class="my-2">
                                 <span class="text-danger">{{ $errors->first('visitorName') }}</span>
@@ -231,9 +231,8 @@
                     <div class="col-md-2">
                         <label for="tel" class="form-label">เบอร์โทรผู้ประสานงาน</label>
                         <input type="text" class="form-control @error('tel') is-invalid @enderror" id="tel"
-                            name="tel" placeholder="หมายเลขโทรศัพท์" value="{{ old('tel') }}" pattern="\d{10}"
-                            maxlength="10" minlength="10" inputmode="numeric" title="กรุณากรอกเบอร์โทร 10 หลัก" required
-                            autocomplete="tel">
+                            name="tel" placeholder="หมายเลขโทรศัพท์" value="{{ old('tel', $visitorData['tel']) }}" 
+                            pattern="\d{10}" maxlength="10" minlength="10" inputmode="numeric" title="กรุณากรอกเบอร์โทร 10 หลัก" required autocomplete="tel">
                         @error('tel')
                             <div class="my-2">
                                 <span class="text-danger">{{ $errors->first('tel') }}</span>

@@ -35,6 +35,11 @@
                 {{ session('error') }}
             </div>
         @endif
+        @if (session('warning'))
+            <div class="alert alert-warning mt-5">
+                {{ session('warning') }}
+            </div>
+        @endif
         @if (session('showSuccessModal'))
             <script>
                 window.addEventListener('DOMContentLoaded', function() {
@@ -130,9 +135,9 @@
                                 </div>
                             @enderror
                         </div>
-                        @else
-                            <div class="w-100"></div>
-                        @endif
+                    @else
+                        <div class="w-100"></div>
+                    @endif
 
                     <div class="col-md-2">
                         <label for="instituteName" class="form-label">ชื่อหน่วยงาน</label>
@@ -173,7 +178,8 @@
                     <div class="col-md-2">
                         <label for="district" class="form-label">เขต/อำเภอ</label>
                         <input type="text" class="form-control @error('district') is-invalid @enderror" id="district"
-                            name="district" placeholder="กรอกเขต/อำเภอ" value="{{ old('district', $visitorData['district']) }}" required>
+                            name="district" placeholder="กรอกเขต/อำเภอ"
+                            value="{{ old('district', $visitorData['district']) }}" required>
                         @error('district')
                             <div class="my-2">
                                 <span class="text-danger">{{ $errors->first('district') }}</span>
@@ -184,7 +190,8 @@
                     <div class="col-md-2">
                         <label for="province" class="form-label">จังหวัด</label>
                         <input type="text" class="form-control @error('province') is-invalid @enderror" id="province"
-                            name="province" placeholder="กรอกจังหวัด" value="{{ old('province', $visitorData['province']) }}" required>
+                            name="province" placeholder="กรอกจังหวัด"
+                            value="{{ old('province', $visitorData['province']) }}" required>
                         @error('inputProvince')
                             <div class="my-2">
                                 <span class="text-danger">{{ $errors->first('province') }}</span>
@@ -195,8 +202,9 @@
                     <div class="col-md-2">
                         <label for="zipcode" class="form-label">รหัสไปรษณีย์</label>
                         <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode"
-                            name="zipcode" placeholder="กรอกรหัสไปรษณีย์" value="{{ old('zipcode', $visitorData['zipcode']) }}" pattern="\d{5}"
-                            maxlength="5" minlength="5" inputmode="numeric" required>
+                            name="zipcode" placeholder="กรอกรหัสไปรษณีย์"
+                            value="{{ old('zipcode', $visitorData['zipcode']) }}" pattern="\d{5}" maxlength="5"
+                            minlength="5" inputmode="numeric" required>
                         @error('zipcode')
                             <div class="my-2">
                                 <span class="text-danger">{{ $errors->first('zipcode') }}</span>
@@ -231,8 +239,9 @@
                     <div class="col-md-2">
                         <label for="tel" class="form-label">เบอร์โทรผู้ประสานงาน</label>
                         <input type="text" class="form-control @error('tel') is-invalid @enderror" id="tel"
-                            name="tel" placeholder="หมายเลขโทรศัพท์" value="{{ old('tel', $visitorData['tel']) }}" 
-                            pattern="\d{10}" maxlength="10" minlength="10" inputmode="numeric" title="กรุณากรอกเบอร์โทร 10 หลัก" required autocomplete="tel">
+                            name="tel" placeholder="หมายเลขโทรศัพท์" value="{{ old('tel', $visitorData['tel']) }}"
+                            pattern="\d{10}" maxlength="10" minlength="10" inputmode="numeric"
+                            title="กรุณากรอกเบอร์โทร 10 หลัก" required autocomplete="tel">
                         @error('tel')
                             <div class="my-2">
                                 <span class="text-danger">{{ $errors->first('tel') }}</span>
@@ -353,8 +362,7 @@
                         value="{{ $selectedActivity->student_price }}">
                     <input type="hidden" id="adult_price" name="adult_price"
                         value="{{ $selectedActivity->adult_price }}">
-                    <input type="hidden" id="kid_price" name="kid_price"
-                        value="{{ $selectedActivity->kid_price }}">
+                    <input type="hidden" id="kid_price" name="kid_price" value="{{ $selectedActivity->kid_price }}">
                     <input type="hidden" id="disabled_price" name="disabled_price"
                         value="{{ $selectedActivity->disabled_price }}">
                     <input type="hidden" id="elderly_price" name="elderly_price"

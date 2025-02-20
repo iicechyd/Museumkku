@@ -386,7 +386,6 @@ class BookingController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-
         $activity = Activity::find($request->fk_activity_id);
         if (!$activity) {
             return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
@@ -500,6 +499,23 @@ class BookingController extends Controller
             }
         }
 
+        $formattedDate = Carbon::createFromFormat('d/m/Y', $request->input('booking_date'))->format('Y-m-d');
+        $visitor = Visitors::where('visitorEmail', $request->input('visitorEmail'))->first();
+
+        if (!$visitor) {
+            return back()->with('error', 'ไม่พบข้อมูลอีเมลที่ใช้จอง');
+        }
+
+        $existingBooking = Bookings::where('activity_id', $request->input('fk_activity_id'))
+            ->where('booking_date', $formattedDate)
+            ->where('timeslots_id', $request->input('fk_timeslots_id') ?? null)
+            ->where('visitor_id', $visitor->visitor_id)
+            ->exists();
+
+        if ($existingBooking) {
+            return back()->with('warning', 'พบข้อมูลการจองซ้ำในระบบ กรุณาตรวจสอบข้อมูลการจองในอีเมลของคุณ');
+        }
+
         $institute = Institutes::firstOrCreate([
             'instituteName' => $request->instituteName,
             'instituteAddress' => $request->instituteAddress,
@@ -540,9 +556,6 @@ class BookingController extends Controller
             $subActivities = $request->input('sub_activity_id');
             $booking->subActivities()->sync($subActivities);
         }
-
-        // $editLink = route('bookings.edit', ['booking_id' => $booking->booking_id]);
-        // $cancelLink = route('bookings.cancel', ['booking_id' => $booking->booking_id]);
         session()->forget('visitor_data');
         Mail::to($request->visitorEmail)->send(new BookingPendingMail($booking));
         return back()->with('showSuccessModal', true);
@@ -644,26 +657,26 @@ class BookingController extends Controller
         if ($request->filled('daily') && $request->daily == 'true') {
             $query->whereDate('booking_date', Carbon::today());
         }
-        
+
         if ($request->filled('monthly') && $request->monthly == 'true') {
             $query->whereMonth('booking_date', Carbon::now()->month)
-                  ->whereYear('booking_date', Carbon::now()->year);
+                ->whereYear('booking_date', Carbon::now()->year);
         }
         if ($request->filled('date_range') && !$request->filled('daily') && !$request->filled('monthly') && !$request->filled('fiscal_year')) {
             $dates = explode(" to ", $request->date_range);
-        
+
             if (count($dates) === 2) {
                 $startDate = $dates[0];
                 $endDate = $dates[1];
-        
+
                 $query->whereBetween('booking_date', [$startDate, $endDate]);
             }
         }
-        
+
         if ($request->filled('fiscal_year')) {
             $currentMonth = Carbon::now()->month;
             $currentYear  = Carbon::now()->year;
-        
+
             if ($currentMonth < 10) {
                 $startFiscalYear = Carbon::createFromDate($currentYear - 1, 10, 1)->startOfDay();
                 $endFiscalYear   = Carbon::createFromDate($currentYear, 9, 30)->endOfDay();
@@ -671,7 +684,7 @@ class BookingController extends Controller
                 $startFiscalYear = Carbon::createFromDate($currentYear, 10, 1)->startOfDay();
                 $endFiscalYear   = Carbon::createFromDate($currentYear + 1, 9, 30)->endOfDay();
             }
-            
+
             $query->whereBetween('booking_date', [$startFiscalYear, $endFiscalYear]);
         }
         $histories = $query->paginate(5);
@@ -687,37 +700,37 @@ class BookingController extends Controller
         COALESCE(monk_qty, 0)
     "));
 
-    $totalRevenue = 0;
-    $totalActualVisitors = 0;
+        $totalRevenue = 0;
+        $totalActualVisitors = 0;
 
-    foreach ($histories as $booking) {
-        $prices = [
-            'children_price' => $booking->activity->children_price,
-            'student_price' => $booking->activity->student_price,
-            'adult_price' => $booking->activity->adult_price,
-            'disabled_price' => $booking->activity->disabled_price,
-            'elderly_price' => $booking->activity->elderly_price,
-            'monk_price' => $booking->activity->monk_price,
-        ];
+        foreach ($histories as $booking) {
+            $prices = [
+                'children_price' => $booking->activity->children_price,
+                'student_price' => $booking->activity->student_price,
+                'adult_price' => $booking->activity->adult_price,
+                'disabled_price' => $booking->activity->disabled_price,
+                'elderly_price' => $booking->activity->elderly_price,
+                'monk_price' => $booking->activity->monk_price,
+            ];
 
-        foreach ($booking->statusChanges as $statusChange) {
-            $totalActualVisitors += $statusChange->actual_children_qty
-                                    + $statusChange->actual_students_qty
-                                    + $statusChange->actual_adults_qty
-                                    + $statusChange->actual_kid_qty
-                                    + $statusChange->actual_disabled_qty
-                                    + $statusChange->actual_elderly_qty
-                                    + $statusChange->actual_monk_qty;
+            foreach ($booking->statusChanges as $statusChange) {
+                $totalActualVisitors += $statusChange->actual_children_qty
+                    + $statusChange->actual_students_qty
+                    + $statusChange->actual_adults_qty
+                    + $statusChange->actual_kid_qty
+                    + $statusChange->actual_disabled_qty
+                    + $statusChange->actual_elderly_qty
+                    + $statusChange->actual_monk_qty;
 
-            $totalRevenue += ($statusChange->actual_children_qty * $prices['children_price'])
-                            + ($statusChange->actual_students_qty * $prices['student_price'])
-                            + ($statusChange->actual_adults_qty * $prices['adult_price'])
-                            + ($statusChange->actual_kid_qty * $prices['children_price'])
-                            + ($statusChange->actual_disabled_qty * $prices['disabled_price'])
-                            + ($statusChange->actual_elderly_qty * $prices['elderly_price'])
-                            + ($statusChange->actual_monk_qty * $prices['monk_price']);
+                $totalRevenue += ($statusChange->actual_children_qty * $prices['children_price'])
+                    + ($statusChange->actual_students_qty * $prices['student_price'])
+                    + ($statusChange->actual_adults_qty * $prices['adult_price'])
+                    + ($statusChange->actual_kid_qty * $prices['children_price'])
+                    + ($statusChange->actual_disabled_qty * $prices['disabled_price'])
+                    + ($statusChange->actual_elderly_qty * $prices['elderly_price'])
+                    + ($statusChange->actual_monk_qty * $prices['monk_price']);
+            }
         }
-    }
         $activities = Activity::orderBy('activity_name')->pluck('activity_name', 'activity_id');
 
         return view('admin.history', compact('histories', 'activities', 'totalRevenue', 'totalBookings', 'totalBookedVisitors', 'totalActualVisitors'));

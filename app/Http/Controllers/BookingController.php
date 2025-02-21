@@ -507,6 +507,7 @@ class BookingController extends Controller
                 ->where('booking_date', $formattedDate)
                 ->where('timeslots_id', $request->input('fk_timeslots_id') ?? null)
                 ->where('visitor_id', $visitor->visitor_id)
+                ->whereIn('status', [0, 1])
                 ->exists();
 
             if ($existingBooking) {

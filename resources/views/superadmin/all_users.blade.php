@@ -54,7 +54,7 @@
                                                 </td>
                                                 <td>
                                                     <p class="text-xs font-weight-bold mb-0">
-                                                        @isset($user->role)
+                                                        @if($user->role)
                                                             @switch($user->role->role_name)
                                                                 @case('Super Admin')
                                                                     ผู้ดูแลระบบ
@@ -73,7 +73,7 @@
                                                             @endswitch
                                                         @else
                                                             <span style="color: red;">รอกำหนดสิทธิ์</span>
-                                                        @endisset
+                                                        @endif
                                                     </p>
                                                 </td>
                                                 <td class="align-middle text-center text-sm">
@@ -85,8 +85,8 @@
                                                         action="{{ route('superadmin.approve_users', $user->user_id) }}">
                                                         @csrf
                                                         <select name="role_id" class="form-control"
-                                                            @if ($user->role->role_name == 'Super Admin') disabled @endif>
-                                                            @if ($user->role->role_name == 'Super Admin')
+                                                        @if ($user->role && $user->role->role_name == 'Super Admin') disabled @endif>
+                                                            @if ($user->role && $user->role->role_name == 'Super Admin')
                                                                 <option value="" disabled selected>
                                                                     ผู้ดูแลระบบ
                                                                 </option>
@@ -118,11 +118,13 @@
                                                         </select>
                                                 </td>
                                                 <td>
-                                                    @if ($user->role->role_name !== 'Super Admin')
+                                                    @if ($user->role && $user->role->role_name !== 'Super Admin')
+                                                    <button type="submit" class="btn btn-success">อนุมัติ</button>
+                                                    @elseif (!$user->role)
                                                         <button type="submit" class="btn btn-success">อนุมัติ</button>
                                                     @endif
                                                     </form>
-                                                    @if ($user->role->role_name !== 'Super Admin')
+                                                    @if ($user->role && $user->role->role_name !== 'Super Admin')
                                                     <form action="{{ route('superadmin.delete_user', $user->user_id) }}"
                                                         method="POST" style="display:inline;">
                                                         @csrf
@@ -132,6 +134,14 @@
                                                             ลบ
                                                         </button>
                                                     </form>
+                                                    @elseif (!$user->role)
+                                                        <form action="{{ route('superadmin.delete_user', $user->user_id) }}" method="POST" style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger" onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีนี้?')">
+                                                                ลบ
+                                                            </button>
+                                                        </form>
                                                     @endif
                                                 </td>
                                             </tr>

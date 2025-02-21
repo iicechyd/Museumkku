@@ -17,9 +17,9 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="mb-5">
-                                        <h2 class="h3">Password Reset</h2>
+                                        <h2 class="h3">เปลี่ยนรหัสผ่าน</h2>
                                         <h3 class="fs-6 fw-normal text-secondary m-0">
-                                            กรุณากรอกอีเมลที่เชื่อมโยงกับบัญชีผู้ใช้งานของคุณเพื่อกู้คืนรหัสผ่าน</h3>
+                                            กรุณากรอกอีเมลที่เชื่อมโยงกับบัญชีผู้ใช้งานของคุณเพื่อเปลี่ยนรหัสผ่าน</h3>
                                     </div>
                                 </div>
                             </div>
@@ -30,7 +30,7 @@
                                         <input id="email" type="email"
                                             class="form-control @error('email') is-invalid @enderror" name="email"
                                             value="{{ old('email') }}" required autocomplete="email" autofocus
-                                            placeholder="name@example.com">
+                                            placeholder="กรุณากรอกอีเมลของคุณ">
                                         @error('email')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -49,9 +49,9 @@
                                 <div class="col-12">
                                     <hr class="mt-5 mb-4 border-secondary-subtle">
                                     <div class="d-flex gap-2 gap-md-4 flex-column flex-md-row justify-content-md-end">
-                                        <a href="{{ route('login') }}" class="link-secondary text-decoration-none">Login</a>
+                                        <a href="{{ route('login') }}" class="link-secondary text-decoration-none">เข้าสู่ระบบ</a>
                                         <a href="{{ route('register') }}"
-                                            class="link-secondary text-decoration-none">Register</a>
+                                            class="link-secondary text-decoration-none">สมัครสมาชิก</a>
                                     </div>
                                 </div>
                             </div>

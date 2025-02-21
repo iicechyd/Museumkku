@@ -43,6 +43,16 @@ class BookingPendingMail extends Mailable
                 'editLink' => $this->editLink,
                 'cancelLink' => $this->cancelLink,
                 'totalPrice' => $this->totalPrice,
+            ])
+            ->attach(public_path('img/clock_icon.png'), [
+                'as' => 'clock_icon.png',
+                'mime' => 'image/png',
+                'inline' => true,
+            ])
+            ->attach(public_path('img/phone_icon.png'), [
+                'as' => 'phone_icon.png',
+                'mime' => 'image/png',
+                'inline' => true,
             ]);
     }
 }

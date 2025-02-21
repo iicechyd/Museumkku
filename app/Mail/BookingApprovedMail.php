@@ -45,6 +45,16 @@ class BookingApprovedMail extends Mailable
                         'uploadLink' => $this->uploadLink,
                         'cancelLink' => $this->cancelLink,
                         'totalPrice' => $this->totalPrice,
+                    ])
+                    ->attach(public_path('img/approved_icon.png'), [
+                        'as' => 'approved_icon.png',
+                        'mime' => 'image/png',
+                        'inline' => true,
+                    ])
+                    ->attach(public_path('img/phone_icon.png'), [
+                        'as' => 'phone_icon.png',
+                        'mime' => 'image/png',
+                        'inline' => true,
                     ]);
     }
 }

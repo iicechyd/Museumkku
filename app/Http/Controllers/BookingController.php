@@ -502,20 +502,17 @@ class BookingController extends Controller
         $formattedDate = Carbon::createFromFormat('d/m/Y', $request->input('booking_date'))->format('Y-m-d');
         $visitor = Visitors::where('visitorEmail', $request->input('visitorEmail'))->first();
 
-        if (!$visitor) {
-            return back()->with('error', 'ไม่พบข้อมูลอีเมลที่ใช้จอง');
+        if ($visitor) {
+            $existingBooking = Bookings::where('activity_id', $request->input('fk_activity_id'))
+                ->where('booking_date', $formattedDate)
+                ->where('timeslots_id', $request->input('fk_timeslots_id') ?? null)
+                ->where('visitor_id', $visitor->visitor_id)
+                ->exists();
+
+            if ($existingBooking) {
+                return back()->with('warning', 'พบข้อมูลการจองซ้ำในระบบ กรุณาตรวจสอบข้อมูลการจองในอีเมลของคุณ');
+            }
         }
-
-        $existingBooking = Bookings::where('activity_id', $request->input('fk_activity_id'))
-            ->where('booking_date', $formattedDate)
-            ->where('timeslots_id', $request->input('fk_timeslots_id') ?? null)
-            ->where('visitor_id', $visitor->visitor_id)
-            ->exists();
-
-        if ($existingBooking) {
-            return back()->with('warning', 'พบข้อมูลการจองซ้ำในระบบ กรุณาตรวจสอบข้อมูลการจองในอีเมลของคุณ');
-        }
-
         $institute = Institutes::firstOrCreate([
             'instituteName' => $request->instituteName,
             'instituteAddress' => $request->instituteAddress,

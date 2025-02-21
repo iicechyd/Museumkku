@@ -42,7 +42,16 @@ class BookingCancelledMail extends Mailable
                         'booking' => $this->booking,
                         'detailsLink' => $this->detailsLink,
                         'totalPrice' => $this->totalPrice,
-
+                    ])
+                    ->attach(public_path('img/cancel_icon.png'), [
+                        'as' => 'cancel_icon.png',
+                        'mime' => 'image/png',
+                        'inline' => true,
+                    ])
+                    ->attach(public_path('img/phone_icon.png'), [
+                        'as' => 'phone_icon.png',
+                        'mime' => 'image/png',
+                        'inline' => true,
                     ]);
     }
 }

@@ -10,7 +10,7 @@
 
 <body style="font-family: Noto Sans Thai, sans-serif; background-color: #f9f9f9; padding: 20px; text-align: center;">
     <div class="container">
-        <h2>การจองของท่านได้รับการ<span class="status" style="color: green;">อนุมัติการจอง</span>
+        <h2>การจองของท่านได้รับการ<span class="status" style="color: #12c48f;">อนุมัติการจอง</span>
         </h2>
         <p>เรียน <span class="highlight"></span>{{ $booking->visitor->visitorName }}</p>
         <p>ขอแจ้งให้ท่านทราบว่าการจองเข้าชมพิพิธภัณฑ์ของท่านได้รับการอนุมัติแล้ว</p>
@@ -23,8 +23,8 @@
                     style="background: #ffffff; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);">
                     <tr>
                         <td>
-                            {{-- <img src="{{ asset('img/clock_icon.png') }}">--}}
-                            <h2 style="margin: 10px 0; font-size: 24px; color: green;">อนุมัติ</h2>
+                            <img src="cid:approved_icon.png" alt="ApprovedIcon">         
+                            <h2 style="margin: 10px 0; font-size: 24px; color: #12c48f;">อนุมัติ</h2>
                             โปรดแนบเอกสารใบขอความอนุเคราะห์<br>โดยคลิกที่ปุ่มด้านล่าง
                             <br>
                             <a href="{{ $uploadLink }}"
@@ -49,7 +49,7 @@
                                 </tr>
                             </table>
                             <p>หากมีข้อสงสัยใดๆ โปรดติดต่อเจ้าหน้าที่</p>
-                            {{-- <img src="{{ asset('img/phone_icon.png') }}">--}}
+                            <img src="cid:phone_icon.png" alt="PhoneIcon">         
                             <span>094-278-4222, 0-4300-9700 ต่อ 45596</span>
                             <p style="color: #489085;">
                                 <strong>ศูนย์พิพิธภัณฑ์<span style="color: #E6A732;">และแหล่งเรียนรู้ตลอดชีวิต</span>

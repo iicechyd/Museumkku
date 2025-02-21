@@ -23,13 +23,13 @@
                     style="background: #ffffff; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);">
                     <tr>
                         <td>
-                            {{-- <img src="{{ asset('img/clock_icon.png') }}">--}}
-                            <h2 style="margin: 20px 0; font-size: 24px; color: red;">ยกเลิก</h2>
+                            <img src="cid:cancel_icon.png" alt="CancelIcon" width="50" height="50" style="margin-left: 2px;">
+                            <h2 style="margin: 20px 0; font-size: 24px; color: red;">ยกเลิกการจอง</h2>
                             <a href="{{ $detailsLink }}"
                                 style="color: red; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-size: 16px; border: 2px solid red; display: inline-block;">
                                 รายละเอียดการจอง</a>
                             <p>หากมีข้อสงสัยใดๆ โปรดติดต่อเจ้าหน้าที่</p>
-                            {{-- <img src="{{ asset('img/phone_icon.png') }}">--}}
+                            <img src="cid:phone_icon.png" alt="PhoneIcon">         
                             <span>094-278-4222, 0-4300-9700 ต่อ 45596</span>
                             <p style="color: #489085;">
                                 <strong>ศูนย์พิพิธภัณฑ์<span style="color: #E6A732;">และแหล่งเรียนรู้ตลอดชีวิต</span>

@@ -64,7 +64,7 @@
                 @elseif ($booking->status == 1)
                     <h1 style="color: #489085;">อนุมัติการจอง</h1>
                 @elseif ($booking->status == 3)
-                    <h1 style="color: #C06628;">ยกเลิกการจอง</h1>
+                    <h1 style="color: #ff0000;">ยกเลิกการจอง</h1>
                 @endif
             </div>
         </div>

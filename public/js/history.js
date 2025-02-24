@@ -19,7 +19,7 @@ flatpickr("#date_range", {
     let dateRangeFields = document.getElementById('dateRangeFields');
     let toggleButton = document.getElementById('toggleDateRange');
 
-    // เปิด-ปิดฟิลด์ช่วงวันที่
+    // เก็บค่าการแสดงผลของช่วงวันที่ใน localStorage
     if (localStorage.getItem('dateRangeVisible') === 'true') {
         dateRangeFields.style.display = "flex";
     }
@@ -34,21 +34,28 @@ flatpickr("#date_range", {
         }
     });
 
-    // ล้างค่า date_range เมื่อกดปุ่มรายวัน, เดือนนี้, ปีงบประมาณ
-    document.querySelectorAll('button[name=daily], button[name=monthly], button[name=fiscal_year]').forEach(button => {
+    // ดัก event ของปุ่มรายวัน, เดือนนี้, ปีงบประมาณ
+    document.querySelectorAll('.filter-btn').forEach(button => {
         button.addEventListener('click', function (event) {
             event.preventDefault();
-            dateRangeInput.value = ''; // ล้างค่า
-            localStorage.removeItem('dateRangeVisible'); // ปิดช่วงวันที่
-            dateRangeFields.style.display = "none"; // ซ่อนช่วงวันที่
 
-            let form = this.closest('form');
+            let form = document.getElementById('filterForm');
             let url = new URL(form.action, window.location.origin);
 
-            url.searchParams.set(this.name, this.value);
-            url.searchParams.delete('date_range'); // ลบค่าจาก URL
+            // ดึงค่าที่เลือกไว้จาก select box
+            let activityName = document.getElementById("activity_name").value;
+            let status = document.getElementById("status").value;
+
+            // ล้างค่า date_range และบันทึกค่าปุ่มที่กด
+            url.searchParams.delete('date_range');
+            url.searchParams.set(this.getAttribute('data-filter'), 'true');
+
+            // เพิ่มค่าฟิลเตอร์ที่เลือกไว้
+            if (activityName) url.searchParams.set('activity_name', activityName);
+            if (status) url.searchParams.set('status', status);
 
             window.location.href = url.toString();
         });
     });
 });
+

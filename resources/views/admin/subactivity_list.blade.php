@@ -125,7 +125,7 @@
                         <div class="form-group">
                             <label for="sub_activity_name">ชื่อหลักสูตร</label>
                             <input type="text" class="form-control" id="sub_activity_name" name="sub_activity_name"
-                                required>
+                            placeholder="กรุณากรอกชื่อหลักสูตร" required>
                         </div>
                         <div class="pt-2">
                             <button type="submit" class="btn btn-primary">บันทึก</button>

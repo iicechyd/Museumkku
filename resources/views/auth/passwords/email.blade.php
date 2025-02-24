@@ -40,7 +40,7 @@
                                     <div class="col-12">
                                         <div class="d-grid">
                                             <button class="btn bsb-btn-xl" style="background-color: #E6A732; color: #fff;"
-                                                type="submit">เปลี่ยนรหัสผ่าน</button>
+                                                type="submit">ส่งลิงค์ยืนยัน</button>
                                         </div>
                                     </div>
                                 </div>

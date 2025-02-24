@@ -92,7 +92,7 @@
                                         เด็ก ( 3 ขวบ - ประถม ) :
                                         {{ $activity->children_price > 0 ? $activity->children_price . ' บาท/คน' : 'ฟรี' }}
                                         |
-                                        นักเรียนมัธยม/นักศึกษา :
+                                        มัธยม/นักศึกษา :
                                         {{ $activity->student_price > 0 ? $activity->student_price . ' บาท/คน' : 'ฟรี' }} |
                                         ผู้ใหญ่ :
                                         {{ $activity->adult_price > 0 ? $activity->adult_price . ' บาท/คน' : 'ฟรี' }}

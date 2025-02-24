@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>เปลี่ยนรหัสผ่านบัญชีผู้ใช้งาน</title>
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link
         rel="stylesheet"href="https://unpkg.com/bs-brain@2.0.4/components/password-resets/password-reset-5/assets/css/password-reset-5.css">
@@ -29,7 +28,7 @@
                             <div class="mb-4">
                                 <h2 class="h3">Password Reset</h2>
                                 <h3 class="fs-6 fw-normal text-secondary m-0">
-                                    กรุณากรอกอีเมลที่เชื่อมโยงกับบัญชีผู้ใช้งานของคุณเพื่อเปลี่ยนรหัสผ่าน</h3>
+                                    กรุณาดำเนินการกรอกรหัสผ่านใหม่เพื่อใช้งานในระบบ</h3>
                             </div>
                         </div>
                     </div>
@@ -41,11 +40,10 @@
                                 Email
                                 <input id="email" type="email"
                                     class="form-control @error('email') is-invalid @enderror" name="email"
-                                    value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus>
+                                    value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus readonly>
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+
                                 @enderror
                             </div>
                             <div>

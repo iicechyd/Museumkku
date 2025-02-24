@@ -110,7 +110,7 @@
             @endif
             @if ($booking->students_qty > 0)
                 <tr>
-                    <td>นร / นศ</td>
+                    <td>มัธยม / นักศึกษา</td>
                     <td>{{ $booking->students_qty }} คน</td>
                     <td>{{ number_format($booking->activity->student_price, 2) }} บาท</td>
                     <td>{{ number_format($booking->students_qty * $booking->activity->student_price, 2) }} บาท</td>

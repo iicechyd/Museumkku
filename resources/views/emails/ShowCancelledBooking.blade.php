@@ -57,7 +57,7 @@
         @endcomponent
         <!-- Modal สำหรับแสดงรายละเอียด -->
         <div class="modal fade" id="detailsModal_{{ $booking->booking_id }}" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            aria-labelledby="exampleModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -151,7 +151,7 @@
 
     <!-- Modal สำหรับยกเลิกการจอง -->
     <div class="modal fade" id="cancelModal_{{ $booking->booking_id }}" tabindex="-1" role="dialog"
-        aria-labelledby="cancelModalLabel" aria-hidden="true" aria-modal="true">
+        aria-labelledby="cancelModalLabel" aria-modal="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header d-flex justify-content-between">

@@ -135,8 +135,7 @@
                                                     </tr>
                                                     <!-- Modal for details -->
                                                     <div class="modal fade" id="detailsModal_{{ $item->booking_id }}"
-                                                        tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                                        aria-hidden="true">
+                                                        tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">

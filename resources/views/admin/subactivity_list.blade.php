@@ -137,7 +137,7 @@
     </div>
     <!-- Modal เพิ่มจำนวนหลักสูตรที่เลือกได้ -->
     <div class="modal fade" id="EditMaxSubactivitiesModal" tabindex="-1" role="dialog"
-        aria-labelledby="EditMaxSubactivitiesModalLabel" aria-hidden="true">
+        aria-labelledby="EditMaxSubactivitiesModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -166,7 +166,7 @@
     </div>
     <!-- Modal แก้ไขหลักสูตร-->
     <div class="modal fade" id="EditSubActivityModal" tabindex="-1" role="dialog"
-        aria-labelledby="EditSubActivityModalLabel" aria-hidden="true">
+        aria-labelledby="EditSubActivityModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

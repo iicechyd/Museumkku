@@ -62,7 +62,7 @@
                     </div>
                 </div>
 
-                <form method="POST" action="/InsertBooking" class="row g-3" novalidate>
+                <form method="POST" action="{{ route('InsertBooking') }}" class="row g-3" novalidate>
                     @csrf
                     <div class="col-md-5">
                         <label for="activity_select" class="form-label">ประเภทเข้าชม</label>
@@ -315,7 +315,7 @@
                             <input class="form-check-input" type="checkbox" id="kid_qty" name="kid_qty"
                                 onclick="toggleInput('kidInput')">
                             <label class="form-check-label" for="kid_qty">
-                                เด็กเล็ก ( ต่ำกว่า 3 ขวบ )</label>
+                                เด็กเล็ก ( ต่ำกว่า 2 ขวบ )</label>
                             <input type="number" class="form-control mt-2" id="kidInput" name="kid_qty"
                                 min="0" disabled oninput="calculateTotal()">
                         </div>
@@ -376,8 +376,7 @@
                         </button>
                     </div>
                 </form>
-                <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel"
-                    aria-hidden="true">
+                <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">

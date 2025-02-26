@@ -107,8 +107,7 @@
                                 </tr>
                                 <!-- Modal สำหรับการแก้ไขรอบการเข้าชม -->
                                 <div class="modal fade" id="EditTimeslotModal{{ $timeslot->timeslots_id }}" tabindex="-1"
-                                    role="dialog" aria-labelledby="EditTimeslotModalLabel{{ $timeslot->timeslots_id }}"
-                                    aria-hidden="true">
+                                    role="dialog" aria-labelledby="EditTimeslotModalLabel{{ $timeslot->timeslots_id }}">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -157,7 +156,7 @@
             @endif
             <!-- Modal สำหรับเพิ่มรอบกิจกรรม -->
             <div class="modal fade" id="InsertTimeslotsModal" tabindex="-1" role="dialog"
-                aria-labelledby="InsertTimeslotsModalLabel" aria-hidden="true">
+                aria-labelledby="InsertTimeslotsModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">

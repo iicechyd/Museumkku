@@ -303,7 +303,7 @@
                         <input class="form-check-input" type="checkbox" id="kid_qty" name="kid_qty"
                             onclick="toggleInput('kidInput')">
                         <label class="form-check-label" for="kid_qty">
-                            เด็กเล็ก ( ต่ำกว่า 3 ขวบ )</label>
+                            เด็กเล็ก ( ต่ำกว่า 2 ขวบ )</label>
                         <input type="number" class="form-control mt-2" id="kidInput" name="kid_qty"
                             min="0" disabled oninput="calculateTotal()">
                     </div>

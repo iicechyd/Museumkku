@@ -143,7 +143,7 @@
                         </div>
                         <!-- Modal สำหรับแสดงราคา -->
                         <div class="modal fade" id="PricesModal_{{ $item->activity_id }}" tabindex="-1" role="dialog"
-                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            aria-labelledby="exampleModalLabel">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -202,7 +202,7 @@
 
     <!-- Modal สำหรับเพิ่มกิจกรรม -->
     <div class="modal fade" id="InsertActivityModal" tabindex="-1" role="dialog"
-        aria-labelledby="InsertActivityModalLabel" aria-hidden="true">
+        aria-labelledby="InsertActivityModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -289,7 +289,7 @@
     </div>
     <!-- Modal สำหรับแก้ไขกิจกรรม -->
     <div class="modal fade" id="EditActivityModal" tabindex="-1" role="dialog"
-        aria-labelledby="EditActivityModalLabel" aria-hidden="true">
+        aria-labelledby="EditActivityModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

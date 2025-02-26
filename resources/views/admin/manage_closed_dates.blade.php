@@ -65,7 +65,8 @@
                 </div>
                 <div class="form-group col-md-5">
                     <label for="comments" class="font-weight-bold">หมายเหตุ</label>
-                    <textarea id="comments" name="comments" class="form-control" rows="3" placeholder="กรุณากรอกหมายเหตุ"></textarea>
+                    <textarea id="comments" name="comments" class="form-control" rows="3"
+                        placeholder="กรุณากรอกหมายเหตุ"></textarea>
                     @error('comments')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
@@ -76,50 +77,52 @@
             </form>
         </div>
     </div>
-    <div class="container px-4 py-6">
-        <h2 class="font-weight-bold mt-5">รายการวันที่ปิดรอบการเข้าชม</h2>
-        <div class="table-responsive">
-            <table class="table table-bordered mt-4 shadow-sm">
-                <thead class="thead-light">
-                    <tr>
-                        <th data-type="text-long">ประเภทการเข้าชม<span class="resize-handle"></span></th>
-                        <th data-type="text-short">รอบเวลา<span class="resize-handle"></span></th>
-                        <th data-type="text-short">วันที่ปิดรอบการเข้าชม<span class="resize-handle"></span></th>
-                        <th data-type="text-short">หมายเหตุ<span class="resize-handle"></span></th>
-                        <th data-type="text-short">การจัดการ<span class="resize-handle"></span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($closedDates as $closed)
+    @if ($closedDates->isNotEmpty())
+        <div class="container px-4 py-6">
+            <h2 class="font-weight-bold mt-5">รายการวันที่ปิดรอบการเข้าชม</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered mt-4 shadow-sm">
+                    <thead class="thead-light">
                         <tr>
-                            <td>{{ $closed->activity->activity_name }}</td>
-                            <td>
-                                @if ($closed->timeslot)
-                                    {{ Carbon::parse($closed->timeslot->start_time)->format('H:i') }} น. -
-                                    {{ Carbon::parse($closed->timeslot->end_time)->format('H:i') }} น.
-                                @else
-                                    ปิดทุกรอบ
-                                @endif
-                            </td>
-                            <td>{{ Carbon::parse($closed->closed_on)->translatedFormat('d /M/ ') }}{{ Carbon::parse($closed->closed_on)->year + 543 }}
-                            </td>
-                            <td>{{ $closed->comments }}</td>
-                            <td>
-                                <form action="{{ route('admin.deleteClosedDate', $closed->closed_timeslots_id) }}"
-                                    method="POST" onsubmit="return confirm('ยืนยันการยกเลิกวันที่ปิดรอบการเข้าชมนี้หรือไม่?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        ยกเลิก
-                                    </button>
-                                </form>
-                            </td>
+                            <th data-type="text-long">ประเภทการเข้าชม<span class="resize-handle"></span></th>
+                            <th data-type="text-short">รอบเวลา<span class="resize-handle"></span></th>
+                            <th data-type="text-short">วันที่ปิดรอบการเข้าชม<span class="resize-handle"></span></th>
+                            <th data-type="text-short">หมายเหตุ<span class="resize-handle"></span></th>
+                            <th data-type="text-short">การจัดการ<span class="resize-handle"></span></th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($closedDates as $closed)
+                            <tr>
+                                <td>{{ $closed->activity->activity_name }}</td>
+                                <td>
+                                    @if ($closed->timeslot)
+                                        {{ Carbon::parse($closed->timeslot->start_time)->format('H:i') }} น. -
+                                        {{ Carbon::parse($closed->timeslot->end_time)->format('H:i') }} น.
+                                    @else
+                                        ปิดทุกรอบ
+                                    @endif
+                                </td>
+                                <td>{{ Carbon::parse($closed->closed_on)->translatedFormat('d /M/ ') }}{{ Carbon::parse($closed->closed_on)->year + 543 }}
+                                </td>
+                                <td>{{ $closed->comments }}</td>
+                                <td>
+                                    <form action="{{ route('admin.deleteClosedDate', $closed->closed_timeslots_id) }}" method="POST"
+                                        onsubmit="return confirm('ยืนยันการยกเลิกวันที่ปิดรอบการเข้าชมนี้หรือไม่?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            ยกเลิก
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+    @endif
     <script>
         var getTimeslotsUrl = "{{ route('admin.getTimeslots') }}";
         var csrfToken = "{{ csrf_token() }}";
@@ -128,4 +131,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/manage_closed_dates.js') }}"></script>
 @endsection
+
 </html>

@@ -115,4 +115,3 @@ Route::get('/bookings/edit/{booking_id}', [BookingController::class, 'showBookin
 Route::get('/admin/edit-booking/{booking_id}', [BookingController::class, 'showBookingAdminEdit'])->name('admin.edit_booking')->middleware('signed');
 Route::put('/bookings/update/{booking_id}', [BookingController::class, 'updateBooking'])->name('bookings.update');
 Route::get('/bookings/cancel/{booking_id}', [BookingController::class, 'showCancel'])->name('bookings.cancel')->middleware('signed');
-Route::post('/bookings/cancel/{booking_id}', [BookingController::class, 'cancel'])->name('bookings.cancel.confirm');

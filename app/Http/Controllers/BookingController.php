@@ -253,7 +253,6 @@ class BookingController extends Controller
 
     public function updateStatus(Request $request, $booking_id)
     {
-
         $request->validate([
             'status' => 'required|in:pending,approve,checkin,cancel',
             'comments' => 'nullable|string',
@@ -288,6 +287,7 @@ class BookingController extends Controller
         $booking->save();
 
         $statusChange = StatusChanges::where('booking_id', $booking_id)->first();
+        $changedBy = Auth::user() ? Auth::user()->name : 'ผู้จองเข้าชม';
 
         if ($statusChange) {
             $statusChange->old_status = $oldStatus;
@@ -300,7 +300,7 @@ class BookingController extends Controller
             $statusChange->actual_disabled_qty = $request->input('actual_disabled_qty', 0);
             $statusChange->actual_elderly_qty = $request->input('actual_elderly_qty', 0);
             $statusChange->actual_monk_qty = $request->input('actual_monk_qty', 0);
-            $statusChange->changed_by = Auth::user()->name;
+            $statusChange->changed_by = $changedBy;
             $statusChange->save();
         } else {
             $statusChange = StatusChanges::create([
@@ -316,7 +316,7 @@ class BookingController extends Controller
                 'actual_disabled_qty' => $request->input('actual_disabled_qty', 0),
                 'actual_elderly_qty' => $request->input('actual_elderly_qty', 0),
                 'actual_monk_qty' => $request->input('actual_monk_qty', 0),
-                'changed_by' => Auth::user()->name,
+                'changed_by' => $changedBy,
             ]);
         }
 
@@ -729,10 +729,61 @@ class BookingController extends Controller
                     + ($statusChange->actual_monk_qty * $prices['monk_price']);
             }
         }
+        $totalPrice = 0;
+        $totalParticipants = 0;
+        $priceDetails = [];
+
+        $categories = [
+            'children' => 'เด็ก',
+            'students' => 'นักเรียน',
+            'adults' => 'ผู้ใหญ่',
+            'kid' => 'เด็กเล็ก',
+            'disabled' => 'ผู้พิการ',
+            'elderly' => 'ผู้สูงอายุ',
+            'monk' => 'พระภิกษุ'
+        ];
+
+        foreach ($histories as $booking) {
+            if (!$booking->activity) continue; // ป้องกัน null error
+            
+            $prices = [
+                'children' => $booking->activity->children_price ?? 0,
+                'students' => $booking->activity->student_price ?? 0,
+                'adults' => $booking->activity->adult_price ?? 0,
+                'kid' => $booking->activity->children_price ?? 0,
+                'disabled' => $booking->activity->disabled_price ?? 0,
+                'elderly' => $booking->activity->elderly_price ?? 0,
+                'monk' => $booking->activity->monk_price ?? 0
+            ];
+    
+            foreach ($booking->statusChanges as $statusChange) {
+                foreach ($categories as $key => $label) {
+                    $qtyField = "actual_{$key}_qty";
+                    $qty = $statusChange->$qtyField ?? 0;
+                    $price = $prices[$key] ?? 0;
+                    $total = $qty * $price;
+    
+                    if ($qty > 0) {
+                        $priceDetails[] = [
+                            'label' => $label,
+                            'qty' => $qty,
+                            'price' => $price,
+                            'total' => $total
+                        ];
+                    }
+    
+                    $totalActualVisitors += $qty;
+                    $totalRevenue += $total;
+                    $totalPrice += $total;
+                    $totalParticipants += $qty;
+                }
+            }
+        }
         $activities = Activity::orderBy('activity_name')->pluck('activity_name', 'activity_id');
 
-        return view('admin.history', compact('histories', 'activities', 'totalRevenue', 'totalBookings', 'totalBookedVisitors', 'totalActualVisitors'));
+        return view('admin.history', compact('histories', 'activities', 'totalRevenue', 'totalBookings', 'totalBookedVisitors', 'totalActualVisitors', 'priceDetails', 'totalPrice', 'totalParticipants'));
     }
+
 
     public function showBookingEdit($booking_id)
     {
@@ -985,20 +1036,6 @@ class BookingController extends Controller
         $totalPrice = $childrenPrice + $studentPrice + $adultPrice + $kidPrice + $disabledPrice + $elderlyPrice + $monkPrice;
 
         return view('emails.ShowCancelledBooking', compact('booking', 'totalPrice'));
-    }
-    public function cancel(Request $request, $booking_id)
-    {
-        $booking = Bookings::findOrFail($booking_id);
-        $booking->status = 3;
-        $booking->save();
-
-        $visitorEmail = $booking->visitor ? $booking->visitor->visitorEmail : null;
-        if ($visitorEmail) {
-            Mail::to($visitorEmail)->send(new BookingCancelledMail($booking));
-        } else {
-            Log::warning("ไม่พบอีเมลสำหรับการจองหมายเลข {$booking->booking_id}");
-        }
-        return back()->with('showSuccessModal', true);
     }
     public function showDetails($booking_id)
     {

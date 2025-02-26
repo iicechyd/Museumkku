@@ -7,9 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
         contentHeight: "auto",
         aspectRatio: 2,
         height: "auto",
-        eventClassNames: function(arg) {
-            return ['custom-event'];
-        },
         eventSources: [
             {
                 url: "/calendar/events",
@@ -60,6 +57,9 @@ document.addEventListener("DOMContentLoaded", function () {
             info.jsEvent.preventDefault();
         
             var eventTitle = info.event.title || "";
+            if (eventTitle === "ปิดให้บริการ") {
+                return; 
+            }
             var eventProps = info.event.extendedProps || {};
 
             if (eventTitle.includes("จำนวนผู้เข้าชม")) {
@@ -118,13 +118,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
                 myModal.show();
                 
-            }
-        },
-        eventDidMount: function (info) {
-            var status = info.event.extendedProps.status;
-            if (status === 1) {
-                info.el.style.backgroundColor = "#28a745";
-                info.el.style.color = "#ffffff";
             }
         },
     });

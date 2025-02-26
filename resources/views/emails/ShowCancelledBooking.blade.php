@@ -24,7 +24,7 @@
                         {{ \Carbon\Carbon::parse($booking->timeslot->start_time)->format('H:i') }} น. -
                         {{ \Carbon\Carbon::parse($booking->timeslot->end_time)->format('H:i') }} น.
                     @else
-                    -
+                        -
                     @endif
                 </td>
                 <td>
@@ -117,59 +117,62 @@
         </div>
         @if ($booking->status != 3)
             <div class="d-flex justify-content-center mt-4">
-                <form action="{{ route('bookings.cancel.confirm', $booking->booking_id) }}" method="POST">
+                <form action="{{ route('bookings.updateStatus', $booking->booking_id) }}" method="POST"
+                    style="display: inline;" id="statusForm_{{ $booking->booking_id }}">
                     @csrf
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">
-                        ยืนยันการยกเลิก
-                    </button>
+                    <input type="hidden" name="status" 
+                    id="status_{{ $booking->booking_id }}">
+                    <input type="hidden" name="actual_children_qty"
+                        id="actual_children_qty_{{ $booking->booking_id }}">
+                    <input type="hidden" name="actual_students_qty"
+                        id="actual_students_qty_{{ $booking->booking_id }}">
+                    <input type="hidden" name="actual_adults_qty"
+                        id="actual_adults_qty_{{ $booking->booking_id }}">
+                    <input type="hidden" name="actual_kid_qty"
+                        id="actual_kid_qty_{{ $booking->booking_id }}">
+                    <input type="hidden" name="actual_disabled_qty"
+                        id="actual_disabled_qty_{{ $booking->booking_id }}">
+                    <input type="hidden" name="actual_elderly_qty"
+                        id="actual_elderly_qty_{{ $booking->booking_id }}">
+                    <input type="hidden" name="actual_monk_qty" 
+                        id="actual_monk_qty_{{ $booking->booking_id }}">
+                    <input type="hidden" name="comments" 
+                        id="comments_{{ $booking->booking_id }}">
+                    <div class="flex items-center space-x-3">
+                        <button type="button" class="btn btn-danger"
+                            onclick="openCancelModal({{ $booking->booking_id }})">
+                            ยกเลิกการจอง
+                        </button>
+                    </div>
                 </form>
             </div>
         @endif
     </div>
 
-    <!-- Modal ยืนยันการยกเลิก -->
-    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+    <!-- Modal สำหรับยกเลิกการจอง -->
+    <div class="modal fade" id="cancelModal_{{ $booking->booking_id }}" tabindex="-1" role="dialog"
+        aria-labelledby="cancelModalLabel" aria-hidden="true" aria-modal="true">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="cancelModalLabel">ยืนยันการยกเลิก</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header d-flex justify-content-between">
+                    <h5 class="modal-title" id="cancelModalLabel">กรอกหมายเหตุการยกเลิก</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="modal-body d-flex justify-content-center text-center">
-                    คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการจองนี้?
+                <div class="modal-body">
+                    <label for="reason_{{ $booking->booking_id }}">กรุณาระบุหมายเหตุ</label>
+                    <textarea id="reason_{{ $booking->booking_id }}" class="form-control"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <form id="cancelBookingForm" action="{{ route('bookings.cancel.confirm', $booking->booking_id) }}"
-                        method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-danger">ยืนยันการยกเลิก</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
-                    </form>
+                    <button type="button" class="btn btn-danger"
+                        onclick="submitCancelForm({{ $booking->booking_id }})">ยืนยันการยกเลิก</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Success Modal -->
-    @if (session('showSuccessModal'))
-        <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="successModalLabel">การยกเลิกสำเร็จ</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        ยกเลิกการจองของคุณเสร็จสมบูรณ์แล้ว
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ปิด</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <script>
-            var myModal = new bootstrap.Modal(document.getElementById('successModal'));
-            myModal.show();
-        </script>
-    @endif
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/cancel_bookings.js') }}"></script>
 @endsection

@@ -94,10 +94,7 @@ class AdminCalendarController extends Controller
     private function getStatusColor($status)
     {
         return match ($status) {
-            0 => '#ffc107',
             1 => '#28a745',
-            2 => '#dc3545',
-            default => '#000000',
         };
     }
 

@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('css/login.css') }}"> --}}
+    <link rel="icon" type="image/png" href="{{ asset('img/logo_page.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>เข้าสู่ระบบ | สำหรับเจ้าหน้าที่</title>
 </head>

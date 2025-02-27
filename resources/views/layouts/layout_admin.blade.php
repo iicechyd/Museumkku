@@ -12,6 +12,7 @@
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/admin_page.css') }}">
+    <link rel="icon" type="image/png" href="{{ asset('img/logo_page.png') }}">
     <title>ระบบจองเข้าชมพิพิธภัณฑ์ | สำหรับเจ้าหน้าที่</title>
 </head>
 

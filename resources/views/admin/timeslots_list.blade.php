@@ -5,7 +5,7 @@
 @section('content')
 
     <head>
-        <link rel="stylesheet" href="{{ asset('css/timeslots_list.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/tms_list.css') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
         <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
@@ -201,7 +201,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="{{ asset('js/timeslots_list.js') }}"></script>
+    <script src="{{ asset('js/tms_list.js') }}"></script>
 @endsection
 
 </html>

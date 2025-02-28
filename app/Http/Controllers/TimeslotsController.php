@@ -123,21 +123,32 @@ class TimeslotsController extends Controller
         $formattedDate = $closedOn->format('Y-m-d');
         $comments = $request->input('comments');
 
-        if ($timeslotsId === 'all') {
-            ClosedTimeslots::create([
-                'activity_id' => $activityId,
-                'timeslots_id' => null,
-                'closed_on' => $closedOn,
-                'comments' => $comments,
-            ]);
-        } else {
-            ClosedTimeslots::create([
-                'activity_id' => $activityId,
-                'timeslots_id' => $timeslotsId,
-                'closed_on' => $closedOn,
-                'comments' => $comments,
-            ]);
+        $existingAllClosed = ClosedTimeslots::where('activity_id', $activityId)
+        ->whereNull('timeslots_id')
+        ->where('closed_on', $formattedDate)
+        ->exists();
+        
+        if ($existingAllClosed && $timeslotsId !== 'all') {
+            return redirect()->back()->with('error', 'ไม่สามารถบันทึกข้อมูลได้ เนื่องจากมีการปิดทุกรอบแล้ว')->withInput();
         }
+
+        $existingClosedTimeslot = ClosedTimeslots::where('activity_id', $activityId)
+        ->where('closed_on', $formattedDate)
+        ->when($timeslotsId !== 'all', function ($query) use ($timeslotsId) {
+            return $query->where('timeslots_id', $timeslotsId);
+        })
+        ->exists();
+
+        if ($existingClosedTimeslot) {
+            return redirect()->back()->with('error', 'ไม่สามารถบันทึกข้อมูลซ้ำได้')->withInput();
+        }
+
+        ClosedTimeslots::create([
+            'activity_id' => $activityId,
+            'timeslots_id' => $timeslotsId === 'all' ? null : $timeslotsId,
+            'closed_on' => $formattedDate,
+            'comments' => $comments,
+        ]);
 
         return redirect()->back()->with('success', 'บันทึกข้อมูลการปิดรอบการเข้าชมเรียบร้อยแล้ว');
     }

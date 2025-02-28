@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
                     .then((response) => response.json())
                     .then((data) => {
-                        timeslotsDropdown.innerHTML = '<option value="">-- เลือกรอบการเข้าชม --</option>';
+                        timeslotsDropdown.innerHTML = '<option value="">กรุณาเลือกรอบการเข้าชม</option>';
                         timeslotsDropdown.innerHTML += '<option value="all">ปิดทุกรอบ</option>';
                         data.forEach((timeslot) => {
                             timeslotsDropdown.innerHTML += `<option value="${timeslot.timeslots_id}">${timeslot.start_time} - ${timeslot.end_time}</option>`;

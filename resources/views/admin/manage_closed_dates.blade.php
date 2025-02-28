@@ -20,7 +20,11 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
     <div class="container px-4 py-6">
         <h1 class="table-heading text-center">จัดการวันปิดรอบการเข้าชม</h1>
         <div class="card shadow p-4">

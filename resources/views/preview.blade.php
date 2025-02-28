@@ -19,7 +19,7 @@
                 style="background-color: #E6A732; color: #fff; font-size: 1.6rem; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); font-family: 'Noto Sans Thai', sans-serif; font-weight: 700;">+
                 จองเข้าร่วมกิจกรรม</a>
             </div>
-            <div class="d-flex justify-content-center mt-2">
+            <div class="d-flex flex-column flex-md-row justify-content-center mt-2">
                 <a href="{{ url('/checkBookingStatus') }}" class="btn"
                     style="background-color: #C06628; color: #fff; font-size: 1.6rem; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); font-family: 'Noto Sans Thai', sans-serif; font-weight: 700;">
                     ตรวจสอบสถานะการจอง</a>

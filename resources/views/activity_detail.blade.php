@@ -8,24 +8,23 @@
     <link rel="stylesheet" href="{{ asset('css/activity_detail.css') }}">
 </head>
 
-@section('sidebar')
 @section('content')
     <div class="container py-5">
         <div class="srow gy-4">
             <div class="col-lg-12 col-md-12">
                 <div class="card">
                     <div class="row g-0">
-                        <div class="col-lg-6 col-md-12 px-3 py-2 ">
+                        <div class="col-lg-6 col-md-12 px-3 py-2">
                             <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
                                 <div class="carousel-inner">
                                     @foreach ($activity->images as $index => $image)
                                         <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
                                             <div class="image"
-                                                style="width: 602px; height: 400px; display: flex; justify-content: center; align-items: center; overflow: hidden; cursor: pointer; border-radius: 3px;"
+                                                style="width: 100%; height: 380px; display: flex; justify-content: center; 
+                                                align-items: center; overflow: hidden; cursor: pointer; border-radius: 3px;"
                                                 onclick="showLargeImage('{{ asset('storage/' . $image->image_path) }}')">
                                                 <img src="{{ asset('storage/' . $image->image_path) }}"
-                                                    class="d-block w-100"
-                                                    style="max-height: 100%; max-width: 100%;  contain; "
+                                                    style="max-height: 100%; max-width: 100%; object-fit: contain;"
                                                     alt="Image for {{ $activity->activity_name }}">
                                             </div>
                                         </div>
@@ -45,37 +44,38 @@
                                 <div id="carouselIndicator" class="carousel-indicator">1/{{ count($activity->images) }}
                                 </div>
                             </div>
-                            <div class="d-flex flex-wrap gap-2 py-2 pb-3">
-                                @foreach ($activity->images->take(4) as $image)
+                            
+                            <div class="d-flex flex-wrap p-2 gap-2 py-2 pb-3">
+                                @foreach ($activity->images->take(2) as $image)
                                     <div class="position-relative">
                                         <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
-                                            style="width: 114px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
+                                            style="width: 100px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
                                             onclick="showLargeImage('{{ asset('storage/' . $image->image_path) }}')">
                                             <img src="{{ asset('storage/' . $image->image_path) }}" alt="Activity Image"
-                                                class="img-fluid" style="object-fit: cover; width: 100%; height: 100%;">
+                                            class="img-fluid" style="object-fit: cover; width: 100%; height: 100%;">
                                         </div>
                                     </div>
                                 @endforeach
                             
-                                @if ($activity->images->count() > 5)
+                                @if ($activity->images->count() > 3)
                                     <div class="position-relative">
                                         <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
-                                            style="width: 114px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
+                                            style="width: 100px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
                                             onclick="openGalleryModal()">
-                                            <img src="{{ asset('storage/' . $activity->images[4]->image_path) }}" alt="Activity Image"
+                                            <img src="{{ asset('storage/' . $activity->images[2]->image_path) }}" alt="Activity Image"
                                                 class="img-fluid" style="object-fit: cover; width: 100%; height: 100%; filter: brightness(0.6);">
                                             <div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center"
                                                 style="top: 0; left: 0; background: rgba(0, 0, 0, 0.5); font-size: 20px;">
-                                                +{{ $activity->images->count() - 5 }}
+                                                +{{ $activity->images->count() - 3 }}
                                             </div>
                                         </div>
                                     </div>
-                                @elseif($activity->images->count() == 5)
+                                @elseif($activity->images->count() == 3)
                                     <div class="position-relative">
                                         <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
-                                            style="width: 114px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
-                                            onclick="showLargeImage('{{ asset('storage/' . $activity->images[4]->image_path) }}')">
-                                            <img src="{{ asset('storage/' . $activity->images[4]->image_path) }}" alt="Activity Image"
+                                            style="width: 100px; height: 100px; border-radius: 3px; overflow: hidden; cursor: pointer;"
+                                            onclick="showLargeImage('{{ asset('storage/' . $activity->images[2]->image_path) }}')">
+                                            <img src="{{ asset('storage/' . $activity->images[2]->image_path) }}" alt="Activity Image"
                                                 class="img-fluid" style="object-fit: cover; width: 100%; height: 100%;">
                                         </div>
                                     </div>
@@ -137,7 +137,7 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="d-flex flex-wrap gap-2 justify-content-center">
-                                            @foreach ($activity->images->slice(5) as $image)
+                                            @foreach ($activity->images->slice(3) as $image)
                                                 <div class="position-relative">
                                                     <div class="bg-primary text-white text-center d-flex align-items-center justify-content-center"
                                                         style="width: 250px; height: 200px; border-radius: 3px; overflow: hidden; cursor: pointer;"

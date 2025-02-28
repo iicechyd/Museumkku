@@ -1,8 +1,13 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use App\Models\Verification;
+use Carbon\Carbon;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote')->hourly();
+Artisan::command('clean:expired-verifications', function () {
+    $deleted = Verification::where('verified', false)
+        ->where('expires_at', '<', Carbon::now())
+        ->delete();
+
+    $this->info("Deleted $deleted expired verification records.");
+})->purpose('Delete expired verification records')->daily();

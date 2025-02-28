@@ -10,6 +10,6 @@ class Verification extends Model
     use HasFactory;
 
     protected $table = 'verifications';
-    protected $fillable = ['email', 'token', 'verified'];
+    protected $fillable = ['email', 'token', 'verified', 'expires_at'];
     public $timestamps = true;
 }

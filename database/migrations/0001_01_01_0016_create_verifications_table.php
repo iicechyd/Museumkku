@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('token')->unique();
             $table->boolean('verified')->default(false);
+            $table->timestamp('expires_at')->nullable();
             $table->timestamps();
         });
     }

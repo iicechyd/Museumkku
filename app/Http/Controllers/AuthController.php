@@ -27,10 +27,11 @@ class AuthController extends Controller
 
         $email = $request->input('email');
         $token = Str::random(40);
+        $expiresAt = now()->addMinutes(30);
 
         Verification::updateOrCreate(
-            ['email' => $email],
-            ['token' => $token, 'verified' => false]
+        ['email' => $email],
+            ['token' => $token, 'verified' => false, 'expires_at' => $expiresAt]
         );
 
         $verificationLink = route('verifyLink', ['token' => $token]);
@@ -48,7 +49,11 @@ class AuthController extends Controller
         $verification = Verification::where('token', $token)->first();
 
         if (!$verification) {
-            return redirect('/')->with('error', 'ลิงก์ยืนยันไม่ถูกต้องหรือหมดอายุ');
+            abort(404, 'ลิงก์ยืนยันไม่ถูกต้อง');
+        }
+
+        if ($verification->expires_at && $verification->expires_at < now()) {
+            abort(419, 'ลิงก์ยืนยันหมดอายุ');
         }
 
         $verification->update(['verified' => true]);
@@ -70,7 +75,8 @@ class AuthController extends Controller
             ]]);
         }
         session(['verification_email' => $verification->email]);
-        session(['redirect_url' => route('form_bookings.activity', ['activity_id' => 1])]);
+        $redirectUrl = session('redirect_url', route('form_bookings.activity', ['activity_id' => 1]));
+        session(['redirect_url' => $redirectUrl]);
 
         return view('emails.verified');
     }

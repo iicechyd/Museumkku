@@ -12,7 +12,7 @@
     <div class="container">
         <h1>✅ ยืนยันตัวตนสำเร็จ</h1>
         <p>{{ session('message', 'กรุณากลับไปที่หน้าการจองเข้าชมของคุณ') }}</p>
-        <a href="/">หน้าการจองเข้าชม</a>
+        <a href="{{ session()->get('redirect_url', url('/')) }}">หน้าการจองเข้าชม</a>
     </div>
 </body>
 </html>

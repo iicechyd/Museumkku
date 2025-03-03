@@ -122,7 +122,7 @@
                                     <a href="{{ route('form_bookings.activity', ['activity_id' => $activity->activity_id]) }}"
                                         class="btn text-white width:50%"
                                         style="background-color: #489085; font-family: 'Noto Sans Thai', sans-serif;">
-                                        จองกิจกรรม
+                                        {{ $activity->activity_type_id == 1 ? 'จองเข้าชม' : 'จองกิจกรรม' }}
                                     </a>
                                 </div>
                             </div>

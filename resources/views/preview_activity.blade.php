@@ -23,7 +23,8 @@
                         <x-card title="{{ $item->activity_name }}" text="{{ $item->description }} "
                             image="{{ $item->images->isNotEmpty() ? asset('storage/' . $item->images->first()->image_path) : asset('') }}"
                             detail="{{ route('activity_detail', ['activity_id' => $item->activity_id]) }}"
-                            booking="{{ route('form_bookings.activity', ['activity_id' => $item->activity_id]) }}" />
+                            booking="{{ route('form_bookings.activity', ['activity_id' => $item->activity_id]) }}" 
+                            bookingText="จองกิจกรรม"/>
                     </x-card-group>
                 </div>
             @endforeach

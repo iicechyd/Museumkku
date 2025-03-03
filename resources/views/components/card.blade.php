@@ -1,4 +1,4 @@
-@props(['title', 'text', 'image', 'detail', 'booking'])
+@props(['title', 'text', 'image', 'detail', 'booking','bookingText'])
 
 <div class="card" style="min-height: 29rem; display: flex; flex-direction: column;">
     <img src="{{ $image }}" class="card-img-top card-img "
@@ -13,7 +13,7 @@
                 รายละเอียดเพิ่มเติม
             </a>
             <a href="{{ $booking }}" class="btn text-white width:50%" style=" background-color: #E6A732;" data-id="booking-button">
-                จองกิจกรรม
+                {{ $bookingText }}
             </a>
         </div>
     </div>

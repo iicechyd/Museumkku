@@ -40,15 +40,9 @@
                                         </a>
                                     </td>
                                     <td width="10"></td>
-                                    <td>
-                                        <a href="{{ $cancelLink }}"
-                                            style="color: red; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-size: 16px; border: 2px solid red; display: inline-block;">
-                                            ยกเลิกการจอง
-                                        </a>
-                                    </td>
                                 </tr>
                             </table>
-                            <p>หากมีข้อสงสัยใดๆ โปรดติดต่อเจ้าหน้าที่</p>
+                            <p>หากมีข้อสงสัยใดๆ หรือต้องการยกเลิกการจอง <br> โปรดติดต่อเจ้าหน้าที่</p>
                             <img src="cid:phone_icon.png" alt="PhoneIcon">         
                             <span>094-278-4222, 0-4300-9700 ต่อ 45596</span>
                             <p style="color: #489085;">

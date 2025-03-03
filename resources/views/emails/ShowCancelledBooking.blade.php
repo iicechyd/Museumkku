@@ -10,8 +10,10 @@
         <h2 class="text-2xl text-center font-bold" style="color: #e61212;">ยกเลิกการจองเข้าชม</h2>
         @if ($booking->status == 3)
             <p class="text-center mb-3 ">ยกเลิกการจองสำเร็จ</p>
-        @else
+        @elseif ($booking->status == 0)
             <p class="text-center mb-3">คุณต้องการยกเลิกการจองนี้หรือไม่?</p>
+            @elseif ($booking->status == 1 || $booking->status == 2)
+            <p class="text-center mb-3">ไม่สามารถยกเลิกการจองได้ หากต้องการยกเลิกการจอง กรุณาติดต่อเจ้าหน้าที่ 09X-XXX-XXXX</p>
         @endif
         @component('components.table_checkbookings')
             <tr>
@@ -45,7 +47,7 @@
                         @break
 
                         @case(2)
-                            <button type="button" class="status-btn-approved">เข้าชม</button>
+                            <button type="button" class="status-btn-visit">เข้าชม</button>
                         @break
 
                         @case(3)
@@ -115,7 +117,7 @@
                 </div>
             </div>
         </div>
-        @if ($booking->status != 3)
+        @if ($booking->status == 0)
             <div class="d-flex justify-content-center mt-4">
                 <form action="{{ route('bookings.updateStatus', $booking->booking_id) }}" method="POST"
                     style="display: inline;" id="statusForm_{{ $booking->booking_id }}">

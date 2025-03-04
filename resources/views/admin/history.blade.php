@@ -89,7 +89,7 @@
                                                                 {{ \Carbon\Carbon::parse($item->timeslot->end_time)->format('H:i') }}
                                                                 น.
                                                             @else
-                                                                ไม่มีรอบการเข้าชม
+                                                                -
                                                             @endif
                                                         </td>
                                                         <td>
@@ -119,7 +119,8 @@
                                                                     $statusChange->actual_kid_qty +
                                                                     $statusChange->actual_disabled_qty +
                                                                     $statusChange->actual_elderly_qty +
-                                                                    $statusChange->actual_monk_qty;
+                                                                    $statusChange->actual_monk_qty +
+                                                                    $statusChange->actual_free_teachers_qty;
                                                             @endphp
                                                             @if ($totalQty)
                                                                 <a href="#" data-toggle="modal"
@@ -254,11 +255,14 @@
                                                                             @endif
                                                                         </p>
                                                                     @endforeach
+                                                                    @if ($statusChange->actual_free_teachers_qty > 0)
+                                                                    <p>คุณครู {{ number_format($statusChange->actual_free_teachers_qty) }} คน</p>
+                                                                    @endif
                                                                     @if ($modalDetails['totalPrice'] > 0)
                                                                         <hr>
                                                                         <p><strong>ยอดรวมราคา:</strong> {{ number_format($modalDetails['totalPrice']) }} บาท</p>
                                                                         <p><strong>ยอดรวมผู้เข้าชมจริงทั้งหมด:</strong> {{ number_format($modalDetails['totalParticipants']) }} คน</p>
-                                                                    @endif
+                                                                        @endif
                                                                 @endif
                                                                 </div>
                                                                 <div class="modal-footer">

@@ -974,15 +974,16 @@ class BookingController extends Controller
         $totalRevenue = 0;
         $totalActualVisitors = 0;
         $priceDetailsByBooking = [];
-
+        $priceDetails = [];
+        
         $categories = [
             'children' => 'เด็ก',
-            'students' => 'นักเรียน',
-            'adults' => 'ผู้ใหญ่',
+            'students' => 'มัธยม / นักศึกษา',
+            'adults' => 'ผู้ใหญ่ / คุณครู',
             'kid' => 'เด็กเล็ก',
             'disabled' => 'ผู้พิการ',
             'elderly' => 'ผู้สูงอายุ',
-            'monk' => 'พระภิกษุ'
+            'monk' => 'พระภิกษุสงฆ์ /สามเณร',
         ];
 
         foreach ($histories as $booking) {
@@ -1021,6 +1022,7 @@ class BookingController extends Controller
                     $totalParticipants += $qty;
                     $totalPrice += $total;
                 }
+                $totalParticipants += $statusChange->actual_free_teachers_qty ?? 0;
                 $totalRevenue += $totalPrice;
                 $totalActualVisitors += $totalParticipants;
 
@@ -1033,7 +1035,7 @@ class BookingController extends Controller
         }
         $activities = Activity::orderBy('activity_name')->pluck('activity_name', 'activity_id');
 
-        return view('admin.history', compact('histories', 'activities', 'totalRevenue', 'totalBookings', 'totalBookedVisitors', 'totalActualVisitors', 'priceDetails', 'totalPrice', 'totalParticipants', 'priceDetailsByBooking'));
+        return view('admin.history', compact('histories', 'activities', 'totalRevenue', 'totalBookings', 'totalBookedVisitors', 'totalActualVisitors', 'priceDetailsByBooking'));
     }
 
 

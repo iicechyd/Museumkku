@@ -35,6 +35,15 @@ class ActivityController extends Controller
         return view('preview_general', compact('activities'));
     }
 
+    public function AdminPreviewGeneral()
+    {
+        $activities = Activity::with('images')
+            ->where('activity_type_id', 1)
+            ->where('status', 'active')
+            ->get();
+        return view('admin.admin_preview_general', compact('activities'));
+    }
+
     function showListActivity()
     {
         $allActivities = Activity::all();

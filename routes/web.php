@@ -37,6 +37,10 @@ Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {
     Route::get('/admin/request_letter/general', [BookingController::class, 'showRequestLetter'])->name('request_letter');
     Route::get('/admin/approved_bookings/general', [BookingController::class, 'showApproved'])->name('approved_bookings.general');
     Route::get('/admin/except_cases_bookings/general', [BookingController::class, 'showExcept'])->name('except_bookings.general');
+    Route::get('/admin_bookings/activity/{activity_id}', [BookingController::class, 'showAdminBookingForm'])->name('admin_bookings.activity');
+    Route::get('/admin/preview_general', [ActivityController::class, 'AdminPreviewGeneral'])->name('admin.preview_general');
+    Route::post('/admin/submitWalkinBooking', [BookingController::class, 'WalkinBooking'])->name('WalkinBooking');
+
     // Route ตรวจการจองกิจกรรม
     Route::get('/admin/manage_bookings/activity', [BookingActivityController::class, 'showTodayBookings'])->name('today_bookings.activity');
     Route::get('/admin/request_bookings/activity', [BookingActivityController::class, 'showBookingsActivity'])->name('request_bookings.activity');

@@ -41,11 +41,11 @@
                 <p>วันที่จอง: {{ \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y') }}</p>
                 <p>ประเภทการเข้าชม: {{ $booking->activity->activity_name }}</p>
                 @if ($booking->timeslot)
-                <p>รอบการเข้าชม
-                {{ \Carbon\Carbon::parse($booking->timeslot->start_time)->format('H:i') }} น. -
-                {{ \Carbon\Carbon::parse($booking->timeslot->end_time)->format('H:i') }} น.</p>
-                </p>
-            @endif
+                    <p>รอบการเข้าชม
+                        {{ \Carbon\Carbon::parse($booking->timeslot->start_time)->format('H:i') }} น. -
+                        {{ \Carbon\Carbon::parse($booking->timeslot->end_time)->format('H:i') }} น.</p>
+                    </p>
+                @endif
                 @if (!$booking->subActivities->isEmpty())
                     <p>หลักสูตร:
                         {{ $booking->subActivities->pluck('sub_activity_name')->implode(', ') }}
@@ -53,7 +53,8 @@
                 @endif
                 <p>ชื่อหน่วยงาน: {{ $booking->institute->instituteName }}</p>
                 <p>ที่อยู่หน่วยงาน: {{ $booking->institute->instituteAddress }} {{ $booking->institute->subdistrict }}
-                    {{ $booking->institute->district }} {{ $booking->institute->province }} {{ $booking->institute->zipcode }}</p>
+                    {{ $booking->institute->district }} {{ $booking->institute->province }}
+                    {{ $booking->institute->zipcode }}</p>
                 @if (!empty($booking->note))
                     <p>*หมายเหตุ: {{ $booking->note }}</p>
                 @endif
@@ -63,6 +64,14 @@
                     <h1 style="color: #E6A732;">รออนุมัติการจอง</h1>
                 @elseif ($booking->status == 1)
                     <h1 style="color: #489085;">อนุมัติการจอง</h1>
+                @elseif ($booking->status == 2)
+                    <h1 style="color: #2b5ff9;">
+                        @if ($booking->activity->activity_type_id == 1)
+                            เข้าชมพิพิธภัณฑ์
+                        @elseif ($booking->activity->activity_type_id == 2)
+                            เข้าร่วมกิจกรรม
+                        @endif
+                    </h1>
                 @elseif ($booking->status == 3)
                     <h1 style="color: #ff0000;">ยกเลิกการจอง</h1>
                 @endif
@@ -80,15 +89,47 @@
                 <h3 style="color: #489085;">ข้อมูลการจองเข้าชม</h3>
                 <p>จองเมื่อ: {{ \Carbon\Carbon::parse($booking->visitor->created_at)->format('d/m/Y') }}</p>
                 <p>สถานะ: @if ($booking->status == 0)
-                    <span>รออนุมัติการจอง</span>
-                @elseif ($booking->status == 1)
-                    <span>อนุมัติการจอง</span>
-                @elseif ($booking->status == 3)
-                    <span>ยกเลิกการจอง</span>
-                @endif</p>
+                        <span>รออนุมัติการจอง</span>
+                    @elseif ($booking->status == 1)
+                        <span>อนุมัติการจอง</span>
+                    @elseif ($booking->status == 2)
+                        <span>
+                            @if ($booking->activity->activity_type_id == 1)
+                            เข้าชมพิพิธภัณฑ์
+                            @elseif ($booking->activity->activity_type_id == 2)
+                                เข้าร่วมกิจกรรม
+                            @endif
+                        </span>
+                    @elseif ($booking->status == 3)
+                        <span>ยกเลิกการจอง</span>
+                    @endif
+                </p>
             </div>
         </div>
 
+        @php
+            $prices = [
+                'children_price' => $booking->activity->children_price,
+                'student_price' => $booking->activity->student_price,
+                'adult_price' => $booking->activity->adult_price,
+                'kid_price' => $booking->activity->kid_price,
+                'disabled_price' => $booking->activity->disabled_price,
+                'elderly_price' => $booking->activity->elderly_price,
+                'monk_price' => $booking->activity->monk_price,
+            ];
+        @endphp
+        @php
+            $visitorTypes = [
+                'children_qty' => 'เด็ก',
+                'students_qty' => 'นักเรียน',
+                'adults_qty' => 'ผู้ใหญ่',
+                'kid_qty' => 'เด็กเล็ก',
+                'disabled_qty' => 'ผู้พิการ',
+                'elderly_qty' => 'ผู้สูงอายุ',
+                'monk_qty' => 'พระภิกษุ',
+                'free_teachers_qty' => 'ครูเข้าชมฟรี',
+            ];
+        @endphp
         <table class="table-container">
             <tr>
                 <th>ประเภทผู้เข้าชม</th>
@@ -96,80 +137,54 @@
                 <th>ราคา/คน</th>
                 <th>จำนวนเงิน (THB)</th>
             </tr>
-            @php
-                $totalPrice = 0;
-            @endphp
-            @if ($booking->children_qty > 0)
+
+            @foreach ($quantities as $type => $qty)
+                @if ($qty > 0 && $type !== 'free_teachers_qty')
+                    @php
+                        $priceMapping = [
+                            'children_qty' => 'children_price',
+                            'students_qty' => 'student_price',
+                            'adults_qty' => 'adult_price',
+                            'kid_qty' => 'kid_price',
+                            'disabled_qty' => 'disabled_price',
+                            'elderly_qty' => 'elderly_price',
+                            'monk_qty' => 'monk_price',
+                        ];
+
+                        $priceKey = $priceMapping[$type] ?? null;
+                    @endphp
+
+
+                    @if ($priceKey && isset($prices[$priceKey]))
+                        <tr>
+                            <td>{{ $visitorTypes[$type] ?? $type }}</td>
+                            <td>{{ $qty }} คน</td>
+                            <td>{{ number_format($prices[$priceKey], 2) }} บาท</td>
+                            <td>{{ number_format($qty * $prices[$priceKey], 2) }} บาท</td>
+                        </tr>
+                    @else
+                        <tr>
+                            <td>{{ $visitorTypes[$type] ?? $type }}</td>
+                            <td>{{ $qty }} คน</td>
+                            <td>0.00 บาท</td>
+                            <td>0.00 บาท</td>
+                        </tr>
+                    @endif
+                @endif
+            @endforeach
+
+            @if ($quantities['free_teachers_qty'] > 0)
                 <tr>
-                    <td>เด็ก</td>
-                    <td>{{ $booking->children_qty }} คน</td>
-                    <td>{{ number_format($booking->activity->children_price, 2) }} บาท</td>
-                    <td>{{ number_format($booking->children_qty * $booking->activity->children_price, 2) }} บาท</td>
+                    <td>คุณครูเข้าชมฟรี</td>
+                    <td>{{ $quantities['free_teachers_qty'] }} คน</td>
+                    <td>0.00 บาท</td>
+                    <td>0.00 บาท</td>
                 </tr>
-                @php $totalPrice += $booking->children_qty * $booking->activity->children_price; @endphp
-            @endif
-            @if ($booking->students_qty > 0)
-                <tr>
-                    <td>มัธยม / นักศึกษา</td>
-                    <td>{{ $booking->students_qty }} คน</td>
-                    <td>{{ number_format($booking->activity->student_price, 2) }} บาท</td>
-                    <td>{{ number_format($booking->students_qty * $booking->activity->student_price, 2) }} บาท</td>
-                </tr>
-                @php $totalPrice += $booking->students_qty * $booking->activity->student_price; @endphp
-            @endif
-            @if ($booking->adults_qty > 0)
-                <tr>
-                    <td>ผู้ใหญ่ / คุณครู</td>
-                    <td>{{ $booking->adults_qty }} คน</td>
-                    <td>{{ number_format($booking->activity->adult_price, 2) }} บาท</td>
-                    <td>{{ number_format($booking->adults_qty * $booking->activity->adult_price, 2) }} บาท</td>
-                </tr>
-                @php $totalPrice += $booking->adults_qty * $booking->activity->adult_price; @endphp
-            @endif
-            @if ($booking->kid_qty > 0)
-                <tr>
-                    <td>เด็กเล็ก</td>
-                    <td>{{ $booking->kid_qty }} คน</td>
-                    <td>{{ number_format($booking->activity->kid_price, 2) }} บาท</td>
-                    <td>{{ number_format($booking->kid_qty * $booking->activity->kid_price, 2) }} บาท</td>
-                </tr>
-                @php $totalPrice += $booking->kid_qty * $booking->activity->kid_price; @endphp
-            @endif
-            @if ($booking->disabled_qty > 0)
-                <tr>
-                    <td>ผู้พิการ</td>
-                    <td>{{ $booking->disabled_qty }} คน</td>
-                    <td>{{ number_format($booking->activity->disabled_price, 2) }} บาท</td>
-                    <td>{{ number_format($booking->disabled_qty * $booking->activity->disabled_price, 2) }} บาท</td>
-                </tr>
-                @php $totalPrice += $booking->disabled_qty * $booking->activity->disabled_price; @endphp
-            @endif
-            @if ($booking->elderly_qty > 0)
-                <tr>
-                    <td>ผู้สูงอายุ</td>
-                    <td>{{ $booking->elderly_qty }} คน</td>
-                    <td>{{ number_format($booking->activity->elderly_price, 2) }} บาท</td>
-                    <td>{{ number_format($booking->elderly_qty * $booking->activity->elderly_price, 2) }} บาท</td>
-                </tr>
-                @php $totalPrice += $booking->elderly_qty * $booking->activity->elderly_price; @endphp
-            @endif
-            @if ($booking->monk_qty > 0)
-                <tr>
-                    <td>พระภิกษุสงฆ์ / สามเณร</td>
-                    <td>{{ $booking->monk_qty }} รูป</td>
-                    <td>{{ number_format($booking->activity->monk_price, 2) }} บาท</td>
-                    <td>{{ number_format($booking->monk_qty * $booking->activity->monk_price, 2) }} บาท</td>
-                </tr>
-                @php
-                    $totalPrice += $booking->monk_qty * $booking->activity->monk_price;
-                @endphp
             @endif
         </table>
-
         <div class="total">
             <p style="color: #489085;"><strong>ยอดรวมทั้งหมด: {{ number_format($totalPrice, 2) }} บาท</strong></p>
         </div>
-
         <div class="footer">
             <h3 style="color: #489085;">ข้อมูลเพิ่มเติม</h3>
             <p>เวลาทำการ 08.30 น. - 16.30 น.</p>

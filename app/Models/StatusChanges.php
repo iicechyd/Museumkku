@@ -26,6 +26,7 @@ class StatusChanges extends Model
         'actual_disabled_qty',
         'actual_elderly_qty',
         'actual_monk_qty',
+        'actual_free_teachers_qty',
         'changed_by',
     ];
 

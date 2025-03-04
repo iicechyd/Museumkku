@@ -242,27 +242,24 @@
                                                                     </button>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    @if ($item->activity && !empty($priceDetails))
-                                                                        @foreach ($priceDetails as $detail)
-                                                                            <p>{{ $detail['label'] }} {{ $detail['qty'] }}
-                                                                                คน
-                                                                                @if ($detail['price'] > 0)
-                                                                                    x {{ number_format($detail['price']) }}
-                                                                                    บาท =
-                                                                                    {{ number_format($detail['total']) }}
-                                                                                    บาท
-                                                                                @endif
-                                                                            </p>
-                                                                        @endforeach
-                                                                        @if ($totalPrice > 0)
-                                                                            <hr>
-                                                                            <p><strong>ยอดรวมราคา:</strong>
-                                                                                {{ number_format($totalPrice) }} บาท</p>
-                                                                            <p><strong>ยอดรวมผู้เข้าชมจริงทั้งหมด:</strong>
-                                                                                {{ number_format($totalParticipants) }} คน
-                                                                            </p>
-                                                                        @endif
+                                                                    @php
+                                                                        $modalDetails = $priceDetailsByBooking[$statusChange->booking_id] ?? null;
+                                                                    @endphp
+                                                                    @if ($modalDetails && !empty($modalDetails['details']))
+                                                                    @foreach ($modalDetails['details'] as $detail)
+                                                                        <p>{{ $detail['label'] }} {{ $detail['qty'] }} คน
+                                                                            @if ($detail['price'] > 0)
+                                                                                x {{ number_format($detail['price']) }} บาท =
+                                                                                {{ number_format($detail['total']) }} บาท
+                                                                            @endif
+                                                                        </p>
+                                                                    @endforeach
+                                                                    @if ($modalDetails['totalPrice'] > 0)
+                                                                        <hr>
+                                                                        <p><strong>ยอดรวมราคา:</strong> {{ number_format($modalDetails['totalPrice']) }} บาท</p>
+                                                                        <p><strong>ยอดรวมผู้เข้าชมจริงทั้งหมด:</strong> {{ number_format($modalDetails['totalParticipants']) }} คน</p>
                                                                     @endif
+                                                                @endif
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary"

@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->integer('actual_disabled_qty')->default(0);
             $table->integer('actual_elderly_qty')->default(0);
             $table->integer('actual_monk_qty')->default(0);
+            $table->integer('actual_free_teachers_qty')->default(0);
             $table->string( 'changed_by');
             $table->timestamps();
 

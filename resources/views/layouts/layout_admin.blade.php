@@ -59,6 +59,9 @@
                                 </li>
                             </ul>
                             <li class="sidebar-item">
+                                <a href="{{ route('admin.preview_general')}}" class="sidebar-link">เข้าชมวอคอิน</a>
+                            </li>
+                            <li class="sidebar-item">
                                 <a href="/admin/admin_calendar" class="sidebar-link">ปฏิทินพิพิธภัณฑ์</a>
                             </li>
                             <li class="sidebar-item">

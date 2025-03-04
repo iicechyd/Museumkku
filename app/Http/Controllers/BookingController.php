@@ -263,6 +263,7 @@ class BookingController extends Controller
             'actual_disabled_qty' => 'integer|min:0',
             'actual_elderly_qty' => 'integer|min:0',
             'actual_monk_qty' => 'integer|min:0',
+            'actual_free_teachers_qty' => 'integer|min:0',
         ]);
 
         $booking = Bookings::where('booking_id', $booking_id)->firstOrFail();
@@ -300,6 +301,7 @@ class BookingController extends Controller
             $statusChange->actual_disabled_qty = $request->input('actual_disabled_qty', 0);
             $statusChange->actual_elderly_qty = $request->input('actual_elderly_qty', 0);
             $statusChange->actual_monk_qty = $request->input('actual_monk_qty', 0);
+            $statusChange->actual_free_teachers_qty = $request->input('actual_free_teachers_qty', 0);
             $statusChange->changed_by = $changedBy;
             $statusChange->save();
         } else {
@@ -316,6 +318,7 @@ class BookingController extends Controller
                 'actual_disabled_qty' => $request->input('actual_disabled_qty', 0),
                 'actual_elderly_qty' => $request->input('actual_elderly_qty', 0),
                 'actual_monk_qty' => $request->input('actual_monk_qty', 0),
+                'actual_free_teachers_qty' => $request->input('actual_free_teachers_qty', 0),
                 'changed_by' => $changedBy,
             ]);
         }
@@ -603,6 +606,277 @@ class BookingController extends Controller
         ]);
     }
 
+    function WalkinBooking(Request $request)
+    {
+        $rules = [
+            'fk_activity_id' => 'required|exists:activities,activity_id',
+            'fk_timeslots_id' => 'nullable|exists:timeslots,timeslots_id',
+            'sub_activity_id' => 'nullable|array',
+            'sub_activity_id.*' => 'nullable|exists:sub_activities,sub_activity_id',
+            'booking_date' => 'required|date_format:d/m/Y',
+            'instituteName' => 'required',
+            'instituteAddress' => 'required',
+            'province' => 'required|string|max:100',
+            'district' => 'required|string|max:100',
+            'subdistrict' => 'required|string|max:100',
+            'zipcode' => ['required', 'regex:/^[0-9]{5}$/'],
+            'visitorName' => 'required',
+            'visitorEmail' => 'required|email',
+            'tel' => ['required', 'regex:/^[0-9]{10}$/', 'starts_with:0'],
+            'children_qty' => 'nullable|integer|min:0',
+            'students_qty' => 'nullable|integer|min:0',
+            'adults_qty' => 'nullable|integer|min:0',
+            'kid_qty' => 'nullable|integer|min:0',
+            'disabled_qty' => 'nullable|integer|min:0',
+            'elderly_qty' => 'nullable|integer|min:0',
+            'monk_qty' => 'nullable|integer|min:0',
+            'note' => 'nullable|string'
+        ];
+
+        if (in_array($request->fk_activity_id, [1, 2, 3])) {
+            $rules['fk_timeslots_id'] = 'required|exists:timeslots,timeslots_id';
+        }
+        $messages = [
+            'fk_timeslots_id.required' => 'กรุณาเลือกรอบการเข้าชม',
+            'booking_date.required' => 'กรุณาระบุวันที่จองเข้าชม',
+            'instituteName.required' => 'กรุณากรอกชื่อหน่วยงาน',
+            'instituteAddress.required' => 'กรุณากรอกที่อยู่หน่วยงาน',
+            'province.required' => 'กรุณากรอกจังหวัด',
+            'district.required' => 'กรุณากรอกเขต/อำเภอ',
+            'subdistrict.required' => 'กรุณากรอกแขวน/ตำบล',
+            'zipcode.required' => 'กรุณกรอกรหัสไปรษณีย์',
+            'visitorName.required' => 'กรุณกรอกชื่อผู้ประสานงาน',
+            'visitorEmail.required' => 'กรุณกรอกอีเมล์ผู้ประสานงาน',
+            'tel.required' => 'กรุณกรอกเบอร์โทรผู้ประสานงาน',
+            'tel.regex' => 'กรุณากรอกเบอร์โทรในรูปแบบที่ถูกต้อง (10 หลัก)',
+            'tel.starts_with' => 'เบอร์โทรต้องขึ้นต้นด้วย 0',
+            'at_least_one_quantity.required' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $activity = Activity::find($request->fk_activity_id);
+        if (!$activity) {
+            return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
+        }
+        $maxSubactivities = $activity->max_subactivities;
+        $selectedSubactivities = $request->input('sub_activity_id', []);
+        if (count($selectedSubactivities) > $maxSubactivities) {
+            return back()->withErrors([
+                'sub_activity_id' => "คุณสามารถเลือกได้สูงสุด $maxSubactivities กิจกรรมย่อยเท่านั้น"
+            ])->withInput();
+        }
+        $quantityFields = [
+            'children_qty',
+            'students_qty',
+            'adults_qty',
+            'kid_qty',
+            'disabled_qty',
+            'elderly_qty',
+            'monk_qty'
+        ];
+
+        $isAtLeastOneQuantityFilled = false;
+        $totalToBook = 0;
+
+        foreach ($quantityFields as $field) {
+            if ($request->$field > 0) {
+                $isAtLeastOneQuantityFilled = true;
+            }
+            $totalToBook += $request->$field ?? 0;
+        }
+
+        if (!$isAtLeastOneQuantityFilled) {
+            return back()->withErrors([
+                'at_least_one_quantity' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท'
+            ])->withInput();
+        }
+        if ($totalToBook < 50) {
+            session()->flash('error', 'กรุณาจองขั้นต่ำ 50 คน');
+            return back()->withInput();
+        }
+        $activity = Activity::with('activityType')->find($request->fk_activity_id);
+        if (!$activity) {
+            return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
+        }
+
+        $bookingDate = DateTime::createFromFormat('d/m/Y', $request->booking_date);
+        if (!$bookingDate) {
+            return back()->with('error', 'รูปแบบวันที่ไม่ถูกต้อง')->withInput();
+        }
+        $formattedDate = $bookingDate->format('Y-m-d');
+
+        if ($request->filled('fk_timeslots_id')) {
+            $timeslot = Timeslots::find($request->fk_timeslots_id);
+            if (!$timeslot) {
+                return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
+            }
+
+            if ($activity->activity_id == 3) {
+                if ($request->filled('fk_timeslots_id')) {
+                    $timeslot = Timeslots::find($request->fk_timeslots_id);
+                    if (!$timeslot) {
+                        return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
+                    }
+                    $conflictingBooking = Bookings::join('timeslots', 'bookings.timeslots_id', '=', 'timeslots.timeslots_id')
+                        ->whereIn('bookings.activity_id', [1, 2])
+                        ->where('bookings.booking_date', $formattedDate)
+                        ->where(function ($query) use ($timeslot) {
+                            $query->where('timeslots.start_time', '<', $timeslot->end_time)
+                                ->where('timeslots.end_time', '>', $timeslot->start_time);
+                        })
+                        ->exists();
+
+                    if ($conflictingBooking) {
+                        return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีกิจกรรมที่จองในช่วงเวลาใกล้เคียงกันจากกิจกรรมอื่น กรุณาจองช่วงเวลาอื่น')->withInput();
+                    }
+                }
+            }
+            if (in_array($activity->activity_id, [1, 2])) {
+                if ($request->filled('fk_timeslots_id')) {
+                    $timeslot = Timeslots::find($request->fk_timeslots_id);
+                    if (!$timeslot) {
+                        return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
+                    }
+                    $conflictingBooking = Bookings::join('timeslots', 'bookings.timeslots_id', '=', 'timeslots.timeslots_id')
+                        ->where('bookings.activity_id', 3)
+                        ->where('bookings.booking_date', $formattedDate)
+                        ->where(function ($query) use ($timeslot) {
+                            $query->where('timeslots.start_time', '<', $timeslot->end_time)
+                                ->where('timeslots.end_time', '>', $timeslot->start_time);
+                        })
+                        ->exists();
+
+                    if ($conflictingBooking) {
+                        return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีการจองกิจกรรมอื่นในช่วงเวลาใกล้เคียง กรุณาจองช่วงเวลาอื่น')->withInput();
+                    }
+                }
+            }
+            $totalToBook = ($request->children_qty ?? 0)
+                + ($request->students_qty ?? 0)
+                + ($request->adults_qty ?? 0)
+                + ($request->kid_qty ?? 0)
+                + ($request->disabled_qty ?? 0)
+                + ($request->elderly_qty ?? 0)
+                + ($request->monk_qty ?? 0);
+            $totalBooked = Bookings::where('booking_date', $formattedDate)
+                ->where('timeslots_id', $timeslot->timeslots_id)
+                ->whereIn('status', [0, 1])
+                ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
+            if ($activity->max_capacity !== null && $totalBooked + $totalToBook > $activity->max_capacity) {
+                return back()->with('error', 'จำนวนเกินความจุต่อรอบการเข้าชม')->withInput();
+            }
+        }
+
+        $formattedDate = Carbon::createFromFormat('d/m/Y', $request->input('booking_date'))->format('Y-m-d');
+        $visitor = Visitors::where('visitorEmail', $request->input('visitorEmail'))->first();
+
+        if ($visitor) {
+            $existingBooking = Bookings::where('activity_id', $request->input('fk_activity_id'))
+                ->where('booking_date', $formattedDate)
+                ->where('timeslots_id', $request->input('fk_timeslots_id') ?? null)
+                ->where('visitor_id', $visitor->visitor_id)
+                ->whereIn('status', [0, 1])
+                ->exists();
+
+            if ($existingBooking) {
+                return back()->with('warning', 'พบข้อมูลการจองซ้ำในระบบ กรุณาตรวจสอบข้อมูลการจองในอีเมลของคุณ');
+            }
+        }
+        $institute = Institutes::firstOrCreate([
+            'instituteName' => $request->instituteName,
+            'instituteAddress' => $request->instituteAddress,
+            'province' => $request->province,
+            'district' => $request->district,
+            'subdistrict' => $request->subdistrict,
+            'zipcode' => $request->zipcode,
+        ]);
+        $visitor = Visitors::updateOrCreate(
+            [
+                'visitorEmail' => $request->visitorEmail,
+            ],
+            [
+                'visitorName' => $request->visitorName,
+                'tel' => $request->tel,
+                'institute_id' => $institute->institute_id,
+            ]
+        );
+
+        $booking = new Bookings();
+        $booking->activity_id = $request->fk_activity_id;
+        $booking->timeslots_id = $request->fk_timeslots_id ?? null;
+        $booking->institute_id = $institute->institute_id;
+        $booking->visitor_id = $visitor->visitor_id;
+        $booking->booking_date = $formattedDate;
+        $booking->children_qty = $request->children_qty ?? 0;
+        $booking->students_qty = $request->students_qty ?? 0;
+        $booking->adults_qty = $request->adults_qty ?? 0;
+        $booking->kid_qty = $request->kid_qty ?? 0;
+        $booking->disabled_qty = $request->disabled_qty ?? 0;
+        $booking->elderly_qty = $request->elderly_qty ?? 0;
+        $booking->monk_qty = $request->monk_qty ?? 0;
+        $booking->note = $request->note;
+        $booking->status = 1;
+        $booking->save();
+
+        if ($request->has('sub_activity_id')) {
+            $subActivities = $request->input('sub_activity_id');
+            $booking->subActivities()->sync($subActivities);
+        }
+        session()->forget('visitor_data');
+        $uploadLink = route('documents.upload', ['booking_id' => $booking->booking_id]);
+        Mail::to($request->visitorEmail)->send(new BookingApprovedMail($booking, $uploadLink));
+        return back()->with('showSuccessModal', true);
+    }
+
+    public function showAdminBookingForm($activity_id)
+    {
+        if (!session()->has('verification_email')) {
+            session(['redirect_url' => route('admin_bookings.activity', ['activity_id' => $activity_id])]);
+            return redirect()->route('guest.verify');
+        }
+
+        $selectedActivity = Activity::find($activity_id);
+        if (!$selectedActivity) {
+            return redirect()->back()->with('error', 'Activity not found.');
+        }
+
+        $timeslots = Timeslots::where('activity_id', $activity_id)->get();
+        $subactivities = SubActivity::where('activity_id', $activity_id)
+            ->where('status', 1)
+            ->get();
+        $hasSubactivities = $subactivities->isNotEmpty();
+
+        $email = session('verification_email');
+        $visitor = Visitors::where('visitorEmail', $email)->with('institute')->first();
+
+        $visitorData = [
+            'visitorName' => $visitor->visitorName ?? '',
+            'visitorEmail' => $visitor->visitorEmail ?? '',
+            'tel' => $visitor->tel ?? '',
+            'instituteName' => $visitor->institute->instituteName ?? '',
+            'instituteAddress' => $visitor->institute->instituteAddress ?? '',
+            'province' => $visitor->institute->province ?? '',
+            'district' => $visitor->institute->district ?? '',
+            'subdistrict' => $visitor->institute->subdistrict ?? '',
+            'zipcode' => $visitor->institute->zipcode ?? '',
+        ];
+
+        return view('admin.admin_bookings', [
+            'activity_id' => $activity_id,
+            'selectedActivity' => $selectedActivity,
+            'timeslots' => $timeslots,
+            'subactivities' => $subactivities,
+            'hasSubactivities' => $hasSubactivities,
+            'maxSubactivities' => $selectedActivity->max_subactivities,
+            'visitorData' => $visitorData,
+        ]);
+    }
+
     public function searchBookingByEmail(Request $request)
     {
         $request->validate([
@@ -687,7 +961,6 @@ class BookingController extends Controller
         }
         $histories = $query->paginate(5);
         $totalBookings = $query->count();
-
         $totalBookedVisitors = $query->sum(DB::raw("
         COALESCE(children_qty, 0) +
         COALESCE(students_qty, 0) +
@@ -700,38 +973,7 @@ class BookingController extends Controller
 
         $totalRevenue = 0;
         $totalActualVisitors = 0;
-
-        foreach ($histories as $booking) {
-            $prices = [
-                'children_price' => $booking->activity->children_price,
-                'student_price' => $booking->activity->student_price,
-                'adult_price' => $booking->activity->adult_price,
-                'disabled_price' => $booking->activity->disabled_price,
-                'elderly_price' => $booking->activity->elderly_price,
-                'monk_price' => $booking->activity->monk_price,
-            ];
-
-            foreach ($booking->statusChanges as $statusChange) {
-                $totalActualVisitors += $statusChange->actual_children_qty
-                    + $statusChange->actual_students_qty
-                    + $statusChange->actual_adults_qty
-                    + $statusChange->actual_kid_qty
-                    + $statusChange->actual_disabled_qty
-                    + $statusChange->actual_elderly_qty
-                    + $statusChange->actual_monk_qty;
-
-                $totalRevenue += ($statusChange->actual_children_qty * $prices['children_price'])
-                    + ($statusChange->actual_students_qty * $prices['student_price'])
-                    + ($statusChange->actual_adults_qty * $prices['adult_price'])
-                    + ($statusChange->actual_kid_qty * $prices['children_price'])
-                    + ($statusChange->actual_disabled_qty * $prices['disabled_price'])
-                    + ($statusChange->actual_elderly_qty * $prices['elderly_price'])
-                    + ($statusChange->actual_monk_qty * $prices['monk_price']);
-            }
-        }
-        $totalPrice = 0;
-        $totalParticipants = 0;
-        $priceDetails = [];
+        $priceDetailsByBooking = [];
 
         $categories = [
             'children' => 'เด็ก',
@@ -744,8 +986,8 @@ class BookingController extends Controller
         ];
 
         foreach ($histories as $booking) {
-            if (!$booking->activity) continue; // ป้องกัน null error
-            
+            if (!$booking->activity) continue;
+
             $prices = [
                 'children' => $booking->activity->children_price ?? 0,
                 'students' => $booking->activity->student_price ?? 0,
@@ -755,14 +997,18 @@ class BookingController extends Controller
                 'elderly' => $booking->activity->elderly_price ?? 0,
                 'monk' => $booking->activity->monk_price ?? 0
             ];
-    
+
             foreach ($booking->statusChanges as $statusChange) {
+                $totalParticipants = 0;
+                $totalPrice = 0;
+                $priceDetails = [];
+
                 foreach ($categories as $key => $label) {
                     $qtyField = "actual_{$key}_qty";
                     $qty = $statusChange->$qtyField ?? 0;
                     $price = $prices[$key] ?? 0;
                     $total = $qty * $price;
-    
+
                     if ($qty > 0) {
                         $priceDetails[] = [
                             'label' => $label,
@@ -771,17 +1017,23 @@ class BookingController extends Controller
                             'total' => $total
                         ];
                     }
-    
-                    $totalActualVisitors += $qty;
-                    $totalRevenue += $total;
-                    $totalPrice += $total;
+
                     $totalParticipants += $qty;
+                    $totalPrice += $total;
                 }
+                $totalRevenue += $totalPrice;
+                $totalActualVisitors += $totalParticipants;
+
+                $priceDetailsByBooking[$statusChange->booking_id] = [
+                    'details' => $priceDetails,
+                    'totalParticipants' => $totalParticipants,
+                    'totalPrice' => $totalPrice
+                ];
             }
         }
         $activities = Activity::orderBy('activity_name')->pluck('activity_name', 'activity_id');
 
-        return view('admin.history', compact('histories', 'activities', 'totalRevenue', 'totalBookings', 'totalBookedVisitors', 'totalActualVisitors', 'priceDetails', 'totalPrice', 'totalParticipants'));
+        return view('admin.history', compact('histories', 'activities', 'totalRevenue', 'totalBookings', 'totalBookedVisitors', 'totalActualVisitors', 'priceDetails', 'totalPrice', 'totalParticipants', 'priceDetailsByBooking'));
     }
 
 
@@ -1040,6 +1292,30 @@ class BookingController extends Controller
     public function showDetails($booking_id)
     {
         $booking = Bookings::findOrFail($booking_id);
-        return view('emails.bookingDetails', compact('booking'));
+        $statusChange = $booking->note === 'วอคอิน'
+            ? StatusChanges::where('booking_id', $booking_id)->latest()->first()
+            : null;
+
+        $quantities = [
+            'children_qty' => $statusChange ? $statusChange->actual_children_qty : $booking->children_qty,
+            'students_qty' => $statusChange ? $statusChange->actual_students_qty : $booking->students_qty,
+            'adults_qty' => $statusChange ? $statusChange->actual_adults_qty : $booking->adults_qty,
+            'kid_qty' => $statusChange ? $statusChange->actual_kid_qty : $booking->kid_qty,
+            'disabled_qty' => $statusChange ? $statusChange->actual_disabled_qty : $booking->disabled_qty,
+            'elderly_qty' => $statusChange ? $statusChange->actual_elderly_qty : $booking->elderly_qty,
+            'monk_qty' => $statusChange ? $statusChange->actual_monk_qty : $booking->monk_qty,
+            'free_teachers_qty' => $statusChange ? $statusChange->actual_free_teachers_qty : 0,
+        ];
+
+        $totalPrice =
+            ($quantities['children_qty'] * $booking->activity->children_price) +
+            ($quantities['students_qty'] * $booking->activity->student_price) +
+            ($quantities['adults_qty'] * $booking->activity->adult_price) +
+            ($quantities['kid_qty'] * $booking->activity->kid_price) +
+            ($quantities['disabled_qty'] * $booking->activity->disabled_price) +
+            ($quantities['elderly_qty'] * $booking->activity->elderly_price) +
+            ($quantities['monk_qty'] * $booking->activity->monk_price);
+
+        return view('emails.bookingDetails', compact('booking', 'quantities', 'totalPrice'));
     }
 }

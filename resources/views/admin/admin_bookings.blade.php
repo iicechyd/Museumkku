@@ -1,10 +1,9 @@
 @extends('layouts.layout')
-@section('title', 'กรอกข้อมูลเพื่อจองเข้าชมพิพิธภัณฑ์')
+@section('title', 'แบบฟอร์มเข้าชมวอคอิน')
 @section('content')
 
     <head>
         <link rel="stylesheet" href="{{ asset('css/form_bookings.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -19,9 +18,7 @@
             href="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.css">
         <script type="text/javascript"
             src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
-
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     </head>
     <div class="container mt-4 pb-5">
         @if (session('success'))
@@ -45,24 +42,18 @@
                 window.addEventListener('DOMContentLoaded', function() {
                     const successModal = new bootstrap.Modal(document.getElementById('successModal'));
                     successModal.show();
+                    setTimeout(function() {
+                        window.location.href = "{{ route('today_bookings.general') }}";
+                    }, 3000);
                 });
             </script>
         @endif
         @if (session('verification_email'))
             <h2 class="text-center py-3"
                 style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); ">
-                แบบฟอร์มจองเข้าชมพิพิธภัณฑ์</h2>
+                แบบฟอร์มเข้าชมวอคอิน</h2>
             <div class="card shadow p-4">
-                <div class="pb-3">
-                    <button id="toggleButton" type="button" class="toggle-btn" onclick="toggleCalendar()">
-                        <span id="toggleText">แสดงปฏิทินการจอง</span>
-                        <span id="arrowIcon" class="arrow">&#9660;</span>
-                    </button>
-                    <div id="calendar" class="calendar hidden">
-                    </div>
-                </div>
-
-                <form method="POST" action="{{ route('InsertBooking') }}" class="row g-3" novalidate>
+                <form method="POST" action="{{ route('WalkinBooking') }}" class="row g-3" novalidate>
                     @csrf
                     <div class="col-md-5">
                         <label for="activity_select" class="form-label">ประเภทเข้าชม</label>
@@ -71,14 +62,11 @@
                             <option value="{{ $activity_id }}">{{ $selectedActivity->activity_name }}</option>
                         </select>
                     </div>
-
                     <div class="form-group col-md-4">
                         <label for="booking_date" class="form-label">วันที่จอง</label>
                         <div class="input-group">
-                            <input type="date" class="form-control" id="booking_date" name="booking_date"
-                                value="{{ old('booking_date', $booking_date ?? '') }}"
-                                min="{{ date('Y-m-d', strtotime('+3 days')) }}" required
-                                placeholder="กรุณาเลือกวันที่ต้องการจอง (วัน/เดือน/ปี)">
+                            <input type="text" class="form-control" id="booking_date" name="booking_date"
+                                readonly required>
                             <div class="input-group-append">
                                 <button type="button" class="input-group-text"
                                     onclick="document.getElementById('booking_date').focus();">
@@ -91,7 +79,6 @@
                                 <span class="text-danger">{{ $message }}</span>
                             </div>
                         @enderror
-                        <p>*หมายเหตุ กรุณาเลือกวันที่ต้องการจองล่วงหน้า 3 วัน</p>
                     </div>
 
                     @if ($hasSubactivities)
@@ -252,8 +239,8 @@
                     <div class="col-md-4">
                         <label for="note" class="form-label">หมายเหตุ</label>
                         <input type="text" class="form-control @error('note') is-invalid @enderror" id="note"
-                            name="note" placeholder="กรอกหมายเหตุ (ถ้ามี)" value="{{ old('note') }}" required
-                            autocomplete="note">
+                            name="note" value="วอคอิน" readonly
+                            required>
                         @error('note')
                             <div class="my-2">
                                 <span class="text-danger">{{ $errors->first('note') }}</span>
@@ -290,7 +277,7 @@
                         <div class="col-md-3">
                             <input class="form-check-input" type="checkbox" id="students_qty" name="students_qty"
                                 onclick="toggleInput('studentInput')">
-                            <label class="form-check-label" for="students_qty">นักเรียนมัธยม/นักศึกษา :
+                            <label class="form-check-label" for="students_qty">มัธยม/นักศึกษา :
                                 {{ $selectedActivity->student_price }} บาท/คน</label>
                             <input type="number" class="form-control mt-2" id="studentInput" name="students_qty"
                                 min="0" disabled oninput="calculateTotal()">
@@ -379,17 +366,16 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="successModalLabel">ส่งข้อมูลสำเร็จ</h5>
+                                <h5 class="modal-title" id="successModalLabel">บันทึกแบบฟอร์มเข้าชมวอคอินสำเร็จ</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 </button>
                             </div>
                             <div class="modal-body text-center">
-                                กรุณารอการติดต่อกลับจากเจ้าหน้าที่ทางอีเมล ภายใน 24 ชั่วโมง<br> หากมีข้อสงสัย กรุณาติดต่อ
-                                096-XXX-XXXX เจ้าหน้าที่ฝ่ายกิจกรรม
-                            </div>
-                            <div class="modal-footer">
-                                <a href="/checkBookingStatus" class="btn btn-primary">ตรวจสอบสถานะการจอง</a>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                                <div class="spinner-border" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                <br>
+                                <p>เรากำลังนำคุณกลับไปยังหน้าการจองวันนี้ กรุณารอขณะนี้...</p>
                             </div>
                         </div>
                     </div>
@@ -397,29 +383,10 @@
             </div>
         @endif
     </div>
-    <!-- Modal Calendar -->
-    <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="eventModalLabel">รายละเอียดการจอง</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h4 id="eventTitle"></h4>
-                    <p><strong id="eventTimeslotLabel"></strong></p>
-                    <p id="eventTimeslot"></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <script>
         window.subactivities = @json($subactivities);
         window.maxSubactivities = @json($maxSubactivities);
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="{{ asset('js/form_bookings.js') }}"></script>
+    <script src="{{ asset('js/admin_bookings.js') }}"></script>
 @endsection

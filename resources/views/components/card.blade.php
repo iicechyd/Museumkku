@@ -1,4 +1,4 @@
-@props(['title', 'text', 'image', 'detail', 'booking','bookingText'])
+@props(['title', 'text', 'image', 'detail', 'booking','bookingText', 'hideDetail' => false])
 
 <div class="card" style="min-height: 29rem; display: flex; flex-direction: column;">
     <img src="{{ $image }}" class="card-img-top card-img "
@@ -9,12 +9,20 @@
     </div>
     <div class="footer text-center" style="padding: 10px;">
         <div class="flex justify-center space-x-4">
-            <a href="{{ $detail }}" class="btn text-white width:50%" style="background-color: #489085;" data-id="detail-button">
-                รายละเอียดเพิ่มเติม
-            </a>
-            <a href="{{ $booking }}" class="btn text-white width:50%" style=" background-color: #E6A732;" data-id="booking-button">
+            @if($hideDetail)
+            <a href="{{ $booking }}" class="btn text-white w-100" style="background-color: #E6A732;" data-id="booking-button">
                 {{ $bookingText }}
             </a>
+        @else
+            <div class="flex justify-center space-x-4">
+                <a href="{{ $detail }}" class="btn text-white" style="background-color: #489085;" data-id="detail-button">
+                    รายละเอียดเพิ่มเติม
+                </a>
+                <a href="{{ $booking }}" class="btn text-white" style="background-color: #E6A732;" data-id="booking-button">
+                    {{ $bookingText }}
+                </a>
+            </div>
+        @endif
         </div>
     </div>
 </div>

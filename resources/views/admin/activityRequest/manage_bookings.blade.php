@@ -92,16 +92,15 @@
                                         id="actual_students_qty_{{ $item->booking_id }}">
                                     <input type="hidden" name="actual_adults_qty"
                                         id="actual_adults_qty_{{ $item->booking_id }}">
-                                    <input type="hidden" name="actual_kid_qty"
-                                        id="actual_kid_qty_{{ $item->booking_id }}">
+                                    <input type="hidden" name="actual_kid_qty" id="actual_kid_qty_{{ $item->booking_id }}">
                                     <input type="hidden" name="actual_disabled_qty"
                                         id="actual_disabled_qty_{{ $item->booking_id }}">
                                     <input type="hidden" name="actual_elderly_qty"
                                         id="actual_elderly_qty_{{ $item->booking_id }}">
-                                    <input type="hidden" name="actual_monk_qty" 
-                                        id="actual_monk_qty_{{ $item->booking_id }}">
-                                    <input type="hidden" name="comments" 
-                                        id="comments_{{ $item->booking_id }}">
+                                    <input type="hidden" name="actual_monk_qty" id="actual_monk_qty_{{ $item->booking_id }}">
+                                    <input type="hidden" name="actual_free_teachers_qty"
+                                        id="actual_free_teachers_qty_{{ $item->booking_id }}">
+                                    <input type="hidden" name="comments" id="comments_{{ $item->booking_id }}">
 
                                     <div class="flex items-center space-x-3">
                                         <button type="button" class="btn btn-primary"
@@ -138,10 +137,13 @@
                                         </div>
                                         <div class="modal-body">
                                             @php
-                                                $prices = [
+                                                $general_prices = [
                                                     'children' => $item->activity->children_price ?? 0,
                                                     'students' => $item->activity->student_price ?? 0,
                                                     'adults' => $item->activity->adult_price ?? 0,
+                                                ];
+
+                                                $welfare_prices = [
                                                     'kid' => $item->activity->kid_price ?? 0,
                                                     'disabled' => $item->activity->disabled_price ?? 0,
                                                     'elderly' => $item->activity->elderly_price ?? 0,
@@ -150,39 +152,92 @@
 
                                                 $labels = [
                                                     'children' => 'เด็ก',
-                                                    'students' => 'นร / นศ',
+                                                    'students' => 'มัธยม / นักศึกษา',
                                                     'adults' => 'ผู้ใหญ่ / คุณครู',
                                                     'kid' => 'เด็กเล็ก',
                                                     'disabled' => 'ผู้พิการ',
                                                     'elderly' => 'ผู้สูงอายุ',
-                                                    'monk' => 'พระสงฆ์ / เณร',
+                                                    'monk' => 'พระภิกษุสงฆ์ /สามเณร',
                                                 ];
                                             @endphp
-                                            @foreach ($prices as $type => $price)
-                                            <div class="d-flex justify-content-center align-items-center mb-2">
+
+                                            {{-- กลุ่มทั่วไป --}}
+                                            <h5 class="mb-3">กลุ่มทั่วไป</h5>
+                                            @foreach ($general_prices as $type => $price)
+                                                <div class="d-flex justify-content-center align-items-center mb-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <label class="mr-2 mb-0"
+                                                            for="{{ $type }}_qty_{{ $item->booking_id }}"
+                                                            style="width: 100px;">
+                                                            {{ $labels[$type] }}
+                                                        </label>
+                                                        <input type="number"
+                                                            id="{{ $type }}_qty_{{ $item->booking_id }}"
+                                                            class="form-control visitor-input text-center"
+                                                            style="width: 70px; padding: 5px;" min="0" value="0"
+                                                            data-price="{{ $price }}"
+                                                            data-booking-id="{{ $item->booking_id }}"
+                                                            oninput="calculateTotal({{ $item->booking_id }})" required>
+                                                        <label class="ml-3" style="margin-left: 10px;">คน</label>
+                                                    </div>
+                                                    <span class="text-right" style="margin-left: 80px; width: 120px;">
+                                                        @if ($price != 0)
+                                                            {{ number_format($price) }} บาท/คน
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                            @endforeach
+
+                                            {{-- สวัสดิการ --}}
+                                            <h5 class="mt-4 mb-3">สวัสดิการ</h5>
+                                            @foreach ($welfare_prices as $type => $price)
+                                                <div class="d-flex justify-content-center align-items-center mb-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <label class="mr-2 mb-0"
+                                                            for="{{ $type }}_qty_{{ $item->booking_id }}"
+                                                            style="width: 100px;">
+                                                            {{ $labels[$type] }}
+                                                        </label>
+                                                        <input type="number"
+                                                            id="{{ $type }}_qty_{{ $item->booking_id }}"
+                                                            class="form-control visitor-input text-center"
+                                                            style="width: 70px; padding: 5px;" min="0" value="0"
+                                                            data-price="{{ $price }}"
+                                                            data-booking-id="{{ $item->booking_id }}"
+                                                            oninput="calculateTotal({{ $item->booking_id }})" required>
+                                                        <label class="ml-3"
+                                                            style="margin-left: 10px;">{{ $type === 'monk' ? 'รูป' : 'คน' }}</label>
+                                                    </div>
+                                                    <span class="text-right" style="margin-left: 80px; width: 120px;">
+                                                        @if ($price != 0)
+                                                            {{ number_format($price) }}
+                                                            {{ $type === 'monk' ? 'บาท/รูป' : 'บาท/คน' }}
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                            @endforeach
+                                            @php
+                                                $maxFreeTeachers = 0;
+                                            @endphp
+                                            <div class="d-flex justify-content-center align-items-center mb-2" style="position: absolute; visibility: hidden;">
                                                 <div class="d-flex align-items-center">
-                                                    <label class="mr-2 mb-0"
-                                                        for="{{ $type }}_qty_{{ $item->booking_id }}"
+                                                    <label class="mr-2 mb-0" for="teacher_free_qty_{{ $item->booking_id }}"
                                                         style="width: 100px;">
-                                                        {{ $labels[$type] }}
+                                                        คุณครู
                                                     </label>
-                                                    <input type="number"
-                                                        id="{{ $type }}_qty_{{ $item->booking_id }}"
+                                                    <input type="number" id="teacher_free_qty_{{ $item->booking_id }}"
                                                         class="form-control visitor-input text-center"
-                                                        style="width: 70px; padding: 5px;" min="0" value="0"
-                                                        data-price="{{ $price }}"
+                                                        style="width: 70px; padding: 5px;" min="0"
+                                                        max="{{ $maxFreeTeachers }}" value="0" data-price="0"
                                                         data-booking-id="{{ $item->booking_id }}"
                                                         oninput="calculateTotal({{ $item->booking_id }})" required>
-                                                    <label class="ml-3"
-                                                        style="margin-left: 10px;">{{ $type === 'monk' ? 'รูป' : 'คน' }}</label>
+                                                    <label class="ml-3" style="margin-left: 10px;">คน</label>
                                                 </div>
                                                 <span class="text-right" style="margin-left: 80px; width: 120px;">
-                                                    @if ($price != 0)
-                                                        {{ number_format($price) }} {{ $type === 'monk' ? 'บาท/รูป' : 'บาท/คน' }}
-                                                    @endif
+                                                    ฟรี (สูงสุด <span id="maxFreeTeachers_{{ $item->booking_id }}">0</span>
+                                                    คน)
                                                 </span>
                                             </div>
-                                        @endforeach
                                             <div class="col-12 mt-4">
                                                 <h5>จำนวนผู้เข้าชมทั้งหมด: <span
                                                         id="totalVisitors_{{ $item->booking_id }}">0</span> <span
@@ -266,8 +321,8 @@
                                                     </strong>{{ $item->adults_qty }} คน</p>
                                             @endif
                                             @if ($item->kid_qty > 0)
-                                            <p><strong>เด็กเล็ก :
-                                                </strong>{{ $item->disabled_qty }} คน</p>
+                                                <p><strong>เด็กเล็ก :
+                                                    </strong>{{ $item->disabled_qty }} คน</p>
                                             @endif
                                             @if ($item->disabled_qty > 0)
                                                 <p><strong>ผู้พิการ :

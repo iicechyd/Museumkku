@@ -34,7 +34,7 @@ class DashboardController extends Controller
             ->where('bookings.status', 2)
             ->select(
                 'bookings.activity_id',
-                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total')
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty + actual_free_teachers_qty) as total')
             )
             ->groupBy('bookings.activity_id')
             ->pluck('total', 'bookings.activity_id');
@@ -43,7 +43,7 @@ class DashboardController extends Controller
             ->where('bookings.activity_id', 3)
             ->whereDate('bookings.booking_date', $today)
             ->where('bookings.status', 2)
-            ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
+            ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty + actual_free_teachers_qty'));
 
         $totalVisitorsToday = [
             1 => ($visitorsToday[1] ?? 0) + $visitorsActivity3Today,
@@ -56,7 +56,7 @@ class DashboardController extends Controller
             ->where('bookings.status', 2)
             ->select(
                 'bookings.activity_id',
-                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total')
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty + actual_free_teachers_qty) as total')
             )
             ->groupBy('bookings.activity_id')
             ->pluck('total', 'bookings.activity_id');
@@ -65,7 +65,7 @@ class DashboardController extends Controller
             ->where('bookings.activity_id', 3)
             ->whereDate('bookings.booking_date', $yesterday)
             ->where('bookings.status', 2)
-            ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
+            ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty + actual_free_teachers_qty'));
 
         $totalVisitorsYesterday = [
             1 => ($visitorsYesterday[1] ?? 0) + $visitorsActivity3Yesterday,
@@ -90,7 +90,7 @@ class DashboardController extends Controller
             ->where('bookings.status', 2)
             ->select(
                 'bookings.activity_id',
-                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty + actual_free_teachers_qty) as total_visitors')
             )
             ->groupBy('bookings.activity_id')
             ->pluck('total_visitors', 'bookings.activity_id');
@@ -114,7 +114,7 @@ class DashboardController extends Controller
             ->where('bookings.status', 2)
             ->select(
                 'bookings.activity_id',
-                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty + actual_free_teachers_qty) as total_visitors')
             )
             ->groupBy('bookings.activity_id')
             ->pluck('total_visitors', 'bookings.activity_id');
@@ -136,7 +136,7 @@ class DashboardController extends Controller
             ->where('bookings.status', 2)
             ->select(
                 'bookings.activity_id',
-                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty + actual_free_teachers_qty) as total_visitors')
             )
             ->groupBy('bookings.activity_id')
             ->pluck('total_visitors', 'bookings.activity_id');
@@ -164,7 +164,7 @@ class DashboardController extends Controller
             ->where('bookings.status', 2)
             ->select(
                 'bookings.activity_id',
-                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty + actual_free_teachers_qty) as total_visitors')
             )
             ->groupBy('bookings.activity_id')
             ->pluck('total_visitors', 'bookings.activity_id');
@@ -204,7 +204,7 @@ class DashboardController extends Controller
             ->where('bookings.status', 2)
             ->select(
                 'bookings.activity_id',
-                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty + actual_free_teachers_qty) as total_visitors')
             )
             ->groupBy('bookings.activity_id')
             ->pluck('total_visitors', 'bookings.activity_id');
@@ -232,7 +232,7 @@ class DashboardController extends Controller
             ->where('bookings.status', 2)
             ->select(
                 'bookings.activity_id',
-                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty) as total_visitors')
+                DB::raw('SUM(actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty + actual_free_teachers_qty) as total_visitors')
             )
             ->groupBy('bookings.activity_id')
             ->pluck('total_visitors', 'bookings.activity_id');
@@ -261,7 +261,7 @@ class DashboardController extends Controller
                 $percentageChangeYear[$activityId] = $thisYear > 0 ? 100 : 0;
             }
         }
-        
+
         $totalVisitorsPerMonthThisYear = [];
         $currentDate = $startMonth->copy();
         while ($currentDate <= $endMonth) {
@@ -270,10 +270,11 @@ class DashboardController extends Controller
             $monthLabel = $currentDate->copy()->translatedFormat('M') . ' ' . ($currentDate->year + 543);
 
             $totalVisitorsPerMonthThisYear[$monthLabel] = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+                ->join('activities', 'bookings.activity_id', '=', 'activities.activity_id')
                 ->whereBetween('bookings.booking_date', [$monthStart, $monthEnd])
                 ->where('bookings.status', 2)
-                ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty'));
-
+                ->where('activities.activity_type_id', 1)
+                ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty + actual_free_teachers_qty'));
             $currentDate->addMonth();
         }
 
@@ -328,32 +329,62 @@ class DashboardController extends Controller
                 ->where('activity_id', $activity->activity_id)
                 ->whereIn('status', [0, 1, 2, 3])
                 ->whereBetween('booking_date', [$startMonth, $endMonth])
+                ->where(function ($query) {
+                    $query->where('note', '!=', 'วอคอิน')
+                        ->orWhereNull('note');
+                })
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
         }
 
-        $totalSpecialActivity = DB::table('activities')
-            ->leftJoin('activity_types', 'activities.activity_type_id', '=', 'activity_types.activity_type_id')
-            ->leftJoin('bookings', function ($join) use ($startMonth, $endMonth) {
-                $join->on('activities.activity_id', '=', 'bookings.activity_id')
-                    ->whereBetween('bookings.booking_date', [$startMonth, $endMonth]);
+        $totalWalkinBooked = [];
+        foreach ($activities as $activity) {
+            $totalWalkinBooked[$activity->activity_id] = StatusChanges::whereHas('booking', function ($query) use ($activity, $startMonth, $endMonth) {
+                $query->where('activity_id', $activity->activity_id)
+                    ->whereBetween('booking_date', [$startMonth, $endMonth])
+                    ->where('note', 'วอคอิน')
+                    ->whereHas('activity', function ($subQuery) {
+                        $subQuery->where('activity_type_id', 1);
+                    });
             })
-            ->leftJoin('status_changes', 'bookings.booking_id', '=', 'status_changes.booking_id')
-            ->select(
-                'activities.activity_id',
-                'activities.activity_name',
-                'activities.target_yearly_count',
-                DB::raw('
-            COALESCE(SUM(status_changes.actual_children_qty + status_changes.actual_students_qty + 
-            status_changes.actual_adults_qty + status_changes.actual_kid_qty + status_changes.actual_disabled_qty + 
-            status_changes.actual_elderly_qty + status_changes.actual_monk_qty), 0) as total_visitors
-        '),
-                DB::raw('COALESCE(COUNT(DISTINCT status_changes.booking_id), 0) as total_bookings')
-            )
-            ->where('activities.activity_type_id', 2)
-            ->groupBy('activities.activity_id', 'activities.activity_name', 'activities.target_yearly_count',)
-            ->get();
+                ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty + actual_free_teachers_qty'));
+        }
+        $totalSpecialActivity = Activity::with(['activityType', 'bookings.statusChanges'])
+            ->where('activity_type_id', 2)
+            ->select('activity_id', 'activity_name', 'target_yearly_count')
+            ->get()
+            ->map(function ($activity) use ($startMonth, $endMonth) {
+                $totalVisitors = $activity->bookings()
+                    ->whereBetween('booking_date', [$startMonth, $endMonth])
+                    ->with('statusChanges')
+                    ->get()
+                    ->sum(function ($booking) {
+                        return $booking->statusChanges->sum(function ($statusChange) {
+                            return $statusChange->actual_children_qty +
+                                $statusChange->actual_students_qty +
+                                $statusChange->actual_adults_qty +
+                                $statusChange->actual_kid_qty +
+                                $statusChange->actual_disabled_qty +
+                                $statusChange->actual_elderly_qty +
+                                $statusChange->actual_monk_qty +
+                                $statusChange->actual_free_teachers_qty;
+                        });
+                    });
 
+                $totalBookings = $activity->bookings()
+                    ->whereBetween('booking_date', [$startMonth, $endMonth])
+                    ->distinct('booking_id')
+                    ->count();
+
+                return (object) [
+                    'activity_id' => $activity->activity_id,
+                    'activity_name' => $activity->activity_name,
+                    'target_yearly_count' => $activity->target_yearly_count,
+                    'total_visitors' => $totalVisitors,
+                    'total_bookings' => $totalBookings,
+                ];
+            });
         $visitorStats = Bookings::join('status_changes', 'bookings.booking_id', '=', 'status_changes.booking_id')
+            ->join('activities', 'bookings.activity_id', '=', 'activities.activity_id')
             ->selectRaw('
                 SUM(actual_children_qty) as children_qty, 
                 SUM(actual_students_qty) as students_qty, 
@@ -361,10 +392,12 @@ class DashboardController extends Controller
                 SUM(actual_kid_qty) as kid_qty, 
                 SUM(actual_disabled_qty) as disabled_qty, 
                 SUM(actual_elderly_qty) as elderly_qty, 
-                SUM(actual_monk_qty) as monk_qty
+                SUM(actual_monk_qty) as monk_qty,
+                SUM(actual_free_teachers_qty) as free_teachers_qty
             ')
             ->whereBetween('booking_date', [$startMonth, $endMonth])
             ->whereIn('status_changes.new_status', [2])
+            ->where('activities.activity_type_id', 1)
             ->first();
 
         return view('admin.dashboard', compact(
@@ -381,6 +414,7 @@ class DashboardController extends Controller
             'yearlyRevenueGeneral',
             'yearlyRevenueActivity',
             'totalVisitorsBooked',
+            'totalWalkinBooked',
             'totalSpecialActivity',
             'visitorStats',
             'startMonth',

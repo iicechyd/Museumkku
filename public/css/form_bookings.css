@@ -2,7 +2,12 @@
     font-family: "Noto Sans Thai", sans-serif;
 }
 
-body, .container, .form-group, .form-label, .form-select, .form-control {
+body,
+.container,
+.form-group,
+.form-label,
+.form-select,
+.form-control {
     font-family: "Noto Sans Thai", sans-serif;
 }
 
@@ -10,25 +15,23 @@ body, .container, .form-group, .form-label, .form-select, .form-control {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: calc(
-        100vh - 1rem
-    );
+    min-height: calc(100vh - 1rem);
 }
 .dropdown-scrollable {
     max-height: 300px;
     overflow-y: auto;
 }
 .tt-menu {
-max-height: 300px;
-overflow-y: auto;
-overflow-x: hidden;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .form-container {
     padding: 20px;
-  }
-  
-  .toggle-btn {
+}
+
+.toggle-btn {
     display: inline-flex;
     align-items: center;
     padding: 10px 20px;
@@ -38,18 +41,18 @@ overflow-x: hidden;
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
-  }
-  
-  .toggle-btn:hover {
+}
+
+.toggle-btn:hover {
     background-color: #0056b3;
-  }
-  
-  .arrow {
+}
+
+.arrow {
     margin-left: 10px;
     transition: transform 0.3s ease;
-  }
-  
-  .hidden {
+}
+
+.hidden {
     display: none !important;
 }
 
@@ -59,23 +62,37 @@ overflow-x: hidden;
     margin: 0 auto;
 }
 .flatpickr-day.disabled-day {
-  color: #ddb1b1  !important;
-  opacity: 0.5 !important;
-  font-weight: bold !important; 
-  cursor: not-allowed !important;
-  pointer-events: none !important;
+    color: #ddb1b1 !important;
+    opacity: 0.5 !important;
+    font-weight: bold !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
 }
 
 .custom-gray-text {
-  color: gray;
+    color: gray;
 }
 .new-line {
-  display: block;
+    display: block;
 }
 .indent-line {
-  margin-left: 1em;
+    margin-left: 1em;
 }
 
 .is-invalid {
-  border: 2px solid red;
+    border: 2px solid red;
+}
+
+@media (min-width: 820px) and (min-height: 1180px) {
+    .custom-col {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+@media (min-width: 768px) and (min-height: 1024px) {
+    .custom-col {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
 }

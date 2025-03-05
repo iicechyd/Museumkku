@@ -25,7 +25,9 @@
                             image="{{ $item->images->isNotEmpty() ? asset('storage/' . $item->images->first()->image_path) : asset('') }}"
                             booking="{{ route('admin_bookings.activity', ['activity_id' => $item->activity_id]) }}" 
                             bookingText="จองเข้าชม"
-                            hideDetail=true/>
+                            hideDetail=true
+                            
+                            />
                     </x-card-group>
                 </div>
             @endforeach

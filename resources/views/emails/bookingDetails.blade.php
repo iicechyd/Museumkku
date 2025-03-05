@@ -120,13 +120,13 @@
         @endphp
         @php
             $visitorTypes = [
-                'children_qty' => 'เด็ก',
-                'students_qty' => 'นักเรียน',
-                'adults_qty' => 'ผู้ใหญ่',
+                'children_qty' => 'เด็ก ( 3 ขวบ - ประถม )',
+                'students_qty' => 'มัธยม / นักศึกษา',
+                'adults_qty' => 'ผู้ใหญ่ / คุณครู',
                 'kid_qty' => 'เด็กเล็ก',
                 'disabled_qty' => 'ผู้พิการ',
                 'elderly_qty' => 'ผู้สูงอายุ',
-                'monk_qty' => 'พระภิกษุ',
+                'monk_qty' => 'พระภิกษุสงฆ์ /สามเณร',
                 'free_teachers_qty' => 'ครูเข้าชมฟรี',
             ];
         @endphp

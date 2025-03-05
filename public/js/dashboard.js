@@ -312,18 +312,20 @@ document.addEventListener("DOMContentLoaded", function () {
         adults_qty +
         disabled_qty +
         elderly_qty +
-        monk_qty;
+        monk_qty +
+        free_teachers_qty;
     var visitorPieChart = new Chart(ctx, {
         type: "pie",
         data: {
             labels: [
                 "เด็ก",
-                "นักเรียน/นักศึกษา",
+                "มัธยม/นักศึกษา",
                 "ผู้ใหญ่ / คุณครู",
                 "เด็กเล็ก",
                 "ผู้พิการ",
                 "ผู้สูงอายุ",
                 "เณร / พระสงฆ์",
+                "คุณครู (ฟรี)",
             ],
             datasets: [
                 {
@@ -336,6 +338,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         disabled_qty,
                         elderly_qty,
                         monk_qty,
+                        free_teachers_qty,
                     ],
                     backgroundColor: [
                         "#6B5B95",
@@ -345,6 +348,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         "#0000FF",
                         "#FF6F61",
                         "#F1C40F",
+                        "#F1040F",
                     ],
                     borderColor: "#fff",
                     borderWidth: 1,
@@ -381,5 +385,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
             },
         },
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    let carousel = document.getElementById("visitorCarousel");
+    let title = document.getElementById("visitorTitle");
+
+    if (!carousel || !title) return;
+
+    let startMonthThai = title.dataset.startMonth;
+    let endMonthThai = title.dataset.endMonth;
+
+    carousel.addEventListener("slid.bs.carousel", function(event) {
+        if (event.to === 0) {
+            title.innerHTML = `จำนวนผู้เข้าชมตามการจองในปีนี้
+                <p class="text-sm">ปีงบประมาณ ${startMonthThai} - ${endMonthThai}</p>`;
+        } else if (event.to === 1) {
+            title.innerHTML = `จำนวนผู้เข้าชมตามการวอคอินในปีนี้
+                <p class="text-sm">ปีงบประมาณ ${startMonthThai} - ${endMonthThai}</p>`;
+        }
     });
 });

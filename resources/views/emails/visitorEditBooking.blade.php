@@ -232,7 +232,7 @@
                             </div>
                         @enderror
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label for="tel" class="form-label">เบอร์โทรผู้ประสานงาน</label>
                         <input type="text" class="form-control @error('tel') is-invalid @enderror" id="tel"
                             name="tel" placeholder="หมายเลขโทรศัพท์"
@@ -246,7 +246,7 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="note" class="form-label">หมายเหตุ</label>
                         <input type="text" class="form-control @error('note') is-invalid @enderror" 
                             id="note" name="note" placeholder="กรอกหมายเหตุ (ถ้ามี)"
@@ -275,7 +275,7 @@
 
                     <div class="row">
                         <!-- เด็กโต -->
-                        <div class="col-md-3">
+                        <div class="col-md-3 custom-col">
                             <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"
                                 onclick="toggleInput('childrenInput')" {{ $booking->children_qty > 0 ? 'checked' : '' }}>
                             <label class="form-check-label" for="children_qty">เด็ก ( 3 ขวบ - ประถม ) :
@@ -285,11 +285,11 @@
                                 {{ $booking->children_qty > 0 ? '' : 'disabled' }} oninput="calculateTotal()">
                         </div>
 
-                        <!-- นักเรียน/นักศึกษา -->
-                        <div class="col-md-3">
+                        <!-- มัธยม/นักศึกษา -->
+                        <div class="col-md-3 custom-col">
                             <input class="form-check-input" type="checkbox" id="students_qty" name="students_qty"
                                 onclick="toggleInput('studentInput')" {{ $booking->students_qty > 0 ? 'checked' : '' }}>
-                            <label class="form-check-label" for="students_qty">นักเรียนมัธยม/นักศึกษา :
+                            <label class="form-check-label" for="students_qty">มัธยม/นักศึกษา :
                                 {{ $booking->activity->student_price }} บาท/คน</label>
                             <input type="number" class="form-control mt-2" id="studentInput" name="students_qty"
                                 min="0" value="{{ $booking->students_qty > 0 ? $booking->students_qty : '' }}"
@@ -297,7 +297,7 @@
                         </div>
 
                         <!-- ครู / อาจารย์  -->
-                        <div class="col-md-3">
+                        <div class="col-md-3 custom-col">
                             <input class="form-check-input" type="checkbox" id="adults_qty" name="adults_qty"
                                 onclick="toggleInput('adultsInput')" {{ $booking->adults_qty > 0 ? 'checked' : '' }}>
                             <label class="form-check-label" for="adults_qty">ผู้ใหญ่ / คุณครู :
@@ -310,7 +310,7 @@
                     <p>สวัสดิการเข้าชมฟรี</p>
                     <div class="row">
                         <!-- เด็กเล็ก-->
-                    <div class="col-md-3">
+                    <div class="col-md-3 custom-col">
                         <input class="form-check-input" type="checkbox" id="kid_qty" name="kid_qty"
                             onclick="toggleInput('kidInput')">
                         <label class="form-check-label" for="kid_qty">
@@ -319,7 +319,7 @@
                             min="0" disabled oninput="calculateTotal()">
                     </div>
                         <!-- ผู้พิการ -->
-                        <div class="col-md-3">
+                        <div class="col-md-3 custom-col">
                             <input class="form-check-input" type="checkbox" id="disabled_qty" name="disabled_qty"
                                 onclick="toggleInput('disabledInput')" {{ $booking->disabled_qty > 0 ? 'checked' : '' }}>
                             <label class="form-check-label" for="disabled_qty">ผู้พิการ</label>
@@ -328,7 +328,7 @@
                                 {{ $booking->disabled_qty > 0 ? '' : 'disabled' }} oninput="calculateTotal()">
                         </div>
                         <!-- ผู้สูงอายุ -->
-                        <div class="col-md-3">
+                        <div class="col-md-3 custom-col">
                             <input class="form-check-input" type="checkbox" id="elderly_qty" name="elderly_qty"
                                 onclick="toggleInput('elderlyInput')" {{ $booking->elderly_qty > 0 ? 'checked' : '' }}>
                             <label class="form-check-label" for="elderly_qty">ผู้สูงอายุ</label>
@@ -337,7 +337,7 @@
                                 {{ $booking->elderly_qty > 0 ? '' : 'disabled' }} oninput="calculateTotal()">
                         </div>
                         <!-- พระภิกษุสงฆ์ /สามเณร -->
-                        <div class="col-md-3">
+                        <div class="col-md-3 custom-col custom-col">
                             <input class="form-check-input" type="checkbox" id="monk_qty" name="monk_qty"
                                 onclick="toggleInput('monkInput')" {{ $booking->monk_qty > 0 ? 'checked' : '' }}>
                             <label class="form-check-label" for="monk_qty">ผู้สูงอายุ</label>

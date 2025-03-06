@@ -22,10 +22,10 @@ class BookingTest extends TestCase
     public static function bookingDataProvider()
     {
         return [
-            'valid booking with timeslot' => [
+            'valid booking with tmss' => [
                 [
                     'fk_activity_id' => 1,
-                    'fk_timeslots_id' => 1,
+                    'fk_tmss_id' => 1,
                     'booking_date' => '15/01/2025',
                     'instituteName' => 'โรงเรียนบ้านหมีน้อย',
                     'instituteAddress' => '22/01 บ้านหมีน้อย',
@@ -68,7 +68,7 @@ class BookingTest extends TestCase
     {
         $this->post('/InsertBooking', [
             'fk_activity_id' => 1,
-            'fk_timeslots_id' => 1,
+            'fk_tmss_id' => 1,
             'booking_date' => '19/01/2025',
             'instituteName' => 'โรงเรียนบ้านหมีน้อย',
             'instituteAddress' => '34/02 บ้านทับหมีใหญ่',
@@ -91,7 +91,7 @@ class BookingTest extends TestCase
             'conflicting booking' => [
                 [
                     'fk_activity_id' => 3,
-                    'fk_timeslots_id' => 1,
+                    'fk_tmss_id' => 1,
                     'booking_date' => '19/01/2025',
                     'instituteName' => 'โรงเรียนทับหมีใหญ่',
                     'instituteAddress' => '34/02 บ้านทับหมีใหญ่',

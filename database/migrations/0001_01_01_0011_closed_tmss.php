@@ -9,10 +9,10 @@ return new class extends Migration
 
     public function up(): void
     {
-        Schema::create('closed_timeslots', function (Blueprint $table) {
-            $table->id('closed_timeslots_id');
+        Schema::create('closed_tmss', function (Blueprint $table) {
+            $table->id('closed_tmss_id');
             $table->foreignId('activity_id')->constrained('activities', 'activity_id')->onDelete('cascade');
-            $table->foreignId('timeslots_id')->nullable()->constrained('timeslots', 'timeslots_id')->onDelete('cascade');
+            $table->foreignId('tmss_id')->nullable()->constrained('tmss', 'tmss_id')->onDelete('cascade');
             $table->text('comments')->nullable();
 
             $table->date('closed_on');
@@ -23,7 +23,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('closed_timeslots');
+        Schema::dropIfExists('closed_tmss');
 
     }
 };

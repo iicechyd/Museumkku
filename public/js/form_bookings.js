@@ -136,30 +136,30 @@ flatpickr("#booking_date", {
                     }
                     return response.json();
                 })
-                .then((timeslots) => {
-                    let timeslotsSelect =
-                        document.getElementById("fk_timeslots_id");
-                    timeslotsSelect.innerHTML = "";
+                .then((tmss) => {
+                    let tmssSelect =
+                        document.getElementById("fk_tmss_id");
+                    tmssSelect.innerHTML = "";
 
-                    if (timeslots.length === 0) {
+                    if (tmss.length === 0) {
                         let option = document.createElement("option");
                         option.value = "";
                         option.text = "ไม่เปิดให้จองในวันนี้";
-                        timeslotsSelect.appendChild(option);
-                        timeslotsSelect.disabled = true;
+                        tmssSelect.appendChild(option);
+                        tmssSelect.disabled = true;
                     } else {
                         let option = document.createElement("option");
                         option.value = "";
                         option.text = "เลือกรอบการเข้าชม";
-                        timeslotsSelect.appendChild(option);
+                        tmssSelect.appendChild(option);
 
-                        timeslots.forEach((timeslot, index) => {
+                        tmss.forEach((tmss, index) => {
                             let option = document.createElement("option");
                             let startTime = new Date(
-                                `1970-01-01T${timeslot.start_time}Z`
+                                `1970-01-01T${tmss.start_time}Z`
                             );
                             let endTime = new Date(
-                                `1970-01-01T${timeslot.end_time}Z`
+                                `1970-01-01T${tmss.end_time}Z`
                             );
                             let startFormatted = `${startTime
                                 .getUTCHours()
@@ -176,21 +176,21 @@ flatpickr("#booking_date", {
                                 .toString()
                                 .padStart(2, "0")}`;
 
-                            option.value = timeslot.timeslots_id;
+                            option.value = tmss.tmss_id;
                             option.text = `รอบที่ ${
                                 index + 1
                             } ${startFormatted} น. - ${endFormatted} น.`;
 
-                            if (timeslot.remaining_capacity === 0) {
+                            if (tmss.remaining_capacity === 0) {
                                 option.disabled = true;
                                 option.text += " (เต็ม)";
                             } else {
-                                option.text += ` (เหลือ ${timeslot.remaining_capacity} ที่นั่ง)`;
+                                option.text += ` (เหลือ ${tmss.remaining_capacity} ที่นั่ง)`;
                             }
-                            timeslotsSelect.appendChild(option);
+                            tmssSelect.appendChild(option);
                         });
 
-                        timeslotsSelect.disabled = false;
+                        tmssSelect.disabled = false;
                     }
                 })
                 .catch((error) => {
@@ -362,11 +362,11 @@ document.addEventListener("DOMContentLoaded", function () {
             if (eventTitle.includes("จำนวนผู้เข้าชม")) {
                 document.getElementById("eventTitle").innerText = eventTitle;
 
-                var timeslotDetails = Object.values(
+                var tmssDetails = Object.values(
                     eventProps.booking_details || {}
                 );
 
-                var groupedByActivity = timeslotDetails.reduce(function (
+                var groupedByActivity = tmssDetails.reduce(function (
                     acc,
                     detail
                 ) {
@@ -386,7 +386,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 {});
 
-                var timeslotText = Object.keys(groupedByActivity)
+                var tmssText = Object.keys(groupedByActivity)
                     .map(function (activityName) {
                         var slots = Object.keys(groupedByActivity[activityName])
                             .map(function (startTime) {
@@ -399,8 +399,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     })
                     .join("<br><br>");
 
-                document.getElementById("eventTimeslot").innerHTML =
-                    timeslotText || "ไม่มีรายละเอียดการจอง";
+                document.getElementById("eventTmss").innerHTML =
+                    tmssText || "ไม่มีรายละเอียดการจอง";
 
                 var myModal = new bootstrap.Modal(
                     document.getElementById("eventModal")
@@ -409,16 +409,16 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 document.getElementById("eventTitle").innerText = eventTitle;
 
-                var timeslotText = "";
-                var timeslotLabel = "";
+                var tmssText = "";
+                var tmssLabel = "";
                 if (eventProps.start_time && eventProps.end_time) {
-                    timeslotText = `${eventProps.start_time} น. - ${eventProps.end_time} น.`;
+                    tmssText = `${eventProps.start_time} น. - ${eventProps.end_time} น.`;
                 }
 
-                document.getElementById("eventTimeslotLabel").innerText =
-                    timeslotLabel;
-                document.getElementById("eventTimeslot").innerText =
-                    timeslotText;
+                document.getElementById("eventTmssLabel").innerText =
+                    tmssLabel;
+                document.getElementById("eventTmss").innerText =
+                    tmssText;
 
                 var myModal = new bootstrap.Modal(
                     document.getElementById("eventModal")

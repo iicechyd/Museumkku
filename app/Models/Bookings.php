@@ -14,7 +14,7 @@ class Bookings extends Model
     protected $fillable = [
         'booking_date',
         'activity_id',
-        'timeslots_id',
+        'tmss_id',
         'children_qty',
         'students_qty',
         'adults_qty',
@@ -53,9 +53,9 @@ class Bookings extends Model
         return $this->belongsToMany(SubActivity::class, 'booking_subactivities', 'booking_id', 'sub_activity_id');
     }
 
-    public function timeslot()
+    public function tmss()
     {
-        return $this->belongsTo(Timeslots::class, 'timeslots_id');
+        return $this->belongsTo(Tmss::class, 'tmss_id');
     }
     public function statusChanges()
     {

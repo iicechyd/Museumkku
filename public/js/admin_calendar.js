@@ -65,11 +65,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             document.getElementById('eventTitle').innerText = info.event.title;
             if (startTime && endTime) {
-                document.getElementById('eventTimeslotLabel').innerText = 'รอบการเข้าชม:';
-                document.getElementById('eventTimeslot').innerText = `${startTime} น. - ${endTime} น.`;
+                document.getElementById('eventTmssLabel').innerText = 'รอบการเข้าชม:';
+                document.getElementById('eventTmss').innerText = `${startTime} น. - ${endTime} น.`;
             } else {
-                document.getElementById('eventTimeslotLabel').innerText = 'ระยะเวลากิจกรรม:';
-                document.getElementById('eventTimeslot').innerText = `${durationDays} วัน`;
+                document.getElementById('eventTmssLabel').innerText = 'ระยะเวลากิจกรรม:';
+                document.getElementById('eventTmss').innerText = `${durationDays} วัน`;
             }
             document.getElementById('eventVisitor').innerText = info.event.extendedProps.visitor_name || 'ไม่ระบุ';
             document.getElementById('eventvisitorEmail').innerText = info.event.extendedProps.visitorEmail || 'ไม่ระบุ';

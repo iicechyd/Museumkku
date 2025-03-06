@@ -28,8 +28,8 @@
                 </div>
                 <div class="modal-body">
                     <h4 id="eventTitle"></h4>
-                    <p><strong id="eventTimeslotLabel"></strong>
-                    <p id="eventTimeslot"></p>
+                    <p><strong id="eventTmssLabel"></strong>
+                    <p id="eventTmss"></p>
                     </p>
                 </div>
                 <div class="modal-footer">

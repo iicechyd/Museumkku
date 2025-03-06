@@ -4,14 +4,14 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Timeslots;
+use App\Models\Tmss;
 use App\Models\Activity;
 
-class TimeslotsSeeder extends Seeder
+class TmssSeeder extends Seeder
 {
     public function run(): void
     {
-        $timeslots = [
+        $tmss = [
             1 => [
                 ['start_time' => '09:30:00', 'end_time' => '10:00:00'],
                 ['start_time' => '10:00:00', 'end_time' => '10:30:00'],
@@ -46,9 +46,9 @@ class TimeslotsSeeder extends Seeder
                 ['start_time' => '15:00:00', 'end_time' => '16:00:00'],
             ],
         ];
-        foreach ($timeslots as $activity_id => $slots) {
+        foreach ($tmss as $activity_id => $slots) {
             foreach ($slots as $slot) {
-                Timeslots::create([
+                Tmss::create([
                     'activity_id' => $activity_id,
                     'start_time' => $slot['start_time'],
                     'end_time' => $slot['end_time'],
@@ -56,6 +56,6 @@ class TimeslotsSeeder extends Seeder
             }
         }
 
-        $this->command->info('สร้างข้อมูล Timeslots สำเร็จ');
+        $this->command->info('สร้างข้อมูล Tmss สำเร็จ');
     }
 }

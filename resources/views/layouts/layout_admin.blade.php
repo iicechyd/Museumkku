@@ -81,7 +81,7 @@
                             <a href="/admin/activity_list" class="sidebar-link">จัดการรายละเอียดกิจกรรม</a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="{{ route('showTimeslots') }}" class="sidebar-link">จัดการรอบการเข้าชม</a>
+                            <a href="{{ route('showTmss') }}" class="sidebar-link">จัดการรอบการเข้าชม</a>
                         </li>
                     </ul>
                 </li>

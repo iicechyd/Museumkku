@@ -65,9 +65,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (eventTitle.includes("จำนวนผู้เข้าชม")) {
                 document.getElementById("eventTitle").innerText = eventTitle;
         
-                var timeslotDetails = Object.values(eventProps.booking_details || {});
+                var tmssDetails = Object.values(eventProps.booking_details || {});
     
-                var groupedByActivity = timeslotDetails.reduce(function (acc, detail) {
+                var groupedByActivity = tmssDetails.reduce(function (acc, detail) {
                     var activityName = detail.activity_name || "ไม่ระบุชื่อกิจกรรม";
                     var startTime = detail.start_time.slice(0, 5);
         
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     return acc;
                 }, {});
         
-                var timeslotText = Object.keys(groupedByActivity).map(function (activityName) {
+                var tmssText = Object.keys(groupedByActivity).map(function (activityName) {
                     var slots = Object.keys(groupedByActivity[activityName])
                         .map(function (startTime) {
                             var totalApproved = groupedByActivity[activityName][startTime];
@@ -92,8 +92,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     return `<strong>${activityName}</strong><br>${slots}`;
                 }).join("<br><br>");
         
-                document.getElementById("eventTimeslot").innerHTML =
-                    timeslotText || "ไม่มีรายละเอียดการจอง";
+                document.getElementById("eventTmss").innerHTML =
+                    tmssText || "ไม่มีรายละเอียดการจอง";
         
                 var myModal = new bootstrap.Modal(
                     document.getElementById("eventModal")
@@ -102,16 +102,16 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 document.getElementById("eventTitle").innerText = eventTitle;
         
-                var timeslotText = "";
-                var timeslotLabel = "";
+                var tmssText = "";
+                var tmssLabel = "";
                 if (eventProps.start_time && eventProps.end_time) {
-                    timeslotText = `${eventProps.start_time} น. - ${eventProps.end_time} น.`;
+                    tmssText = `${eventProps.start_time} น. - ${eventProps.end_time} น.`;
                 }
         
-                document.getElementById("eventTimeslotLabel").innerText =
-                    timeslotLabel;
-                document.getElementById("eventTimeslot").innerText =
-                    timeslotText;
+                document.getElementById("eventTmssLabel").innerText =
+                    tmssLabel;
+                document.getElementById("eventTmss").innerText =
+                    tmssText;
         
                 var myModal = new bootstrap.Modal(
                     document.getElementById("eventModal")

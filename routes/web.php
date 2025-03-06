@@ -9,7 +9,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BookingActivityController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\SubActivityController;
-use App\Http\Controllers\TimeslotsController;
+use App\Http\Controllers\TmssController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Middleware\RoleMiddleware;
@@ -47,10 +47,10 @@ Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {
     Route::get('/admin/approved_bookings/activity', [BookingActivityController::class, 'showApprovedActivity'])->name('approved_bookings.activity');
     Route::get('/admin/except_cases_bookings/activity', [BookingActivityController::class, 'showExceptActivity'])->name('except_bookings.activity');
     //Route ปิดรอบการเข้าชม
-    Route::delete('admin/closed-dates/{id}', [TimeslotsController::class, 'deleteClosedDate'])->name('admin.deleteClosedDate');
-    Route::get('/admin/manage-closed-dates', [TimeslotsController::class, 'showClosedDates'])->name('admin.manageClosedDates');
-    Route::post('/admin/manage-closed-dates', [TimeslotsController::class, 'saveClosedDates'])->name('admin.saveClosedDates');
-    Route::post('/admin/getTmsActivity', [TimeslotsController::class, 'getTimeslotsByActivity'])->name('admin.getTimeslots');
+    Route::delete('admin/closed-dates/{id}', [TmssController::class, 'deleteClosedDate'])->name('admin.deleteClosedDate');
+    Route::get('/admin/manage-closed-dates', [TmssController::class, 'showClosedDates'])->name('admin.manageClosedDates');
+    Route::post('/admin/manage-closed-dates', [TmssController::class, 'saveClosedDates'])->name('admin.saveClosedDates');
+    Route::post('/admin/getTmsActivity', [TmssController::class, 'getTmssByActivity'])->name('admin.getTmss');
     //Route หลักสูตร
     Route::get('/admin/subactivity_list', [SubActivityController::class, 'showSubActivities'])->name('admin.subactivities');
     Route::post('/admin/subactivities/store', [SubActivityController::class, 'storeSubActivity'])->name('admin.storeSubActivity');
@@ -68,12 +68,12 @@ Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {
     Route::delete('/admin/activity_images/{image_id}', [ActivityController::class, 'deleteImage'])->name('deleteImage');
     Route::post('/add-target', [ActivityController::class, 'addTarget']);
     //Route รอบการเข้าชม
-    Route::get('/tms_list', [TimeslotsController::class, 'showTimeslots'])->name('showTimeslots');
-    Route::post('/InsertTms', [TimeslotsController::class, 'InsertTimeslots'])->name('InsertTimeslots');
-    Route::delete('/delete/timeslots/{id}', [TimeslotsController::class, 'delete'])->name('timeslots.delete');
-    Route::put('/update/tms/{id}', [TimeslotsController::class, 'update'])->name('timeslots.update');
-    Route::get('/toggle-status/{id}', [TimeslotsController::class, 'toggleStatus'])->name('toggle.status');
-    Route::post('/toggle-status/{id}', [TimeslotsController::class, 'toggleStatus'])->name('toggle.status');
+    Route::get('/tms_list', [TmssController::class, 'showTmss'])->name('showTmss');
+    Route::post('/InsertTms', [TmssController::class, 'InsertTmss'])->name('InsertTmss');
+    Route::delete('/delete/tmss/{id}', [TmssController::class, 'delete'])->name('tmss.delete');
+    Route::put('/update/tms/{id}', [TmssController::class, 'update'])->name('tmss.update');
+    Route::get('/toggle-status/{id}', [TmssController::class, 'toggleStatus'])->name('toggle.status');
+    Route::post('/toggle-status/{id}', [TmssController::class, 'toggleStatus'])->name('toggle.status');
 });
 Route::middleware([RoleMiddleware::class . ':Executive'])->group(function () {
     Route::get('/executive/dashboard', [DashboardController::class, 'showDashboard'])->name('showDashboard');
@@ -87,7 +87,7 @@ Route::put('/documents/{document_id}', [DocumentController::class, 'update'])->n
 Route::get('/calendar', [HomeController::class, 'showCalendar'])->name('calendar.showCalendar');
 Route::get('/calendar/events', [CalendarController::class, 'getEvents'])->name('calendar.events');
 Route::get('/admin_calendar/events', [AdminCalendarController::class, 'getEvents'])->name('admin_calendar.events');
-Route::get('/calendar/timeslots/{date}', [CalendarController::class, 'getTimeslotsForDate']);
+Route::get('/calendar/tmss/{date}', [CalendarController::class, 'getTmssForDate']);
 //Rpute เข้าสู่ระบบ ล็อคเอ้าท์
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
@@ -99,7 +99,7 @@ Route::get('/preview_general', [ActivityController::class, 'previewGeneral'])->n
 Route::get('/activity/{activity_id}', [ActivityController::class, 'showDetail'])->name('activity_detail');
 Route::get('/form_bookings/activity/{activity_id}', [BookingController::class, 'showBookingForm'])->name('form_bookings.activity');
 Route::post('/submitBooking', [BookingController::class, 'InsertBooking'])->name('InsertBooking');
-Route::get('/available-tms/{activity_id}/{date}', [TimeslotsController::class, 'getAvailableTimeslots']);
+Route::get('/available-tms/{activity_id}/{date}', [TmssController::class, 'getAvailableTmss']);
 Route::post('change_status/{booking_id}', [BookingController::class, 'changeStatus'])->name('changeStatus');
 Route::get('/checkBookingStatus', [BookingController::class, 'checkBookingStatus'])->name('checkBookingStatus');
 Route::post('/checkBookingStatus', [BookingController::class, 'searchBookingByEmail'])->name('searchBookingByEmail');

@@ -31,13 +31,13 @@ class Activity extends Model
     {
         return $this->belongsTo(ActivityType::class, 'activity_type_id', 'activity_type_id');
     }
-    public function timeslots()
+    public function tmss()
     {
-        return $this->hasMany(Timeslots::class, 'activity_id', 'activity_id');
+        return $this->hasMany(Tmss::class, 'activity_id', 'activity_id');
     }
-    public function closedTimeslots()
+    public function closedTmss()
     {
-        return $this->hasMany(ClosedTimeslots::class, 'activity_id');
+        return $this->hasMany(ClosedTmss::class, 'activity_id');
     }
     public function bookings()
     {

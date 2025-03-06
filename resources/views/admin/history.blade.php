@@ -83,10 +83,10 @@
                                                             {{ \Carbon\Carbon::parse($item->booking_date)->year + 543 }}
                                                         </td>
                                                         <td>
-                                                            @if ($item->timeslot)
-                                                                {{ \Carbon\Carbon::parse($item->timeslot->start_time)->format('H:i') }}
+                                                            @if ($item->tmss)
+                                                                {{ \Carbon\Carbon::parse($item->tmss->start_time)->format('H:i') }}
                                                                 น. -
-                                                                {{ \Carbon\Carbon::parse($item->timeslot->end_time)->format('H:i') }}
+                                                                {{ \Carbon\Carbon::parse($item->tmss->end_time)->format('H:i') }}
                                                                 น.
                                                             @else
                                                                 -

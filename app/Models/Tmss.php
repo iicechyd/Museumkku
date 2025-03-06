@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Timeslots extends Model
+class Tmss extends Model
 {
-    protected $table = 'timeslots';
-    protected $primaryKey = 'timeslots_id';
+    protected $table = 'tmss';
+    protected $primaryKey = 'tmss_id';
 
     use HasFactory;
     protected $fillable = ['activity_id', 'start_time', 'end_time', 'status'];
@@ -18,8 +18,8 @@ class Timeslots extends Model
     {
         return $this->belongsTo(Activity::class, 'activity_id', 'activity_id');
     }
-    public function closedTimeslots()
+    public function closedTmss()
     {
-        return $this->hasMany(ClosedTimeslots::class, 'timeslot_id');
+        return $this->hasMany(ClosedTmss::class, 'tmss_id');
     }
 }

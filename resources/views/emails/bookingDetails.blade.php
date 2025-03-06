@@ -40,10 +40,10 @@
                 <h3 style="color: #489085;">รายละเอียดการจองเข้าชม</h3>
                 <p>วันที่จอง: {{ \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y') }}</p>
                 <p>ประเภทการเข้าชม: {{ $booking->activity->activity_name }}</p>
-                @if ($booking->timeslot)
+                @if ($booking->tmss)
                     <p>รอบการเข้าชม
-                        {{ \Carbon\Carbon::parse($booking->timeslot->start_time)->format('H:i') }} น. -
-                        {{ \Carbon\Carbon::parse($booking->timeslot->end_time)->format('H:i') }} น.</p>
+                        {{ \Carbon\Carbon::parse($booking->tmss->start_time)->format('H:i') }} น. -
+                        {{ \Carbon\Carbon::parse($booking->tmss->end_time)->format('H:i') }} น.</p>
                     </p>
                 @endif
                 @if (!$booking->subActivities->isEmpty())

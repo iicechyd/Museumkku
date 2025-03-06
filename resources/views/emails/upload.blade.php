@@ -35,9 +35,9 @@
                     {{ \Carbon\Carbon::parse($booking->booking_date)->addYears(543)->year }}
                 </td>
                 <td>
-                    @if ($booking->timeslot)
-                        {{ \Carbon\Carbon::parse($booking->timeslot->start_time)->format('H:i') }} น. -
-                        {{ \Carbon\Carbon::parse($booking->timeslot->end_time)->format('H:i') }} น.
+                    @if ($booking->tmss)
+                        {{ \Carbon\Carbon::parse($booking->tmss->start_time)->format('H:i') }} น. -
+                        {{ \Carbon\Carbon::parse($booking->tmss->end_time)->format('H:i') }} น.
                     @else
                         -
                     @endif

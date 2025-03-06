@@ -8,8 +8,8 @@ return new class extends Migration {
 
     public function up(): void
     {
-        Schema::create('timeslots', function (Blueprint $table) {
-            $table->id('timeslots_id');
+        Schema::create('tmss', function (Blueprint $table) {
+            $table->id('tmss_id');
             $table->foreignId('activity_id')->constrained('activities', 'activity_id')->onDelete('cascade'); // Foreign Key
             $table->time('start_time');
             $table->time('end_time');
@@ -21,6 +21,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('timeslots');
+        Schema::dropIfExists('tmss');
     }
 };

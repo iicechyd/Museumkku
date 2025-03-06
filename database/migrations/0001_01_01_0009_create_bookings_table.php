@@ -11,7 +11,7 @@ return new class extends Migration {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id('booking_id');
             $table->unsignedBigInteger('activity_id');
-            $table->unsignedBigInteger('timeslots_id')->nullable();
+            $table->unsignedBigInteger('tmss_id')->nullable();
             $table->unsignedBigInteger('visitor_id');
             $table->unsignedBigInteger('institute_id');
             $table->unsignedBigInteger('sub_activity_id')->nullable();
@@ -28,7 +28,7 @@ return new class extends Migration {
 
             $table->foreign('activity_id')->references('activity_id')->on('activities')->onDelete('cascade');
             $table->foreign('sub_activity_id')->references('sub_activity_id')->on('sub_activities')->onDelete('set null');
-            $table->foreign('timeslots_id')->references('timeslots_id')->on('timeslots')->onDelete('cascade');
+            $table->foreign('tmss_id')->references('tmss_id')->on('tmss')->onDelete('cascade');
             $table->foreign('visitor_id')->references('visitor_id')->on('visitors')->onDelete('cascade');
             $table->foreign('institute_id')->references('institute_id')->on('institutes')->onDelete('cascade');
             $table->timestamps();

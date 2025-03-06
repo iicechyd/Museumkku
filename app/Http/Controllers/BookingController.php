@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use DateTime;
 use App\Models\Bookings;
-use App\Models\Timeslots;
+use App\Models\Tmss;
 use App\Models\Activity;
 use App\Models\SubActivity;
 use App\Models\Institutes;
@@ -40,7 +40,7 @@ class BookingController extends Controller
                 return $activity;
             });
 
-        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'documents', 'subactivities')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'documents', 'subactivities')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
@@ -58,10 +58,10 @@ class BookingController extends Controller
                 ->where('status', 1)
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
 
-            if ($item->timeslot && $item->timeslot->timeslots_id) {
+            if ($item->tmss && $item->tmss->tmss_id) {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('activity_id', $item->activity_id)
-                    ->where('timeslots_id', $item->timeslot->timeslots_id)
+                    ->where('tmss_id', $item->tmss->tmss_id)
                     ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
@@ -98,7 +98,7 @@ class BookingController extends Controller
                 return $activity;
             });
 
-        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'subactivities')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'subactivities')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
@@ -112,9 +112,9 @@ class BookingController extends Controller
         foreach ($requestBookings as $item) {
             $totalApproved = 0;
 
-            if ($item->timeslot) {
+            if ($item->tmss) {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
-                    ->where('timeslots_id', $item->timeslot->timeslots_id)
+                    ->where('tmss_id', $item->tmss->tmss_id)
                     ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
             } else {
@@ -155,7 +155,7 @@ class BookingController extends Controller
                 return $activity;
             });
 
-        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'documents', 'subactivities')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'documents', 'subactivities')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
@@ -173,10 +173,10 @@ class BookingController extends Controller
                 ->where('status', 1)
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
 
-            if ($item->timeslot && $item->timeslot->timeslots_id) {
+            if ($item->tmss && $item->tmss->tmss_id) {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('activity_id', $item->activity_id)
-                    ->where('timeslots_id', $item->timeslot->timeslots_id)
+                    ->where('tmss_id', $item->tmss->tmss_id)
                     ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
@@ -214,7 +214,7 @@ class BookingController extends Controller
                 return $activity;
             });
 
-        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'subactivities')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'subactivities')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
@@ -227,9 +227,9 @@ class BookingController extends Controller
 
         foreach ($exceptBookings as $item) {
             $totalApproved = 0;
-            if ($item->timeslot) {
+            if ($item->tmss) {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
-                    ->where('timeslots_id', $item->timeslot->timeslots_id)
+                    ->where('tmss_id', $item->tmss->tmss_id)
                     ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
@@ -340,7 +340,7 @@ class BookingController extends Controller
     {
         $rules = [
             'fk_activity_id' => 'required|exists:activities,activity_id',
-            'fk_timeslots_id' => 'nullable|exists:timeslots,timeslots_id',
+            'fk_tmss_id' => 'nullable|exists:tmss,tmss_id',
             'sub_activity_id' => 'nullable|array',
             'sub_activity_id.*' => 'nullable|exists:sub_activities,sub_activity_id',
             'booking_date' => 'required|date_format:d/m/Y',
@@ -364,10 +364,10 @@ class BookingController extends Controller
         ];
 
         if (in_array($request->fk_activity_id, [1, 2, 3])) {
-            $rules['fk_timeslots_id'] = 'required|exists:timeslots,timeslots_id';
+            $rules['fk_tmss_id'] = 'required|exists:tmss,tmss_id';
         }
         $messages = [
-            'fk_timeslots_id.required' => 'กรุณาเลือกรอบการเข้าชม',
+            'fk_tmss_id.required' => 'กรุณาเลือกรอบการเข้าชม',
             'booking_date.required' => 'กรุณาระบุวันที่จองเข้าชม',
             'instituteName.required' => 'กรุณากรอกชื่อหน่วยงาน',
             'instituteAddress.required' => 'กรุณากรอกที่อยู่หน่วยงาน',
@@ -440,24 +440,24 @@ class BookingController extends Controller
         }
         $formattedDate = $bookingDate->format('Y-m-d');
 
-        if ($request->filled('fk_timeslots_id')) {
-            $timeslot = Timeslots::find($request->fk_timeslots_id);
-            if (!$timeslot) {
+        if ($request->filled('fk_tmss_id')) {
+            $tmss = Tmss::find($request->fk_tmss_id);
+            if (!$tmss) {
                 return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
             }
 
             if ($activity->activity_id == 3) {
-                if ($request->filled('fk_timeslots_id')) {
-                    $timeslot = Timeslots::find($request->fk_timeslots_id);
-                    if (!$timeslot) {
+                if ($request->filled('fk_tmss_id')) {
+                    $tmss = Tmss::find($request->fk_tmss_id);
+                    if (!$tmss) {
                         return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
                     }
-                    $conflictingBooking = Bookings::join('timeslots', 'bookings.timeslots_id', '=', 'timeslots.timeslots_id')
+                    $conflictingBooking = Bookings::join('tmss', 'bookings.tmss_id', '=', 'tmss.tmss_id')
                         ->whereIn('bookings.activity_id', [1, 2])
                         ->where('bookings.booking_date', $formattedDate)
-                        ->where(function ($query) use ($timeslot) {
-                            $query->where('timeslots.start_time', '<', $timeslot->end_time)
-                                ->where('timeslots.end_time', '>', $timeslot->start_time);
+                        ->where(function ($query) use ($tmss) {
+                            $query->where('tmss.start_time', '<', $tmss->end_time)
+                                ->where('tmss.end_time', '>', $tmss->start_time);
                         })
                         ->exists();
 
@@ -467,17 +467,17 @@ class BookingController extends Controller
                 }
             }
             if (in_array($activity->activity_id, [1, 2])) {
-                if ($request->filled('fk_timeslots_id')) {
-                    $timeslot = Timeslots::find($request->fk_timeslots_id);
-                    if (!$timeslot) {
+                if ($request->filled('fk_tmss_id')) {
+                    $tmss = Tmss::find($request->fk_tmss_id);
+                    if (!$tmss) {
                         return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
                     }
-                    $conflictingBooking = Bookings::join('timeslots', 'bookings.timeslots_id', '=', 'timeslots.timeslots_id')
+                    $conflictingBooking = Bookings::join('tmss', 'bookings.tmss_id', '=', 'tmss.tmss_id')
                         ->where('bookings.activity_id', 3)
                         ->where('bookings.booking_date', $formattedDate)
-                        ->where(function ($query) use ($timeslot) {
-                            $query->where('timeslots.start_time', '<', $timeslot->end_time)
-                                ->where('timeslots.end_time', '>', $timeslot->start_time);
+                        ->where(function ($query) use ($tmss) {
+                            $query->where('tmss.start_time', '<', $tmss->end_time)
+                                ->where('tmss.end_time', '>', $tmss->start_time);
                         })
                         ->exists();
 
@@ -494,7 +494,7 @@ class BookingController extends Controller
                 + ($request->elderly_qty ?? 0)
                 + ($request->monk_qty ?? 0);
             $totalBooked = Bookings::where('booking_date', $formattedDate)
-                ->where('timeslots_id', $timeslot->timeslots_id)
+                ->where('tmss_id', $tmss->tmss_id)
                 ->whereIn('status', [0, 1])
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
             if ($activity->max_capacity !== null && $totalBooked + $totalToBook > $activity->max_capacity) {
@@ -508,7 +508,7 @@ class BookingController extends Controller
         if ($visitor) {
             $existingBooking = Bookings::where('activity_id', $request->input('fk_activity_id'))
                 ->where('booking_date', $formattedDate)
-                ->where('timeslots_id', $request->input('fk_timeslots_id') ?? null)
+                ->where('tmss_id', $request->input('fk_tmss_id') ?? null)
                 ->where('visitor_id', $visitor->visitor_id)
                 ->whereIn('status', [0, 1])
                 ->exists();
@@ -538,7 +538,7 @@ class BookingController extends Controller
 
         $booking = new Bookings();
         $booking->activity_id = $request->fk_activity_id;
-        $booking->timeslots_id = $request->fk_timeslots_id ?? null;
+        $booking->tmss_id = $request->fk_tmss_id ?? null;
         $booking->institute_id = $institute->institute_id;
         $booking->visitor_id = $visitor->visitor_id;
         $booking->booking_date = $formattedDate;
@@ -574,7 +574,7 @@ class BookingController extends Controller
             return redirect()->back()->with('error', 'Activity not found.');
         }
 
-        $timeslots = Timeslots::where('activity_id', $activity_id)->get();
+        $tmss = Tmss::where('activity_id', $activity_id)->get();
         $subactivities = SubActivity::where('activity_id', $activity_id)
             ->where('status', 1)
             ->get();
@@ -598,7 +598,7 @@ class BookingController extends Controller
         return view('form_bookings', [
             'activity_id' => $activity_id,
             'selectedActivity' => $selectedActivity,
-            'timeslots' => $timeslots,
+            'tmss' => $tmss,
             'subactivities' => $subactivities,
             'hasSubactivities' => $hasSubactivities,
             'maxSubactivities' => $selectedActivity->max_subactivities,
@@ -610,7 +610,7 @@ class BookingController extends Controller
     {
         $rules = [
             'fk_activity_id' => 'required|exists:activities,activity_id',
-            'fk_timeslots_id' => 'nullable|exists:timeslots,timeslots_id',
+            'fk_tmss_id' => 'nullable|exists:tmss,tmss_id',
             'sub_activity_id' => 'nullable|array',
             'sub_activity_id.*' => 'nullable|exists:sub_activities,sub_activity_id',
             'booking_date' => 'required|date_format:d/m/Y',
@@ -634,10 +634,10 @@ class BookingController extends Controller
         ];
 
         if (in_array($request->fk_activity_id, [1, 2, 3])) {
-            $rules['fk_timeslots_id'] = 'required|exists:timeslots,timeslots_id';
+            $rules['fk_tmss_id'] = 'required|exists:tmss,tmss_id';
         }
         $messages = [
-            'fk_timeslots_id.required' => 'กรุณาเลือกรอบการเข้าชม',
+            'fk_tmss_id.required' => 'กรุณาเลือกรอบการเข้าชม',
             'booking_date.required' => 'กรุณาระบุวันที่จองเข้าชม',
             'instituteName.required' => 'กรุณากรอกชื่อหน่วยงาน',
             'instituteAddress.required' => 'กรุณากรอกที่อยู่หน่วยงาน',
@@ -710,24 +710,24 @@ class BookingController extends Controller
         }
         $formattedDate = $bookingDate->format('Y-m-d');
 
-        if ($request->filled('fk_timeslots_id')) {
-            $timeslot = Timeslots::find($request->fk_timeslots_id);
-            if (!$timeslot) {
+        if ($request->filled('fk_tmss_id')) {
+            $tmss = Tmss::find($request->fk_tmss_id);
+            if (!$tmss) {
                 return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
             }
 
             if ($activity->activity_id == 3) {
-                if ($request->filled('fk_timeslots_id')) {
-                    $timeslot = Timeslots::find($request->fk_timeslots_id);
-                    if (!$timeslot) {
+                if ($request->filled('fk_tmss_id')) {
+                    $tmss = Tmss::find($request->fk_tmss_id);
+                    if (!$tmss) {
                         return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
                     }
-                    $conflictingBooking = Bookings::join('timeslots', 'bookings.timeslots_id', '=', 'timeslots.timeslots_id')
+                    $conflictingBooking = Bookings::join('tmss', 'bookings.tmss_id', '=', 'tmss.tmss_id')
                         ->whereIn('bookings.activity_id', [1, 2])
                         ->where('bookings.booking_date', $formattedDate)
-                        ->where(function ($query) use ($timeslot) {
-                            $query->where('timeslots.start_time', '<', $timeslot->end_time)
-                                ->where('timeslots.end_time', '>', $timeslot->start_time);
+                        ->where(function ($query) use ($tmss) {
+                            $query->where('tmss.start_time', '<', $tmss->end_time)
+                                ->where('tmss.end_time', '>', $tmss->start_time);
                         })
                         ->exists();
 
@@ -737,17 +737,17 @@ class BookingController extends Controller
                 }
             }
             if (in_array($activity->activity_id, [1, 2])) {
-                if ($request->filled('fk_timeslots_id')) {
-                    $timeslot = Timeslots::find($request->fk_timeslots_id);
-                    if (!$timeslot) {
+                if ($request->filled('fk_tmss_id')) {
+                    $tmss = Tmss::find($request->fk_tmss_id);
+                    if (!$tmss) {
                         return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
                     }
-                    $conflictingBooking = Bookings::join('timeslots', 'bookings.timeslots_id', '=', 'timeslots.timeslots_id')
+                    $conflictingBooking = Bookings::join('tmss', 'bookings.tmss_id', '=', 'tmss.tmss_id')
                         ->where('bookings.activity_id', 3)
                         ->where('bookings.booking_date', $formattedDate)
-                        ->where(function ($query) use ($timeslot) {
-                            $query->where('timeslots.start_time', '<', $timeslot->end_time)
-                                ->where('timeslots.end_time', '>', $timeslot->start_time);
+                        ->where(function ($query) use ($tmss) {
+                            $query->where('tmss.start_time', '<', $tmss->end_time)
+                                ->where('tmss.end_time', '>', $tmss->start_time);
                         })
                         ->exists();
 
@@ -764,7 +764,7 @@ class BookingController extends Controller
                 + ($request->elderly_qty ?? 0)
                 + ($request->monk_qty ?? 0);
             $totalBooked = Bookings::where('booking_date', $formattedDate)
-                ->where('timeslots_id', $timeslot->timeslots_id)
+                ->where('tmss_id', $tmss->tmss_id)
                 ->whereIn('status', [0, 1])
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
             if ($activity->max_capacity !== null && $totalBooked + $totalToBook > $activity->max_capacity) {
@@ -778,7 +778,7 @@ class BookingController extends Controller
         if ($visitor) {
             $existingBooking = Bookings::where('activity_id', $request->input('fk_activity_id'))
                 ->where('booking_date', $formattedDate)
-                ->where('timeslots_id', $request->input('fk_timeslots_id') ?? null)
+                ->where('tmss_id', $request->input('fk_tmss_id') ?? null)
                 ->where('visitor_id', $visitor->visitor_id)
                 ->whereIn('status', [0, 1])
                 ->exists();
@@ -808,7 +808,7 @@ class BookingController extends Controller
 
         $booking = new Bookings();
         $booking->activity_id = $request->fk_activity_id;
-        $booking->timeslots_id = $request->fk_timeslots_id ?? null;
+        $booking->tmss_id = $request->fk_tmss_id ?? null;
         $booking->institute_id = $institute->institute_id;
         $booking->visitor_id = $visitor->visitor_id;
         $booking->booking_date = $formattedDate;
@@ -845,7 +845,7 @@ class BookingController extends Controller
             return redirect()->back()->with('error', 'Activity not found.');
         }
 
-        $timeslots = Timeslots::where('activity_id', $activity_id)->get();
+        $tmss = Tmss::where('activity_id', $activity_id)->get();
         $subactivities = SubActivity::where('activity_id', $activity_id)
             ->where('status', 1)
             ->get();
@@ -869,7 +869,7 @@ class BookingController extends Controller
         return view('admin.admin_bookings', [
             'activity_id' => $activity_id,
             'selectedActivity' => $selectedActivity,
-            'timeslots' => $timeslots,
+            'tmss' => $tmss,
             'subactivities' => $subactivities,
             'hasSubactivities' => $hasSubactivities,
             'maxSubactivities' => $selectedActivity->max_subactivities,
@@ -910,7 +910,7 @@ class BookingController extends Controller
             'institute',
             'activity',
             'documents',
-            'timeslot',
+            'tmss',
             'statusChanges'
         ])->whereIn('status', [2, 3])->orderBy('created_at', 'desc');
 
@@ -1048,11 +1048,11 @@ class BookingController extends Controller
         $subactivities = Subactivity::where('activity_id', $booking->activity_id)
             ->where('status', 1)
             ->get();
-        $timeslots = Timeslots::where('activity_id', $booking->activity_id)->get();
+        $tmss = Tmss::where('activity_id', $booking->activity_id)->get();
         $activity = Activity::findOrFail($booking->activity_id);
         $maxSubactivities = $activity->max_subactivities;
 
-        return view('emails.visitorEditBooking', compact('booking', 'institutes', 'visitors', 'activities', 'subactivities', 'timeslots', 'maxSubactivities'));
+        return view('emails.visitorEditBooking', compact('booking', 'institutes', 'visitors', 'activities', 'subactivities', 'tmss', 'maxSubactivities'));
     }
 
     public function showBookingAdminEdit($booking_id)
@@ -1064,18 +1064,18 @@ class BookingController extends Controller
         $subactivities = Subactivity::where('activity_id', $booking->activity_id)
             ->where('status', 1)
             ->get();
-        $timeslots = Timeslots::where('activity_id', $booking->activity_id)->get();
+        $tmss = Tmss::where('activity_id', $booking->activity_id)->get();
         $activity = Activity::findOrFail($booking->activity_id);
         $maxSubactivities = $activity->max_subactivities;
 
-        return view('admin.AdminEditBooking', compact('booking', 'institutes', 'visitors', 'activities', 'subactivities', 'timeslots', 'maxSubactivities'));
+        return view('admin.AdminEditBooking', compact('booking', 'institutes', 'visitors', 'activities', 'subactivities', 'tmss', 'maxSubactivities'));
     }
 
     public function updateBooking(Request $request, $booking_id)
     {
         $rules = [
             'fk_activity_id' => 'required|exists:activities,activity_id',
-            'fk_timeslots_id' => 'nullable|exists:timeslots,timeslots_id',
+            'fk_tmss_id' => 'nullable|exists:tmss,tmss_id',
             'sub_activity_id' => 'nullable|array',
             'sub_activity_id.*' => 'nullable|exists:sub_activities,sub_activity_id',
             'booking_date' => 'required|date_format:Y-m-d',
@@ -1099,10 +1099,10 @@ class BookingController extends Controller
         ];
 
         if (in_array($request->fk_activity_id, [1, 2, 3])) {
-            $rules['fk_timeslots_id'] = 'required|exists:timeslots,timeslots_id';
+            $rules['fk_tmss_id'] = 'required|exists:tmss,tmss_id';
         }
         $message = [
-            'fk_timeslots_id.required' => 'กรุณาเลือกรอบการเข้าชม',
+            'fk_tmss_id.required' => 'กรุณาเลือกรอบการเข้าชม',
             'booking_date.required' => 'กรุณาระบุวันที่จองเข้าชม',
             'instituteName.required' => 'กรุณากรอกชื่อหน่วยงาน',
             'instituteAddress.required' => 'กรุณากรอกที่อยู่หน่วยงาน',
@@ -1167,24 +1167,24 @@ class BookingController extends Controller
 
         $formattedDate = $request->booking_date;
 
-        if ($request->filled('fk_timeslots_id')) {
-            $timeslot = Timeslots::find($request->fk_timeslots_id);
-            if (!$timeslot) {
+        if ($request->filled('fk_tmss_id')) {
+            $tmss = Tmss::find($request->fk_tmss_id);
+            if (!$tmss) {
                 return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
             }
 
             if ($activity->activity_id == 3) {
-                if ($request->filled('fk_timeslots_id')) {
-                    $timeslot = Timeslots::find($request->fk_timeslots_id);
-                    if (!$timeslot) {
+                if ($request->filled('fk_tmss_id')) {
+                    $tmss = Tmss::find($request->fk_tmss_id);
+                    if (!$tmss) {
                         return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
                     }
-                    $conflictingBooking = Bookings::join('timeslots', 'bookings.timeslots_id', '=', 'timeslots.timeslots_id')
+                    $conflictingBooking = Bookings::join('tmss', 'bookings.tmss_id', '=', 'tmss.tmss_id')
                         ->whereIn('bookings.activity_id', [1, 2])
                         ->where('bookings.booking_date', $formattedDate)
-                        ->where(function ($query) use ($timeslot) {
-                            $query->where('timeslots.start_time', '<', $timeslot->end_time)
-                                ->where('timeslots.end_time', '>', $timeslot->start_time);
+                        ->where(function ($query) use ($tmss) {
+                            $query->where('tmss.start_time', '<', $tmss->end_time)
+                                ->where('tmss.end_time', '>', $tmss->start_time);
                         })
                         ->exists();
 
@@ -1194,17 +1194,17 @@ class BookingController extends Controller
                 }
             }
             if (in_array($activity->activity_id, [1, 2])) {
-                if ($request->filled('fk_timeslots_id')) {
-                    $timeslot = Timeslots::find($request->fk_timeslots_id);
-                    if (!$timeslot) {
+                if ($request->filled('fk_tmss_id')) {
+                    $tmss = Tmss::find($request->fk_tmss_id);
+                    if (!$tmss) {
                         return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
                     }
-                    $conflictingBooking = Bookings::join('timeslots', 'bookings.timeslots_id', '=', 'timeslots.timeslots_id')
+                    $conflictingBooking = Bookings::join('tmss', 'bookings.tmss_id', '=', 'tmss.tmss_id')
                         ->where('bookings.activity_id', 3)
                         ->where('bookings.booking_date', $formattedDate)
-                        ->where(function ($query) use ($timeslot) {
-                            $query->where('timeslots.start_time', '<', $timeslot->end_time)
-                                ->where('timeslots.end_time', '>', $timeslot->start_time);
+                        ->where(function ($query) use ($tmss) {
+                            $query->where('tmss.start_time', '<', $tmss->end_time)
+                                ->where('tmss.end_time', '>', $tmss->start_time);
                         })
                         ->exists();
 
@@ -1226,7 +1226,7 @@ class BookingController extends Controller
                 ])->withInput();
             }
             $totalBooked = Bookings::where('booking_date', $formattedDate)
-                ->where('timeslots_id', $timeslot->timeslots_id)
+                ->where('tmss_id', $tmss->tmss_id)
                 ->whereIn('status', [0, 1])
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
             if ($activity->max_capacity !== null && $totalBooked + $totalToBook > $activity->max_capacity) {
@@ -1261,7 +1261,7 @@ class BookingController extends Controller
         $booking->update([
             'fk_activity_id' => $request->fk_activity_id,
             'booking_date' => $formattedDate,
-            'timeslots_id' => $request->fk_timeslots_id,
+            'tmss_id' => $request->fk_tmss_id,
             'children_qty' => $request->children_qty ?? 0,
             'students_qty' => $request->students_qty ?? 0,
             'adults_qty' => $request->adults_qty ?? 0,

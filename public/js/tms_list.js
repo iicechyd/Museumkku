@@ -13,7 +13,7 @@ $(document).on('click', '.toggle-status', function(e) {
     e.preventDefault();
 
     var button = $(this);
-    var timeslotId = button.data('id'); 
+    var tmssId = button.data('id'); 
     var currentStatus = button.data('status');
 
     if (!confirm('คุณต้องการเปลี่ยนสถานะของ หรือไม่?')) {
@@ -21,7 +21,7 @@ $(document).on('click', '.toggle-status', function(e) {
     }
 
     $.ajax({
-        url: '/toggle-status/' + timeslotId, 
+        url: '/toggle-status/' + tmssId, 
         type: 'POST',
         data: {
             _token: $('meta[name="csrf-token"]').attr('content'),

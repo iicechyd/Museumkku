@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return `${year}-${month}-${day}`;
     }
 
-    function fetchTimeslots(activityId, formattedDate) {
+    function fetchTmss(activityId, formattedDate) {
         if (!activityId || !formattedDate) return;
 
         fetch(`/available-tms/${activityId}/${formattedDate}`)
@@ -137,26 +137,26 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 return response.json();
             })
-            .then((timeslots) => {
-                let timeslotsSelect = document.getElementById("fk_timeslots_id");
-                timeslotsSelect.innerHTML = "";
+            .then((tmss) => {
+                let tmssSelect = document.getElementById("fk_tmss_id");
+                tmssSelect.innerHTML = "";
 
-                if (timeslots.length === 0) {
+                if (tmss.length === 0) {
                     let option = document.createElement("option");
                     option.value = "";
                     option.text = "ไม่เปิดให้จองในวันนี้";
-                    timeslotsSelect.appendChild(option);
-                    timeslotsSelect.disabled = true;
+                    tmssSelect.appendChild(option);
+                    tmssSelect.disabled = true;
                 } else {
                     let option = document.createElement("option");
                     option.value = "";
                     option.text = "เลือกรอบการเข้าชม";
-                    timeslotsSelect.appendChild(option);
+                    tmssSelect.appendChild(option);
 
-                    timeslots.forEach((timeslot, index) => {
+                    tmss.forEach((tmss, index) => {
                         let option = document.createElement("option");
-                        let startTime = new Date(`1970-01-01T${timeslot.start_time}Z`);
-                        let endTime = new Date(`1970-01-01T${timeslot.end_time}Z`);
+                        let startTime = new Date(`1970-01-01T${tmss.start_time}Z`);
+                        let endTime = new Date(`1970-01-01T${tmss.end_time}Z`);
                         let startFormatted = `${startTime
                             .getUTCHours()
                             .toString()
@@ -172,19 +172,19 @@ document.addEventListener("DOMContentLoaded", function () {
                             .toString()
                             .padStart(2, "0")}`;
 
-                        option.value = timeslot.timeslots_id;
+                        option.value = tmss.tmss_id;
                         option.text = `รอบที่ ${index + 1} ${startFormatted} น. - ${endFormatted} น.`;
 
-                        if (timeslot.remaining_capacity === 0) {
+                        if (tmss.remaining_capacity === 0) {
                             option.disabled = true;
                             option.text += " (เต็ม)";
                         } else {
-                            option.text += ` (เหลือ ${timeslot.remaining_capacity} ที่นั่ง)`;
+                            option.text += ` (เหลือ ${tmss.remaining_capacity} ที่นั่ง)`;
                         }
-                        timeslotsSelect.appendChild(option);
+                        tmssSelect.appendChild(option);
                     });
 
-                    timeslotsSelect.disabled = false;
+                    tmssSelect.disabled = false;
                 }
             })
             .catch((error) => {
@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ดึงรอบการเข้าชมของวันนี้อัตโนมัติ
     let activityId = document.getElementById("fk_activity_id").value;
-    fetchTimeslots(activityId, formattedDateYMD);
+    fetchTmss(activityId, formattedDateYMD);
 
     flatpickr("#booking_date", {
         dateFormat: "d/m/Y",
@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let formattedDate = `${year}-${month}-${day}`;
             let activityId = document.getElementById("fk_activity_id").value;
 
-            fetchTimeslots(activityId, formattedDate);
+            fetchTmss(activityId, formattedDate);
         },
         onReady: function () {
             document.querySelector(".input-group-text").addEventListener("click", () => {

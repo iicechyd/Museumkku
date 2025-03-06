@@ -43,12 +43,12 @@
                     @enderror
                 </div>
                 <div class="form-group col-md-3">
-                    <label for="timeslots_id" class="font-weight-bold">เลือกรอบการเข้าชม</label>
-                    <select id="timeslots_id" name="timeslots_id" class="form-control" required disabled>
+                    <label for="tmss_id" class="font-weight-bold">เลือกรอบการเข้าชม</label>
+                    <select id="tmss_id" name="tmss_id" class="form-control" required disabled>
                         <option value="">กรุณาเลือกรอบการเข้าชม</option>
                         <option value="all">ปิดทุกรอบ</option>
                     </select>
-                    @error('timeslots_id')
+                    @error('tmss_id')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
@@ -100,9 +100,9 @@
                             <tr>
                                 <td>{{ $closed->activity->activity_name }}</td>
                                 <td>
-                                    @if ($closed->timeslot)
-                                        {{ Carbon::parse($closed->timeslot->start_time)->format('H:i') }} น. -
-                                        {{ Carbon::parse($closed->timeslot->end_time)->format('H:i') }} น.
+                                    @if ($closed->tmss)
+                                        {{ Carbon::parse($closed->tmss->start_time)->format('H:i') }} น. -
+                                        {{ Carbon::parse($closed->tmss->end_time)->format('H:i') }} น.
                                     @else
                                         ปิดทุกรอบ
                                     @endif
@@ -111,7 +111,7 @@
                                 </td>
                                 <td>{{ $closed->comments }}</td>
                                 <td>
-                                    <form action="{{ route('admin.deleteClosedDate', $closed->closed_timeslots_id) }}" method="POST"
+                                    <form action="{{ route('admin.deleteClosedDate', $closed->closed_tmss_id) }}" method="POST"
                                         onsubmit="return confirm('ยืนยันการยกเลิกวันที่ปิดรอบการเข้าชมนี้หรือไม่?');">
                                         @csrf
                                         @method('DELETE')
@@ -128,7 +128,7 @@
         </div>
     @endif
     <script>
-        var getTimeslotsUrl = "{{ route('admin.getTimeslots') }}";
+        var getTmssUrl = "{{ route('admin.getTmss') }}";
         var csrfToken = "{{ csrf_token() }}";
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

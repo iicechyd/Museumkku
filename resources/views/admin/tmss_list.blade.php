@@ -34,14 +34,14 @@
         <h1 class="table-heading text-center">รอบการเข้าชม</h1>
         <button type="button" class="btn my-3"
             style="background-color: rgb(85, 88, 218); border-color: rgb(85, 88, 218); color: white;" data-toggle="modal"
-            data-target="#InsertTimeslotsModal">
+            data-target="#InsertTmssModal">
             เพิ่มรอบการเข้าชม
         </button>
         <a href="{{ url('/admin/manage-closed-dates') }}" class="btn"
             style="background-color: rgb(85, 88, 218); border-color: rgb(85, 88, 218); color: white;">
             ปิดรอบการเข้าชม</a>
         <div class="table-responsive">
-            @if ($activities->isEmpty() || $activities->every(fn($activity) => $activity->timeslots->isEmpty()))
+            @if ($activities->isEmpty() || $activities->every(fn($activity) => $activity->tmss->isEmpty()))
                 <div class="text-center mt-4">
                     <h1 class="text text-center py-5">ไม่พบข้อมูลในระบบ</h1>
                 </div>
@@ -59,28 +59,28 @@
                     <tbody>
                         @foreach ($activities as $activity)
                             @php
-                                $rowspan = $activity->timeslots->count();
+                                $rowspan = $activity->tmss->count();
                             @endphp
-                            @foreach ($activity->timeslots as $index => $timeslot)
+                            @foreach ($activity->tmss as $index => $tmss)
                                 <tr>
                                     @if ($index == 0)
                                         <td rowspan="{{ $rowspan }}">{{ $activity->activity_name }}</td>
                                     @endif
                                     <td>{{ $index + 1 }}</td>
 
-                                    <td>{{ \Carbon\Carbon::parse($timeslot->start_time)->format('H:i') }} น. -
-                                        {{ \Carbon\Carbon::parse($timeslot->end_time)->format('H:i') }} น.</td>
+                                    <td>{{ \Carbon\Carbon::parse($tmss->start_time)->format('H:i') }} น. -
+                                        {{ \Carbon\Carbon::parse($tmss->end_time)->format('H:i') }} น.</td>
                                     <td>
                                         <ul class="list-inline m-0">
                                             <li class="list-inline-item">
                                                 <button class="btn btn-success btn-sm rounded-0" type="button"
                                                     data-toggle="modal"
-                                                    data-target="#EditTimeslotModal{{ $timeslot->timeslots_id }}">
+                                                    data-target="#EditTmssModal{{ $tmss->tmss_id }}">
                                                     <i class="fa fa-edit"></i>
                                                 </button>
                                             </li>
                                             <li class="list-inline-item">
-                                                <form action="{{ route('timeslots.delete', $timeslot->timeslots_id) }}"
+                                                <form action="{{ route('tmss.delete', $tmss->tmss_id) }}"
                                                     method="POST" class="d-inline delete-form">
                                                     @csrf
                                                     @method('DELETE')
@@ -94,8 +94,8 @@
                                     </td>
                                     <td class="text-center">
                                         <a href="javascript:void(0);" class="toggle-status"
-                                            data-id="{{ $timeslot->timeslots_id }}" data-status="{{ $timeslot->status }}">
-                                            @if ($timeslot->status === 1)
+                                            data-id="{{ $tmss->tmss_id }}" data-status="{{ $tmss->status }}">
+                                            @if ($tmss->status === 1)
                                                 <i class="fas fa-toggle-on text-success" style="font-size: 24px;"
                                                     title="Active"></i>
                                             @else
@@ -106,13 +106,13 @@
                                     </td>
                                 </tr>
                                 <!-- Modal สำหรับการแก้ไขรอบการเข้าชม -->
-                                <div class="modal fade" id="EditTimeslotModal{{ $timeslot->timeslots_id }}" tabindex="-1"
-                                    role="dialog" aria-labelledby="EditTimeslotModalLabel{{ $timeslot->timeslots_id }}">
+                                <div class="modal fade" id="EditTmssModal{{ $tmss->tmss_id }}" tabindex="-1"
+                                    role="dialog" aria-labelledby="EditTmssModalLabel{{ $tmss->tmss_id }}">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title"
-                                                    id="EditTimeslotModalLabel{{ $timeslot->timeslots_id }}">
+                                                    id="EditTmssModalLabel{{ $tmss->tmss_id }}">
                                                     แก้ไขรอบการเข้าชม
                                                 </h5>
                                                 <button type="button" class="close" data-dismiss="modal"
@@ -121,7 +121,7 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <form action="{{ route('timeslots.update', $timeslot->timeslots_id) }}"
+                                                <form action="{{ route('tmss.update', $tmss->tmss_id) }}"
                                                     method="POST">
                                                     @csrf
                                                     @method('PUT')
@@ -129,7 +129,7 @@
                                                         <label for="start_time">เวลาเริ่มต้น</label>
                                                         <input type="time" name="start_time" id="start_time"
                                                             class="form-control"
-                                                            value="{{ \Carbon\Carbon::parse($timeslot->start_time)->format('H:i') }}"
+                                                            value="{{ \Carbon\Carbon::parse($tmss->start_time)->format('H:i') }}"
                                                             required>
 
                                                     </div>
@@ -137,7 +137,7 @@
                                                         <label for="end_time">เวลาสิ้นสุด</label>
                                                         <input type="time" name="end_time" id="end_time"
                                                             class="form-control"
-                                                            value="{{ \Carbon\Carbon::parse($timeslot->end_time)->format('H:i') }}"
+                                                            value="{{ \Carbon\Carbon::parse($tmss->end_time)->format('H:i') }}"
                                                             required>
                                                     </div>
                                                     <div class="pt-2">
@@ -155,19 +155,19 @@
                 </table>
             @endif
             <!-- Modal สำหรับเพิ่มรอบกิจกรรม -->
-            <div class="modal fade" id="InsertTimeslotsModal" tabindex="-1" role="dialog"
-                aria-labelledby="InsertTimeslotsModalLabel">
+            <div class="modal fade" id="InsertTmssModal" tabindex="-1" role="dialog"
+                aria-labelledby="InsertTmssModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="InsertTimeslotsModalLabel">เพิ่มรอบการเข้าชม</h5>
+                            <h5 class="modal-title" id="InsertTmssModalLabel">เพิ่มรอบการเข้าชม</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <!-- ฟอร์มเพิ่มรอบการเข้าชม -->
-                            <form id="timeslotsForm" action="{{ route('InsertTimeslots') }}" method="POST">
+                            <form id="tmssForm" action="{{ route('InsertTmss') }}" method="POST">
                                 @csrf
                                 <div class="form-group">
                                     <label for="activity_id">ประเภทการเข้าชม</label>

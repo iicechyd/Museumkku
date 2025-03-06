@@ -26,7 +26,7 @@
                 <div class="modal-body">
                     <h4 id="eventTitle"></h4>
                     <p id="eventStatus"></p>
-                    <p><strong id="eventTimeslotLabel">รอบการเข้าชม:</strong> <span id="eventTimeslot"></span></p>
+                    <p><strong id="eventTmssLabel">รอบการเข้าชม:</strong> <span id="eventTmss"></span></p>
                     <p><strong>ผู้จอง:</strong> <span id="eventVisitor"></span></p>
                     <p><strong>เบอร์โทรศัพท์:</strong> <span id="eventTel"></span></p>
                     <p><strong>อีเมล:</strong> <span id="eventvisitorEmail"></span></p>

@@ -1,13 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
     const activityDropdown = document.getElementById("activity_id");
-    const timeslotsDropdown = document.getElementById("timeslots_id");
+    const tmssDropdown = document.getElementById("tmss_id");
 
     if (activityDropdown) {
         activityDropdown.addEventListener("change", function () {
             const activityId = this.value;
 
             if (activityId) {
-                fetch(getTimeslotsUrl, {
+                fetch(getTmssUrl, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -17,20 +17,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
                     .then((response) => response.json())
                     .then((data) => {
-                        timeslotsDropdown.innerHTML = '<option value="">กรุณาเลือกรอบการเข้าชม</option>';
-                        timeslotsDropdown.innerHTML += '<option value="all">ปิดทุกรอบ</option>';
-                        data.forEach((timeslot) => {
-                            timeslotsDropdown.innerHTML += `<option value="${timeslot.timeslots_id}">${timeslot.start_time} - ${timeslot.end_time}</option>`;
+                        tmssDropdown.innerHTML = '<option value="">กรุณาเลือกรอบการเข้าชม</option>';
+                        tmssDropdown.innerHTML += '<option value="all">ปิดทุกรอบ</option>';
+                        data.forEach((tmss) => {
+                            tmssDropdown.innerHTML += `<option value="${tmss.tmss_id}">${tmss.start_time} - ${tmss.end_time}</option>`;
                         });
-                        timeslotsDropdown.disabled = false;
+                        tmssDropdown.disabled = false;
                     })
                     .catch((error) => {
                         console.error("Error:", error);
                         alert("ไม่สามารถโหลดข้อมูลรอบการเข้าชมได้");
                     });
             } else {
-                timeslotsDropdown.innerHTML = '<option value="">-- เลือกรอบการเข้าชม --</option>';
-                timeslotsDropdown.disabled = true;
+                tmssDropdown.innerHTML = '<option value="">-- เลือกรอบการเข้าชม --</option>';
+                tmssDropdown.disabled = true;
             }
         });
     }

@@ -10,7 +10,7 @@ class CalendarController extends Controller
 {
     public function getEvents(Request $request)
     {
-        $bookingsQuery = Bookings::with(['activity', 'timeslot', 'institute'])
+        $bookingsQuery = Bookings::with(['activity', 'tmss', 'institute'])
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 2);
             })
@@ -18,7 +18,7 @@ class CalendarController extends Controller
 
         $bookings = $bookingsQuery->get();
 
-        $filteredBookings = Bookings::with('activity', 'timeslot', 'institute')
+        $filteredBookings = Bookings::with('activity', 'tmss', 'institute')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1)
                       ->whereIn('activity_id', [1, 2, 3]);
@@ -36,9 +36,9 @@ class CalendarController extends Controller
             $bookingDetails = $filteredBookings->where('booking_date', $date)->map(function ($booking) { 
                 return [
                     'activity_name' => $booking->activity->activity_name,
-                    'timeslot_id' => $booking->timeslot->timeslots_id ?? '',
-                    'start_time' => $booking->timeslot->start_time ?? '',
-                    'end_time' => $booking->timeslot->end_time ?? '',
+                    'tmss_id' => $booking->tmss->tmss_id ?? '',
+                    'start_time' => $booking->tmss->start_time ?? '',
+                    'end_time' => $booking->tmss->end_time ?? '',
                     'total_approved' => $this->calculateTotalApproved($booking),
                 ];
             });
@@ -62,7 +62,7 @@ class CalendarController extends Controller
     private function getGroupedEvents($bookings)
     {
         $groupedBookings = $bookings->groupBy(function ($booking) {
-            return $booking->booking_date . '-' . $booking->activity_id . '-' . ($booking->timeslot->timeslots_id ?? 'no_timeslot');
+            return $booking->booking_date . '-' . $booking->activity_id . '-' . ($booking->tmss->tmss_id ?? 'no_tmss');
         });
 
         return $groupedBookings->map(function ($groupedBooking) {
@@ -86,8 +86,8 @@ class CalendarController extends Controller
 
     private function createEvent($booking, $totalApproved)
     {
-        $startTime = $booking->timeslot ? Carbon::createFromFormat('H:i:s', $booking->timeslot->start_time)->format('H:i') : null;
-        $endTime = $booking->timeslot ? Carbon::createFromFormat('H:i:s', $booking->timeslot->end_time)->format('H:i') : null;
+        $startTime = $booking->tmss ? Carbon::createFromFormat('H:i:s', $booking->tmss->start_time)->format('H:i') : null;
+        $endTime = $booking->tmss ? Carbon::createFromFormat('H:i:s', $booking->tmss->end_time)->format('H:i') : null;
 
         $startDate = Carbon::createFromFormat('Y-m-d', $booking->booking_date);
         $durationDays = $booking->activity->duration_days;

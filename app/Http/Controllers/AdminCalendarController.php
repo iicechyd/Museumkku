@@ -12,7 +12,7 @@ class AdminCalendarController extends Controller
     public function getEvents(Request $request)
     {
         $isAdmin = Auth::check() && Auth::user()->role->role_name === 'Admin';
-        $bookingsQuery = Bookings::with('activity', 'timeslot', 'institute')
+        $bookingsQuery = Bookings::with('activity', 'tmss', 'institute')
             ->where('status', 1);
         $bookings = $bookingsQuery->get();
         $events = $isAdmin ? $this->getAdminEvents($bookings) : $this->getGroupedEvents($bookings);
@@ -30,7 +30,7 @@ class AdminCalendarController extends Controller
     private function getGroupedEvents($bookings)
     {
         $groupedBookings = $bookings->groupBy(function ($booking) {
-            return $booking->booking_date . '-' . $booking->activity_id . '-' . ($booking->timeslot->timeslots_id ?? 'no_timeslot');
+            return $booking->booking_date . '-' . $booking->activity_id . '-' . ($booking->tmss->tmss_id ?? 'no_tmss');
         });
         return $groupedBookings->map(function ($groupedBooking) {
             $firstBooking = $groupedBooking->first();
@@ -52,8 +52,8 @@ class AdminCalendarController extends Controller
 
     private function createEvent($booking, $totalApproved)
     {
-        $startTime = $booking->timeslot ? Carbon::createFromFormat('H:i:s', $booking->timeslot->start_time)->format('H:i') : null;
-        $endTime = $booking->timeslot ? Carbon::createFromFormat('H:i:s', $booking->timeslot->end_time)->format('H:i') : null;
+        $startTime = $booking->tmss ? Carbon::createFromFormat('H:i:s', $booking->tmss->start_time)->format('H:i') : null;
+        $endTime = $booking->tmss ? Carbon::createFromFormat('H:i:s', $booking->tmss->end_time)->format('H:i') : null;
 
         $startDate = Carbon::createFromFormat('Y-m-d', $booking->booking_date);
         $durationDays = $booking->activity->duration_days;

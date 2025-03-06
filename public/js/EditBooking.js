@@ -112,39 +112,39 @@ $.Thailand({
 
 document.addEventListener("DOMContentLoaded", function () {
     let bookingInput = document.getElementById("booking_date");
-    let timeslotsSelect = document.getElementById("fk_timeslots_id");
+    let tmssSelect = document.getElementById("fk_tmss_id");
     let activityId = document.getElementById("fk_activity_id").value;
     let existingDate = bookingInput.value;
-    let selectedTimeslotId = timeslotsSelect?.getAttribute("data-selected") || null;
+    let selectedTmssId = tmssSelect?.getAttribute("data-selected") || null;
 
-    function fetchTimeslots(dateStr) {
-        if (!dateStr || !timeslotsSelect) return;
+    function fetchTmss(dateStr) {
+        if (!dateStr || !tmssSelect) return;
 
         fetch(`/available-tms/${activityId}/${dateStr}`)
             .then((response) => response.json())
-            .then((timeslots) => {
-                if (!timeslotsSelect) return;
-                timeslotsSelect.innerHTML = "";
+            .then((tmss) => {
+                if (!tmssSelect) return;
+                tmssSelect.innerHTML = "";
 
-                if (timeslots.length === 0) {
+                if (tmss.length === 0) {
                     let option = document.createElement("option");
                     option.value = "";
                     option.text = "ไม่เปิดให้จองในวันนี้";
-                    timeslotsSelect.appendChild(option);
-                    timeslotsSelect.disabled = true;
+                    tmssSelect.appendChild(option);
+                    tmssSelect.disabled = true;
                 } else {
                     let option = document.createElement("option");
                     option.value = "";
                     option.text = "เลือกรอบการเข้าชม";
-                    timeslotsSelect.appendChild(option);
+                    tmssSelect.appendChild(option);
 
-                    timeslots.forEach((timeslot, index) => {
+                    tmss.forEach((tmss, index) => {
                         let option = document.createElement("option");
                         let startTime = new Date(
-                            `1970-01-01T${timeslot.start_time}Z`
+                            `1970-01-01T${tmss.start_time}Z`
                         );
                         let endTime = new Date(
-                            `1970-01-01T${timeslot.end_time}Z`
+                            `1970-01-01T${tmss.end_time}Z`
                         );
                         let startFormatted = `${startTime
                             .getUTCHours()
@@ -161,24 +161,24 @@ document.addEventListener("DOMContentLoaded", function () {
                             .toString()
                             .padStart(2, "0")}`;
 
-                        option.value = timeslot.timeslots_id;
+                        option.value = tmss.tmss_id;
                         option.text = `รอบที่ ${index + 1} ${startFormatted} น. - ${endFormatted} น.`;
 
-                        if (timeslot.remaining_capacity === 0) {
+                        if (tmss.remaining_capacity === 0) {
                             option.disabled = true;
                             option.text += " (เต็ม)";
                         } else {
-                            option.text += ` (เหลือ ${timeslot.remaining_capacity} ที่นั่ง)`;
+                            option.text += ` (เหลือ ${tmss.remaining_capacity} ที่นั่ง)`;
                         }
 
-                        if (timeslot.timeslots_id == selectedTimeslotId) {
+                        if (tmss.tmss_id == selectedTmssId) {
                             option.selected = true;
                         }
 
-                        timeslotsSelect.appendChild(option);
+                        tmssSelect.appendChild(option);
                     });
 
-                    timeslotsSelect.disabled = false;
+                    tmssSelect.disabled = false;
                 }
             })
             .catch((error) => {
@@ -198,9 +198,9 @@ document.addEventListener("DOMContentLoaded", function () {
             },
         ],
         onChange: function (selectedDates, dateStr, instance) {
-            timeslotsSelect.innerHTML = "<option value=''>เลือกรอบการเข้าชม</option>";
-            selectedTimeslotId = '';
-            fetchTimeslots(dateStr);
+            tmssSelect.innerHTML = "<option value=''>เลือกรอบการเข้าชม</option>";
+            selectedTmssId = '';
+            fetchTmss(dateStr);
         },
         onReady: function (selectedDates, dateStr, instance) {
             instance.altInput.setAttribute("id", "booking_date_alt");
@@ -215,7 +215,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             if (existingDate) {
-                fetchTimeslots(existingDate);
+                fetchTmss(existingDate);
             }
         },
     });

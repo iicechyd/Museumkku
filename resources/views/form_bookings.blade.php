@@ -122,16 +122,16 @@
                         </div>
                     @endif
 
-                    @if ($timeslots->isNotEmpty())
+                    @if ($tmss->isNotEmpty())
                         <div class="form-group col-md-3">
-                            <label for="fk_timeslots_id" class="form-label">รอบการเข้าชม</label>
-                            <select id="fk_timeslots_id" class="form-select @error('fk_timeslots_id') is-invalid @enderror"
-                                name="fk_timeslots_id">
+                            <label for="fk_tmss_id" class="form-label">รอบการเข้าชม</label>
+                            <select id="fk_tmss_id" class="form-select @error('fk_tmss_id') is-invalid @enderror"
+                                name="fk_tmss_id">
                                 <option value="">เลือกรอบการเข้าชม</option>
                             </select>
-                            @error('fk_timeslots_id')
+                            @error('fk_tmss_id')
                                 <div class="my-2">
-                                    <span class="text-danger">{{ $errors->first('fk_timeslots_id') }}</span>
+                                    <span class="text-danger">{{ $errors->first('fk_tmss_id') }}</span>
                                 </div>
                             @enderror
                         </div>
@@ -407,8 +407,8 @@
                 </div>
                 <div class="modal-body">
                     <h4 id="eventTitle"></h4>
-                    <p><strong id="eventTimeslotLabel"></strong></p>
-                    <p id="eventTimeslot"></p>
+                    <p><strong id="eventTmssLabel"></strong></p>
+                    <p id="eventTmss"></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>

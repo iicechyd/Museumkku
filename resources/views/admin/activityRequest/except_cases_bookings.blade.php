@@ -59,9 +59,9 @@
                                 {{ \Carbon\Carbon::parse($item->booking_date)->addYears(543)->year }}
                             </td>
                             <td>
-                                @if ($item->timeslot)
-                                    {{ \Carbon\Carbon::parse($item->timeslot->start_time)->format('H:i') }} น. -
-                                    {{ \Carbon\Carbon::parse($item->timeslot->end_time)->format('H:i') }} น.
+                                @if ($item->tmss)
+                                    {{ \Carbon\Carbon::parse($item->tmss->start_time)->format('H:i') }} น. -
+                                    {{ \Carbon\Carbon::parse($item->tmss->end_time)->format('H:i') }} น.
                                 @else
                                     ไม่มีรอบการเข้าชม
                                 @endif

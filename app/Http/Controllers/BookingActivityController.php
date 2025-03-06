@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use App\Models\Bookings;
-use App\Models\Timeslots;
+use App\Models\Tmss;
 use App\Models\Activity;
 use Carbon\Carbon;
 
@@ -28,7 +28,7 @@ class BookingActivityController extends Controller
             return $activity;
         });
 
-        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'documents', 'subactivities')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'documents', 'subactivities')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 2);
             })
@@ -47,10 +47,10 @@ class BookingActivityController extends Controller
                 ->where('status', 1)
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
 
-            if ($item->timeslot && $item->timeslot->timeslots_id) {
+            if ($item->tmss && $item->tmss->tmss_id) {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('activity_id', $item->activity_id)
-                    ->where('timeslots_id', $item->timeslot->timeslots_id)
+                    ->where('tmss_id', $item->tmss->tmss_id)
                     ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
@@ -87,7 +87,7 @@ class BookingActivityController extends Controller
         });
 
 
-        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'subactivities')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'subactivities')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 2);
             })
@@ -101,9 +101,9 @@ class BookingActivityController extends Controller
         foreach ($requestBookings as $item) {
             $totalApproved = 0;
 
-            if ($item->timeslot) {
+            if ($item->tmss) {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
-                    ->where('timeslots_id', $item->timeslot->timeslots_id)
+                    ->where('tmss_id', $item->tmss->tmss_id)
                     ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
             } else {
@@ -145,7 +145,7 @@ class BookingActivityController extends Controller
             return $activity;
         });
 
-        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'subactivities')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'subactivities')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 2);
             })
@@ -162,10 +162,10 @@ class BookingActivityController extends Controller
                 ->where('status', 1)
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
 
-            if ($item->timeslot && $item->timeslot->timeslots_id) {
+            if ($item->tmss && $item->tmss->tmss_id) {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('activity_id', $item->activity_id)
-                    ->where('timeslots_id', $item->timeslot->timeslots_id)
+                    ->where('tmss_id', $item->tmss->tmss_id)
                     ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
@@ -202,7 +202,7 @@ class BookingActivityController extends Controller
             return $activity;
         });
 
-        $query = Bookings::with('activity', 'timeslot', 'visitor', 'institute', 'subactivities')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'subactivities')
         ->whereHas('activity', function ($query) {
             $query->where('activity_type_id', 2);
         })
@@ -215,9 +215,9 @@ class BookingActivityController extends Controller
 
         foreach ($exceptBookings as $item) {
             $totalApproved = 0;
-            if ($item->timeslot) {
+            if ($item->tmss) {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
-                    ->where('timeslots_id', $item->timeslot->timeslots_id)
+                    ->where('tmss_id', $item->tmss->tmss_id)
                     ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
@@ -239,10 +239,10 @@ class BookingActivityController extends Controller
         return view('admin.activityRequest.except_cases_bookings', compact('exceptBookings', 'activities'));
     }
 
-    public function deleteTimeslots($id)
+    public function deleteTmss($id)
     {
-        $timeslot = Timeslots::findOrFail($id);
-        $timeslot->delete();
+        $tmss = Tmss::findOrFail($id);
+        $tmss->delete();
 
         return redirect()->back()->with('success', 'ลบรอบการเข้าชมสำเร็จ');
     }

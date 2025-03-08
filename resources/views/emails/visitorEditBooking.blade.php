@@ -337,7 +337,7 @@
                                 {{ $booking->elderly_qty > 0 ? '' : 'disabled' }} oninput="calculateTotal()">
                         </div>
                         <!-- พระภิกษุสงฆ์ /สามเณร -->
-                        <div class="col-md-3 custom-col custom-col">
+                        <div class="col-md-3 custom-col">
                             <input class="form-check-input" type="checkbox" id="monk_qty" name="monk_qty"
                                 onclick="toggleInput('monkInput')" {{ $booking->monk_qty > 0 ? 'checked' : '' }}>
                             <label class="form-check-label" for="monk_qty">ผู้สูงอายุ</label>

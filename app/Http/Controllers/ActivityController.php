@@ -95,6 +95,7 @@ class ActivityController extends Controller
                 'monk_price' => 'required',
                 'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'target_yearly_count' => 'nullable|integer',
+                'max_capacity' => 'nullable|integer|min:0',
             ],
             [
                 'activity_name.required' => 'กรุณาป้อนชื่อกิจกรรม',
@@ -121,7 +122,7 @@ class ActivityController extends Controller
         $activity->disabled_price = $request->disabled_price;
         $activity->elderly_price = $request->elderly_price;
         $activity->monk_price = $request->monk_price;
-        $activity->max_capacity = $request->max_capacity;
+        $activity->max_capacity = $request->max_capacity ?? null;
         $activity->target_yearly_count = $request->target_yearly_count;
         $activity->activity_type_id = $request->activity_type_id;
         $activity->status = 'inactive';

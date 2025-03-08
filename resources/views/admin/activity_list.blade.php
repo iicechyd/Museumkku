@@ -273,10 +273,10 @@
                         <div class="form-group">
                             <label for="max_capacity">ความจุคนต่อรอบการเข้าชม</label>
                             <input type="number" class="form-control" id="max_capacity" name="max_capacity"
-                                min="0" placeholder="กรุณาระบุความจุผู้เข้าชม" required>
+                                min="0" placeholder="กรุณาระบุความจุผู้เข้าชม">
                         </div>
                         <div class="form-group pt-2">
-                            <label for="images">เลือกรูปภาพ:</label>
+                            <label for="images">เลือกรูปภาพ</label>
                             <input type="file" name="images[]" multiple>
                         </div>
                         <div class="pt-2">
@@ -368,7 +368,7 @@
                             value="{{ $item->max_capacity }}" @endif>
                         </div>
                         <div class="form-group pt-2">
-                            <label for="images">เลือกรูปภาพ:</label>
+                            <label for="images">เลือกรูปภาพ</label>
                             <input type="file" name="images[]" multiple>
                         </div>
                         <div class="pt-2">

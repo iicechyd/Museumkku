@@ -373,6 +373,7 @@ class DashboardController extends Controller
                 $totalBookings = $activity->bookings()
                     ->whereBetween('booking_date', [$startMonth, $endMonth])
                     ->distinct('booking_id')
+                    ->where('status', 2)
                     ->count();
 
                 return (object) [

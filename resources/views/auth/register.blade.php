@@ -22,7 +22,7 @@
                 @csrf
                 <div class="input-box">
                     <input id="name" type="text" class="form-control @error('name') is-invalid @enderror"
-                        placeholder="กรุณากรอกชื่อของคุณ" name="name" value="{{ old('name') }}" required
+                        placeholder="กรุณากรอกชื่อ-นามสกุลของคุณ" name="name" value="{{ old('name') }}" required
                         autocomplete="name" autofocus>
 
                     @error('name')

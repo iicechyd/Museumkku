@@ -124,6 +124,17 @@ class TmssController extends Controller
         $formattedDate = $closedOn->format('Y-m-d');
         $comments = $request->input('comments');
 
+            $existingBookings = Bookings::where('activity_id', $activityId)
+            ->where('booking_date', $formattedDate)
+            ->when($tmssId !== 'all', function ($query) use ($tmssId) {
+                return $query->where('tmss_id', $tmssId);
+            })
+            ->where('status', 0,1)
+            ->exists();
+
+        if ($existingBookings) {
+            return redirect()->back()->with('error', 'ไม่สามารถบันทึกข้อมูลการปิดรอบการเข้าชมนี้ได้ เนื่องจากมีการจองรอบการเข้าชมที่เลือกในวันที่เดียวกันที่รอดำเนินการอยู่ในระบบ')->withInput();
+        }
         $existingAllClosed = ClosedTmss::where('activity_id', $activityId)
         ->whereNull('tmss_id')
         ->where('closed_on', $formattedDate)

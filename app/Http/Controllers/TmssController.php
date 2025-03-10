@@ -24,6 +24,18 @@ class TmssController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i',
+        ]);
+
+        $start_time = Carbon::createFromFormat('H:i', $request->input('start_time'));
+        $end_time = Carbon::createFromFormat('H:i', $request->input('end_time'));
+        
+        if ($start_time >= $end_time) {
+            return redirect()->back()->with('error', 'เวลาเริ่มต้นต้องน้อยกว่าเวลาสิ้นสุด');
+        }
+
         $tmss = Tmss::findOrFail($id);
         $tmss->start_time = $request->input('start_time');
         $tmss->end_time = $request->input('end_time');

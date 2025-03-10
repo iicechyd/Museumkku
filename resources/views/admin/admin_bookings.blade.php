@@ -63,7 +63,7 @@
                         </select>
                     </div>
                     <div class="form-group col-md-4">
-                        <label for="booking_date" class="form-label">วันที่จอง</label>
+                        <label for="booking_date" class="form-label">วันที่เข้าชม</label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="booking_date" name="booking_date"
                                 readonly required>

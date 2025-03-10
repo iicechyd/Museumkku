@@ -6,7 +6,13 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
         <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
-
+    <style>
+        #targetSection .table-responsive {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+    
     <title>Dashboard</title>
 
     <x-layout bodyClass>
@@ -284,7 +290,7 @@
                         <div class="row mb-4">
                             @foreach ($activities->whereIn('activity_id', [1, 2]) as $activity)
                                 <div class="col-md-3 pt-3">
-                                    <div class="card text-center">
+                                    <div class="card text-center" style="min-height: 11vh; display: flex; flex-direction: column;">
                                         <div class="card-body">
                                             <h5>{{ $activity->activity_name }}</h5>
                                             <h3 class="{{ $activity->activity_id == 1 ? 'text-info' : 'text-danger' }}">
@@ -295,7 +301,7 @@
                                 </div>
                             @endforeach
                             <div class="col-md-3 pt-3">
-                                <div class="card text-center">
+                                <div class="card text-center" style="min-height: 11vh; display: flex; flex-direction: column;">
                                     <div class="card-body">
                                         <h5>เข้าชมทั้งสองพิพิธภัณฑ์</h5>
                                         <h3 class="text-success">{{ number_format($totalVisitorsActivityBooked) }} คน</h3>
@@ -303,7 +309,7 @@
                                 </div>
                             </div>
                             <div class="col-md-3 pt-3">
-                                <div class="card text-center">
+                                <div class="card text-center" style="min-height: 11vh; display: flex; flex-direction: column;">
                                     <div class="card-body">
                                         <h5>ผู้เข้าชมทั้งหมด</h5>
                                         <h3 class="text-warning">{{ number_format(array_sum($totalVisitorsBooked)) }} คน
@@ -319,7 +325,7 @@
                         <div class="row mb-4">
                             @foreach ($activities->whereIn('activity_id', [1, 2]) as $activity)
                                 <div class="col-md-3 pt-3">
-                                    <div class="card text-center">
+                                    <div class="card text-center" style="min-height: 11vh; display: flex; flex-direction: column;">
                                         <div class="card-body">
                                             <h5>{{ $activity->activity_name }}</h5>
                                             <h3 class="{{ $activity->activity_id == 1 ? 'text-info' : 'text-danger' }}">
@@ -330,7 +336,7 @@
                                 </div>
                             @endforeach
                             <div class="col-md-3 pt-3">
-                                <div class="card text-center">
+                                <div class="card text-center" style="min-height: 11vh; display: flex; flex-direction: column;">
                                     <div class="card-body">
                                         <h5>เข้าชมทั้งสองพิพิธภัณฑ์</h5>
                                         <h3 class="text-success">{{ number_format($totalWalkinActivityBooked) }} คน</h3>
@@ -338,7 +344,7 @@
                                 </div>
                             </div>
                             <div class="col-md-3 pt-3">
-                                <div class="card text-center">
+                                <div class="card text-center" style="min-height: 11vh; display: flex; flex-direction: column;">
                                     <div class="card-body">
                                         <h5>ผู้เข้าชมทั้งหมด</h5>
                                         <h3 class="text-warning">{{ number_format(array_sum($totalWalkinBooked)) }} คน
@@ -386,7 +392,7 @@
                         </div>
                     </div>
                     <div class="card-body px-0 pb-2" id="targetSection">
-                        <div class="table-responsive">
+                        <div class="table-responsive max-h-48 overflow-y-auto">
                             <table class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
@@ -445,9 +451,8 @@
                         <h6>สถิติประเภทผู้เข้าชมปีนี้</h6>
                         <p class="text-sm">ปีงบประมาณ {{ $startMonthThai }} - {{ $endMonthThai }}</p>
                     </div>
-                </div>
                 <div class="card align-items-center">
-                    <div class="card-body p-3" style="width: 250px" height="250px">
+                    <div class="card-body p-3" style="width: 250px; height: 325px;">
                         <canvas id="visitorPieChart"></canvas>
                     </div>
                 </div>

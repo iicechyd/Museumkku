@@ -69,4 +69,17 @@ class SuperAdminController extends Controller
     
         return redirect()->route('showAllUsers')->with('success', 'ลบบัญชีผู้ใช้งานเรียบร้อย');
     }
+        public function update(Request $request, $user_id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $user = User::findOrFail($user_id);
+        $user->name = $request->name;
+        $user->save();
+
+        return redirect()->back()->with('success', 'แก้ไขชื่อบัญชีผู้ใช้งานสำเร็จ');
+    }
+
 }

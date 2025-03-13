@@ -25,7 +25,8 @@ Route::middleware([RoleMiddleware::class . ':Super Admin'])->group(function () {
     Route::post('/approve_user/{user_id}', [SuperAdminController::class, 'approveUsers'])->name('superadmin.approve_users');
     Route::delete('/superadmin/users/{user_id}', [SuperAdminController::class, 'deleteUser'])
         ->name('superadmin.delete_user');
-});
+    Route::put('/users/{user_id}', [SuperAdminController::class, 'update'])->name('users.update');
+    });
 Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'showDashboard'])->name('showDashboard');
     Route::get('/admin/activity_list', [ActivityController::class, 'showListActivity']);

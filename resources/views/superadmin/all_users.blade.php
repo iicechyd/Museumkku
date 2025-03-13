@@ -46,7 +46,12 @@
                                                             <i class="fa-solid fa-user" style="margin-right: 15px;"></i>
                                                         </div>
                                                         <div class="d-flex flex-column justify-content-center">
-                                                            <h6 class="mb-0 text-sm">{{ $user->name }}</h6>
+                                                            <h6 class="mb-0 text-sm">{{ $user->name }}
+                                                                <i class="fas fa-edit"
+                                                                    style="color: #3b44ff; cursor: pointer;"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#editUserModal{{ $user->user_id }}"></i>
+                                                            </h6>
                                                             <p class="text-xs text-secondary mb-0">{{ $user->email }}
                                                             </p>
                                                         </div>
@@ -54,7 +59,7 @@
                                                 </td>
                                                 <td>
                                                     <p class="text-xs font-weight-bold mb-0">
-                                                        @if($user->role)
+                                                        @if ($user->role)
                                                             @switch($user->role->role_name)
                                                                 @case('Super Admin')
                                                                     ผู้ดูแลระบบ
@@ -85,7 +90,7 @@
                                                         action="{{ route('superadmin.approve_users', $user->user_id) }}">
                                                         @csrf
                                                         <select name="role_id" class="form-control"
-                                                        @if ($user->role && $user->role->role_name == 'Super Admin') disabled @endif>
+                                                            @if ($user->role && $user->role->role_name == 'Super Admin') disabled @endif>
                                                             @if ($user->role && $user->role->role_name == 'Super Admin')
                                                                 <option value="" disabled selected>
                                                                     ผู้ดูแลระบบ
@@ -119,32 +124,71 @@
                                                 </td>
                                                 <td>
                                                     @if ($user->role && $user->role->role_name !== 'Super Admin')
-                                                    <button type="submit" class="btn btn-success">อนุมัติ</button>
+                                                        <button type="submit" class="btn btn-success">อนุมัติ</button>
                                                     @elseif (!$user->role)
                                                         <button type="submit" class="btn btn-success">อนุมัติ</button>
                                                     @endif
                                                     </form>
                                                     @if ($user->role && $user->role->role_name !== 'Super Admin')
-                                                    <form action="{{ route('superadmin.delete_user', $user->user_id) }}"
-                                                        method="POST" style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger"
-                                                            onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีนี้?')">
-                                                            ลบ
-                                                        </button>
-                                                    </form>
-                                                    @elseif (!$user->role)
-                                                        <form action="{{ route('superadmin.delete_user', $user->user_id) }}" method="POST" style="display:inline;">
+                                                        <form
+                                                            action="{{ route('superadmin.delete_user', $user->user_id) }}"
+                                                            method="POST" style="display:inline;">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger" onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีนี้?')">
+                                                            <button type="submit" class="btn btn-danger"
+                                                                onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีนี้?')">
+                                                                ลบ
+                                                            </button>
+                                                        </form>
+                                                    @elseif (!$user->role)
+                                                        <form
+                                                            action="{{ route('superadmin.delete_user', $user->user_id) }}"
+                                                            method="POST" style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger"
+                                                                onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีนี้?')">
                                                                 ลบ
                                                             </button>
                                                         </form>
                                                     @endif
                                                 </td>
                                             </tr>
+                                            <!-- Modal แก้ไขชื่อผู้ใช้ -->
+                                            <div class="modal fade" id="editUserModal{{ $user->user_id }}" tabindex="-1"
+                                                aria-labelledby="editUserModalLabel{{ $user->user_id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title"
+                                                                id="editUserModalLabel{{ $user->user_id }}">แก้ไขชื่อบัญชีผู้ใช้งาน
+                                                            </h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                        </div>
+                                                        <form action="{{ route('users.update', $user->user_id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label for="name{{ $user->user_id }}"
+                                                                        class="form-label">กรุณากรอกชื่อบัญชีผู้ใช้งาน</label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="name{{ $user->user_id }}" name="name"
+                                                                        value="{{ $user->name }}" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">ยกเลิก</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">บันทึก</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -154,4 +198,5 @@
                 </div>
                 </main>
         </x-layout>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @endsection

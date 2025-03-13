@@ -90,10 +90,14 @@
                                                         action="{{ route('superadmin.approve_users', $user->user_id) }}">
                                                         @csrf
                                                         <select name="role_id" class="form-control"
-                                                            @if ($user->role && $user->role->role_name == 'Super Admin') disabled @endif>
+                                                            @if ($user->role && ($user->role->role_name == 'Executive' || $user->role->role_name == 'Super Admin')) disabled @endif>
                                                             @if ($user->role && $user->role->role_name == 'Super Admin')
                                                                 <option value="" disabled selected>
                                                                     ผู้ดูแลระบบ
+                                                                </option>
+                                                            @elseif ($user->role && $user->role->role_name == 'Executive')
+                                                                <option value="" disabled selected>
+                                                                    ผู้บริหาร
                                                                 </option>
                                                             @else
                                                                 <option value="" disabled selected>
@@ -101,35 +105,21 @@
                                                                 </option>
                                                             @endif
                                                             @foreach ($roles as $role)
-                                                                <option value="{{ $role->role_id }}">
-                                                                    @switch($role->role_name)
-                                                                        @case('Super Admin')
-                                                                            ผู้ดูแลระบบ
-                                                                        @break
-
-                                                                        @case('Executive')
-                                                                            ผู้บริหาร
-                                                                        @break
-
-                                                                        @case('Admin')
-                                                                            เจ้าหน้าที่
-                                                                        @break
-
-                                                                        @default
-                                                                            รอกำหนดสิทธิ์
-                                                                    @endswitch
-                                                                </option>
+                                                                @if ($role->role_name == 'Admin')
+                                                                    <option value="{{ $role->role_id }}">เจ้าหน้าที่
+                                                                    </option>
+                                                                @endif
                                                             @endforeach
                                                         </select>
                                                 </td>
                                                 <td>
-                                                    @if ($user->role && $user->role->role_name !== 'Super Admin')
+                                                    @if ($user->role && ($user->role->role_name !== 'Super Admin' && $user->role->role_name !== 'Executive'))
                                                         <button type="submit" class="btn btn-success">อนุมัติ</button>
                                                     @elseif (!$user->role)
                                                         <button type="submit" class="btn btn-success">อนุมัติ</button>
                                                     @endif
                                                     </form>
-                                                    @if ($user->role && $user->role->role_name !== 'Super Admin')
+                                                    @if ($user->role && ($user->role->role_name !== 'Super Admin' && $user->role->role_name !== 'Executive'))
                                                         <form
                                                             action="{{ route('superadmin.delete_user', $user->user_id) }}"
                                                             method="POST" style="display:inline;">
@@ -161,7 +151,8 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title"
-                                                                id="editUserModalLabel{{ $user->user_id }}">แก้ไขชื่อบัญชีผู้ใช้งาน
+                                                                id="editUserModalLabel{{ $user->user_id }}">
+                                                                แก้ไขชื่อบัญชีผู้ใช้งาน
                                                             </h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-label="Close"></button>

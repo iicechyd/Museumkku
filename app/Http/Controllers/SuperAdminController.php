@@ -18,9 +18,6 @@ class SuperAdminController extends Controller
     public function approveUsers(Request $request, $user_id)
     {
         $user = User::find($user_id);
-        if (Auth::user()->role_id === $user->role_id && $user->role_id == 1) {
-            return redirect()->route('showAllUsers')->with('error', 'ผู้ดูแลระบบไม่สามารถเปลี่ยนประเภทบัญชีผู้ใช้งานได้');
-        }
         $user->is_approved = true;
         $user->role_id = $request->role_id;
         $user->save();
@@ -29,7 +26,12 @@ class SuperAdminController extends Controller
 
     public function showAllUsers()
     {
-        $users = User::with('role')->get();
+        $users = User::with('role')
+        ->get()
+        ->sortBy(function ($user) {
+            $order = ['Super Admin' => 1, 'Executive' => 2, 'Admin' => 3, null => 4];
+            return $order[$user->role->role_name ?? null] ?? 5;
+        });
         $roles = Role::all();
         return view('superadmin.all_users', compact('users', 'roles'));
     }

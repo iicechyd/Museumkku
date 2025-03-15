@@ -105,7 +105,7 @@
     <div class="footer">
         <footer class="text-center" style="background-color: #F9F9F9;">
             <div class="text-center text-black p-3">
-                Copyright © | ศูนย์พิพิธภัณฑ์ และแหล่งเรียนรู้ตลอดชีวิต || มหาวิทยาลัยขอนแก่น | Natural History Museum
+                Copyright © | ศูนย์พิพิธภัณฑ์ และแหล่งเรียนรู้ตลอดชีวิต มหาวิทยาลัยขอนแก่น | Natural History Museum KKU | วิทยาลัยการคอมพิวเตอร์ มหาวิทยาลัยขอนแก่น | College Of Computing KKU
             </div>
         </footer>
     </div>

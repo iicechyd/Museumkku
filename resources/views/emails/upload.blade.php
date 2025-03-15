@@ -21,7 +21,7 @@
         </h2>
         @if ($booking->documents->isNotEmpty())
             <p class="text-center">หากต้องการแก้ไขข้อมูลเพิ่มเติม กรุณาติดต่อ
-                096-XXX-XXXX เจ้าหน้าที่ฝ่ายกิจกรรม</p>
+                094-512-9458, 094-278-4222 เจ้าหน้าที่ฝ่ายกิจกรรม</p>
         @else
         @endif
         @if ($booking->status == 3)

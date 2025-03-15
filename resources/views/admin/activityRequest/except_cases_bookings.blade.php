@@ -59,13 +59,15 @@
                                 {{ \Carbon\Carbon::parse($item->booking_date)->addYears(543)->year }}
                             </td>
                             <td>
-                                @if ($item->tmss)
+                                @if ($item->note === 'วอคอิน')
+                                    วอคอิน
+                                @elseif ($item->tmss)
                                     {{ \Carbon\Carbon::parse($item->tmss->start_time)->format('H:i') }} น. -
                                     {{ \Carbon\Carbon::parse($item->tmss->end_time)->format('H:i') }} น.
                                 @else
                                     ไม่มีรอบการเข้าชม
                                 @endif
-                            </td>
+                            </td> 
                             <td>
                                 {!! $item->status == 3 ? '<button type="button" class="btn-except">ยกเลิก</button>' : '' !!}
                             </td>

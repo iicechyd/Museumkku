@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\BookingApprovedMail;
 use App\Mail\BookingCancelledMail;
 use App\Mail\BookingPendingMail;
+use App\Http\Controllers\TmssController;
 
 class BookingController extends Controller
 {
@@ -79,7 +80,7 @@ class BookingController extends Controller
             $disabledPrice = $item->disabled_qty * $item->activity->disabled_price;
             $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
             $monkPrice = $item->monk_qty * $item->activity->monk_price;
-            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
+            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice + $kidPrice + $disabledPrice + $elderlyPrice + $monkPrice;
         }
 
         return view('admin.generalRequest.manage_bookings', compact('approvedBookings', 'activities'));
@@ -93,7 +94,6 @@ class BookingController extends Controller
                 $countBookings = Bookings::where('activity_id', $activity->activity_id)
                     ->where('status', 0)
                     ->count();
-
                 $activity->countBookings = $countBookings;
                 return $activity;
             });
@@ -110,25 +110,23 @@ class BookingController extends Controller
         $requestBookings = $query->paginate(5);
 
         foreach ($requestBookings as $item) {
-            $totalApproved = 0;
+            $totalApproved = Bookings::where('booking_date', $item->booking_date)
+                ->where('activity_id', $item->activity_id)
+                ->where('status', 1)
+                ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
 
-            if ($item->tmss) {
+            if ($item->tmss && $item->tmss->tmss_id) {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
+                    ->where('activity_id', $item->activity_id)
                     ->where('tmss_id', $item->tmss->tmss_id)
                     ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
-            } else {
-                $totalApproved = Bookings::where('booking_date', $item->booking_date)
-                    ->where('activity_id', $item->activity_id)
-                    ->where('status', 1)
-                    ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
-            $maxCapacity = $item->activity->max_capacity;
 
-            if ($maxCapacity === null) {
-                $item->remaining_capacity = 'ไม่จำกัดจำนวนคน';
+            if ($item->activity->max_capacity !== null) {
+                $item->remaining_capacity = $item->activity->max_capacity - $totalApproved;
             } else {
-                $item->remaining_capacity = $maxCapacity - $totalApproved;
+                $item->remaining_capacity = 'ไม่จำกัดจำนวนคน';
             }
             $childrenPrice = $item->children_qty * $item->activity->children_price;
             $studentPrice = $item->students_qty * $item->activity->student_price;
@@ -137,7 +135,7 @@ class BookingController extends Controller
             $disabledPrice = $item->disabled_qty * $item->activity->disabled_price;
             $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
             $monkPrice = $item->monk_qty * $item->activity->monk_price;
-            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice + $disabledPrice + $elderlyPrice + $monkPrice;
+            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice + $kidPrice + $disabledPrice + $elderlyPrice + $monkPrice;
         }
         return view('admin.generalRequest.request_bookings', compact('requestBookings', 'activities'));
     }
@@ -194,7 +192,7 @@ class BookingController extends Controller
             $disabledPrice = $item->disabled_qty * $item->activity->disabled_price;
             $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
             $monkPrice = $item->monk_qty * $item->activity->monk_price;
-            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
+            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice + $kidPrice + $disabledPrice + $elderlyPrice + $monkPrice;
             $item->signed_edit_url = URL::signedRoute('admin.edit_booking', ['booking_id' => $item->booking_id]);
         }
 
@@ -226,19 +224,6 @@ class BookingController extends Controller
         $exceptBookings = $query->paginate(5);
 
         foreach ($exceptBookings as $item) {
-            $totalApproved = 0;
-            if ($item->tmss) {
-                $totalApproved = Bookings::where('booking_date', $item->booking_date)
-                    ->where('tmss_id', $item->tmss->tmss_id)
-                    ->where('status', 1)
-                    ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
-            }
-            if ($item->activity) {
-                $item->remaining_capacity = $item->activity->max_capacity - $totalApproved;
-                $item->remaining_capacity += $item->children_qty + $item->students_qty + $item->adults_qty + $item->kid_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty;
-            } else {
-                $item->remaining_capacity = 'N/A';
-            }
             $childrenPrice = $item->children_qty * $item->activity->children_price;
             $studentPrice = $item->students_qty * $item->activity->student_price;
             $adultPrice = $item->adults_qty * $item->activity->adult_price;
@@ -246,7 +231,7 @@ class BookingController extends Controller
             $disabledPrice = $item->disabled_qty * $item->activity->disabled_price;
             $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
             $monkPrice = $item->monk_qty * $item->activity->monk_price;
-            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
+            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice + $kidPrice + $disabledPrice + $elderlyPrice + $monkPrice;
         }
         return view('admin.generalRequest.except_cases_bookings', compact('exceptBookings', 'activities'));
     }
@@ -365,6 +350,8 @@ class BookingController extends Controller
 
         if (in_array($request->fk_activity_id, [1, 2, 3])) {
             $rules['fk_tmss_id'] = 'required|exists:tmss,tmss_id';
+        } else {
+            $rules['fk_tmss_id'] = 'nullable|exists:tmss,tmss_id';
         }
         $messages = [
             'fk_tmss_id.required' => 'กรุณาเลือกรอบการเข้าชม',
@@ -393,11 +380,23 @@ class BookingController extends Controller
         if (!$activity) {
             return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
         }
+
+        $activity = Activity::with('activityType')->find($request->fk_activity_id);
+        if (!$activity) {
+            return back()->with('error', 'ไม่พบประเภทกิจกรรม')->withInput();
+        }
+
+        $maxCapacity = $activity->max_capacity ?? null;
+
+        $tmss = Tmss::find($request->fk_tmss_id);
+        if (!$tmss && !is_null($request->fk_tmss_id)) {
+            return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
+        }
         $maxSubactivities = $activity->max_subactivities;
         $selectedSubactivities = $request->input('sub_activity_id', []);
         if (count($selectedSubactivities) > $maxSubactivities) {
             return back()->withErrors([
-                'sub_activity_id' => "คุณสามารถเลือกได้สูงสุด $maxSubactivities กิจกรรมย่อยเท่านั้น"
+                'sub_activity_id' => "คุณสามารถเลือกได้สูงสุด $maxSubactivities หลักสูตรเท่านั้น"
             ])->withInput();
         }
         $quantityFields = [
@@ -409,16 +408,8 @@ class BookingController extends Controller
             'elderly_qty',
             'monk_qty'
         ];
-
-        $isAtLeastOneQuantityFilled = false;
-        $totalToBook = 0;
-
-        foreach ($quantityFields as $field) {
-            if ($request->$field > 0) {
-                $isAtLeastOneQuantityFilled = true;
-            }
-            $totalToBook += $request->$field ?? 0;
-        }
+        $totalToBook = array_sum(array_map(fn($field) => $request->input($field, 0), $quantityFields));
+        $isAtLeastOneQuantityFilled = collect($quantityFields)->some(fn($field) => $request->input($field, 0) > 0);
 
         if (!$isAtLeastOneQuantityFilled) {
             return back()->withErrors([
@@ -429,10 +420,6 @@ class BookingController extends Controller
             session()->flash('error', 'กรุณาจองขั้นต่ำ 50 คน');
             return back()->withInput();
         }
-        $activity = Activity::with('activityType')->find($request->fk_activity_id);
-        if (!$activity) {
-            return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
-        }
 
         $bookingDate = DateTime::createFromFormat('d/m/Y', $request->booking_date);
         if (!$bookingDate) {
@@ -440,83 +427,20 @@ class BookingController extends Controller
         }
         $formattedDate = $bookingDate->format('Y-m-d');
 
-        if ($request->filled('fk_tmss_id')) {
-            $tmss = Tmss::find($request->fk_tmss_id);
-            if (!$tmss) {
-                return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
+        if (is_null($request->fk_tmss_id) && is_null($maxCapacity)) {
+        } elseif (is_null($request->fk_tmss_id) && !is_null($maxCapacity)) {
+            if ($totalToBook > $maxCapacity) {
+                return back()->with('error', 'จำนวนเกินความจุต่อรอบการเข้าชม')->withInput();
             }
-
-            if ($activity->activity_id == 3) {
-                if ($request->filled('fk_tmss_id')) {
-                    $tmss = Tmss::find($request->fk_tmss_id);
-                    if (!$tmss) {
-                        return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
-                    }
-                    $conflictingBooking = Bookings::join('tmss', 'bookings.tmss_id', '=', 'tmss.tmss_id')
-                        ->whereIn('bookings.activity_id', [1, 2])
-                        ->where('bookings.booking_date', $formattedDate)
-                        ->where(function ($query) use ($tmss) {
-                            $query->where('tmss.start_time', '<', $tmss->end_time)
-                                ->where('tmss.end_time', '>', $tmss->start_time);
-                        })
-                        ->exists();
-
-                    if ($conflictingBooking) {
-                        return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีกิจกรรมที่จองในช่วงเวลาใกล้เคียงกันจากกิจกรรมอื่น กรุณาจองช่วงเวลาอื่น')->withInput();
-                    }
-                }
-            }
-            if (in_array($activity->activity_id, [1, 2])) {
-                if ($request->filled('fk_tmss_id')) {
-                    $tmss = Tmss::find($request->fk_tmss_id);
-                    if (!$tmss) {
-                        return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
-                    }
-                    $conflictingBooking = Bookings::join('tmss', 'bookings.tmss_id', '=', 'tmss.tmss_id')
-                        ->where('bookings.activity_id', 3)
-                        ->where('bookings.booking_date', $formattedDate)
-                        ->where(function ($query) use ($tmss) {
-                            $query->where('tmss.start_time', '<', $tmss->end_time)
-                                ->where('tmss.end_time', '>', $tmss->start_time);
-                        })
-                        ->exists();
-
-                    if ($conflictingBooking) {
-                        return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีการจองกิจกรรมอื่นในช่วงเวลาใกล้เคียง กรุณาจองช่วงเวลาอื่น')->withInput();
-                    }
-                }
-            }
-            $totalToBook = ($request->children_qty ?? 0)
-                + ($request->students_qty ?? 0)
-                + ($request->adults_qty ?? 0)
-                + ($request->kid_qty ?? 0)
-                + ($request->disabled_qty ?? 0)
-                + ($request->elderly_qty ?? 0)
-                + ($request->monk_qty ?? 0);
-            $totalBooked = Bookings::where('booking_date', $formattedDate)
-                ->where('tmss_id', $tmss->tmss_id)
-                ->whereIn('status', [0, 1])
-                ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
-            if ($activity->max_capacity !== null && $totalBooked + $totalToBook > $activity->max_capacity) {
+        } else {
+            $tmssController = new TmssController();
+            $availableTmss = json_decode($tmssController->getAvailableTmss($request->fk_activity_id, $formattedDate)->getContent());
+            $selectedTmss = collect($availableTmss)->firstWhere('tmss_id', $request->fk_tmss_id);
+            if (!$selectedTmss || $selectedTmss->remaining_capacity < $totalToBook) {
                 return back()->with('error', 'จำนวนเกินความจุต่อรอบการเข้าชม')->withInput();
             }
         }
-
-        $formattedDate = Carbon::createFromFormat('d/m/Y', $request->input('booking_date'))->format('Y-m-d');
-        $visitor = Visitors::where('visitorEmail', $request->input('visitorEmail'))->first();
-
-        if ($visitor) {
-            $existingBooking = Bookings::where('activity_id', $request->input('fk_activity_id'))
-                ->where('booking_date', $formattedDate)
-                ->where('tmss_id', $request->input('fk_tmss_id') ?? null)
-                ->where('visitor_id', $visitor->visitor_id)
-                ->whereIn('status', [0, 1])
-                ->exists();
-
-            if ($existingBooking) {
-                return back()->with('warning', 'พบข้อมูลการจองซ้ำในระบบ กรุณาตรวจสอบข้อมูลการจองในอีเมลของคุณ');
-            }
-        }
+        
         $institute = Institutes::firstOrCreate([
             'instituteName' => $request->instituteName,
             'instituteAddress' => $request->instituteAddress,
@@ -610,7 +534,6 @@ class BookingController extends Controller
     {
         $rules = [
             'fk_activity_id' => 'required|exists:activities,activity_id',
-            'fk_tmss_id' => 'nullable|exists:tmss,tmss_id',
             'sub_activity_id' => 'nullable|array',
             'sub_activity_id.*' => 'nullable|exists:sub_activities,sub_activity_id',
             'booking_date' => 'required|date_format:d/m/Y',
@@ -633,11 +556,7 @@ class BookingController extends Controller
             'note' => 'nullable|string'
         ];
 
-        if (in_array($request->fk_activity_id, [1, 2, 3])) {
-            $rules['fk_tmss_id'] = 'required|exists:tmss,tmss_id';
-        }
         $messages = [
-            'fk_tmss_id.required' => 'กรุณาเลือกรอบการเข้าชม',
             'booking_date.required' => 'กรุณาระบุวันที่จองเข้าชม',
             'instituteName.required' => 'กรุณากรอกชื่อหน่วยงาน',
             'instituteAddress.required' => 'กรุณากรอกที่อยู่หน่วยงาน',
@@ -663,6 +582,12 @@ class BookingController extends Controller
         if (!$activity) {
             return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
         }
+
+        $activity = Activity::with('activityType')->find($request->fk_activity_id);
+        if (!$activity) {
+            return back()->with('error', 'ไม่พบประเภทกิจกรรม')->withInput();
+        }
+
         $maxSubactivities = $activity->max_subactivities;
         $selectedSubactivities = $request->input('sub_activity_id', []);
         if (count($selectedSubactivities) > $maxSubactivities) {
@@ -695,98 +620,10 @@ class BookingController extends Controller
                 'at_least_one_quantity' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท'
             ])->withInput();
         }
-        if ($totalToBook < 50) {
-            session()->flash('error', 'กรุณาจองขั้นต่ำ 50 คน');
-            return back()->withInput();
-        }
-        $activity = Activity::with('activityType')->find($request->fk_activity_id);
-        if (!$activity) {
-            return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
-        }
-
-        $bookingDate = DateTime::createFromFormat('d/m/Y', $request->booking_date);
-        if (!$bookingDate) {
-            return back()->with('error', 'รูปแบบวันที่ไม่ถูกต้อง')->withInput();
-        }
-        $formattedDate = $bookingDate->format('Y-m-d');
-
-        if ($request->filled('fk_tmss_id')) {
-            $tmss = Tmss::find($request->fk_tmss_id);
-            if (!$tmss) {
-                return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
-            }
-
-            if ($activity->activity_id == 3) {
-                if ($request->filled('fk_tmss_id')) {
-                    $tmss = Tmss::find($request->fk_tmss_id);
-                    if (!$tmss) {
-                        return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
-                    }
-                    $conflictingBooking = Bookings::join('tmss', 'bookings.tmss_id', '=', 'tmss.tmss_id')
-                        ->whereIn('bookings.activity_id', [1, 2])
-                        ->where('bookings.booking_date', $formattedDate)
-                        ->where(function ($query) use ($tmss) {
-                            $query->where('tmss.start_time', '<', $tmss->end_time)
-                                ->where('tmss.end_time', '>', $tmss->start_time);
-                        })
-                        ->exists();
-
-                    if ($conflictingBooking) {
-                        return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีกิจกรรมที่จองในช่วงเวลาใกล้เคียงกันจากกิจกรรมอื่น กรุณาจองช่วงเวลาอื่น')->withInput();
-                    }
-                }
-            }
-            if (in_array($activity->activity_id, [1, 2])) {
-                if ($request->filled('fk_tmss_id')) {
-                    $tmss = Tmss::find($request->fk_tmss_id);
-                    if (!$tmss) {
-                        return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
-                    }
-                    $conflictingBooking = Bookings::join('tmss', 'bookings.tmss_id', '=', 'tmss.tmss_id')
-                        ->where('bookings.activity_id', 3)
-                        ->where('bookings.booking_date', $formattedDate)
-                        ->where(function ($query) use ($tmss) {
-                            $query->where('tmss.start_time', '<', $tmss->end_time)
-                                ->where('tmss.end_time', '>', $tmss->start_time);
-                        })
-                        ->exists();
-
-                    if ($conflictingBooking) {
-                        return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีการจองกิจกรรมอื่นในช่วงเวลาใกล้เคียง กรุณาจองช่วงเวลาอื่น')->withInput();
-                    }
-                }
-            }
-            $totalToBook = ($request->children_qty ?? 0)
-                + ($request->students_qty ?? 0)
-                + ($request->adults_qty ?? 0)
-                + ($request->kid_qty ?? 0)
-                + ($request->disabled_qty ?? 0)
-                + ($request->elderly_qty ?? 0)
-                + ($request->monk_qty ?? 0);
-            $totalBooked = Bookings::where('booking_date', $formattedDate)
-                ->where('tmss_id', $tmss->tmss_id)
-                ->whereIn('status', [0, 1])
-                ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
-            if ($activity->max_capacity !== null && $totalBooked + $totalToBook > $activity->max_capacity) {
-                return back()->with('error', 'จำนวนเกินความจุต่อรอบการเข้าชม')->withInput();
-            }
-        }
 
         $formattedDate = Carbon::createFromFormat('d/m/Y', $request->input('booking_date'))->format('Y-m-d');
         $visitor = Visitors::where('visitorEmail', $request->input('visitorEmail'))->first();
 
-        if ($visitor) {
-            $existingBooking = Bookings::where('activity_id', $request->input('fk_activity_id'))
-                ->where('booking_date', $formattedDate)
-                ->where('tmss_id', $request->input('fk_tmss_id') ?? null)
-                ->where('visitor_id', $visitor->visitor_id)
-                ->whereIn('status', [0, 1])
-                ->exists();
-
-            if ($existingBooking) {
-                return back()->with('warning', 'พบข้อมูลการจองซ้ำในระบบ กรุณาตรวจสอบข้อมูลการจองในอีเมลของคุณ');
-            }
-        }
         $institute = Institutes::firstOrCreate([
             'instituteName' => $request->instituteName,
             'instituteAddress' => $request->instituteAddress,
@@ -808,7 +645,7 @@ class BookingController extends Controller
 
         $booking = new Bookings();
         $booking->activity_id = $request->fk_activity_id;
-        $booking->tmss_id = $request->fk_tmss_id ?? null;
+        $booking->tmss_id = null;
         $booking->institute_id = $institute->institute_id;
         $booking->visitor_id = $visitor->visitor_id;
         $booking->booking_date = $formattedDate;
@@ -975,7 +812,7 @@ class BookingController extends Controller
         $totalActualVisitors = 0;
         $priceDetailsByBooking = [];
         $priceDetails = [];
-        
+
         $categories = [
             'children' => 'เด็ก',
             'students' => 'มัธยม / นักศึกษา',
@@ -1098,8 +935,10 @@ class BookingController extends Controller
             'note' => 'nullable|string'
         ];
 
-        if (in_array($request->fk_activity_id, [1, 2, 3])) {
+        if (in_array($request->fk_activity_id, [1, 2, 3]) && $request->note !== 'วอคอิน') {
             $rules['fk_tmss_id'] = 'required|exists:tmss,tmss_id';
+        } else {
+            $rules['fk_tmss_id'] = 'nullable|exists:tmss,tmss_id';
         }
         $message = [
             'fk_tmss_id.required' => 'กรุณาเลือกรอบการเข้าชม',
@@ -1120,10 +959,18 @@ class BookingController extends Controller
 
         $request->validate($rules, $message);
 
-        $activity = Activity::find($request->fk_activity_id);
+        $activity = Activity::with('activityType')->find($request->fk_activity_id);
         if (!$activity) {
-            return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
+            return back()->with('error', 'ไม่พบประเภทกิจกรรม')->withInput();
         }
+
+        $maxCapacity = $activity->max_capacity ?? null;
+
+        $tmss = Tmss::find($request->fk_tmss_id);
+        if (!$tmss && !is_null($request->fk_tmss_id)) {
+            return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
+        }
+
         $maxSubactivities = $activity->max_subactivities;
         $selectedSubactivities = $request->input('sub_activity_id', []);
         if (count($selectedSubactivities) > $maxSubactivities) {
@@ -1132,13 +979,8 @@ class BookingController extends Controller
             ])->withInput();
         }
         $quantityFields = [
-            'children_qty',
-            'students_qty',
-            'adults_qty',
-            'kid_qty',
-            'disabled_qty',
-            'elderly_qty',
-            'monk_qty'
+            'children_qty', 'students_qty', 'adults_qty', 'kid_qty',
+            'disabled_qty', 'elderly_qty', 'monk_qty'
         ];
 
         $isAtLeastOneQuantityFilled = false;
@@ -1151,85 +993,40 @@ class BookingController extends Controller
             $totalToBook += $request->$field ?? 0;
         }
 
-        if (!$isAtLeastOneQuantityFilled) {
-            return back()->withErrors([
-                'at_least_one_quantity' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท'
-            ])->withInput();
-        }
-        if ($totalToBook < 50) {
-            session()->flash('error', 'กรุณาจองขั้นต่ำ 50 คน');
-            return back()->withInput();
-        }
-        $activity = Activity::with('activityType')->find($request->fk_activity_id);
-        if (!$activity) {
-            return back()->with('error', 'ไม่พบกิจกรรม')->withInput();
-        }
-
-        $formattedDate = $request->booking_date;
-
-        if ($request->filled('fk_tmss_id')) {
-            $tmss = Tmss::find($request->fk_tmss_id);
-            if (!$tmss) {
-                return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
-            }
-
-            if ($activity->activity_id == 3) {
-                if ($request->filled('fk_tmss_id')) {
-                    $tmss = Tmss::find($request->fk_tmss_id);
-                    if (!$tmss) {
-                        return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
-                    }
-                    $conflictingBooking = Bookings::join('tmss', 'bookings.tmss_id', '=', 'tmss.tmss_id')
-                        ->whereIn('bookings.activity_id', [1, 2])
-                        ->where('bookings.booking_date', $formattedDate)
-                        ->where(function ($query) use ($tmss) {
-                            $query->where('tmss.start_time', '<', $tmss->end_time)
-                                ->where('tmss.end_time', '>', $tmss->start_time);
-                        })
-                        ->exists();
-
-                    if ($conflictingBooking) {
-                        return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีกิจกรรมที่จองในช่วงเวลาใกล้เคียงกันจากกิจกรรมอื่น')->withInput();
-                    }
-                }
-            }
-            if (in_array($activity->activity_id, [1, 2])) {
-                if ($request->filled('fk_tmss_id')) {
-                    $tmss = Tmss::find($request->fk_tmss_id);
-                    if (!$tmss) {
-                        return back()->with('error', 'ไม่พบรอบการเข้าชม')->withInput();
-                    }
-                    $conflictingBooking = Bookings::join('tmss', 'bookings.tmss_id', '=', 'tmss.tmss_id')
-                        ->where('bookings.activity_id', 3)
-                        ->where('bookings.booking_date', $formattedDate)
-                        ->where(function ($query) use ($tmss) {
-                            $query->where('tmss.start_time', '<', $tmss->end_time)
-                                ->where('tmss.end_time', '>', $tmss->start_time);
-                        })
-                        ->exists();
-
-                    if ($conflictingBooking) {
-                        return back()->with('error', 'ไม่สามารถจองกิจกรรมนี้ได้ เนื่องจากมีการจองกิจกรรมอื่นในช่วงเวลาใกล้เคียง')->withInput();
-                    }
-                }
-            }
-            $totalToBook = ($request->children_qty ?? 0)
-                + ($request->students_qty ?? 0)
-                + ($request->adults_qty ?? 0)
-                + ($request->kid_qty ?? 0)
-                + ($request->disabled_qty ?? 0)
-                + ($request->elderly_qty ?? 0)
-                + ($request->monk_qty ?? 0);
-            if ($totalToBook < 50) {
+        if ($request->note !== 'วอคอิน') {
+            if (!$isAtLeastOneQuantityFilled) {
                 return back()->withErrors([
-                    'minimum_attendees' => 'กรุณาจองจำนวนผู้เข้าชมอย่างน้อย 50 คน'
+                    'at_least_one_quantity' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท'
                 ])->withInput();
             }
-            $totalBooked = Bookings::where('booking_date', $formattedDate)
-                ->where('tmss_id', $tmss->tmss_id)
-                ->whereIn('status', [0, 1])
-                ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
-            if ($activity->max_capacity !== null && $totalBooked + $totalToBook > $activity->max_capacity) {
+            if ($totalToBook < 50) {
+                session()->flash('error', 'กรุณาจองขั้นต่ำ 50 คน');
+                return back()->withInput();
+            }
+        }
+        $formattedDate = $request->booking_date;
+        $booking = Bookings::findOrFail($booking_id);
+
+        $previousTotal = $booking->children_qty + $booking->students_qty + $booking->adults_qty +
+            $booking->kid_qty + $booking->disabled_qty + $booking->elderly_qty +
+            $booking->monk_qty;
+
+            if ($request->note !== 'วอคอิน' && is_null($request->fk_tmss_id) && !is_null($maxCapacity)) {
+                if ($totalToBook > $maxCapacity) {
+                return back()->with('error', 'จำนวนเกินความจุต่อรอบการเข้าชม')->withInput();
+            }
+        } 
+        if ($request->note !== 'วอคอิน' && $request->fk_tmss_id) {
+            $tmssController = new TmssController();
+            $availableTmss = json_decode($tmssController->getAvailableTmss($request->fk_activity_id, $formattedDate)->getContent());
+            $selectedTmss = collect($availableTmss)->firstWhere('tmss_id', $request->fk_tmss_id);
+
+            if ($selectedTmss) {
+                $adjustedRemainingCapacity = $selectedTmss->remaining_capacity + $previousTotal;
+                if ($adjustedRemainingCapacity < $totalToBook) {
+                    return back()->with('error', 'จำนวนเกินความจุต่อรอบการเข้าชม')->withInput();
+                }
+            } else {
                 return back()->with('error', 'จำนวนเกินความจุต่อรอบการเข้าชม')->withInput();
             }
         }
@@ -1261,7 +1058,7 @@ class BookingController extends Controller
         $booking->update([
             'fk_activity_id' => $request->fk_activity_id,
             'booking_date' => $formattedDate,
-            'tmss_id' => $request->fk_tmss_id,
+            'tmss_id' => $request->note === 'วอคอิน' ? null : $request->fk_tmss_id,
             'children_qty' => $request->children_qty ?? 0,
             'students_qty' => $request->students_qty ?? 0,
             'adults_qty' => $request->adults_qty ?? 0,
@@ -1273,7 +1070,6 @@ class BookingController extends Controller
         ]);
 
         $booking->subactivities()->sync($request->sub_activity_id ?? []);
-
         return back()->with('showSuccessModal', true);
     }
     public function showCancel($booking_id)

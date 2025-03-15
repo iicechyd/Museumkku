@@ -201,33 +201,50 @@ class TmssController extends Controller
     }
     public function getAvailableTmss($activity_id, $date)
     {
-        Log::debug("Activity ID: $activity_id, Date: $date");
-
         $closedTmssIds = ClosedTmss::where('closed_on', $date)
             ->where('activity_id', $activity_id)
             ->pluck('tmss_id');
-
-        Log::debug("ClosedTmss IDs: ", $closedTmssIds->toArray());
-
+    
         $availableTmss = Tmss::where('activity_id', $activity_id)
             ->where('status', 1)    
             ->whereNotIn('tmss_id', $closedTmssIds)
             ->get();
-        Log::debug("Available TMSS: ", $availableTmss->toArray());
-
+    
         $availableTmssWithCapacity = $availableTmss->map(function ($tmss) use ($activity_id, $date) {
             $totalApproved = Bookings::where('booking_date', $date)
                 ->where('activity_id', $activity_id)
                 ->where('tmss_id', $tmss->tmss_id)
                 ->whereIn('status', [0, 1])
                 ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
-
+    
             if ($tmss->activity->max_capacity !== null) {
                 $remainingCapacity = $tmss->activity->max_capacity - $totalApproved;
             } else {
                 $remainingCapacity = 'ไม่จำกัดจำนวนคน';
             }
-
+    
+            if (in_array($activity_id, [1, 2, 3])) {
+                $affectedActivities = $activity_id == 3 ? [1, 2] : [3];
+    
+                $overlappingTmss = Tmss::whereIn('activity_id', $affectedActivities)
+                    ->where('start_time', '<', $tmss->end_time)
+                    ->where('end_time', '>', $tmss->start_time)
+                    ->get();
+    
+                foreach ($overlappingTmss as $overlap) {
+                    $overlapTotalApproved = Bookings::where('booking_date', $date)
+                        ->where('tmss_id', $overlap->tmss_id)
+                        ->whereIn('activity_id', $affectedActivities)
+                        ->whereIn('status', [0, 1])
+                        ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
+    
+                    if ($tmss->activity->max_capacity !== null) {
+                        $remainingCapacity -= $overlapTotalApproved;
+                        $remainingCapacity = max(0, $remainingCapacity);
+                    }
+                }
+            }
+    
             $tmss->remaining_capacity = $remainingCapacity;
             return $tmss;
         });

@@ -68,7 +68,7 @@ class BookingActivityController extends Controller
             $disabledPrice = $item->disabled_qty * $item->activity->disabled_price;
             $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
             $monkPrice = $item->monk_qty * $item->activity->monk_price;
-            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
+            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice + $kidPrice + $disabledPrice + $elderlyPrice + $monkPrice;
         }
 
         return view('admin.activityRequest.manage_bookings', compact('approvedBookings', 'activities'));
@@ -86,7 +86,6 @@ class BookingActivityController extends Controller
             return $activity;
         });
 
-
         $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'subactivities')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 2);
@@ -99,25 +98,23 @@ class BookingActivityController extends Controller
         $requestBookings = $query->paginate(5);
 
         foreach ($requestBookings as $item) {
-            $totalApproved = 0;
+            $totalApproved = Bookings::where('booking_date', $item->booking_date)
+                ->where('activity_id', $item->activity_id)
+                ->where('status', 1)
+                ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
 
-            if ($item->tmss) {
-                $totalApproved = Bookings::where('booking_date', $item->booking_date)
-                    ->where('tmss_id', $item->tmss->tmss_id)
-                    ->where('status', 1)
-                    ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty + monk_qty'));
-            } else {
+            if ($item->tmss && $item->tmss->tmss_id) {
                 $totalApproved = Bookings::where('booking_date', $item->booking_date)
                     ->where('activity_id', $item->activity_id)
+                    ->where('tmss_id', $item->tmss->tmss_id)
                     ->where('status', 1)
                     ->sum(DB::raw('children_qty + students_qty + adults_qty + kid_qty + disabled_qty + elderly_qty +  monk_qty'));
             }
-            $maxCapacity = $item->activity->max_capacity;
-            
-            if ($maxCapacity === null) {
-                $item->remaining_capacity = 'ไม่จำกัดจำนวนคน';
+
+            if ($item->activity->max_capacity !== null) {
+                $item->remaining_capacity = $item->activity->max_capacity - $totalApproved;
             } else {
-                $item->remaining_capacity = $maxCapacity - $totalApproved;
+                $item->remaining_capacity = 'ไม่จำกัดจำนวนคน';
             }
 
             $childrenPrice = $item->children_qty * $item->activity->children_price;
@@ -127,7 +124,7 @@ class BookingActivityController extends Controller
             $disabledPrice = $item->disabled_qty * $item->activity->disabled_price;
             $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
             $monkPrice = $item->monk_qty * $item->activity->monk_price;
-            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
+            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice + $kidPrice + $disabledPrice + $elderlyPrice + $monkPrice;
         }
         return view('admin.activityRequest.request_bookings', compact('requestBookings', 'activities'));
     }
@@ -182,7 +179,7 @@ class BookingActivityController extends Controller
             $disabledPrice = $item->disabled_qty * $item->activity->disabled_price;
             $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
             $monkPrice = $item->monk_qty * $item->activity->monk_price;
-            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
+            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice + $kidPrice + $disabledPrice + $elderlyPrice + $monkPrice;
             $item->signed_edit_url = URL::signedRoute('admin.edit_booking', ['booking_id' => $item->booking_id]);
 
         }
@@ -234,7 +231,7 @@ class BookingActivityController extends Controller
             $disabledPrice = $item->disabled_qty * $item->activity->disabled_price;
             $elderlyPrice = $item->elderly_qty * $item->activity->elderly_price;
             $monkPrice = $item->monk_qty * $item->activity->monk_price;
-            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice;
+            $item->totalPrice = $childrenPrice + $studentPrice + $adultPrice + $kidPrice + $disabledPrice + $elderlyPrice + $monkPrice;
         }
         return view('admin.activityRequest.except_cases_bookings', compact('exceptBookings', 'activities'));
     }

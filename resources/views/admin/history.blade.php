@@ -83,7 +83,9 @@
                                                             {{ \Carbon\Carbon::parse($item->booking_date)->year + 543 }}
                                                         </td>
                                                         <td>
-                                                            @if ($item->tmss)
+                                                            @if ($item->note == 'วอคอิน')
+                                                                วอคอิน
+                                                            @elseif ($item->tmss)
                                                                 {{ \Carbon\Carbon::parse($item->tmss->start_time)->format('H:i') }}
                                                                 น. -
                                                                 {{ \Carbon\Carbon::parse($item->tmss->end_time)->format('H:i') }}
@@ -91,7 +93,7 @@
                                                             @else
                                                                 -
                                                             @endif
-                                                        </td>
+                                                        </td>                                                        
                                                         <td>
                                                             <a href="#detailsModal_{{ $item->booking_id }}"
                                                                 class="text-blue-500" data-toggle="modal">

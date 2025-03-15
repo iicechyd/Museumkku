@@ -165,7 +165,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         option.text = `รอบที่ ${index + 1} ${startFormatted} น. - ${endFormatted} น.`;
 
                         if (tmss.remaining_capacity === 0) {
-                            option.disabled = true;
                             option.text += " (เต็ม)";
                         } else {
                             option.text += ` (เหลือ ${tmss.remaining_capacity} ที่นั่ง)`;

@@ -65,8 +65,8 @@
                     <div class="form-group col-md-4">
                         <label for="booking_date" class="form-label">วันที่เข้าชม</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="booking_date" name="booking_date"
-                                readonly required>
+                            <input type="text" class="form-control" id="booking_date" name="booking_date" readonly
+                                required>
                             <div class="input-group-append">
                                 <button type="button" class="input-group-text"
                                     onclick="document.getElementById('booking_date').focus();">
@@ -109,96 +109,80 @@
                         </div>
                     @endif
 
-                    @if ($tmss->isNotEmpty())
-                        <div class="form-group col-md-3">
-                            <label for="fk_tmss_id" class="form-label">รอบการเข้าชม</label>
-                            <select id="fk_tmss_id" class="form-select @error('fk_tmss_id') is-invalid @enderror"
-                                name="fk_tmss_id">
-                                <option value="">เลือกรอบการเข้าชม</option>
-                            </select>
-                            @error('fk_tmss_id')
+                    <div class="row pt-2">
+                        <div class="col-md-2">
+                            <label for="instituteName" class="form-label">ชื่อหน่วยงาน</label>
+                            <input type="text" class="form-control @error('instituteName') is-invalid @enderror"
+                                id="instituteName" name="instituteName" placeholder="กรอกชื่อหน่วยงาน"
+                                value="{{ old('instituteName', $visitorData['instituteName']) }}" required>
+                            @error('instituteName')
                                 <div class="my-2">
-                                    <span class="text-danger">{{ $errors->first('fk_tmss_id') }}</span>
+                                    <span class="text-danger">{{ $errors->first('instituteName') }}</span>
                                 </div>
                             @enderror
                         </div>
-                    @else
-                        <div class="w-100"></div>
-                    @endif
 
-                    <div class="col-md-2">
-                        <label for="instituteName" class="form-label">ชื่อหน่วยงาน</label>
-                        <input type="text" class="form-control @error('instituteName') is-invalid @enderror"
-                            id="instituteName" name="instituteName" placeholder="กรอกชื่อหน่วยงาน"
-                            value="{{ old('instituteName', $visitorData['instituteName']) }}" required>
-                        @error('instituteName')
-                            <div class="my-2">
-                                <span class="text-danger">{{ $errors->first('instituteName') }}</span>
-                            </div>
-                        @enderror
+                        <div class="col-md-2">
+                            <label for="instituteAddress" class="form-label">ที่อยู่หน่วยงาน</label>
+                            <input type="text" class="form-control @error('instituteAddress') is-invalid @enderror"
+                                id="instituteAddress" name="instituteAddress" placeholder="บ้านเลขที่, ซอย, หมู่, ถนน"
+                                value="{{ old('instituteAddress', $visitorData['instituteAddress']) }}">
+                            @error('instituteAddress')
+                                <div class="my-2">
+                                    <span class="text-danger">{{ $errors->first('instituteAddress') }}</span>
+                                </div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="subdistrict" class="form-label">แขวน/ตำบล</label>
+                            <input type="text" class="form-control @error('subdistrict') is-invalid @enderror"
+                                id="subdistrict" name="subdistrict" placeholder="กรอกแขวน/ตำบล"
+                                value="{{ old('subdistrict', $visitorData['subdistrict']) }}" required>
+                            @error('subdistrict')
+                                <div class="my-2">
+                                    <span class="text-danger">{{ $errors->first('subdistrict') }}</span>
+                                </div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="district" class="form-label">เขต/อำเภอ</label>
+                            <input type="text" class="form-control @error('district') is-invalid @enderror"
+                                id="district" name="district" placeholder="กรอกเขต/อำเภอ"
+                                value="{{ old('district', $visitorData['district']) }}" required>
+                            @error('district')
+                                <div class="my-2">
+                                    <span class="text-danger">{{ $errors->first('district') }}</span>
+                                </div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="province" class="form-label">จังหวัด</label>
+                            <input type="text" class="form-control @error('province') is-invalid @enderror"
+                                id="province" name="province" placeholder="กรอกจังหวัด"
+                                value="{{ old('province', $visitorData['province']) }}" required>
+                            @error('inputProvince')
+                                <div class="my-2">
+                                    <span class="text-danger">{{ $errors->first('province') }}</span>
+                                </div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="zipcode" class="form-label">รหัสไปรษณีย์</label>
+                            <input type="text" class="form-control @error('zipcode') is-invalid @enderror"
+                                id="zipcode" name="zipcode" placeholder="กรอกรหัสไปรษณีย์"
+                                value="{{ old('zipcode', $visitorData['zipcode']) }}" pattern="\d{5}" maxlength="5"
+                                minlength="5" inputmode="numeric" required>
+                            @error('zipcode')
+                                <div class="my-2">
+                                    <span class="text-danger">{{ $errors->first('zipcode') }}</span>
+                                </div>
+                            @enderror
+                        </div>
                     </div>
-
-                    <div class="col-md-2">
-                        <label for="instituteAddress" class="form-label">ที่อยู่หน่วยงาน</label>
-                        <input type="text" class="form-control @error('instituteAddress') is-invalid @enderror"
-                            id="instituteAddress" name="instituteAddress" placeholder="บ้านเลขที่, ซอย, หมู่, ถนน"
-                            value="{{ old('instituteAddress', $visitorData['instituteAddress']) }}">
-                        @error('instituteAddress')
-                            <div class="my-2">
-                                <span class="text-danger">{{ $errors->first('instituteAddress') }}</span>
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-2">
-                        <label for="subdistrict" class="form-label">แขวน/ตำบล</label>
-                        <input type="text" class="form-control @error('subdistrict') is-invalid @enderror"
-                            id="subdistrict" name="subdistrict" placeholder="กรอกแขวน/ตำบล"
-                            value="{{ old('subdistrict', $visitorData['subdistrict']) }}" required>
-                        @error('subdistrict')
-                            <div class="my-2">
-                                <span class="text-danger">{{ $errors->first('subdistrict') }}</span>
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-2">
-                        <label for="district" class="form-label">เขต/อำเภอ</label>
-                        <input type="text" class="form-control @error('district') is-invalid @enderror" id="district"
-                            name="district" placeholder="กรอกเขต/อำเภอ"
-                            value="{{ old('district', $visitorData['district']) }}" required>
-                        @error('district')
-                            <div class="my-2">
-                                <span class="text-danger">{{ $errors->first('district') }}</span>
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-2">
-                        <label for="province" class="form-label">จังหวัด</label>
-                        <input type="text" class="form-control @error('province') is-invalid @enderror" id="province"
-                            name="province" placeholder="กรอกจังหวัด"
-                            value="{{ old('province', $visitorData['province']) }}" required>
-                        @error('inputProvince')
-                            <div class="my-2">
-                                <span class="text-danger">{{ $errors->first('province') }}</span>
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-2">
-                        <label for="zipcode" class="form-label">รหัสไปรษณีย์</label>
-                        <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode"
-                            name="zipcode" placeholder="กรอกรหัสไปรษณีย์"
-                            value="{{ old('zipcode', $visitorData['zipcode']) }}" pattern="\d{5}" maxlength="5"
-                            minlength="5" inputmode="numeric" required>
-                        @error('zipcode')
-                            <div class="my-2">
-                                <span class="text-danger">{{ $errors->first('zipcode') }}</span>
-                            </div>
-                        @enderror
-                    </div>
-
                     <div class="col-md-3">
                         <label for="visitorName" class="form-label">ชื่อผู้ประสานงาน</label>
                         <input type="text" class="form-control @error('visitorName') is-invalid @enderror"
@@ -239,8 +223,7 @@
                     <div class="col-md-3">
                         <label for="note" class="form-label">หมายเหตุ</label>
                         <input type="text" class="form-control @error('note') is-invalid @enderror" id="note"
-                            name="note" value="วอคอิน" readonly
-                            required>
+                            name="note" value="วอคอิน" readonly required>
                         @error('note')
                             <div class="my-2">
                                 <span class="text-danger">{{ $errors->first('note') }}</span>
@@ -249,19 +232,7 @@
                     </div>
 
                     <p>ระบุจำนวนผู้เข้าชม</p>
-                    <p class="custom-gray-text mt-0">
-                        @if ($selectedActivity->max_capacity)
-                            <span class="indent-line">จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $selectedActivity->max_capacity }} คน
-                                และ
-                                ไม่ต่ำกว่า 50 คนต่อการจอง</span>
-                            <span class="new-line">(หากผู้เข้าชมเกิน {{ $selectedActivity->max_capacity }} คน
-                                กรุณาติดต่อเจ้าหน้าที่ 0XX-XXXX )</span>
-                        @else
-                            <span>ไม่จำกัดจำนวนผู้เข้าชม และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
-                        @endif
-                    </p>
                     <p id="errorMessage" style="color: red; display: none;"></p>
-
                     <div class="row">
                         <!-- เด็กโต -->
                         <div class="col-md-3 custom-col">

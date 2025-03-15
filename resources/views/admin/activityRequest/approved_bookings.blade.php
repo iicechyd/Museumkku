@@ -59,15 +59,19 @@
                                 {{ \Carbon\Carbon::parse($item->booking_date)->addYears(543)->year }}
                             </td>
                             <td>
-                                @if ($item->tmss)
+                                @if ($item->note === 'วอคอิน')
+                                    วอคอิน
+                                @elseif ($item->tmss)
                                     {{ \Carbon\Carbon::parse($item->tmss->start_time)->format('H:i') }} น. -
                                     {{ \Carbon\Carbon::parse($item->tmss->end_time)->format('H:i') }} น.
                                 @else
                                     ไม่มีรอบการเข้าชม
                                 @endif
-                            </td>
+                            </td> 
                             <td>
-                                @if ($item->activity->max_capacity !== null)
+                                @if ($item->note == 'วอคอิน')
+                                    -
+                                @elseif ($item->activity->max_capacity !== null)
                                     @if ($item->remaining_capacity > 0)
                                         {{ $item->remaining_capacity }} / {{ $item->activity->max_capacity }} คน
                                     @else
@@ -76,7 +80,7 @@
                                 @else
                                     ไม่จำกัดจำนวนคน
                                 @endif
-                            </td>
+                            </td>   
                             <td>
                                 {!! $item->status == 1 ? '<button type="button" class="status-btn">อนุมัติ</button>' : '' !!}
                             </td>

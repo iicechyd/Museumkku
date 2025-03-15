@@ -82,11 +82,23 @@ function updateFreeTeachers(bookingId) {
     
     document.getElementById(`teacher_free_qty_${bookingId}`).max = maxFreeTeachers;
     document.getElementById(`maxFreeTeachers_${bookingId}`).textContent = maxFreeTeachers;
+
+    let teacherInput = document.getElementById(`teacher_free_qty_${bookingId}`);
+    if (parseInt(teacherInput.value) > maxFreeTeachers) {
+        teacherInput.value = maxFreeTeachers;
+    }
 }
 
 document.querySelectorAll('.visitor-input').forEach(input => {
     input.addEventListener('input', function () {
         let bookingId = this.dataset.bookingId;
         updateFreeTeachers(bookingId);
+        calculateTotal(bookingId);
+
     });
 });
+
+function validateFreeTeachersInput(input, bookingId) {
+    let maxFreeTeachers = parseInt(document.getElementById(`maxFreeTeachers_${bookingId}`).textContent) || 0;
+    input.value = Math.min(Math.max(parseInt(input.value) || 0, 0), maxFreeTeachers);
+}

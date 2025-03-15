@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+    calculateTotal();
     let maxSubactivities = window.maxSubactivities;
     let checkboxes = document.querySelectorAll(
         'input[name="sub_activity_id[]"]'
@@ -28,15 +29,15 @@ function fetchActivityPrice() {
                 document.getElementById("student_price").value =
                     data.student_price;
                 document.getElementById("adult_price").value = 
-                    data.adult_price;
-                document.getElementById("kid_price").value =
-                    data.kid_price;
+                data.adult_price;
+                document.getElementById("kid_price").value = 
+                data.kid_price;
                 document.getElementById("disabled_price").value =
                     data.disabled_price;
                 document.getElementById("elderly_price").value =
                     data.elderly_price;
                 document.getElementById("monk_price").value = 
-                    data.monk_price;
+                data.monk_price;
                 calculateTotal();
             })
             .catch((error) =>
@@ -45,14 +46,6 @@ function fetchActivityPrice() {
     }
 }
 
-function toggleInput(inputId) {
-    const inputField = document.getElementById(inputId);
-    inputField.disabled = !inputField.disabled;
-    if (inputField.disabled) {
-        inputField.value = "";
-    }
-    calculateTotal();
-}
 function calculateTotal() {
     const childrenQty = document.getElementById("childrenInput").value || 0;
     const studentsQty = document.getElementById("studentInput").value || 0;
@@ -98,6 +91,15 @@ function calculateTotal() {
     document.getElementById("totalPrice").innerText = totalPrice.toFixed(2);
 }
 
+function toggleInput(inputId) {
+    const inputField = document.getElementById(inputId);
+    inputField.disabled = !inputField.disabled;
+    if (inputField.disabled) {
+        inputField.value = "";
+    }
+    calculateTotal();
+}
+
 $.Thailand({
     $district: $("#subdistrict"),
     $amphoe: $("#district"),
@@ -109,59 +111,117 @@ $.Thailand({
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    let bookingDateInput = document.getElementById("booking_date");
-
-    function formatDateToDMY(date) {
-        let day = String(date.getDate()).padStart(2, "0");
-        let month = String(date.getMonth() + 1).padStart(2, "0");
-        let year = date.getFullYear();
-        return `${day}/${month}/${year}`;
-    }
-
-    function formatDateToYMD(date) {
-        let day = String(date.getDate()).padStart(2, "0");
-        let month = String(date.getMonth() + 1).padStart(2, "0");
-        let year = date.getFullYear();
-        return `${year}-${month}-${day}`;
-    }
-
-    let today = new Date();
-    let formattedDateDMY = formatDateToDMY(today);
-    let formattedDateYMD = formatDateToYMD(today);
-    bookingDateInput.value = formattedDateDMY;
-
+    let bookingInput = document.getElementById("booking_date");
+    let tmssSelect = document.getElementById("fk_tmss_id");
     let activityId = document.getElementById("fk_activity_id").value;
-    fetchTmss(activityId, formattedDateYMD);
+    let existingDate = bookingInput.value;
+    let selectedTmssId = tmssSelect?.getAttribute("data-selected") || null;
+    let isWalkIn = bookingInput.dataset.note === "วอคอิน";
+
+    function fetchTmss(dateStr) {
+        if (!dateStr || !tmssSelect || isWalkIn) return;
+
+        fetch(`/available-tms/${activityId}/${dateStr}`)
+            .then((response) => response.json())
+            .then((tmss) => {
+                if (!tmssSelect) return;
+                tmssSelect.innerHTML = "";
+
+                if (tmss.length === 0) {
+                    let option = document.createElement("option");
+                    option.value = "";
+                    option.text = "ไม่เปิดให้จองในวันนี้";
+                    tmssSelect.appendChild(option);
+                    tmssSelect.disabled = true;
+                } else {
+                    let option = document.createElement("option");
+                    option.value = "";
+                    option.text = "เลือกรอบการเข้าชม";
+                    tmssSelect.appendChild(option);
+
+                    tmss.forEach((tmss, index) => {
+                        let option = document.createElement("option");
+                        let startTime = new Date(
+                            `1970-01-01T${tmss.start_time}Z`
+                        );
+                        let endTime = new Date(
+                            `1970-01-01T${tmss.end_time}Z`
+                        );
+                        let startFormatted = `${startTime
+                            .getUTCHours()
+                            .toString()
+                            .padStart(2, "0")}:${startTime
+                            .getUTCMinutes()
+                            .toString()
+                            .padStart(2, "0")}`;
+                        let endFormatted = `${endTime
+                            .getUTCHours()
+                            .toString()
+                            .padStart(2, "0")}:${endTime
+                            .getUTCMinutes()
+                            .toString()
+                            .padStart(2, "0")}`;
+
+                        option.value = tmss.tmss_id;
+                        option.text = `รอบที่ ${index + 1} ${startFormatted} น. - ${endFormatted} น.`;
+
+                        if (tmss.remaining_capacity === 0) {
+                            option.text += " (เต็ม)";
+                        } else {
+                            option.text += ` (เหลือ ${tmss.remaining_capacity} ที่นั่ง)`;
+                        }
+
+                        if (tmss.tmss_id == selectedTmssId) {
+                            option.selected = true;
+                        }
+
+                        tmssSelect.appendChild(option);
+                    });
+
+                    tmssSelect.disabled = false;
+                }
+            })
+            .catch((error) => {
+                console.error("There was a problem with the fetch operation:", error);
+            });
+    }
 
     flatpickr("#booking_date", {
-        dateFormat: "d/m/Y",
-        defaultDate: today,
-        minDate: "today",
-        maxDate: "today",
-        disableMobile: true,
-        disable: [
-            function (date) {
-                return date.getDay() === 1;
-            },
-        ],
-        onDayCreate: function (dObj, dStr, fp, dayElem) {
-            if (dayElem.dateObj.getDay() === 1) {
-                dayElem.classList.add("disabled-day");
+        dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "d/m/Y",
+        defaultDate: existingDate || null,
+        disable: isWalkIn ? [true] : [function (date) {
+            return date.getDay() === 1;
+        }],
+        clickOpens: !isWalkIn,
+        onChange: function (selectedDates, dateStr, instance) {
+            if (!isWalkIn) {
+                tmssSelect.innerHTML = "<option value=''>เลือกรอบการเข้าชม</option>";
+                selectedTmssId = '';
+                fetchTmss(dateStr);
             }
         },
-        onChange: function (selectedDates, dateStr, instance) {
-            let [day, month, year] = dateStr.split("/");
-            let formattedDate = `${year}-${month}-${day}`;
-            let activityId = document.getElementById("fk_activity_id").value;
+        onReady: function (selectedDates, dateStr, instance) {
+            instance.altInput.setAttribute("id", "booking_date_alt");
 
-            fetchTmss(activityId, formattedDate);
-        },
-        onReady: function () {
+            const label = document.querySelector("label[for='booking_date']");
+            if (label) {
+                label.setAttribute("for", "booking_date_alt");
+            }
+
             document.querySelector(".input-group-text").addEventListener("click", () => {
-                document.querySelector("#booking_date")._flatpickr.open();
+                instance.open();
             });
+
+            if (existingDate) {
+                fetchTmss(existingDate);
+            }
         },
     });
+    if (isWalkIn && tmssSelect) {
+        tmssSelect.closest(".form-group").style.display = "none";
+    }
 });
 
 function confirmSubmission() {
@@ -172,20 +232,30 @@ function confirmSubmission() {
     const disabledQty = document.getElementById("disabledInput").value || 0;
     const elderlyQty = document.getElementById("elderlyInput").value || 0;
     const monkQty = document.getElementById("monkInput").value || 0;
-    const totalVisitors = childrenQty + studentsQty + adultsQty + kidQty + disabledQty + elderlyQty + monkQty;
+    let errorMessage = document.getElementById("errorMessage");
 
-    if (totalVisitors === 0) {
-        document.getElementById("errorMessage").innerText =
-            "*กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท";
-        document.getElementById("errorMessage").style.display = "block";
-        return;
-    } else {
-        document.getElementById("errorMessage").style.display = "none";
+    if (!errorMessage) {
+        errorMessage = document.createElement("div");
+        errorMessage.id = "errorMessage";
+        errorMessage.style.color = "red";
+        errorMessage.style.display = "none";
+        document.body.appendChild(errorMessage);
     }
 
-    if (totalVisitors < 50) {
-        alert("จำนวนผู้เข้าชมต้องไม่น้อยกว่า 50 คน");
+    if (
+        childrenQty == 0 &&
+        studentsQty == 0 &&
+        adultsQty == 0 &&
+        kidQty == 0 &&
+        disabledQty == 0 &&
+        elderlyQty == 0 &&
+        monkQty == 0
+    ) {
+        errorMessage.innerText = "*กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท";
+        errorMessage.style.display = "block";
         return;
+    } else {
+        errorMessage.style.display = "none";
     }
 
     if (window.subactivities.length > 0) {
@@ -204,7 +274,7 @@ function confirmSubmission() {
             return;
         }
     }
-
+    
     const formInput = {
         zipcode: document.getElementById("zipcode").value.trim(),
         subdistrict: document

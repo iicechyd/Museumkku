@@ -60,15 +60,19 @@
                                 {{ \Carbon\Carbon::parse($item->booking_date)->addYears(543)->year }}
                             </td>
                             <td>
-                                @if ($item->tmss)
+                                @if ($item->note === 'วอคอิน')
+                                    วอคอิน
+                                @elseif ($item->tmss)
                                     {{ \Carbon\Carbon::parse($item->tmss->start_time)->format('H:i') }} น. -
                                     {{ \Carbon\Carbon::parse($item->tmss->end_time)->format('H:i') }} น.
                                 @else
                                     ไม่มีรอบการเข้าชม
                                 @endif
-                            </td>
+                            </td>                            
                             <td>
-                                @if ($item->activity->max_capacity !== null)
+                                @if ($item->note == 'วอคอิน')
+                                    -
+                                @elseif ($item->activity->max_capacity !== null)
                                     @if ($item->remaining_capacity > 0)
                                         {{ $item->remaining_capacity }} / {{ $item->activity->max_capacity }} คน
                                     @else
@@ -77,7 +81,7 @@
                                 @else
                                     ไม่จำกัดจำนวนคน
                                 @endif
-                            </td>
+                            </td>                            
                             <td>
                                 {!! $item->status == 1 ? '<button type="button" class="status-btn">อนุมัติ</button>' : '' !!}
                             </td>
@@ -230,7 +234,7 @@
                                                     class="form-control visitor-input text-center" style="width: 70px; padding: 5px;" 
                                                     min="0" max="{{ $maxFreeTeachers }}" value="0"
                                                     data-price="0" data-booking-id="{{ $item->booking_id }}" 
-                                                    oninput="calculateTotal({{ $item->booking_id }})" required>
+                                                    oninput="validateFreeTeachersInput(this, {{ $item->booking_id }}); calculateTotal({{ $item->booking_id }});" required>
                                                 <label class="ml-3" style="margin-left: 10px;">คน</label>
                                             </div>
                                             <span class="text-right" style="margin-left: 80px; width: 120px;">

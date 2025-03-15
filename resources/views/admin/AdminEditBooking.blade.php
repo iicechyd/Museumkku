@@ -42,7 +42,7 @@
                 });
             </script>
         @endif
-        <h2 class="text-center py-3 pt-5"
+        <h2 class="text-center py-3 pt-4"
             style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); ">
             แก้ไขข้อมูลการจองเข้าชมพิพิธภัณฑ์</h2>
             <div class="card shadow p-4">
@@ -62,7 +62,8 @@
                         <div class="input-group">
                             <input type="date" class="form-control" id="booking_date" name="booking_date"
                                 value="{{ old('booking_date', $booking->booking_date ?? '') }}" required
-                                placeholder="กรุณาเลือกวันที่ต้องการจอง (วัน/เดือน/ปี)">
+                                placeholder="กรุณาเลือกวันที่ต้องการจอง (วัน/เดือน/ปี)"
+                                data-note="{{ $booking->note }}">
                             <div class="input-group-append">
                                 <button type="button" class="input-group-text"
                                     onclick="document.getElementById('booking_date').focus();">
@@ -75,7 +76,6 @@
                                 <span class="text-danger">{{ $message }}</span>
                             </div>
                         @enderror
-                        <p>*หมายเหตุ กรุณาเลือกวันที่ต้องการจองล่วงหน้า 3 วัน</p>
                     </div>
 
                     @if ($subactivities->isNotEmpty())
@@ -106,8 +106,8 @@
                         </div>
                     @endif
 
-                    @if ($tmss->isNotEmpty())
-                        <div class="form-group col-md-3">
+                    @if ($booking->note !== 'วอคอิน' && $tmss->isNotEmpty())
+                    <div class="form-group col-md-3">
                             <label for="fk_tmss_id" class="form-label">รอบการเข้าชม</label>
                             <select id="fk_tmss_id" class="form-select @error('fk_tmss_id') is-invalid @enderror"
                                 name="fk_tmss_id"
@@ -249,6 +249,7 @@
                     </div>
 
                     <p>ระบุจำนวนผู้เข้าชม</p>
+                    @if ($booking->note !== 'วอคอิน')
                     <p class="custom-gray-text mt-0">
                         @if ($booking->activity->max_capacity)
                             <span class="indent-line">จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $booking->activity->max_capacity }} คน
@@ -261,7 +262,7 @@
                         @endif
                     </p>
                     <p id="errorMessage" style="color: red; display: none;"></p>
-
+                    @endif
                     <div class="row">
                         <!-- เด็กโต -->
                         <div class="col-md-3 custom-col">
@@ -379,7 +380,6 @@
                                 แก้ไขข้อมูลการจองของผู้เข้าชมสำเร็จ
                             </div>
                             <div class="modal-footer">
-                                <a href="/checkBookingStatus" class="btn btn-primary">ตรวจสอบสถานะการจอง</a>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
                             </div>
                         </div>
@@ -391,7 +391,7 @@
         window.subactivities = @json($subactivities);
         window.maxSubactivities = {{ $maxSubactivities }};
     </script>
-    <script src="{{ asset('js/EditBooking.js') }}"></script>
+    <script src="{{ asset('js/adminEditBooking.js') }}"></script>
     <script>
         function goBack() {
             var activityTypeId = {{ $booking->activity->activity_type_id }};

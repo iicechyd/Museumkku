@@ -416,7 +416,7 @@ class BookingController extends Controller
                 'at_least_one_quantity' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท'
             ])->withInput();
         }
-        if ($totalToBook < 50) {
+        if (!in_array($request->fk_activity_id, [1, 2, 3]) && $totalToBook < 50) {
             session()->flash('error', 'กรุณาจองขั้นต่ำ 50 คน');
             return back()->withInput();
         }
@@ -999,7 +999,7 @@ class BookingController extends Controller
                     'at_least_one_quantity' => 'กรุณาระบุจำนวนผู้เข้าชมอย่างน้อย 1 ประเภท'
                 ])->withInput();
             }
-            if ($totalToBook < 50) {
+            if (!in_array($request->fk_activity_id, [1, 2, 3]) && $totalToBook < 50) {
                 session()->flash('error', 'กรุณาจองขั้นต่ำ 50 คน');
                 return back()->withInput();
             }

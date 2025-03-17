@@ -348,7 +348,9 @@ class BookingController extends Controller
             'note' => 'nullable|string'
         ];
 
-        if (in_array($request->fk_activity_id, [1, 2, 3])) {
+        $hasTmss = Tmss::where('activity_id', $request->fk_activity_id)->exists();
+
+        if (in_array($request->fk_activity_id, [1, 2, 3]) || $hasTmss) {
             $rules['fk_tmss_id'] = 'required|exists:tmss,tmss_id';
         } else {
             $rules['fk_tmss_id'] = 'nullable|exists:tmss,tmss_id';
@@ -485,7 +487,6 @@ class BookingController extends Controller
         Mail::to($request->visitorEmail)->send(new BookingPendingMail($booking));
         return back()->with('showSuccessModal', true);
     }
-
     public function showBookingForm($activity_id)
     {
         if (!session()->has('verification_email')) {
@@ -891,7 +892,6 @@ class BookingController extends Controller
 
         return view('emails.visitorEditBooking', compact('booking', 'institutes', 'visitors', 'activities', 'subactivities', 'tmss', 'maxSubactivities'));
     }
-
     public function showBookingAdminEdit($booking_id)
     {
         $booking = Bookings::findOrFail($booking_id);
@@ -935,7 +935,11 @@ class BookingController extends Controller
             'note' => 'nullable|string'
         ];
 
-        if (in_array($request->fk_activity_id, [1, 2, 3]) && $request->note !== 'วอคอิน') {
+        $hasTmss = Tmss::where('activity_id', $request->fk_activity_id)->exists();
+
+        if (in_array($request->fk_activity_id, [1, 2, 3]) && $request->note === 'วอคอิน') {
+            $rules['fk_tmss_id'] = 'nullable|exists:tmss,tmss_id';
+        } elseif ($hasTmss || in_array($request->fk_activity_id, [1, 2, 3])) {
             $rules['fk_tmss_id'] = 'required|exists:tmss,tmss_id';
         } else {
             $rules['fk_tmss_id'] = 'nullable|exists:tmss,tmss_id';
@@ -1022,30 +1026,44 @@ class BookingController extends Controller
             $selectedTmss = collect($availableTmss)->firstWhere('tmss_id', $request->fk_tmss_id);
 
             if ($selectedTmss) {
-                $adjustedRemainingCapacity = $selectedTmss->remaining_capacity + $previousTotal;
+                if (is_numeric($selectedTmss->remaining_capacity)) {
+                    $adjustedRemainingCapacity = (int) $selectedTmss->remaining_capacity + $previousTotal;
+                } else {
+                    $adjustedRemainingCapacity = PHP_INT_MAX;
+                }
+            
                 if ($adjustedRemainingCapacity < $totalToBook) {
                     return back()->with('error', 'จำนวนเกินความจุต่อรอบการเข้าชม')->withInput();
                 }
             } else {
                 return back()->with('error', 'จำนวนเกินความจุต่อรอบการเข้าชม')->withInput();
             }
+            
         }
 
         $booking = Bookings::findOrFail($booking_id);
+        $institute = Institutes::find($booking->institute_id);
 
-        $institute = Institutes::firstOrNew([
-            'instituteName' => $request->instituteName,
-        ]);
-        if ($institute->exists) {
-            $institute->instituteAddress = $request->instituteAddress;
-            $institute->province = $request->province;
-            $institute->district = $request->district;
-            $institute->subdistrict = $request->subdistrict;
-            $institute->zipcode = $request->zipcode;
-            $institute->save();
+        if ($institute) {
+            $institute->update([
+                'instituteName' => $request->instituteName,
+                'instituteAddress' => $request->instituteAddress,
+                'province' => $request->province,
+                'district' => $request->district,
+                'subdistrict' => $request->subdistrict,
+                'zipcode' => $request->zipcode,
+            ]);
         } else {
-            $institute->save();
+            $institute = Institutes::create([
+                'instituteName' => $request->instituteName,
+                'instituteAddress' => $request->instituteAddress,
+                'province' => $request->province,
+                'district' => $request->district,
+                'subdistrict' => $request->subdistrict,
+                'zipcode' => $request->zipcode,
+            ]);
         }
+        
 
         $visitor = Visitors::updateOrCreate(
             ['visitorEmail' => $request->visitorEmail],
@@ -1059,6 +1077,7 @@ class BookingController extends Controller
             'fk_activity_id' => $request->fk_activity_id,
             'booking_date' => $formattedDate,
             'tmss_id' => $request->note === 'วอคอิน' ? null : $request->fk_tmss_id,
+            'institute_id' => $institute->institute_id,
             'children_qty' => $request->children_qty ?? 0,
             'students_qty' => $request->students_qty ?? 0,
             'adults_qty' => $request->adults_qty ?? 0,

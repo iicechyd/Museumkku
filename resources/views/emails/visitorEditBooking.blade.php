@@ -52,7 +52,7 @@
         @if ($booking->status == 1)
             <p class="text-center">ไม่สามารถแก้ไขข้อมูลการจองเข้าชมพิพิธภัณฑ์ได้ เนื่องจากการจองได้รับการอนุมัติแล้ว</p>
             <p class="text-center">หากต้องการแก้ไขข้อมูลเพิ่มเติม กรุณาติดต่อ
-                096-XXX-XXXX เจ้าหน้าที่ฝ่ายกิจกรรม</p>
+                094-512-9458, 094-278-4222 เจ้าหน้าที่ฝ่ายกิจกรรม</p>
         @elseif ($booking->status == 3)
             <p class="text-center">ไม่สามารถแก้ไขข้อมูลการจองเข้าชมพิพิธภัณฑ์ได้ เนื่องจากการจองถูกยกเลิกแล้ว</p>
         @else
@@ -263,12 +263,17 @@
                     <p class="custom-gray-text mt-0">
                         @if ($booking->activity->max_capacity)
                             <span class="indent-line">จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $booking->activity->max_capacity }} คน
-                                และ
-                                ไม่ต่ำกว่า 50 คนต่อการจอง</span>
+                                @unless ($booking->activity->activity_type_id == 1)
+                                และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
+                                @endunless
                             <span class="new-line">(หากผู้เข้าชมเกิน {{ $booking->activity->max_capacity }} คน
                                 กรุณาติดต่อ 094-512-9458, 094-278-4222 เจ้าหน้าที่ฝ่ายกิจกรรม)</span>
                         @else
-                            <span>ไม่จำกัดจำนวนผู้เข้าชม และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
+                            <span>ไม่จำกัดจำนวนผู้เข้าชม
+                                @unless ($booking->activity->activity_type_id == 1)
+                                และ ไม่ต่ำกว่า 50 คนต่อการจอง
+                                @endunless
+                            </span>
                         @endif
                     </p>
                     <p id="errorMessage" style="color: red; display: none;"></p>
@@ -383,7 +388,7 @@
                             </div>
                             <div class="modal-body text-center">
                                 กรุณารอการติดต่อกลับจากเจ้าหน้าที่ทางอีเมล ภายใน 24 ชั่วโมง<br> หากมีข้อสงสัย กรุณาติดต่อ
-                                094-512-9458, 094-278-4222 เจ้าหน้าที่ฝ่ายกิจกรรม
+                                094-512-9458, 094-278-4222 <br>เจ้าหน้าที่ฝ่ายกิจกรรม
                             </div>
                             <div class="modal-footer">
                                 <a href="/checkBookingStatus" class="btn btn-primary">ตรวจสอบสถานะการจอง</a>

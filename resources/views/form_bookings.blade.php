@@ -265,12 +265,17 @@
                     <p class="custom-gray-text mt-0">
                         @if ($selectedActivity->max_capacity)
                             <span class="indent-line">จำกัดจำนวนผู้เข้าชมไม่เกิน {{ $selectedActivity->max_capacity }} คน
-                                และ
-                                ไม่ต่ำกว่า 50 คนต่อการจอง</span>
+                                @unless ($selectedActivity->activity_type_id == 1)
+                                และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
+                                @endunless
                             <span class="new-line">(หากผู้เข้าชมเกิน {{ $selectedActivity->max_capacity }} คน
                                 กรุณาติดต่อ 094-512-9458, 094-278-4222 เจ้าหน้าที่ฝ่ายกิจกรรม)</span>
                         @else
-                            <span>ไม่จำกัดจำนวนผู้เข้าชม และ ไม่ต่ำกว่า 50 คนต่อการจอง</span>
+                            <span>ไม่จำกัดจำนวนผู้เข้าชม 
+                                @unless ($selectedActivity->activity_type_id == 1)
+                                และ ไม่ต่ำกว่า 50 คนต่อการจอง
+                                @endunless
+                            </span>
                         @endif
                     </p>
                     <p id="errorMessage" style="color: red; display: none;"></p>
@@ -385,7 +390,7 @@
                             </div>
                             <div class="modal-body text-center">
                                 กรุณารอการติดต่อกลับจากเจ้าหน้าที่ทางอีเมล ภายใน 24 ชั่วโมง<br> หากมีข้อสงสัย กรุณาติดต่อ
-                                094-512-9458, 094-278-4222 เจ้าหน้าที่ฝ่ายกิจกรรม
+                                094-512-9458, 094-278-4222 <br>เจ้าหน้าที่ฝ่ายกิจกรรม
                             </div>
                             <div class="modal-footer">
                                 <a href="/checkBookingStatus" class="btn btn-primary">ตรวจสอบสถานะการจอง</a>

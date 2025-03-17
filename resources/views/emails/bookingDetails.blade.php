@@ -24,7 +24,7 @@
             <div class="flex items-center space-x-6 text-sm">
                 <div class="flex items-center space-x-2">
                     <i class="fa-solid fa-phone"></i>
-                    <span>094-278-4222, 0-4300-9700 ต่อ 45596</span>
+                    <span>094-512-9458, 094-278-4222</span>
                     <i class="fa-solid fa-globe"></i>
                     <span>museum.kku.ac.th</span>
                 </div>
@@ -87,7 +87,7 @@
 
             <div class="details booking-info">
                 <h3 style="color: #489085;">ข้อมูลการจองเข้าชม</h3>
-                <p>จองเมื่อ: {{ \Carbon\Carbon::parse($booking->visitor->created_at)->format('d/m/Y') }}</p>
+                <p>จองเมื่อ: {{ \Carbon\Carbon::parse($booking->created_at)->format('d/m/Y') }}</p>
                 <p>สถานะ: @if ($booking->status == 0)
                         <span>รออนุมัติการจอง</span>
                     @elseif ($booking->status == 1)

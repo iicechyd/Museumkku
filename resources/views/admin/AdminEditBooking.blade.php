@@ -240,7 +240,8 @@
                         <input type="text" class="form-control @error('note') is-invalid @enderror" 
                             id="note" name="note" placeholder="กรอกหมายเหตุ (ถ้ามี)"
                             value="{{ old('note', $booking->note ?? $booking->note) }}" pattern="\d{10}" maxlength="10"
-                            minlength="10" title="ระบุหมายเหตุ (ถ้ามี)" required autocomplete="note">
+                            minlength="10" title="ระบุหมายเหตุ (ถ้ามี)" required autocomplete="note"
+                            {{ (isset($booking) && $booking->note == 'วอคอิน') ? 'readonly' : '' }}>
                         @error('note')
                             <div class="my-2">
                                 <span class="text-danger">{{ $message }}</span>

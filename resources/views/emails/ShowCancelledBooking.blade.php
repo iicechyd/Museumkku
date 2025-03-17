@@ -13,7 +13,7 @@
         @elseif ($booking->status == 0)
             <p class="text-center mb-3">คุณต้องการยกเลิกการจองนี้หรือไม่?</p>
             @elseif ($booking->status == 1 || $booking->status == 2)
-            <p class="text-center mb-3">ไม่สามารถยกเลิกการจองได้ หากต้องการยกเลิกการจอง กรุณาติดต่อเจ้าหน้าที่ 09X-XXX-XXXX</p>
+            <p class="text-center mb-3">ไม่สามารถยกเลิกการจองได้ หากต้องการยกเลิกการจอง กรุณาติดต่อ 094-512-9458, 094-278-4222 เจ้าหน้าที่ฝ่ายกิจกรรม</p>
         @endif
         @component('components.table_checkbookings')
             <tr>

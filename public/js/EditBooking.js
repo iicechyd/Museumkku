@@ -87,8 +87,8 @@ function calculateTotal() {
         elderlyQty * elderlyPrice +
         monkQty * monkPrice;
 
-    document.getElementById("totalVisitors").innerText = totalVisitors;
-    document.getElementById("totalPrice").innerText = totalPrice.toFixed(2);
+    document.getElementById("totalVisitors").innerText = totalVisitors.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById("totalPrice").innerText = totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function toggleInput(inputId) {

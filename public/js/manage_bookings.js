@@ -3,9 +3,6 @@ function openVisitorModal(bookingId) {
 }
 
 function submitVisitorCount(bookingId) {
-    console.log('submitVisitorCount called for bookingId:', bookingId);
-    console.log(document.getElementById('actual_free_teachers_qty_' + bookingId));
-
     var childrenQty = document.getElementById('children_qty_' + bookingId).value;
     var studentsQty = document.getElementById('students_qty_' + bookingId).value;
     var adultsQty = document.getElementById('adults_qty_' + bookingId).value;
@@ -89,6 +86,15 @@ function updateFreeTeachers(bookingId) {
     }
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('shown.bs.modal', function () {
+            let bookingId = this.id.split("_")[1];
+            updateFreeTeachers(bookingId);
+            calculateTotal(bookingId);
+        });
+    });
+});
 document.querySelectorAll('.visitor-input').forEach(input => {
     input.addEventListener('input', function () {
         let bookingId = this.dataset.bookingId;

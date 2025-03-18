@@ -189,7 +189,7 @@
                                                         </label>
                                                         <input type="number" id="{{ $type }}_qty_{{ $item->booking_id }}" 
                                                             class="form-control visitor-input text-center" style="width: 70px; padding: 5px;" 
-                                                            min="0" value="0" data-price="{{ $price }}" data-booking-id="{{ $item->booking_id }}" 
+                                                            min="0" value="{{ $item->{$type . '_qty'} ?? 0 }}" data-price="{{ $price }}" data-booking-id="{{ $item->booking_id }}" 
                                                             oninput="calculateTotal({{ $item->booking_id }})" required>
                                                         <label class="ml-3" style="margin-left: 10px;">คน</label>
                                                     </div>
@@ -211,7 +211,7 @@
                                                         </label>
                                                         <input type="number" id="{{ $type }}_qty_{{ $item->booking_id }}" 
                                                             class="form-control visitor-input text-center" style="width: 70px; padding: 5px;" 
-                                                            min="0" value="0" data-price="{{ $price }}" data-booking-id="{{ $item->booking_id }}" 
+                                                            min="0" value="{{ $item->{$type . '_qty'} ?? 0 }}" data-price="{{ $price }}" data-booking-id="{{ $item->booking_id }}" 
                                                             oninput="calculateTotal({{ $item->booking_id }})" required>
                                                         <label class="ml-3" style="margin-left: 10px;">{{ $type === 'monk' ? 'รูป' : 'คน' }}</label>
                                                     </div>

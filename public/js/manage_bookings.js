@@ -73,6 +73,7 @@ function calculateTotal(bookingId) {
 function updateFreeTeachers(bookingId) {
     let studentQty = parseInt(document.getElementById(`students_qty_${bookingId}`).value) || 0;
     let childrenQty = parseInt(document.getElementById(`children_qty_${bookingId}`).value) || 0;
+    
     let totalEligibleQty = studentQty + childrenQty;
     
     let maxFreeTeachers = Math.floor(totalEligibleQty / 10);

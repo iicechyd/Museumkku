@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('verifications', function (Blueprint $table) {
-            $table->id();
+            $table->id('verification_id');
             $table->string('email')->unique();
             $table->string('token')->unique();
             $table->boolean('verified')->default(false);

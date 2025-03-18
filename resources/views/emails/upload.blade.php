@@ -35,11 +35,13 @@
                     {{ \Carbon\Carbon::parse($booking->booking_date)->addYears(543)->year }}
                 </td>
                 <td>
-                    @if ($booking->tmss)
+                    @if ($booking->note === 'วอคอิน')
+                        วอคอิน
+                    @elseif ($booking->tmss)
                         {{ \Carbon\Carbon::parse($booking->tmss->start_time)->format('H:i') }} น. -
                         {{ \Carbon\Carbon::parse($booking->tmss->end_time)->format('H:i') }} น.
                     @else
-                        -
+                        ไม่มีรอบการเข้าชม
                     @endif
                 </td>
                 <td>
@@ -69,8 +71,8 @@
                     @endswitch
                 </td>
                 <td>
-                    @if ($booking->status == 3)
-                        <span class="text-muted">ไม่สามารถอัปโหลดไฟล์ได้</span>
+                    @if ($booking->status == 3 || $booking->status == 2)
+                    <span class="text-muted">ไม่สามารถอัปโหลดไฟล์ได้</span>
                     @elseif ($booking->documents->isNotEmpty())
                         @foreach ($booking->documents as $document)
                             <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank">
@@ -121,11 +123,11 @@
                     <p><strong>อีเมลผู้ประสานงาน: </strong>{{ $booking->visitor->visitorEmail }}</p>
                     <p><strong>เบอร์โทรศัพท์: </strong>{{ $booking->visitor->tel }}</p>
                     @if ($booking->children_qty > 0)
-                            <p>เด็ก : {{ $booking->children_qty }} คน</p>
+                            <p><strong>เด็ก : </strong>{{ $booking->children_qty }} คน</p>
                         @endif
 
                         @if ($booking->students_qty > 0)
-                            <p>นร / นศ : {{ $booking->students_qty }} คน</p>
+                            <p><strong>นร / นศ : </strong>{{ $booking->students_qty }} คน</p>
                         @endif
 
                         @if ($booking->adults_qty > 0)
@@ -133,22 +135,22 @@
                         @endif
 
                         @if ($booking->kid_qty > 0)
-                            <p>เด็กเล็ก : {{ $booking->kid_qty }} คน</p>
+                            <p><strong>เด็กเล็ก : </strong>{{ $booking->kid_qty }} คน</p>
                         @endif
 
                         @if ($booking->disabled_qty > 0)
-                            <p>ผู้พิการ : {{ $booking->disabled_qty }} คน</p>
+                            <p><strong>ผู้พิการ : </strong>{{ $booking->disabled_qty }} คน</p>
                         @endif
 
                         @if ($booking->elderly_qty > 0)
-                            <p>ผู้สูงอายุ : {{ $booking->elderly_qty }} คน</p>
+                            <p><strong>ผู้สูงอายุ : </strong>{{ $booking->elderly_qty }} คน</p>
                         @endif
 
                         @if ($booking->monk_qty > 0)
-                            <p>พระภิกษุสงฆ์ / สามเณร : {{ $booking->monk_qty }} รูป</p>
+                            <p><strong>พระภิกษุสงฆ์ / สามเณร : </strong>{{ $booking->monk_qty }} รูป</p>
                         @endif
                         @if (!empty($booking->note))
-                            <p>*หมายเหตุ: {{ $booking->note }}</p>
+                            <p><strong>*หมายเหตุ: </strong>{{ $booking->note }}</p>
                         @endif
                     <p><strong>ยอดรวมราคา:</strong> {{ number_format($totalPrice, 2) }} บาท</p>
                 </div>

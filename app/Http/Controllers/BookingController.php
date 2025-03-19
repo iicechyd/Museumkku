@@ -292,7 +292,7 @@ class BookingController extends Controller
         } else {
             $statusChange = StatusChanges::create([
                 'booking_id' => $booking->booking_id,
-                'user_id' => Auth::user()->user_id,
+                'user_id' => optional(Auth::user())->user_id,
                 'old_status' => $oldStatus,
                 'new_status' => $newStatus,
                 'comments' => $request->input('comments', null),

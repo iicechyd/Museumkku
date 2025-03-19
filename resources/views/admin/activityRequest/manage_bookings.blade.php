@@ -351,9 +351,7 @@
                                                     เวลา
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->format('H:i') }}
                                                     น.
-                                                    แก้ไขโดยเจ้าหน้าที่: {{ $item->latestStatusChange->changed_by ?? 'N/A' }}
-                                                @else
-                                                    ไม่พบข้อมูลการเปลี่ยนแปลงสถานะ
+                                                    โดย: {{ $item->latestStatusChange->changed_by}}
                                                 @endif
                                             </p>
                                             <p><strong>แนบเอกสาร: </strong>

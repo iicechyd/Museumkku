@@ -223,7 +223,7 @@
                                                                         เวลา
                                                                         {{ \Carbon\Carbon::parse($item->updated_at)->format('H:i') }}
                                                                         น.
-                                                                        โดย: {{ $statusChange->changed_by ?? 'ผู้เข้าชม' }}
+                                                                        โดย: {{ $statusChange->changed_by}}
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary"

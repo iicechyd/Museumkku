@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('status_changes', function (Blueprint $table) {
             $table->id('changed_id');
             $table->unsignedBigInteger('booking_id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->tinyInteger('old_status');
             $table->tinyInteger('new_status');
             $table->text('comments')->nullable();

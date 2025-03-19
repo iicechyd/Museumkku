@@ -224,15 +224,14 @@
                                                 @endif
                                             </p>
                                             <p><strong>แก้ไขสถานะ:</strong>
+                                                
                                                 @if ($item->latestStatusChange)
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->year + 543 }}
                                                     เวลา
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->format('H:i') }}
                                                     น.
-                                                    โดยเจ้าหน้าที่: {{ $item->latestStatusChange->changed_by ?? 'N/A' }}
-                                                @else
-                                                    ไม่พบข้อมูลการเปลี่ยนแปลงสถานะ
+                                                    โดย: {{ $item->latestStatusChange->changed_by}}
                                                 @endif
                                             </p>
                                         </div>

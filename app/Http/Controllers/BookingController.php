@@ -739,6 +739,7 @@ class BookingController extends Controller
 
     public function checkBookingStatus()
     {
+        session()->forget('verification_email');
         return view('checkBookingStatus');
     }
 

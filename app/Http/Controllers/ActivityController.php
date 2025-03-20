@@ -14,6 +14,7 @@ class ActivityController extends Controller
     public function showDetail($activity_id)
     {
         $activity = Activity::with('images')->findOrFail($activity_id);
+        session()->forget('verification_email');
         return view('activity_detail', compact('activity'));
     }
 
@@ -23,6 +24,7 @@ class ActivityController extends Controller
             ->where('activity_type_id', 2)
             ->where('status', 'active')
             ->get();
+            session()->forget('verification_email');
         return view('preview_activity', compact('activities'));
     }
 
@@ -32,6 +34,7 @@ class ActivityController extends Controller
             ->where('activity_type_id', 1)
             ->where('status', 'active')
             ->get();
+            session()->forget('verification_email');
         return view('preview_general', compact('activities'));
     }
 

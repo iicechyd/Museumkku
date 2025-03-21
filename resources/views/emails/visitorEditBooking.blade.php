@@ -357,6 +357,17 @@
                             <h5>ราคารวม: <span id="totalPrice">0.00</span> บาท</h5>
                         </div>
 
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="privacyPolicy" name="privacy_policy"
+                                required checked>
+                            <label class="form-check-label" for="privacyPolicy">
+                                ฉันได้อ่านและยอมรับข้อตกลงการใช้งาน
+                                <a href="#" data-bs-toggle="modal"
+                                    data-bs-target="#privacyModal">นโยบายความเป็นส่วนตัว</a>
+                            </label>
+                            <p id="privacyAlert" style="color: red; display: none;"></p>
+                        </div>
+    
                         <input type="hidden" id="children_price" name="children_price"
                             value="{{ $booking->activity->children_price }}">
                         <input type="hidden" id="student_price" name="student_price"
@@ -400,6 +411,7 @@
             </div>
         @endif
     </div>
+    <x-privacy-modal />
     <script>
         window.subactivities = @json($subactivities);
         window.maxSubactivities = @json($maxSubactivities);

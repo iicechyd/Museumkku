@@ -327,6 +327,17 @@
                     <input type="hidden" id="monk_price" name="monk_price"
                         value="{{ $selectedActivity->monk_price }}">
 
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="privacyPolicy" name="privacy_policy"
+                            required>
+                        <label class="form-check-label" for="privacyPolicy">
+                            ฉันได้อ่านและยอมรับข้อตกลงการใช้งาน
+                            <a href="#" data-bs-toggle="modal"
+                                data-bs-target="#privacyModal">นโยบายความเป็นส่วนตัว</a>
+                        </label>
+                        <p id="privacyAlert" style="color: red; display: none;"></p>
+                    </div>
+
                     <div class="col-12 d-flex justify-content-center pt-2">
                         <button type="button" class="btn btn-primary btn-lg ms-2" onclick="confirmSubmission()">
                             ยืนยันข้อมูล
@@ -354,6 +365,7 @@
             </div>
         @endif
     </div>
+    <x-privacy-modal />
     <script>
         window.subactivities = @json($subactivities);
         window.maxSubactivities = @json($maxSubactivities);

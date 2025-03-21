@@ -165,6 +165,17 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function confirmSubmission() {
+    const privacyCheckbox = document.getElementById("privacyPolicy");
+    const privacyAlert = document.getElementById("privacyAlert");
+
+    if (!privacyCheckbox.checked) {
+        privacyAlert.innerText = "โปรดยอมรับนโยบายความเป็นส่วนตัวก่อนยืนยันข้อมูล";
+        privacyAlert.style.display = "block";
+        return;
+    } else {
+        privacyAlert.style.display = "none";
+    }
+    
     const childrenQty = document.getElementById("childrenInput").value || 0;
     const studentsQty = document.getElementById("studentInput").value || 0;
     const adultsQty = document.getElementById("adultsInput").value || 0;

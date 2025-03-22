@@ -237,31 +237,34 @@
                         <!-- เด็กโต -->
                         <div class="col-md-3 custom-col">
                             <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"
-                                onclick="toggleInput('childrenInput')">
+                                onclick="toggleInput('childrenInput')" {{ old('children_qty') ? 'checked' : '' }}>
                             <label class="form-check-label" for="children_qty">เด็ก ( 3 ขวบ - ประถม ) :
                                 {{ $selectedActivity->children_price }} บาท/คน</label>
                             <input type="number" class="form-control mt-2" id="childrenInput" name="children_qty"
-                                min="0" disabled oninput="calculateTotal()">
+                                min="0" value="{{ old('children_qty') }}" 
+                                {{ old('children_qty') ? '' : 'disabled' }} oninput="calculateTotal()">
                         </div>
 
                         <!-- มัธยม/นักศึกษา -->
                         <div class="col-md-3 custom-col">
                             <input class="form-check-input" type="checkbox" id="students_qty" name="students_qty"
-                                onclick="toggleInput('studentInput')">
+                                onclick="toggleInput('studentInput')" {{ old('students_qty') ? 'checked' : '' }}>
                             <label class="form-check-label" for="students_qty">มัธยม/นักศึกษา :
                                 {{ $selectedActivity->student_price }} บาท/คน</label>
                             <input type="number" class="form-control mt-2" id="studentInput" name="students_qty"
-                                min="0" disabled oninput="calculateTotal()">
+                                min="0" value="{{ old('students_qty') }}" 
+                                {{ old('students_qty') ? '' : 'disabled' }} oninput="calculateTotal()">
                         </div>
 
                         <!-- ครู / อาจารย์ -->
                         <div class="col-md-3 custom-col">
                             <input class="form-check-input" type="checkbox" id="adults_qty" name="adults_qty"
-                                onclick="toggleInput('adultsInput')">
+                                onclick="toggleInput('adultsInput')" {{ old('adults_qty') ? 'checked' : '' }}>
                             <label class="form-check-label" for="adults_qty">ผู้ใหญ่ / คุณครู :
                                 {{ $selectedActivity->adult_price }} บาท/คน</label>
                             <input type="number" class="form-control mt-2" id="adultsInput" name="adults_qty"
-                                min="0" disabled oninput="calculateTotal()">
+                                min="0" value="{{ old('adults_qty') }}" 
+                                {{ old('adults_qty') ? '' : 'disabled' }} oninput="calculateTotal()">
                         </div>
                     </div>
 
@@ -270,41 +273,45 @@
                         <!-- เด็กเล็ก-->
                         <div class="col-md-3 custom-col">
                             <input class="form-check-input" type="checkbox" id="kid_qty" name="kid_qty"
-                                onclick="toggleInput('kidInput')">
+                                onclick="toggleInput('kidInput')" {{ old('kid_qty') ? 'checked' : '' }}>
                             <label class="form-check-label" for="kid_qty">
                                 เด็กเล็ก ( ต่ำกว่า 2 ขวบ )</label>
                             <input type="number" class="form-control mt-2" id="kidInput" name="kid_qty"
-                                min="0" disabled oninput="calculateTotal()">
+                                min="0" value="{{ old('kid_qty') }}" 
+                                {{ old('kid_qty') ? '' : 'disabled' }} oninput="calculateTotal()">
                         </div>
 
                         <!-- ผู้พิการ -->
                         <div class="col-md-3 custom-col">
                             <input class="form-check-input" type="checkbox" id="disabled_qty" name="disabled_qty"
-                                onclick="toggleInput('disabledInput')">
+                                onclick="toggleInput('disabledInput')" {{ old('disabled_qty') ? 'checked' : '' }}>
                             <label class="form-check-label" for="disabled_qty">
                                 ผู้พิการ</label>
                             <input type="number" class="form-control mt-2" id="disabledInput" name="disabled_qty"
-                                min="0" disabled oninput="calculateTotal()">
+                                min="0" value="{{ old('disabled_qty') }}" 
+                                {{ old('disabled_qty') ? '' : 'disabled' }} oninput="calculateTotal()">
                         </div>
 
                         <!-- ผู้สูงอายุ -->
                         <div class="col-md-3 custom-col">
                             <input class="form-check-input" type="checkbox" id="elderly_qty" name="elderly_qty"
-                                onclick="toggleInput('elderlyInput')">
+                                onclick="toggleInput('elderlyInput')" {{ old('elderly_qty') ? 'checked' : '' }}>
                             <label class="form-check-label" for="elderly_qty">
                                 ผู้สูงอายุ</label>
                             <input type="number" class="form-control mt-2" id="elderlyInput" name="elderly_qty"
-                                min="0" disabled oninput="calculateTotal()">
+                                min="0" value="{{ old('elderly_qty') }}" 
+                                {{ old('elderly_qty') ? '' : 'disabled' }} oninput="calculateTotal()">
                         </div>
 
                         <!-- พระภิกษุสงฆ์ /สามเณร -->
                         <div class="col-md-3 custom-col">
                             <input class="form-check-input" type="checkbox" id="monk_qty" name="monk_qty"
-                                onclick="toggleInput('monkInput')">
+                                onclick="toggleInput('monkInput')" {{ old('monk_qty') ? 'checked' : '' }}>
                             <label class="form-check-label" for="monk_qty">
                                 พระภิกษุสงฆ์ /สามเณร</label>
                             <input type="number" class="form-control mt-2" id="monkInput" name="monk_qty"
-                                min="0" disabled oninput="calculateTotal()">
+                                min="0" value="{{ old('monk_qty') }}" 
+                                {{ old('monk_qty') ? '' : 'disabled' }} oninput="calculateTotal()">
                         </div>
                     </div>
                     <!-- จำนวนผู้เข้าร่วมกิจกรรม -->

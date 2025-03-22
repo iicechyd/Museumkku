@@ -28,7 +28,7 @@ class BookingActivityController extends Controller
             return $activity;
         });
 
-        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'documents', 'subactivities')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'documents', 'subactivities', 'user')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 2);
             })
@@ -86,7 +86,7 @@ class BookingActivityController extends Controller
             return $activity;
         });
 
-        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'subactivities')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'subactivities', 'user')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 2);
             })
@@ -142,7 +142,7 @@ class BookingActivityController extends Controller
             return $activity;
         });
 
-        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'subactivities')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'subactivities', 'user')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 2);
             })
@@ -199,7 +199,7 @@ class BookingActivityController extends Controller
             return $activity;
         });
 
-        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'subactivities')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'subactivities', 'user')
         ->whereHas('activity', function ($query) {
             $query->where('activity_type_id', 2);
         })

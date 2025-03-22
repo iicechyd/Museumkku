@@ -23,7 +23,8 @@ class Bookings extends Model
         'elderly_qty',
         'monk_qty',
         'note',
-        'status'
+        'status',
+        'booked_by'
     ];
     protected $appends = ['end_date'];
     public function getEndDateAttribute()
@@ -71,6 +72,11 @@ class Bookings extends Model
     {
         return $this->children_qty + $this->students_qty + $this->adults_qty;
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
+
 
     public function documents()
     {

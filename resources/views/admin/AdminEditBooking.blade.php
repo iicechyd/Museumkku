@@ -46,6 +46,13 @@
             style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); ">
             แก้ไขข้อมูลการจองเข้าชมพิพิธภัณฑ์</h2>
             <div class="card shadow p-4">
+                <div class="d-flex justify-content-end align-items-center mb-2">
+                    <label for="booked_by" class="form-label mb-0 me-2">ดำเนินการจองโดย</label>
+                    <input type="text" class="form-control" id="booked_by"
+                        value="{{ Auth::check() ? Auth::user()->name : 'ผู้จองเข้าชม' }}" readonly 
+                        style="width: auto; max-width: 180px;">
+                    <input type="hidden" name="user_id" value="{{ Auth::check() ? Auth::user()->user_id : null }}">
+                </div>
                 <form method="POST" action="{{ route('bookings.update', $booking->booking_id) }}" class="row g-3">
                     @csrf
                     @method('PUT')

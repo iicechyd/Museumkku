@@ -53,15 +53,23 @@
                 style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); ">
                 แบบฟอร์มจองเข้าชมพิพิธภัณฑ์</h2>
             <div class="card shadow p-4">
-                <div class="pb-3">
+                <div class="pb-3 d-flex flex-wrap justify-content-between align-items-center">
                     <button id="toggleButton" type="button" class="toggle-btn" onclick="toggleCalendar()">
                         <span id="toggleText">แสดงปฏิทินการจอง</span>
                         <span id="arrowIcon" class="arrow">&#9660;</span>
                     </button>
-                    <div id="calendar" class="calendar hidden">
-                    </div>
+                    <div class="d-flex align-items-center mt-2 mt-sm-0">
+                        <label for="booked_by" class="form-label mb-0" style="margin-right: 10px;">ดำเนินการจองโดย</label>
+                        <input type="text" class="form-control" id="booked_by"
+                            value="{{ Auth::check() ? Auth::user()->name : 'ผู้จองเข้าชม' }}" readonly style="width: auto; max-width: 180px;">
+                            <input type="hidden" name="user_id" value="{{ Auth::check() ? Auth::user()->user_id : null }}">
+                        </div>
                 </div>
 
+                <div class="pb-3">
+                    <div id="calendar" class="calendar hidden"></div>
+                </div>
+                
                 <form method="POST" action="{{ route('InsertBooking') }}" class="row g-3" novalidate>
                     @csrf
                     <div class="col-md-5">

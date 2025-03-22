@@ -41,7 +41,7 @@ class BookingController extends Controller
                 return $activity;
             });
 
-        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'documents', 'subactivities')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'documents', 'subactivities', 'user')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
@@ -98,7 +98,7 @@ class BookingController extends Controller
                 return $activity;
             });
 
-        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'subactivities')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'subactivities', 'user')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
@@ -153,7 +153,7 @@ class BookingController extends Controller
                 return $activity;
             });
 
-        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'documents', 'subactivities')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'documents', 'subactivities', 'user')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
@@ -212,7 +212,7 @@ class BookingController extends Controller
                 return $activity;
             });
 
-        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'subactivities')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'subactivities', 'user')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
@@ -467,6 +467,7 @@ class BookingController extends Controller
         $booking->tmss_id = $request->fk_tmss_id ?? null;
         $booking->institute_id = $institute->institute_id;
         $booking->visitor_id = $visitor->visitor_id;
+        $booking->user_id = Auth::check() ? Auth::user()->user_id : null;
         $booking->booking_date = $formattedDate;
         $booking->children_qty = $request->children_qty ?? 0;
         $booking->students_qty = $request->students_qty ?? 0;

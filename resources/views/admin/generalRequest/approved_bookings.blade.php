@@ -167,7 +167,8 @@
                                             <p><strong>วันเวลาที่จองเข้ามา:
                                                 </strong>{{ \Carbon\Carbon::parse($item->created_at)->locale('th')->translatedFormat('j F') }}
                                                 {{ \Carbon\Carbon::parse($item->created_at)->year + 543 }} เวลา
-                                                {{ \Carbon\Carbon::parse($item->created_at)->format('H:i') }} น.</p>
+                                                {{ \Carbon\Carbon::parse($item->created_at)->format('H:i') }} น.
+                                                โดย: {{ $item->user ? $item->user->name : 'ผู้จองเข้าชม' }}</p>
                                             <p><strong>ชื่อหน่วยงาน: </strong>{{ $item->institute->instituteName }}</p>
                                             <p><strong>ที่อยู่หน่วยงาน: </strong>{{ $item->institute->instituteAddress }}
                                                 {{ $item->institute->subdistrict }} {{ $item->institute->district }}
@@ -224,7 +225,6 @@
                                                 @endif
                                             </p>
                                             <p><strong>แก้ไขสถานะ:</strong>
-                                                
                                                 @if ($item->latestStatusChange)
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->year + 543 }}

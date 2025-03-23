@@ -66,7 +66,7 @@
                                     {{ \Carbon\Carbon::parse($item->tmss->start_time)->format('H:i') }} น. -
                                     {{ \Carbon\Carbon::parse($item->tmss->end_time)->format('H:i') }} น.
                                 @else
-                                    ไม่มีรอบการเข้าชม
+                                    -
                                 @endif
                             </td> 
                             <td>
@@ -128,8 +128,8 @@
                                     <p class="text-danger pt-2">รอแนบเอกสาร</p>
                                 @endif
                             </td>
-                            <!-- Modal สำหรับกรอกจำนวนผู้เข้าชม -->
-                            <div class="modal fade" id="visitorModal_{{ $item->booking_id }}" tabindex="-1" role="dialog"
+                             <!-- Modal สำหรับกรอกจำนวนผู้เข้าชม -->
+                             <div class="modal fade" id="visitorModal_{{ $item->booking_id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="visitorModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -146,14 +146,14 @@
                                                     'students' => $item->activity->student_price ?? 0,
                                                     'adults' => $item->activity->adult_price ?? 0,
                                                 ];
-
+                                        
                                                 $welfare_prices = [
                                                     'kid' => $item->activity->kid_price ?? 0,
                                                     'disabled' => $item->activity->disabled_price ?? 0,
                                                     'elderly' => $item->activity->elderly_price ?? 0,
                                                     'monk' => $item->activity->monk_price ?? 0,
                                                 ];
-
+                                        
                                                 $labels = [
                                                     'children' => 'เด็ก',
                                                     'students' => 'มัธยม / นักศึกษา',
@@ -164,23 +164,18 @@
                                                     'monk' => 'พระภิกษุสงฆ์ /สามเณร',
                                                 ];
                                             @endphp
-
+                                        
                                             {{-- กลุ่มทั่วไป --}}
                                             <h5 class="mb-3">กลุ่มทั่วไป</h5>
                                             @foreach ($general_prices as $type => $price)
                                                 <div class="d-flex justify-content-center align-items-center mb-2">
                                                     <div class="d-flex align-items-center">
-                                                        <label class="mr-2 mb-0"
-                                                            for="{{ $type }}_qty_{{ $item->booking_id }}"
-                                                            style="width: 100px;">
+                                                        <label class="mr-2 mb-0" for="{{ $type }}_qty_{{ $item->booking_id }}" style="width: 100px;">
                                                             {{ $labels[$type] }}
                                                         </label>
-                                                        <input type="number"
-                                                            id="{{ $type }}_qty_{{ $item->booking_id }}"
-                                                            class="form-control visitor-input text-center"
-                                                            style="width: 70px; padding: 5px;" min="0" value="0"
-                                                            data-price="{{ $price }}"
-                                                            data-booking-id="{{ $item->booking_id }}"
+                                                        <input type="number" id="{{ $type }}_qty_{{ $item->booking_id }}" 
+                                                            class="form-control visitor-input text-center" style="width: 70px; padding: 5px;" 
+                                                            min="0" value="{{ $item->{$type . '_qty'} ?? 0 }}" data-price="{{ $price }}" data-booking-id="{{ $item->booking_id }}" 
                                                             oninput="calculateTotal({{ $item->booking_id }})" required>
                                                         <label class="ml-3" style="margin-left: 10px;">คน</label>
                                                     </div>
@@ -191,54 +186,47 @@
                                                     </span>
                                                 </div>
                                             @endforeach
-
+                                        
                                             {{-- สวัสดิการ --}}
                                             <h5 class="mt-4 mb-3">สวัสดิการ</h5>
                                             @foreach ($welfare_prices as $type => $price)
                                                 <div class="d-flex justify-content-center align-items-center mb-2">
                                                     <div class="d-flex align-items-center">
-                                                        <label class="mr-2 mb-0"
-                                                            for="{{ $type }}_qty_{{ $item->booking_id }}"
-                                                            style="width: 100px;">
+                                                        <label class="mr-2 mb-0" for="{{ $type }}_qty_{{ $item->booking_id }}" style="width: 100px;">
                                                             {{ $labels[$type] }}
                                                         </label>
-                                                        <input type="number"
-                                                            id="{{ $type }}_qty_{{ $item->booking_id }}"
-                                                            class="form-control visitor-input text-center"
-                                                            style="width: 70px; padding: 5px;" min="0" value="0"
-                                                            data-price="{{ $price }}"
-                                                            data-booking-id="{{ $item->booking_id }}"
+                                                        <input type="number" id="{{ $type }}_qty_{{ $item->booking_id }}" 
+                                                            class="form-control visitor-input text-center" style="width: 70px; padding: 5px;" 
+                                                            min="0" value="{{ $item->{$type . '_qty'} ?? 0 }}" data-price="{{ $price }}" data-booking-id="{{ $item->booking_id }}" 
                                                             oninput="calculateTotal({{ $item->booking_id }})" required>
-                                                        <label class="ml-3"
-                                                            style="margin-left: 10px;">{{ $type === 'monk' ? 'รูป' : 'คน' }}</label>
+                                                        <label class="ml-3" style="margin-left: 10px;">{{ $type === 'monk' ? 'รูป' : 'คน' }}</label>
                                                     </div>
                                                     <span class="text-right" style="margin-left: 80px; width: 120px;">
                                                         @if ($price != 0)
-                                                            {{ number_format($price) }}
-                                                            {{ $type === 'monk' ? 'บาท/รูป' : 'บาท/คน' }}
+                                                            {{ number_format($price) }} {{ $type === 'monk' ? 'บาท/รูป' : 'บาท/คน' }}
                                                         @endif
                                                     </span>
                                                 </div>
-                                            @endforeach
+                                            @endforeach   
                                             @php
                                                 $maxFreeTeachers = 0;
                                             @endphp
-                                            <div class="d-flex justify-content-center align-items-center mb-2" style="position: absolute; visibility: hidden;">
-                                                <div class="d-flex align-items-center">
-                                                    <label class="mr-2 mb-0" for="teacher_free_qty_{{ $item->booking_id }}" style="width: 100px;">
-                                                        คุณครู
-                                                    </label>
-                                                    <input type="number" id="teacher_free_qty_{{ $item->booking_id }}" 
-                                                        class="form-control visitor-input text-center" style="width: 70px; padding: 5px;" 
-                                                        min="0" max="{{ $maxFreeTeachers }}" value="0"
-                                                        data-price="0" data-booking-id="{{ $item->booking_id }}" 
-                                                        oninput="validateFreeTeachersInput(this, {{ $item->booking_id }}); calculateTotal({{ $item->booking_id }});" required>
-                                                    <label class="ml-3" style="margin-left: 10px;">คน</label>
-                                                </div>
-                                                <span class="text-right" style="margin-left: 80px; width: 120px;">
-                                                    ฟรี (สูงสุด <span id="maxFreeTeachers_{{ $item->booking_id }}">0</span> คน)
-                                                </span>
+                                        <div class="d-flex justify-content-center align-items-center mb-2">
+                                            <div class="d-flex align-items-center">
+                                                <label class="mr-2 mb-0" for="teacher_free_qty_{{ $item->booking_id }}" style="width: 100px;">
+                                                    คุณครู
+                                                </label>
+                                                <input type="number" id="teacher_free_qty_{{ $item->booking_id }}" 
+                                                    class="form-control visitor-input text-center" style="width: 70px; padding: 5px;" 
+                                                    min="0" max="{{ $maxFreeTeachers }}" value="0"
+                                                    data-price="0" data-booking-id="{{ $item->booking_id }}" 
+                                                    oninput="validateFreeTeachersInput(this, {{ $item->booking_id }}); calculateTotal({{ $item->booking_id }});" required>
+                                                <label class="ml-3" style="margin-left: 10px;">คน</label>
                                             </div>
+                                            <span class="text-right" style="margin-left: 80px; width: 120px;">
+                                                ฟรี (สูงสุด <span id="maxFreeTeachers_{{ $item->booking_id }}">0</span> คน)
+                                            </span>
+                                        </div>
                                             <div class="col-12 mt-4">
                                                 <h5>จำนวนผู้เข้าชมทั้งหมด: <span
                                                         id="totalVisitors_{{ $item->booking_id }}">0</span> <span
@@ -345,16 +333,6 @@
                                                 </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->kid_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
                                                 คน</p>
                                             <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
-                                            <p><strong>แก้ไขสถานะ: </strong>
-                                                @if ($item->latestStatusChange)
-                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
-                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->year + 543 }}
-                                                    เวลา
-                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->format('H:i') }}
-                                                    น.
-                                                    โดย: {{ $item->latestStatusChange->changed_by}}
-                                                @endif
-                                            </p>
                                             <p><strong>แนบเอกสาร: </strong>
                                                 @if ($item->documents->isNotEmpty())
                                                     @foreach ($item->documents as $document)
@@ -367,6 +345,16 @@
                                                     @endforeach
                                                 @else
                                                     <span class="text-danger">รอแนบเอกสาร</span>
+                                                @endif
+                                            </p>
+                                            <p><strong>อนุมัติ: </strong>
+                                                @if ($item->latestStatusChange)
+                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
+                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->year + 543 }}
+                                                    เวลา
+                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->format('H:i') }}
+                                                    น.
+                                                    โดย: {{ $item->latestStatusChange->user->name ?? 'N/A' }}
                                                 @endif
                                             </p>
                                         </div>

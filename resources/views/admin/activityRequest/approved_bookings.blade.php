@@ -65,7 +65,7 @@
                                     {{ \Carbon\Carbon::parse($item->tmss->start_time)->format('H:i') }} น. -
                                     {{ \Carbon\Carbon::parse($item->tmss->end_time)->format('H:i') }} น.
                                 @else
-                                    ไม่มีรอบการเข้าชม
+                                    -
                                 @endif
                             </td> 
                             <td>
@@ -213,16 +213,6 @@
                                                 </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->kid_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
                                                 คน</p>
                                             <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
-                                            <p><strong>แก้ไขสถานะ: </strong>
-                                                @if ($item->latestStatusChange)
-                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
-                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->year + 543 }}
-                                                    เวลา
-                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->format('H:i') }}
-                                                    น.
-                                                    โดย: {{ $item->latestStatusChange->changed_by}}
-                                                @endif
-                                            </p>
                                             <p><strong>แนบเอกสาร: </strong>
                                                 @if ($item->documents->isNotEmpty())
                                                     @foreach ($item->documents as $document)
@@ -235,6 +225,16 @@
                                                     @endforeach
                                                 @else
                                                     <span class="text-danger">รอแนบเอกสาร</span>
+                                                @endif
+                                            </p>
+                                            <p><strong>อนุมัติ: </strong>
+                                                @if ($item->latestStatusChange)
+                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
+                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->year + 543 }}
+                                                    เวลา
+                                                    {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->format('H:i') }}
+                                                    น.
+                                                    โดย: {{ $item->latestStatusChange->user->name ?? 'N/A' }}
                                                 @endif
                                             </p>
                                         </div>

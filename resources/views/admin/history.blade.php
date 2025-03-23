@@ -76,7 +76,7 @@
                                                 $cancelledBookings = 0;
                                             @endphp
                                             @foreach ($histories->sortBy('booking_date') as $index => $item)
-                                                @foreach ($item->statusChanges as $statusChange)
+                                                @foreach ($item->statusChanges->whereIn('new_status', [2, 3]) as $statusChange)
                                                     <tr>
                                                         <th scope="row">{{ $loop->parent->iteration }}</th>
                                                         <td>{{ \Carbon\Carbon::parse($item->booking_date)->locale('th')->translatedFormat('j F') }}
@@ -114,19 +114,21 @@
                                                         </td>
                                                         <td>
                                                             @php
-                                                                $totalQty =
-                                                                    $statusChange->actual_children_qty +
-                                                                    $statusChange->actual_students_qty +
-                                                                    $statusChange->actual_adults_qty +
-                                                                    $statusChange->actual_kid_qty +
-                                                                    $statusChange->actual_disabled_qty +
-                                                                    $statusChange->actual_elderly_qty +
-                                                                    $statusChange->actual_monk_qty +
-                                                                    $statusChange->actual_free_teachers_qty;
+                                                                $actualVisitors = $item->actualVisitors;
+                                                                $totalQty = $actualVisitors ? (
+                                                                    $actualVisitors->actual_children_qty +
+                                                                    $actualVisitors->actual_students_qty +
+                                                                    $actualVisitors->actual_adults_qty +
+                                                                    $actualVisitors->actual_kid_qty +
+                                                                    $actualVisitors->actual_disabled_qty +
+                                                                    $actualVisitors->actual_elderly_qty +
+                                                                    $actualVisitors->actual_monk_qty +
+                                                                    $actualVisitors->actual_free_teachers_qty
+                                                                    ) : 0;
                                                             @endphp
                                                             @if ($totalQty)
                                                                 <a href="#" data-toggle="modal"
-                                                                    data-target="#actualModal_{{ $statusChange->booking_id }}">
+                                                                    data-target="#actualModal_{{ $actualVisitors->booking_id }}">
                                                                     {{ $totalQty }} คน
                                                                 </a>
                                                             @else
@@ -155,8 +157,8 @@
                                                                         {{ \Carbon\Carbon::parse($item->created_at)->locale('th')->translatedFormat('j F') }}
                                                                         {{ \Carbon\Carbon::parse($item->created_at)->year + 543 }}
                                                                         เวลา
-                                                                        {{ \Carbon\Carbon::parse($item->created_at)->format('H:i') }}
-                                                                        น.</p>
+                                                                        {{ \Carbon\Carbon::parse($item->created_at)->format('H:i') }} น.
+                                                                        โดย: {{ $item->user ? $item->user->name : 'ผู้จองเข้าชม' }}</p>
                                                                     <p><strong>กิจกรรม:</strong>
                                                                         {{ $item->activity->activity_name }}</p>
                                                                     @if (!$item->subActivities->isEmpty())
@@ -217,13 +219,27 @@
                                                                         คน</p>
                                                                     <p><strong>ยอดรวมราคา:</strong>
                                                                         {{ number_format($item->totalPrice, 2) }} บาท</p>
-                                                                    <p><strong>แก้ไขสถานะ:</strong>
-                                                                        {{ \Carbon\Carbon::parse($item->updated_at)->locale('th')->translatedFormat('j F') }}
-                                                                        {{ \Carbon\Carbon::parse($item->updated_at)->year + 543 }}
-                                                                        เวลา
-                                                                        {{ \Carbon\Carbon::parse($item->updated_at)->format('H:i') }}
-                                                                        น.
-                                                                        โดย: {{ $statusChange->changed_by}}
+                                                                    @foreach($item->statusChanges as $change)
+                                                                        @if($change->new_status == 1)
+                                                                            <p><strong>อนุมัติการจอง: </strong>
+                                                                                {{ \Carbon\Carbon::parse($change->created_at)->locale('th')->translatedFormat('j F') }}
+                                                                                {{ \Carbon\Carbon::parse($change->created_at)->year + 543 }} เวลา
+                                                                                {{ \Carbon\Carbon::parse($change->created_at)->format('H:i') }} น.
+                                                                                โดย: </strong>{{ $change->user->name ?? 'N/A' }} 
+                                                                            @elseif($change->new_status == 2)
+                                                                                <p><strong>ยืนยันเข้าชม: </strong>
+                                                                                {{ \Carbon\Carbon::parse($change->created_at)->locale('th')->translatedFormat('j F') }}
+                                                                                {{ \Carbon\Carbon::parse($change->created_at)->year + 543 }} เวลา
+                                                                                {{ \Carbon\Carbon::parse($change->created_at)->format('H:i') }} น.
+                                                                                โดย: {{ $change->user->name ?? 'N/A' }} 
+                                                                        @elseif($change->new_status == 3)
+                                                                            <p><strong>ยกเลิกการจอง: </strong>
+                                                                                {{ \Carbon\Carbon::parse($change->created_at)->locale('th')->translatedFormat('j F') }}
+                                                                                {{ \Carbon\Carbon::parse($change->created_at)->year + 543 }} เวลา
+                                                                                {{ \Carbon\Carbon::parse($change->created_at)->format('H:i') }} น.
+                                                                                โดย: {{ $change->user->name ?? 'ผู้จองเข้าชม' }} 
+                                                                        @endif
+                                                                    @endforeach
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary"
@@ -257,8 +273,8 @@
                                                                             @endif
                                                                         </p>
                                                                     @endforeach
-                                                                    @if ($statusChange->actual_free_teachers_qty > 0)
-                                                                    <p>คุณครู {{ number_format($statusChange->actual_free_teachers_qty) }} คน</p>
+                                                                    @if ($actualVisitors->actual_free_teachers_qty > 0)
+                                                                    <p>คุณครู {{ number_format($actualVisitors->actual_free_teachers_qty) }} คน</p>
                                                                     @endif
                                                                     @if ($modalDetails['totalPrice'] > 0)
                                                                         <hr>

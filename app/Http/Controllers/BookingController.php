@@ -17,6 +17,7 @@ use App\Models\SubActivity;
 use App\Models\Institutes;
 use App\Models\Visitors;
 use App\Models\StatusChanges;
+use App\Models\ActualVisitors;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\BookingApprovedMail;
 use App\Mail\BookingCancelledMail;
@@ -254,71 +255,53 @@ class BookingController extends Controller
         $booking = Bookings::where('booking_id', $booking_id)->firstOrFail();
         $oldStatus = $booking->status;
 
-        switch ($request->status) {
-            case 'pending':
-                $newStatus = 0;
-                break;
-            case 'approve':
-                $newStatus = 1;
-                break;
-            case 'checkin':
-                $newStatus = 2;
-                break;
-            case 'cancel':
-                $newStatus = 3;
-                break;
-        }
-
+        $statusMapping = [
+            'pending' => 0,
+            'approve' => 1,
+            'checkin' => 2,
+            'cancel' => 3,
+        ];
+        $newStatus = $statusMapping[$request->status];
         $booking->status = $newStatus;
         $booking->save();
 
-        $statusChange = StatusChanges::where('booking_id', $booking_id)->first();
         $changedBy = Auth::user() ? Auth::user()->name : 'ผู้จองเข้าชม';
 
-        if ($statusChange) {
-            $statusChange->old_status = $oldStatus;
-            $statusChange->new_status = $newStatus;
-            $statusChange->comments = $request->input('comments', $statusChange->comments);
-            $statusChange->actual_children_qty = $request->input('actual_children_qty', 0);
-            $statusChange->actual_students_qty = $request->input('actual_students_qty', 0);
-            $statusChange->actual_adults_qty = $request->input('actual_adults_qty', 0);
-            $statusChange->actual_kid_qty = $request->input('actual_kid_qty', 0);
-            $statusChange->actual_disabled_qty = $request->input('actual_disabled_qty', 0);
-            $statusChange->actual_elderly_qty = $request->input('actual_elderly_qty', 0);
-            $statusChange->actual_monk_qty = $request->input('actual_monk_qty', 0);
-            $statusChange->actual_free_teachers_qty = $request->input('actual_free_teachers_qty', 0);
-            $statusChange->changed_by = $changedBy;
-            $statusChange->save();
-        } else {
-            $statusChange = StatusChanges::create([
-                'booking_id' => $booking->booking_id,
-                'user_id' => optional(Auth::user())->user_id,
-                'old_status' => $oldStatus,
-                'new_status' => $newStatus,
-                'comments' => $request->input('comments', null),
-                'actual_children_qty' => $request->input('actual_children_qty', 0),
-                'actual_students_qty' => $request->input('actual_students_qty', 0),
-                'actual_adults_qty' => $request->input('actual_adults_qty', 0),
-                'actual_kid_qty' => $request->input('actual_kid_qty', 0),
-                'actual_disabled_qty' => $request->input('actual_disabled_qty', 0),
-                'actual_elderly_qty' => $request->input('actual_elderly_qty', 0),
-                'actual_monk_qty' => $request->input('actual_monk_qty', 0),
-                'actual_free_teachers_qty' => $request->input('actual_free_teachers_qty', 0),
-                'changed_by' => $changedBy,
-            ]);
+        $statusChange = StatusChanges::create([
+            'booking_id' => $booking->booking_id,
+            'user_id' => optional(Auth::user())->user_id,
+            'old_status' => $oldStatus,
+            'new_status' => $newStatus,
+            'comments' => $request->input('comments', null),
+        ]);
+
+        if ($newStatus === 2) {
+            ActualVisitors::updateOrCreate(
+                ['booking_id' => $booking->booking_id],
+                [
+                    'actual_children_qty' => $request->input('actual_children_qty', 0),
+                    'actual_students_qty' => $request->input('actual_students_qty', 0),
+                    'actual_adults_qty' => $request->input('actual_adults_qty', 0),
+                    'actual_kid_qty' => $request->input('actual_kid_qty', 0),
+                    'actual_disabled_qty' => $request->input('actual_disabled_qty', 0),
+                    'actual_elderly_qty' => $request->input('actual_elderly_qty', 0),
+                    'actual_monk_qty' => $request->input('actual_monk_qty', 0),
+                    'actual_free_teachers_qty' => $request->input('actual_free_teachers_qty', 0),
+                ]
+            );
         }
 
-        $visitorEmail = $booking->visitor ? $booking->visitor->visitorEmail : null;
-
-        if ($newStatus === 1 && $visitorEmail) {
+        $visitorEmail = $booking->visitor->visitorEmail ?? null;
+        if ($visitorEmail) {
+            if ($newStatus === 1) {
             $uploadLink = route('documents.upload', ['booking_id' => $booking->booking_id]);
-            $cancelLink = route('bookings.cancel', ['booking_id' => $booking->booking_id]);
             Mail::to($visitorEmail)->send(new BookingApprovedMail($booking, $uploadLink));
-        } elseif ($newStatus === 3 && $visitorEmail) {
+        } elseif ($newStatus === 3) {
             Mail::to($visitorEmail)->send(new BookingCancelledMail($booking));
-        } else {
-            Log::warning("ไม่พบอีเมลสำหรับการจองหมายเลข {$booking->booking_id}");
         }
+    } else {
+        Log::warning("ไม่พบอีเมลสำหรับการจองหมายเลข {$booking->booking_id}");
+    }
         return redirect()->back()->with('success', 'สถานะการจองถูกอัปเดตแล้ว');
     }
     function InsertBooking(Request $request)
@@ -650,6 +633,7 @@ class BookingController extends Controller
         $booking->tmss_id = null;
         $booking->institute_id = $institute->institute_id;
         $booking->visitor_id = $visitor->visitor_id;
+        $booking->user_id = Auth::check() ? Auth::user()->user_id : null;
         $booking->booking_date = $formattedDate;
         $booking->children_qty = $request->children_qty ?? 0;
         $booking->students_qty = $request->students_qty ?? 0;
@@ -750,6 +734,7 @@ class BookingController extends Controller
             'institute',
             'activity',
             'documents',
+            'actualVisitors',
             'tmss',
             'statusChanges'
         ])->whereIn('status', [2, 3])->orderBy('created_at', 'desc');
@@ -839,14 +824,13 @@ class BookingController extends Controller
                 'monk' => $booking->activity->monk_price ?? 0
             ];
 
-            foreach ($booking->statusChanges as $statusChange) {
                 $totalParticipants = 0;
                 $totalPrice = 0;
                 $priceDetails = [];
 
                 foreach ($categories as $key => $label) {
                     $qtyField = "actual_{$key}_qty";
-                    $qty = $statusChange->$qtyField ?? 0;
+                    $qty = $booking->actualVisitors->$qtyField ?? 0;
                     $price = $prices[$key] ?? 0;
                     $total = $qty * $price;
 
@@ -862,17 +846,17 @@ class BookingController extends Controller
                     $totalParticipants += $qty;
                     $totalPrice += $total;
                 }
-                $totalParticipants += $statusChange->actual_free_teachers_qty ?? 0;
+                $totalParticipants += $booking->actualVisitors->actual_free_teachers_qty ?? 0;
                 $totalRevenue += $totalPrice;
                 $totalActualVisitors += $totalParticipants;
 
-                $priceDetailsByBooking[$statusChange->booking_id] = [
+                $priceDetailsByBooking[$booking->booking_id] = [
                     'details' => $priceDetails,
                     'totalParticipants' => $totalParticipants,
                     'totalPrice' => $totalPrice
                 ];
             }
-        }
+        
         $activities = Activity::orderBy('activity_name')->pluck('activity_name', 'activity_id');
 
         return view('admin.history', compact('histories', 'activities', 'totalRevenue', 'totalBookings', 'totalBookedVisitors', 'totalActualVisitors', 'priceDetailsByBooking'));

@@ -53,6 +53,14 @@
                 style="color: #C06628; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); ">
                 แบบฟอร์มเข้าชมวอคอิน</h2>
             <div class="card shadow p-4">
+                <div class="d-flex justify-content-end align-items-center mb-2">
+                    <label for="booked_by" class="form-label mb-0 me-2">ดำเนินการจองโดย</label>
+                    <input type="text" class="form-control" id="booked_by"
+                        value="{{ Auth::check() ? Auth::user()->name : 'ผู้จองเข้าชม' }}" readonly 
+                        style="width: auto; max-width: 180px;">
+                    <input type="hidden" name="user_id" value="{{ Auth::check() ? Auth::user()->user_id : null }}">
+                </div>
+                
                 <form method="POST" action="{{ route('WalkinBooking') }}" class="row g-3" novalidate>
                     @csrf
                     <div class="col-md-5">

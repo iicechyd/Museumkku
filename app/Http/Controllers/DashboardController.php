@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Bookings;
 use App\Models\Activity;
 use App\Models\StatusChanges;
+use App\Models\ActualVisitors;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -28,7 +29,7 @@ class DashboardController extends Controller
         $startMonthThai = $startMonth->locale('th')->isoFormat('MMMM') . ' ' . ($startMonth->year + 543);
         $endMonthThai = $endMonth->locale('th')->isoFormat('MMMM') . ' ' . ($endMonth->year + 543);
 
-        $visitorsToday = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+        $visitorsToday = ActualVisitors::join('bookings', 'actual_visitors.booking_id', '=', 'bookings.booking_id')
             ->whereIn('bookings.activity_id', [1, 2])
             ->whereDate('bookings.booking_date', $today)
             ->where('bookings.status', 2)
@@ -39,7 +40,7 @@ class DashboardController extends Controller
             ->groupBy('bookings.activity_id')
             ->pluck('total', 'bookings.activity_id');
 
-        $visitorsActivity3Today = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+        $visitorsActivity3Today = ActualVisitors::join('bookings', 'actual_visitors.booking_id', '=', 'bookings.booking_id')
             ->where('bookings.activity_id', 3)
             ->whereDate('bookings.booking_date', $today)
             ->where('bookings.status', 2)
@@ -50,7 +51,7 @@ class DashboardController extends Controller
             2 => ($visitorsToday[2] ?? 0) + $visitorsActivity3Today
         ];
 
-        $visitorsYesterday = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+        $visitorsYesterday = ActualVisitors::join('bookings', 'actual_visitors.booking_id', '=', 'bookings.booking_id')
             ->whereIn('bookings.activity_id', [1, 2])
             ->whereDate('bookings.booking_date', $yesterday)
             ->where('bookings.status', 2)
@@ -61,7 +62,7 @@ class DashboardController extends Controller
             ->groupBy('bookings.activity_id')
             ->pluck('total', 'bookings.activity_id');
 
-        $visitorsActivity3Yesterday = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+        $visitorsActivity3Yesterday = ActualVisitors::join('bookings', 'actual_visitors.booking_id', '=', 'bookings.booking_id')
             ->where('bookings.activity_id', 3)
             ->whereDate('bookings.booking_date', $yesterday)
             ->where('bookings.status', 2)
@@ -84,7 +85,7 @@ class DashboardController extends Controller
             }
         }
 
-        $activityVisitorCountsWeek = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+        $activityVisitorCountsWeek = ActualVisitors::join('bookings', 'actual_visitors.booking_id', '=', 'bookings.booking_id')
             ->whereIn('bookings.activity_id', [1, 2, 3])
             ->whereBetween('bookings.booking_date', [$weekStart, $weekEnd])
             ->where('bookings.status', 2)
@@ -108,7 +109,7 @@ class DashboardController extends Controller
             2 => $activity2Visitors
         ];
 
-        $activityVisitorCountsLastWeek = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+        $activityVisitorCountsLastWeek = ActualVisitors::join('bookings', 'actual_visitors.booking_id', '=', 'bookings.booking_id')
             ->whereIn('bookings.activity_id', [1, 2, 3])
             ->whereBetween('bookings.booking_date', [$lastWeekStart, $lastWeekEnd])
             ->where('bookings.status', 2)
@@ -130,7 +131,7 @@ class DashboardController extends Controller
             }
         }
 
-        $activityVisitorCountsMonth = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+        $activityVisitorCountsMonth = ActualVisitors::join('bookings', 'actual_visitors.booking_id', '=', 'bookings.booking_id')
             ->whereIn('bookings.activity_id', [1, 2, 3])
             ->whereBetween('bookings.booking_date', [$monthStart, $monthEnd])
             ->where('bookings.status', 2)
@@ -158,7 +159,7 @@ class DashboardController extends Controller
         $lastMonthStart = $monthStart->clone()->subMonth()->startOfMonth();
         $lastMonthEnd = $monthStart->clone()->subMonth()->endOfMonth();
 
-        $activityVisitorCountsLastMonth = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+        $activityVisitorCountsLastMonth = ActualVisitors::join('bookings', 'actual_visitors.booking_id', '=', 'bookings.booking_id')
             ->whereIn('bookings.activity_id', [1, 2, 3])
             ->whereBetween('bookings.booking_date', [$lastMonthStart, $lastMonthEnd])
             ->where('bookings.status', 2)
@@ -198,7 +199,7 @@ class DashboardController extends Controller
             }
         }
 
-        $activityVisitorCountsYear = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+        $activityVisitorCountsYear = ActualVisitors::join('bookings', 'actual_visitors.booking_id', '=', 'bookings.booking_id')
             ->whereIn('bookings.activity_id', [1, 2, 3])
             ->whereBetween('bookings.booking_date', [$startMonth, $endMonth])
             ->where('bookings.status', 2)
@@ -226,7 +227,7 @@ class DashboardController extends Controller
         $startMonthLastYear = $startMonth->copy()->subYear();
         $endMonthLastYear = $endMonth->copy()->subYear();
 
-        $activityVisitorCountsLastYear = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+        $activityVisitorCountsLastYear = ActualVisitors::join('bookings', 'actual_visitors.booking_id', '=', 'bookings.booking_id')
             ->whereIn('bookings.activity_id', [1, 2, 3])
             ->whereBetween('bookings.booking_date', [$startMonthLastYear, $endMonthLastYear])
             ->where('bookings.status', 2)
@@ -269,7 +270,7 @@ class DashboardController extends Controller
             $monthEnd = $currentDate->copy()->endOfMonth()->format('Y-m-d');
             $monthLabel = $currentDate->copy()->translatedFormat('M') . ' ' . ($currentDate->year + 543);
 
-            $totalVisitorsPerMonthThisYear[$monthLabel] = StatusChanges::join('bookings', 'status_changes.booking_id', '=', 'bookings.booking_id')
+            $totalVisitorsPerMonthThisYear[$monthLabel] = ActualVisitors::join('bookings', 'actual_visitors.booking_id', '=', 'bookings.booking_id')
                 ->join('activities', 'bookings.activity_id', '=', 'activities.activity_id')
                 ->whereBetween('bookings.booking_date', [$monthStart, $monthEnd])
                 ->where('bookings.status', 2)
@@ -289,7 +290,7 @@ class DashboardController extends Controller
                 $query->where('activity_type_id', 1);
             })
                 ->join('activities', 'bookings.activity_id', '=', 'activities.activity_id')
-                ->join('status_changes', 'bookings.booking_id', '=', 'status_changes.booking_id')
+                ->join('actual_visitors', 'bookings.booking_id', '=', 'actual_visitors.booking_id')
                 ->whereBetween('booking_date', [$monthStart, $monthEnd])
                 ->whereIn('bookings.status', [2])
                 ->sum(DB::raw(
@@ -310,7 +311,7 @@ class DashboardController extends Controller
                 $query->where('activity_type_id', 2);
             })
                 ->join('activities', 'bookings.activity_id', '=', 'activities.activity_id')
-                ->join('status_changes', 'bookings.booking_id', '=', 'status_changes.booking_id')
+                ->join('actual_visitors', 'bookings.booking_id', '=', 'actual_visitors.booking_id')
                 ->whereBetween('booking_date', [$monthStart, $monthEnd])
                 ->whereIn('bookings.status', [2])
                 ->sum(DB::raw(
@@ -338,7 +339,7 @@ class DashboardController extends Controller
 
         $totalWalkinBooked = [];
         foreach ($activities as $activity) {
-            $totalWalkinBooked[$activity->activity_id] = StatusChanges::whereHas('booking', function ($query) use ($activity, $startMonth, $endMonth) {
+            $totalWalkinBooked[$activity->activity_id] = ActualVisitors::whereHas('booking', function ($query) use ($activity, $startMonth, $endMonth) {
                 $query->where('activity_id', $activity->activity_id)
                     ->whereBetween('booking_date', [$startMonth, $endMonth])
                     ->where('note', 'วอคอิน')
@@ -348,27 +349,27 @@ class DashboardController extends Controller
             })
                 ->sum(DB::raw('actual_children_qty + actual_students_qty + actual_adults_qty + actual_kid_qty + actual_disabled_qty + actual_elderly_qty + actual_monk_qty + actual_free_teachers_qty'));
         }
-        $totalSpecialActivity = Activity::with(['activityType', 'bookings.statusChanges'])
+        $totalSpecialActivity = Activity::with(['activityType', 'bookings.actualVisitors'])
             ->where('activity_type_id', 2)
             ->select('activity_id', 'activity_name', 'target_yearly_count')
             ->get()
             ->map(function ($activity) use ($startMonth, $endMonth) {
                 $totalVisitors = $activity->bookings()
                     ->whereBetween('booking_date', [$startMonth, $endMonth])
-                    ->with('statusChanges')
+                    ->with('actualVisitors')
                     ->get()
                     ->sum(function ($booking) {
-                        return $booking->statusChanges->sum(function ($statusChange) {
-                            return $statusChange->actual_children_qty +
-                                $statusChange->actual_students_qty +
-                                $statusChange->actual_adults_qty +
-                                $statusChange->actual_kid_qty +
-                                $statusChange->actual_disabled_qty +
-                                $statusChange->actual_elderly_qty +
-                                $statusChange->actual_monk_qty +
-                                $statusChange->actual_free_teachers_qty;
-                        });
-                    });
+                        return $booking->actualVisitors 
+                        ? $booking->actualVisitors->actual_children_qty +
+                          $booking->actualVisitors->actual_students_qty +
+                          $booking->actualVisitors->actual_adults_qty +
+                          $booking->actualVisitors->actual_kid_qty +
+                          $booking->actualVisitors->actual_disabled_qty +
+                          $booking->actualVisitors->actual_elderly_qty +
+                          $booking->actualVisitors->actual_monk_qty +
+                          $booking->actualVisitors->actual_free_teachers_qty
+                        : 0;
+                });
 
                 $totalBookings = $activity->bookings()
                     ->whereBetween('booking_date', [$startMonth, $endMonth])
@@ -384,8 +385,12 @@ class DashboardController extends Controller
                     'total_bookings' => $totalBookings,
                 ];
             });
-        $visitorStats = Bookings::join('status_changes', 'bookings.booking_id', '=', 'status_changes.booking_id')
+        $visitorStats = Bookings::join('actual_visitors', 'bookings.booking_id', '=', 'actual_visitors.booking_id')
             ->join('activities', 'bookings.activity_id', '=', 'activities.activity_id')
+            ->join('status_changes', function ($join) {
+                $join->on('bookings.booking_id', '=', 'status_changes.booking_id')
+                     ->where('status_changes.new_status', 2);
+            })
             ->selectRaw('
                 SUM(actual_children_qty) as children_qty, 
                 SUM(actual_students_qty) as students_qty, 
@@ -397,7 +402,6 @@ class DashboardController extends Controller
                 SUM(actual_free_teachers_qty) as free_teachers_qty
             ')
             ->whereBetween('booking_date', [$startMonth, $endMonth])
-            ->whereIn('status_changes.new_status', [2])
             ->where('activities.activity_type_id', 1)
             ->first();
 

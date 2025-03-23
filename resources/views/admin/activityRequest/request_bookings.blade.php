@@ -66,7 +66,7 @@
                                     {{ \Carbon\Carbon::parse($item->tmss->start_time)->format('H:i') }} น. -
                                     {{ \Carbon\Carbon::parse($item->tmss->end_time)->format('H:i') }} น.
                                 @else
-                                    ไม่มีรอบการเข้าชม
+                                    -
                                 @endif
                             </td> 
                             <td>

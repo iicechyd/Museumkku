@@ -63,7 +63,7 @@
                                     {{ \Carbon\Carbon::parse($item->tmss->start_time)->format('H:i') }} น. -
                                     {{ \Carbon\Carbon::parse($item->tmss->end_time)->format('H:i') }} น.
                                 @else
-                                    ไม่มีรอบการเข้าชม
+                                    -
                                 @endif
                             </td> 
                             <td>
@@ -224,14 +224,21 @@
                                                     <span class="text-danger">รอแนบเอกสาร</span>
                                                 @endif
                                             </p>
-                                            <p><strong>แก้ไขสถานะ:</strong>
-                                                @if ($item->latestStatusChange)
+                                            <p><strong>อนุมัติ:</strong>
+                                                @if ($item->note == 'วอคอิน')
+                                                    {{ \Carbon\Carbon::parse($item->updated_at)->locale('th')->translatedFormat('j F') }}
+                                                    {{ \Carbon\Carbon::parse($item->updated_at)->year + 543 }}
+                                                    เวลา
+                                                    {{ \Carbon\Carbon::parse($item->updated_at)->format('H:i') }}
+                                                    น.
+                                                    โดย: {{ $item->user->name ?? 'N/A' }}
+                                                @elseif ($item->latestStatusChange)
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->year + 543 }}
                                                     เวลา
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->format('H:i') }}
                                                     น.
-                                                    โดย: {{ $item->latestStatusChange->changed_by}}
+                                                    โดย: {{ $item->latestStatusChange->user->name ?? 'N/A' }}
                                                 @endif
                                             </p>
                                         </div>

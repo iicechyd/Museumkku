@@ -14,15 +14,6 @@ return new class extends Migration {
             $table->tinyInteger('old_status');
             $table->tinyInteger('new_status');
             $table->text('comments')->nullable();
-            $table->integer('actual_children_qty')->default(0);
-            $table->integer('actual_students_qty')->default(0);
-            $table->integer('actual_adults_qty')->default(0);
-            $table->integer('actual_kid_qty')->default(0);
-            $table->integer('actual_disabled_qty')->default(0);
-            $table->integer('actual_elderly_qty')->default(0);
-            $table->integer('actual_monk_qty')->default(0);
-            $table->integer('actual_free_teachers_qty')->default(0);
-            $table->string( 'changed_by');
             $table->timestamps();
 
             $table->foreign('booking_id')->references('booking_id')->on('bookings')->onDelete('cascade');

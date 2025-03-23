@@ -15,6 +15,7 @@ class Bookings extends Model
         'booking_date',
         'activity_id',
         'tmss_id',
+        'user_id',
         'children_qty',
         'students_qty',
         'adults_qty',
@@ -24,7 +25,6 @@ class Bookings extends Model
         'monk_qty',
         'note',
         'status',
-        'booked_by'
     ];
     protected $appends = ['end_date'];
     public function getEndDateAttribute()
@@ -68,6 +68,11 @@ class Bookings extends Model
             ->orderBy('changed_id', 'desc');
     }
 
+    public function actualVisitors()
+    {
+        return $this->hasOne(ActualVisitors::class, 'booking_id', 'booking_id');
+    }
+
     public function getTotalVisitorsAttribute()
     {
         return $this->children_qty + $this->students_qty + $this->adults_qty;
@@ -76,7 +81,6 @@ class Bookings extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
-
 
     public function documents()
     {

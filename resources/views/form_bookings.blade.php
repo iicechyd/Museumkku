@@ -64,7 +64,7 @@
                             value="{{ Auth::check() ? Auth::user()->name : 'ผู้จองเข้าชม' }}" readonly style="width: auto; max-width: 180px;">
                             <input type="hidden" name="user_id" value="{{ Auth::check() ? Auth::user()->user_id : null }}">
                         </div>
-                </div>
+                    </div>
 
                 <div class="pb-3">
                     <div id="calendar" class="calendar hidden"></div>

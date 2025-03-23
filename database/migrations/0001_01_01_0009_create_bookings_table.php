@@ -26,7 +26,6 @@ return new class extends Migration {
             $table->integer('monk_qty')->default(0);
             $table->string('note')->nullable();
             $table->tinyInteger('status')->default(0);
-            $table->unsignedBigInteger('booked_by')->nullable();
 
             $table->foreign('activity_id')->references('activity_id')->on('activities')->onDelete('cascade');
             $table->foreign('sub_activity_id')->references('sub_activity_id')->on('sub_activities')->onDelete('set null');

@@ -211,7 +211,7 @@
                                             @php
                                                 $maxFreeTeachers = 0;
                                             @endphp
-                                        <div class="d-flex justify-content-center align-items-center mb-2">
+                                        <div class="d-flex justify-content-center align-items-center mb-2" style="position: absolute; visibility: hidden;">
                                             <div class="d-flex align-items-center">
                                                 <label class="mr-2 mb-0" for="teacher_free_qty_{{ $item->booking_id }}" style="width: 100px;">
                                                     คุณครู

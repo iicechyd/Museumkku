@@ -44,6 +44,7 @@ class ActivityController extends Controller
             ->where('activity_type_id', 1)
             ->where('status', 'active')
             ->get();
+            session()->forget('verification_email');
         return view('admin.admin_preview_general', compact('activities'));
     }
 

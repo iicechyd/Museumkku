@@ -25,6 +25,7 @@ class Bookings extends Model
         'monk_qty',
         'note',
         'status',
+        'updated_by',
     ];
     protected $appends = ['end_date'];
     public function getEndDateAttribute()
@@ -82,6 +83,11 @@ class Bookings extends Model
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+    
     public function documents()
     {
         return $this->hasMany(Documents::class, 'booking_id', 'booking_id');

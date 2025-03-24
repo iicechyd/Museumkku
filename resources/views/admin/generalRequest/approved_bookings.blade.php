@@ -65,7 +65,7 @@
                                 @else
                                     -
                                 @endif
-                            </td> 
+                            </td>
                             <td>
                                 @if ($item->note == 'วอคอิน')
                                     -
@@ -78,7 +78,7 @@
                                 @else
                                     ไม่จำกัดจำนวนคน
                                 @endif
-                            </td>   
+                            </td>
                             <td>
                                 {!! $item->status == 1 ? '<button type="button" class="status-btn">อนุมัติ</button>' : '' !!}
                             </td>
@@ -224,7 +224,15 @@
                                                     <span class="text-danger">รอแนบเอกสาร</span>
                                                 @endif
                                             </p>
-                                            <p><strong>อนุมัติ:</strong>
+                                            @if ($item->updated_at && $item->updated_at != $item->created_at && !is_null($item->updatedBy))
+                                            <p><strong>แก้ไขล่าสุด: </strong>
+                                                    {{ \Carbon\Carbon::parse($item->updated_at)->locale('th')->translatedFormat('j F') }}
+                                                    {{ \Carbon\Carbon::parse($item->updated_at)->year + 543 }} เวลา
+                                                    {{ \Carbon\Carbon::parse($item->updated_at)->format('H:i') }} น.
+                                                    โดย: {{ $item->updatedBy->name }}
+                                                </p>
+                                            @endif
+                                            <p><strong>อนุมัติ: </strong>
                                                 @if ($item->note == 'วอคอิน')
                                                     {{ \Carbon\Carbon::parse($item->updated_at)->locale('th')->translatedFormat('j F') }}
                                                     {{ \Carbon\Carbon::parse($item->updated_at)->year + 543 }}
@@ -266,14 +274,16 @@
                                                         class="text-primary">
                                                         {{ $document->file_name }}
                                                     </a>
-                                                    <form action="{{ route('documents.destroy', $document->document_id) }}" method="POST" class="d-inline"
-                                                        onsubmit="return confirm('คุณต้องการลบเอกสารนี้หรือไม่?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="border-0 bg-transparent delete-button">
-                                                            <i class="fa-solid fa-circle-xmark text-danger" style="font-size: 1.2rem;"></i>
-                                                        </button>
-                                                    </form>
+                                                <form action="{{ route('documents.destroy', $document->document_id) }}"
+                                                    method="POST" class="d-inline"
+                                                    onsubmit="return confirm('คุณต้องการลบเอกสารนี้หรือไม่?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="border-0 bg-transparent delete-button">
+                                                        <i class="fa-solid fa-circle-xmark text-danger"
+                                                            style="font-size: 1.2rem;"></i>
+                                                    </button>
+                                                </form>
                                                 </p>
                                             @endforeach
                                             <form action="{{ route('documents.store', $item->booking_id) }}" method="POST"
@@ -289,7 +299,8 @@
                                                             style="min-width: 100px;">อัปโหลด</button>
                                                     </div>
                                                     <label for="document" class="form-label text-danger mt-2">อัปโหลดเอกสาร
-                                                        (PDF เท่านั้น)</label>
+                                                        (PDF เท่านั้น)
+                                                    </label>
                                                     <div id="file-preview"></div>
                                                 </div>
                                             </form>

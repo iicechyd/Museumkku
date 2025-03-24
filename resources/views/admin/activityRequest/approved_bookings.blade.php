@@ -227,6 +227,14 @@
                                                     <span class="text-danger">รอแนบเอกสาร</span>
                                                 @endif
                                             </p>
+                                            @if ($item->updated_at && $item->updated_at != $item->created_at && !is_null($item->updatedBy))
+                                            <p><strong>แก้ไขล่าสุด: </strong>
+                                                    {{ \Carbon\Carbon::parse($item->updated_at)->locale('th')->translatedFormat('j F') }}
+                                                    {{ \Carbon\Carbon::parse($item->updated_at)->year + 543 }} เวลา
+                                                    {{ \Carbon\Carbon::parse($item->updated_at)->format('H:i') }} น.
+                                                    โดย: {{ $item->updatedBy->name }}
+                                                </p>
+                                            @endif
                                             <p><strong>อนุมัติ: </strong>
                                                 @if ($item->latestStatusChange)
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}

@@ -154,7 +154,7 @@ class BookingController extends Controller
                 return $activity;
             });
 
-        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'documents', 'subactivities', 'user')
+        $query = Bookings::with('activity', 'tmss', 'visitor', 'institute', 'documents', 'subactivities', 'user', 'updatedBy')
             ->whereHas('activity', function ($query) {
                 $query->where('activity_type_id', 1);
             })
@@ -736,7 +736,8 @@ class BookingController extends Controller
             'documents',
             'actualVisitors',
             'tmss',
-            'statusChanges'
+            'statusChanges',
+            'updatedBy'
         ])->whereIn('status', [2, 3])->orderBy('created_at', 'desc');
 
         if ($request->filled('activity_name')) {
@@ -1071,7 +1072,8 @@ class BookingController extends Controller
             'disabled_qty' => $request->disabled_qty ?? 0,
             'elderly_qty' => $request->elderly_qty ?? 0,
             'monk_qty' => $request->monk_qty ?? 0,
-            'note' => $request->note ?? null
+            'note' => $request->note ?? null,
+            'updated_by' => optional(Auth::user())->user_id
         ]);
 
         $booking->subactivities()->sync($request->sub_activity_id ?? []);

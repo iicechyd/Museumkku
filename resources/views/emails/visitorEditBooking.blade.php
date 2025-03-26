@@ -292,7 +292,7 @@
                             <input class="form-check-input" type="checkbox" id="children_qty" name="children_qty"
                                 onclick="toggleInput('childrenInput')" {{ old('children_qty', $booking->children_qty ?? 0) > 0 ? 'checked' : '' }}>
                             <label class="form-check-label" for="children_qty">เด็ก ( 3 ขวบ - ประถม ) :
-                                {{ $booking->activity->children_price }} บาท/คน</label>
+                                {{ number_format($booking->activity->children_price, 0) }} บาท/คน</label>
                             <input type="number" class="form-control mt-2" id="childrenInput" name="children_qty"
                                 min="0" value="{{ old('children_qty', $booking->children_qty ?? '') == 0 ? '' : old('children_qty', $booking->children_qty ?? '') }}" 
                                 {{ old('children_qty', $booking->children_qty ?? 0) > 0 ? '' : 'disabled' }}
@@ -304,7 +304,7 @@
                             <input class="form-check-input" type="checkbox" id="students_qty" name="students_qty"
                                 onclick="toggleInput('studentInput')" {{ old('students_qty', $booking->students_qty ?? 0) > 0 ? 'checked' : '' }}>
                             <label class="form-check-label" for="students_qty">มัธยม/นักศึกษา :
-                                {{ $booking->activity->student_price }} บาท/คน</label>
+                                {{ number_format($booking->activity->student_price, 0) }} บาท/คน</label>
                             <input type="number" class="form-control mt-2" id="studentInput" name="students_qty"
                                 min="0" value="{{ old('students_qty', $booking->students_qty ?? '') == 0 ? '' : old('students_qty', $booking->students_qty ?? '') }}" 
                                 {{ old('students_qty', $booking->students_qty ?? 0) > 0 ? '' : 'disabled' }}
@@ -316,7 +316,7 @@
                             <input class="form-check-input" type="checkbox" id="adults_qty" name="adults_qty"
                                 onclick="toggleInput('adultsInput')" {{ old('adults_qty', $booking->adults_qty ?? 0) > 0 ? 'checked' : '' }}>
                             <label class="form-check-label" for="adults_qty">ผู้ใหญ่ / คุณครู :
-                                {{ $booking->activity->adult_price }} บาท/คน</label>
+                                {{ number_format($booking->activity->adult_price, 0) }} บาท/คน</label>
                             <input type="number" class="form-control mt-2" id="adultsInput" name="adults_qty"
                                 min="0" value="{{ old('adults_qty', $booking->adults_qty ?? '') == 0 ? '' : old('adults_qty', $booking->adults_qty ?? '') }}" 
                                 {{ old('adults_qty', $booking->adults_qty ?? 0) > 0 ? '' : 'disabled' }}

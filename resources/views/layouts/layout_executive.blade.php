@@ -39,11 +39,17 @@
                             แดชบอร์ด
                         </a>
                     </li>
+                    <li class="sidebar-item">
+                        <a href="{{route('exe.history.all')}}" class="sidebar-link">
+                            <i class="fa-regular fa-file-lines pe-2"></i>
+                            ประวัติการจองทั้งหมด
+                        </a>
+                    </li>
                     <li class="border-top my-3" style="border-top: 1px solid gray !important;"></li>
                     <div class="sidebar-footer">
                         <a href="{{ route('logout') }}" class="sidebar-link"
                             onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                            document.getElementById('logout-form').submit();">
                             <i class="fa-solid fa-right-from-bracket pe-2"></i>
                             <span>ออกจากระบบ</span>
                         </a>

@@ -78,6 +78,7 @@ Route::middleware([RoleMiddleware::class . ':Admin'])->group(function () {
 });
 Route::middleware([RoleMiddleware::class . ':Executive'])->group(function () {
     Route::get('/executive/dashboard', [DashboardController::class, 'showDashboard'])->name('showDashboard');
+    Route::get('/executive/history', [BookingController::class, 'showHistory'])->name('exe.history.all');
 });
 //Route อัปเดตสถานะการจอง อัปโหลดไฟล์ขอความอนุเคราะห์
 Route::post('/bookings/{booking_id}/updateStatus', [BookingController::class, 'updateStatus'])->name('bookings.updateStatus');

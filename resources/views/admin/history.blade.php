@@ -1,4 +1,4 @@
-@extends('layouts.layout_admin')
+@extends(auth()->user()->role->role_name === 'Admin' ? 'layouts.layout_admin' : 'layouts.layout_executive')
 @section('content')
 
     <head>
@@ -10,7 +10,7 @@
     <div class="container">
         <h1 class="text-center pt-3" style="color: #489085; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);">
             ประวัติการจองทั้งหมด</h1>
-        <form action="{{ route('booking.history.all') }}" method="GET" class="mb-4">
+        <form action="{{ auth()->user()->role->role_name === 'Admin' ? route('booking.history.all') : route('exe.history.all') }}" method="GET" class="mb-4">
             <button type="submit" name="daily" value="true" class="btn btn-primary">รายวัน</button>
             <button type="submit" name="monthly" value="true" class="btn btn-secondary">เดือนนี้</button>
             <button type="submit" name="fiscal_year" value="true" class="btn btn-warning"

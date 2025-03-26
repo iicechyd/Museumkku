@@ -263,7 +263,8 @@
                                                 </h5>
                                             </div>
                                         </div>
-                                        <div class="modal-footer">
+                                        <div class="modal-footer d-flex justify-content-between">
+                                            <button type="button" class="btn btn-light me-auto" onclick="resetVisitorForm({{ $item->booking_id }})">คืนค่า</button>
                                             <button type="button" class="btn btn-secondary"
                                                 data-dismiss="modal">ปิด</button>
                                             <button type="button" class="btn btn-success"

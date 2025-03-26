@@ -93,9 +93,22 @@ document.addEventListener("DOMContentLoaded", function () {
             let bookingId = this.id.split("_")[1];
             updateFreeTeachers(bookingId);
             calculateTotal(bookingId);
+            document.querySelectorAll(`#visitorModal_${bookingId} .visitor-input`).forEach(input => {
+                input.dataset.oldValue = input.value; 
+            });
         });
     });
 });
+
+function resetVisitorForm(bookingId) {
+    document.querySelectorAll(`#visitorModal_${bookingId} .visitor-input`).forEach(input => {
+        input.value = input.dataset.oldValue || 0;
+    });
+
+    updateFreeTeachers(bookingId);
+    calculateTotal(bookingId);
+}
+
 document.querySelectorAll('.visitor-input').forEach(input => {
     input.addEventListener('input', function () {
         let bookingId = this.dataset.bookingId;

@@ -1098,19 +1098,19 @@ class BookingController extends Controller
     public function showDetails($booking_id)
     {
         $booking = Bookings::findOrFail($booking_id);
-        $statusChange = $booking->note === 'วอคอิน'
-            ? StatusChanges::where('booking_id', $booking_id)->latest()->first()
+        $ActualVisitor = $booking->note === 'วอคอิน'
+            ? ActualVisitors::where('booking_id', $booking_id)->latest()->first()
             : null;
 
         $quantities = [
-            'children_qty' => $statusChange ? $statusChange->actual_children_qty : $booking->children_qty,
-            'students_qty' => $statusChange ? $statusChange->actual_students_qty : $booking->students_qty,
-            'adults_qty' => $statusChange ? $statusChange->actual_adults_qty : $booking->adults_qty,
-            'kid_qty' => $statusChange ? $statusChange->actual_kid_qty : $booking->kid_qty,
-            'disabled_qty' => $statusChange ? $statusChange->actual_disabled_qty : $booking->disabled_qty,
-            'elderly_qty' => $statusChange ? $statusChange->actual_elderly_qty : $booking->elderly_qty,
-            'monk_qty' => $statusChange ? $statusChange->actual_monk_qty : $booking->monk_qty,
-            'free_teachers_qty' => $statusChange ? $statusChange->actual_free_teachers_qty : 0,
+            'children_qty' => $ActualVisitor ? $ActualVisitor->actual_children_qty : $booking->children_qty,
+            'students_qty' => $ActualVisitor ? $ActualVisitor->actual_students_qty : $booking->students_qty,
+            'adults_qty' => $ActualVisitor ? $ActualVisitor->actual_adults_qty : $booking->adults_qty,
+            'kid_qty' => $ActualVisitor ? $ActualVisitor->actual_kid_qty : $booking->kid_qty,
+            'disabled_qty' => $ActualVisitor ? $ActualVisitor->actual_disabled_qty : $booking->disabled_qty,
+            'elderly_qty' => $ActualVisitor ? $ActualVisitor->actual_elderly_qty : $booking->elderly_qty,
+            'monk_qty' => $ActualVisitor ? $ActualVisitor->actual_monk_qty : $booking->monk_qty,
+            'free_teachers_qty' => $ActualVisitor ? $ActualVisitor->actual_free_teachers_qty : 0,
         ];
 
         $totalPrice =

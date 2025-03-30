@@ -311,7 +311,7 @@ class BookingController extends Controller
             'fk_tmss_id' => 'nullable|exists:tmss,tmss_id',
             'sub_activity_id' => 'nullable|array',
             'sub_activity_id.*' => 'nullable|exists:sub_activities,sub_activity_id',
-            'booking_date' => 'required|date_format:d/m/Y',
+            'booking_date' => 'required|date',
             'instituteName' => 'required',
             'instituteAddress' => 'required',
             'province' => 'required|string|max:100',
@@ -406,12 +406,13 @@ class BookingController extends Controller
             return back()->withInput();
         }
 
-        $bookingDate = DateTime::createFromFormat('d/m/Y', $request->booking_date);
+        $bookingDate = DateTime::createFromFormat('Y-m-d', $request->booking_date);
+
         if (!$bookingDate) {
             return back()->with('error', 'รูปแบบวันที่ไม่ถูกต้อง')->withInput();
         }
+        
         $formattedDate = $bookingDate->format('Y-m-d');
-
         if (is_null($request->fk_tmss_id) && is_null($maxCapacity)) {
         } elseif (is_null($request->fk_tmss_id) && !is_null($maxCapacity)) {
             if ($totalToBook > $maxCapacity) {
@@ -469,7 +470,7 @@ class BookingController extends Controller
         }
         session()->forget('visitor_data');
         Mail::to($request->visitorEmail)->send(new BookingPendingMail($booking));
-        return back()->with('showSuccessModal', true);
+        return back()->with('showSuccessModal', true)->withInput();
     }
     public function showBookingForm($activity_id)
     {

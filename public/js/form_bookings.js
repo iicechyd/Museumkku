@@ -109,7 +109,10 @@ $.Thailand({
 });
 
 flatpickr("#booking_date", {
-    dateFormat: "d/m/Y",
+    dateFormat: "Y-m-d",
+    altInput: true,
+    altFormat: "d/m/Y",
+    allowInput: true,
     minDate: new Date().fp_incr(3),
     disable: [
         function (date) {
@@ -122,8 +125,11 @@ flatpickr("#booking_date", {
         }
     },
     onChange: function (selectedDates, dateStr, instance) {
-        let [day, month, year] = dateStr.split("/");
-        let formattedDate = `${year}-${month}-${day}`;
+        if (!dateStr) {
+            console.error("Invalid date string:", dateStr);
+            return;
+        }    
+        let formattedDate = dateStr;
         let activityId = document.getElementById("fk_activity_id").value;
 
         if (formattedDate) {
@@ -202,6 +208,83 @@ flatpickr("#booking_date", {
         }
     },
     onReady: function () {
+        let existingDate = document.getElementById('booking_date').value;
+        let selectedTmssId = document.getElementById("selected_tmss_id").value;
+
+        if (existingDate) {
+            let [year, month, day] = existingDate.split("-");
+            let formattedDate = `${year}-${month}-${day}`;
+            let activityId = document.getElementById("fk_activity_id").value;
+
+            fetch(`/available-tms/${activityId}/${formattedDate}`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(
+                            "Network response was not ok " + response.statusText
+                        );
+                    }
+                    return response.json();
+                })
+                .then((tmss) => {
+                    let tmssSelect = document.getElementById("fk_tmss_id");
+                    tmssSelect.innerHTML = "";
+
+                    if (tmss.length === 0) {
+                        let option = document.createElement("option");
+                        option.value = "";
+                        option.text = "ไม่เปิดให้จองในวันนี้";
+                        tmssSelect.appendChild(option);
+                        tmssSelect.disabled = true;
+                    } else {
+                        let option = document.createElement("option");
+                        option.value = "";
+                        option.text = "เลือกรอบการเข้าชม";
+                        tmssSelect.appendChild(option);
+
+                        tmss.forEach((tmss, index) => {
+                            let startTime = new Date(`1970-01-01T${tmss.start_time}Z`);
+                            let endTime = new Date(`1970-01-01T${tmss.end_time}Z`);
+                            let startFormatted = `${startTime.getUTCHours()
+                                .toString()
+                                .padStart(2, "0")}:${startTime
+                                .getUTCMinutes()
+                                .toString()
+                                .padStart(2, "0")}`;
+                            let endFormatted = `${endTime
+                                .getUTCHours()
+                                .toString()
+                                .padStart(2, "0")}:${endTime
+                                .getUTCMinutes()
+                                .toString()
+                                .padStart(2, "0")}`;
+
+                            let option = document.createElement("option");
+                            option.value = tmss.tmss_id;
+                            option.text = `รอบที่ ${index + 1} ${startFormatted} น. - ${endFormatted} น.`;
+
+                            if (tmss.remaining_capacity === 0) {
+                                option.disabled = true;
+                                option.text += " (เต็ม)";
+                            } else {
+                                option.text += ` (เหลือ ${tmss.remaining_capacity} ที่นั่ง)`;
+                            }
+                            if (option.value == selectedTmssId) {
+                                option.selected = true;
+                            }
+                            tmssSelect.appendChild(option);
+                        });
+
+                        tmssSelect.disabled = false;
+                    }
+                })
+                .catch((error) => {
+                    console.error(
+                        "There was a problem with the fetch operation:",
+                        error
+                    );
+                });
+        }
+
         document
             .querySelector(".input-group-text")
             .addEventListener("click", () => {

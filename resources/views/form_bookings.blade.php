@@ -61,15 +61,16 @@
                     <div class="d-flex align-items-center mt-2 mt-sm-0">
                         <label for="booked_by" class="form-label mb-0" style="margin-right: 10px;">ดำเนินการจองโดย</label>
                         <input type="text" class="form-control" id="booked_by"
-                            value="{{ Auth::check() ? Auth::user()->name : 'ผู้จองเข้าชม' }}" readonly style="width: auto; max-width: 180px;">
-                            <input type="hidden" name="user_id" value="{{ Auth::check() ? Auth::user()->user_id : null }}">
-                        </div>
+                            value="{{ Auth::check() ? Auth::user()->name : 'ผู้จองเข้าชม' }}" readonly
+                            style="width: auto; max-width: 180px;">
+                        <input type="hidden" name="user_id" value="{{ Auth::check() ? Auth::user()->user_id : null }}">
                     </div>
+                </div>
 
                 <div class="pb-3">
                     <div id="calendar" class="calendar hidden"></div>
                 </div>
-                
+
                 <form method="POST" action="{{ route('InsertBooking') }}" class="row g-3" novalidate>
                     @csrf
                     <div class="col-md-5">
@@ -84,8 +85,7 @@
                         <label for="booking_date" class="form-label">วันที่จอง</label>
                         <div class="input-group">
                             <input type="date" class="form-control" id="booking_date" name="booking_date"
-                                value="{{ old('booking_date', $booking_date ?? '') }}"
-                                min="{{ date('Y-m-d', strtotime('+3 days')) }}" required
+                                value="{{ old('booking_date', $booking_date ?? '') }}" required
                                 placeholder="กรุณาเลือกวันที่ต้องการจอง (วัน/เดือน/ปี)">
                             <div class="input-group-append">
                                 <button type="button" class="input-group-text"
@@ -137,6 +137,7 @@
                                 name="fk_tmss_id">
                                 <option value="">เลือกรอบการเข้าชม</option>
                             </select>
+                            <input type="hidden" id="selected_tmss_id" value="{{ old('fk_tmss_id') }}">
                             @error('fk_tmss_id')
                                 <div class="my-2">
                                     <span class="text-danger">{{ $errors->first('fk_tmss_id') }}</span>
@@ -296,7 +297,7 @@
                             <label class="form-check-label" for="children_qty">เด็ก ( 3 ขวบ - ประถม ) :
                                 {{ number_format($selectedActivity->children_price, 0) }} บาท/คน</label>
                             <input type="number" class="form-control mt-2" id="childrenInput" name="children_qty"
-                                min="0" value="{{ old('children_qty') }}" 
+                                min="0" value="{{ old('children_qty') }}"
                                 {{ old('children_qty') ? '' : 'disabled' }} oninput="calculateTotal()">
                         </div>
 
@@ -307,7 +308,7 @@
                             <label class="form-check-label" for="students_qty">มัธยม/นักศึกษา :
                                 {{ number_format($selectedActivity->student_price, 0) }} บาท/คน</label>
                             <input type="number" class="form-control mt-2" id="studentInput" name="students_qty"
-                                min="0" value="{{ old('students_qty') }}" 
+                                min="0" value="{{ old('students_qty') }}"
                                 {{ old('students_qty') ? '' : 'disabled' }} oninput="calculateTotal()">
                         </div>
 
@@ -318,8 +319,8 @@
                             <label class="form-check-label" for="adults_qty">ผู้ใหญ่ / คุณครู :
                                 {{ number_format($selectedActivity->adult_price, 0) }} บาท/คน</label>
                             <input type="number" class="form-control mt-2" id="adultsInput" name="adults_qty"
-                                min="0" value="{{ old('adults_qty') }}" 
-                                {{ old('adults_qty') ? '' : 'disabled' }} oninput="calculateTotal()">
+                                min="0" value="{{ old('adults_qty') }}" {{ old('adults_qty') ? '' : 'disabled' }}
+                                oninput="calculateTotal()">
                         </div>
                     </div>
 
@@ -332,8 +333,8 @@
                             <label class="form-check-label" for="kid_qty">
                                 เด็กเล็ก ( ต่ำกว่า 2 ขวบ )</label>
                             <input type="number" class="form-control mt-2" id="kidInput" name="kid_qty"
-                                min="0" value="{{ old('kid_qty') }}" 
-                                {{ old('kid_qty') ? '' : 'disabled' }} oninput="calculateTotal()">
+                                min="0" value="{{ old('kid_qty') }}" {{ old('kid_qty') ? '' : 'disabled' }}
+                                oninput="calculateTotal()">
                         </div>
 
                         <!-- ผู้พิการ -->
@@ -343,7 +344,7 @@
                             <label class="form-check-label" for="disabled_qty">
                                 ผู้พิการ</label>
                             <input type="number" class="form-control mt-2" id="disabledInput" name="disabled_qty"
-                                min="0" value="{{ old('disabled_qty') }}" 
+                                min="0" value="{{ old('disabled_qty') }}"
                                 {{ old('disabled_qty') ? '' : 'disabled' }} oninput="calculateTotal()">
                         </div>
 
@@ -354,7 +355,7 @@
                             <label class="form-check-label" for="elderly_qty">
                                 ผู้สูงอายุ</label>
                             <input type="number" class="form-control mt-2" id="elderlyInput" name="elderly_qty"
-                                min="0" value="{{ old('elderly_qty') }}" 
+                                min="0" value="{{ old('elderly_qty') }}"
                                 {{ old('elderly_qty') ? '' : 'disabled' }} oninput="calculateTotal()">
                         </div>
 
@@ -365,8 +366,8 @@
                             <label class="form-check-label" for="monk_qty">
                                 พระภิกษุสงฆ์ /สามเณร</label>
                             <input type="number" class="form-control mt-2" id="monkInput" name="monk_qty"
-                                min="0" value="{{ old('monk_qty') }}" 
-                                {{ old('monk_qty') ? '' : 'disabled' }} oninput="calculateTotal()">
+                                min="0" value="{{ old('monk_qty') }}" {{ old('monk_qty') ? '' : 'disabled' }}
+                                oninput="calculateTotal()">
                         </div>
                     </div>
                     <!-- จำนวนผู้เข้าร่วมกิจกรรม -->

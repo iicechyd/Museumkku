@@ -344,7 +344,7 @@
 
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="privacyPolicy" name="privacy_policy"
-                            required>
+                        {{ old('privacy_policy') ? 'checked' : '' }} required>
                         <label class="form-check-label" for="privacyPolicy">
                             ฉันได้อ่านและยอมรับข้อตกลงการใช้งาน
                             <a href="#" data-bs-toggle="modal"

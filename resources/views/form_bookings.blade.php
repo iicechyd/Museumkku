@@ -116,7 +116,8 @@
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="sub_activity_id[]"
                                                     value="{{ $subactivity->sub_activity_id }}"
-                                                    id="sub_activity_{{ $subactivity->sub_activity_id }}">
+                                                    id="sub_activity_{{ $subactivity->sub_activity_id }}"
+                                                    {{ in_array($subactivity->sub_activity_id, old('sub_activity_id', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label"
                                                     for="sub_activity_{{ $subactivity->sub_activity_id }}">
                                                     {{ $subactivity->sub_activity_name }}
@@ -392,7 +393,7 @@
 
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="privacyPolicy" name="privacy_policy"
-                            required>
+                        {{ old('privacy_policy') ? 'checked' : '' }} required>
                         <label class="form-check-label" for="privacyPolicy">
                             ฉันได้อ่านและยอมรับข้อตกลงการใช้งาน
                             <a href="#" data-bs-toggle="modal"

@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
+    calculateTotal();
 });
 
 function fetchActivityPrice() {
@@ -194,8 +195,8 @@ function confirmSubmission() {
         document.getElementById("errorMessage").style.display = "none";
     }
 
-    if (totalVisitors < 50) {
-        alert("จำนวนผู้เข้าชมต้องไม่น้อยกว่า 50 คน");
+    if (totalVisitors <= 0) {
+        alert("จำนวนผู้เข้าชมต้องมากกว่า 0 คน");
         return;
     }
 

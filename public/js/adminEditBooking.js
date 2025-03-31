@@ -113,7 +113,6 @@ $.Thailand({
 
 document.addEventListener("DOMContentLoaded", function () {
     let bookingInput = document.getElementById("booking_date");
-    let minBookingDate = bookingInput.value || new Date().toISOString().split("T")[0];
     let tmssSelect = document.getElementById("fk_tmss_id");
     let activityId = document.getElementById("fk_activity_id").value;
     let existingDate = bookingInput.value;
@@ -192,8 +191,8 @@ document.addEventListener("DOMContentLoaded", function () {
         dateFormat: "Y-m-d",
         altInput: true,
         altFormat: "d/m/Y",
+        minDate: new Date().fp_incr(3),
         defaultDate: existingDate || null,
-        minDate: minBookingDate,
         disable: isWalkIn ? [true] : [function (date) {
             return date.getDay() === 1;
         }],

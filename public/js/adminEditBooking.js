@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function () {
         dateFormat: "Y-m-d",
         altInput: true,
         altFormat: "d/m/Y",
-        minDate: new Date().fp_incr(3),
+        minDate: isWalkIn ? null : new Date().fp_incr(3),
         defaultDate: existingDate || null,
         disable: isWalkIn ? [true] : [function (date) {
             return date.getDay() === 1;
@@ -219,11 +219,12 @@ document.addEventListener("DOMContentLoaded", function () {
             if (existingDate) {
                 fetchTmss(existingDate);
             }
+            const calendarButton = document.querySelector(".input-group-text");
+            if (isWalkIn && calendarButton) {
+                calendarButton.disabled = true;
+            }
         },
     });
-    if (isWalkIn && tmssSelect) {
-        tmssSelect.closest(".form-group").style.display = "none";
-    }
 });
 
 function confirmSubmission() {

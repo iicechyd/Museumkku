@@ -65,7 +65,9 @@
                     </div>
 
                     <div class="form-group col-md-4">
-                        <label for="booking_date" class="form-label">วันที่จอง</label>
+                        <label for="booking_date" class="form-label">
+                            {{ $booking->note == 'วอคอิน' ? 'วันที่เข้าชม' : 'วันที่จอง' }}
+                        </label>
                         <div class="input-group">
                             <input type="date" class="form-control" id="booking_date" name="booking_date"
                                 value="{{ old('booking_date', $booking->booking_date ?? '') }}" required
@@ -73,7 +75,7 @@
                                 data-note="{{ $booking->note }}">
                             <div class="input-group-append">
                                 <button type="button" class="input-group-text"
-                                    onclick="document.getElementById('booking_date').focus();">
+                                    onclick="document.getElementById('booking_date').focus();" >
                                     <i class="fas fa-calendar-alt" style="font-size: 1.5rem;"></i>
                                 </button>
                             </div>

@@ -10,7 +10,9 @@
     <div class="container">
         <h1 class="text-center pt-3" style="color: #489085; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);">
             ประวัติการจองทั้งหมด</h1>
-        <form action="{{ auth()->user()->role->role_name === 'Admin' ? route('booking.history.all') : route('exe.history.all') }}" method="GET" class="mb-4">
+        <form
+            action="{{ auth()->user()->role->role_name === 'Admin' ? route('booking.history.all') : route('exe.history.all') }}"
+            method="GET" class="mb-4">
             <button type="submit" name="daily" value="true" class="btn btn-primary">รายวัน</button>
             <button type="submit" name="monthly" value="true" class="btn btn-secondary">เดือนนี้</button>
             <button type="submit" name="fiscal_year" value="true" class="btn btn-warning"
@@ -93,7 +95,7 @@
                                                             @else
                                                                 -
                                                             @endif
-                                                        </td>                                                        
+                                                        </td>
                                                         <td>
                                                             <a href="#detailsModal_{{ $item->booking_id }}"
                                                                 class="text-blue-500" data-toggle="modal">
@@ -115,16 +117,16 @@
                                                         <td>
                                                             @php
                                                                 $actualVisitors = $item->actualVisitors;
-                                                                $totalQty = $actualVisitors ? (
-                                                                    $actualVisitors->actual_children_qty +
-                                                                    $actualVisitors->actual_students_qty +
-                                                                    $actualVisitors->actual_adults_qty +
-                                                                    $actualVisitors->actual_kid_qty +
-                                                                    $actualVisitors->actual_disabled_qty +
-                                                                    $actualVisitors->actual_elderly_qty +
-                                                                    $actualVisitors->actual_monk_qty +
-                                                                    $actualVisitors->actual_free_teachers_qty
-                                                                    ) : 0;
+                                                                $totalQty = $actualVisitors
+                                                                    ? $actualVisitors->actual_children_qty +
+                                                                        $actualVisitors->actual_students_qty +
+                                                                        $actualVisitors->actual_adults_qty +
+                                                                        $actualVisitors->actual_kid_qty +
+                                                                        $actualVisitors->actual_disabled_qty +
+                                                                        $actualVisitors->actual_elderly_qty +
+                                                                        $actualVisitors->actual_monk_qty +
+                                                                        $actualVisitors->actual_free_teachers_qty
+                                                                    : 0;
                                                             @endphp
                                                             @if ($totalQty)
                                                                 <a href="#" data-toggle="modal"
@@ -157,8 +159,11 @@
                                                                         {{ \Carbon\Carbon::parse($item->created_at)->locale('th')->translatedFormat('j F') }}
                                                                         {{ \Carbon\Carbon::parse($item->created_at)->year + 543 }}
                                                                         เวลา
-                                                                        {{ \Carbon\Carbon::parse($item->created_at)->format('H:i') }} น.
-                                                                        โดย: {{ $item->user ? $item->user->name : 'ผู้จองเข้าชม' }}</p>
+                                                                        {{ \Carbon\Carbon::parse($item->created_at)->format('H:i') }}
+                                                                        น.
+                                                                        โดย:
+                                                                        {{ $item->user ? $item->user->name : 'ผู้จองเข้าชม' }}
+                                                                    </p>
                                                                     <p><strong>กิจกรรม:</strong>
                                                                         {{ $item->activity->activity_name }}</p>
                                                                     @if (!$item->subActivities->isEmpty())
@@ -219,25 +224,47 @@
                                                                         คน</p>
                                                                     <p><strong>ยอดรวมราคา:</strong>
                                                                         {{ number_format($item->totalPrice, 2) }} บาท</p>
-                                                                    @foreach($item->statusChanges as $change)
-                                                                        @if($change->new_status == 1)
+                                                                    <p><strong>แนบเอกสาร: </strong>
+                                                                        @if ($item->documents->isNotEmpty())
+                                                                            @foreach ($item->documents as $document)
+                                                                                <span class="mr-2">
+                                                                                    <a href="{{ asset('storage/' . $document->file_path) }}"
+                                                                                        target="_blank">
+                                                                                        {{ $document->file_name }}
+                                                                                    </a>
+                                                                                </span>
+                                                                            @endforeach
+                                                                        @else
+                                                                            <span class="text-danger">-</span>
+                                                                        @endif
+                                                                    </p>
+                                                                    @foreach ($item->statusChanges as $change)
+                                                                        @if ($change->new_status == 1)
                                                                             <p><strong>อนุมัติการจอง: </strong>
                                                                                 {{ \Carbon\Carbon::parse($change->created_at)->locale('th')->translatedFormat('j F') }}
-                                                                                {{ \Carbon\Carbon::parse($change->created_at)->year + 543 }} เวลา
-                                                                                {{ \Carbon\Carbon::parse($change->created_at)->format('H:i') }} น.
-                                                                                โดย: </strong>{{ $change->user->name ?? 'N/A' }} 
+                                                                                {{ \Carbon\Carbon::parse($change->created_at)->year + 543 }}
+                                                                                เวลา
+                                                                                {{ \Carbon\Carbon::parse($change->created_at)->format('H:i') }}
+                                                                                น.
+                                                                                โดย:
+                                                                                </strong>{{ $change->user->name ?? 'N/A' }}
                                                                             @elseif($change->new_status == 2)
-                                                                                <p><strong>ยืนยันเข้าชม: </strong>
+                                                                            <p><strong>ยืนยันเข้าชม: </strong>
                                                                                 {{ \Carbon\Carbon::parse($change->created_at)->locale('th')->translatedFormat('j F') }}
-                                                                                {{ \Carbon\Carbon::parse($change->created_at)->year + 543 }} เวลา
-                                                                                {{ \Carbon\Carbon::parse($change->created_at)->format('H:i') }} น.
-                                                                                โดย: {{ $change->user->name ?? 'N/A' }} 
-                                                                        @elseif($change->new_status == 3)
+                                                                                {{ \Carbon\Carbon::parse($change->created_at)->year + 543 }}
+                                                                                เวลา
+                                                                                {{ \Carbon\Carbon::parse($change->created_at)->format('H:i') }}
+                                                                                น.
+                                                                                โดย: {{ $change->user->name ?? 'N/A' }}
+                                                                            @elseif($change->new_status == 3)
                                                                             <p><strong>ยกเลิกการจอง: </strong>
                                                                                 {{ \Carbon\Carbon::parse($change->created_at)->locale('th')->translatedFormat('j F') }}
-                                                                                {{ \Carbon\Carbon::parse($change->created_at)->year + 543 }} เวลา
-                                                                                {{ \Carbon\Carbon::parse($change->created_at)->format('H:i') }} น.
-                                                                                โดย: {{ $change->user->name ?? 'ผู้จองเข้าชม' }} 
+                                                                                {{ \Carbon\Carbon::parse($change->created_at)->year + 543 }}
+                                                                                เวลา
+                                                                                {{ \Carbon\Carbon::parse($change->created_at)->format('H:i') }}
+                                                                                น.
+                                                                                โดย:
+                                                                                {{ $change->user->name ?? 'ผู้จองเข้าชม' }}
                                                                         @endif
                                                                     @endforeach
                                                                 </div>
@@ -262,26 +289,38 @@
                                                                 </div>
                                                                 <div class="modal-body">
                                                                     @php
-                                                                        $modalDetails = $priceDetailsByBooking[$statusChange->booking_id] ?? null;
+                                                                        $modalDetails =
+                                                                            $priceDetailsByBooking[
+                                                                                $statusChange->booking_id
+                                                                            ] ?? null;
                                                                     @endphp
                                                                     @if ($modalDetails && !empty($modalDetails['details']))
-                                                                    @foreach ($modalDetails['details'] as $detail)
-                                                                        <p>{{ $detail['label'] }} {{ $detail['qty'] }} คน
-                                                                            @if ($detail['price'] > 0)
-                                                                                x {{ number_format($detail['price']) }} บาท =
-                                                                                {{ number_format($detail['total']) }} บาท
-                                                                            @endif
-                                                                        </p>
-                                                                    @endforeach
-                                                                    @if ($actualVisitors->actual_free_teachers_qty > 0)
-                                                                    <p>คุณครู {{ number_format($actualVisitors->actual_free_teachers_qty) }} คน</p>
-                                                                    @endif
-                                                                    @if ($modalDetails['totalPrice'] > 0)
-                                                                        <hr>
-                                                                        <p><strong>ยอดรวมราคา:</strong> {{ number_format($modalDetails['totalPrice']) }} บาท</p>
-                                                                        <p><strong>ยอดรวมผู้เข้าชมจริงทั้งหมด:</strong> {{ number_format($modalDetails['totalParticipants']) }} คน</p>
+                                                                        @foreach ($modalDetails['details'] as $detail)
+                                                                            <p>{{ $detail['label'] }} {{ $detail['qty'] }}
+                                                                                คน
+                                                                                @if ($detail['price'] > 0)
+                                                                                    x {{ number_format($detail['price']) }}
+                                                                                    บาท =
+                                                                                    {{ number_format($detail['total']) }}
+                                                                                    บาท
+                                                                                @endif
+                                                                            </p>
+                                                                        @endforeach
+                                                                        @if ($actualVisitors->actual_free_teachers_qty > 0)
+                                                                            <p>คุณครู
+                                                                                {{ number_format($actualVisitors->actual_free_teachers_qty) }}
+                                                                                คน</p>
                                                                         @endif
-                                                                @endif
+                                                                        @if ($modalDetails['totalPrice'] > 0)
+                                                                            <hr>
+                                                                            <p><strong>ยอดรวมราคา:</strong>
+                                                                                {{ number_format($modalDetails['totalPrice']) }}
+                                                                                บาท</p>
+                                                                            <p><strong>ยอดรวมผู้เข้าชมจริงทั้งหมด:</strong>
+                                                                                {{ number_format($modalDetails['totalParticipants']) }}
+                                                                                คน</p>
+                                                                        @endif
+                                                                    @endif
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary"

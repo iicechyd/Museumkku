@@ -69,7 +69,7 @@
                                 @else
                                     -
                                 @endif
-                            </td> 
+                            </td>
                             <td>
                                 {!! $item->status == 3 ? '<button type="button" class="btn-except">ยกเลิก</button>' : '' !!}
                             </td>
@@ -122,8 +122,8 @@
                                                     </strong>{{ $item->adults_qty }} คน</p>
                                             @endif
                                             @if ($item->kid_qty > 0)
-                                            <p><strong>เด็กเล็ก :
-                                                </strong>{{ $item->kid_qty }} คน</p>
+                                                <p><strong>เด็กเล็ก :
+                                                    </strong>{{ $item->kid_qty }} คน</p>
                                             @endif
                                             @if ($item->disabled_qty > 0)
                                                 <p><strong>ผู้พิการ :
@@ -144,6 +144,20 @@
                                                 </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->kid_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
                                                 คน</p>
                                             <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
+                                            <p><strong>แนบเอกสาร: </strong>
+                                                @if ($item->documents->isNotEmpty())
+                                                    @foreach ($item->documents as $document)
+                                                        <span class="mr-2">
+                                                            <a href="{{ asset('storage/' . $document->file_path) }}"
+                                                                target="_blank">
+                                                                {{ $document->file_name }}
+                                                            </a>
+                                                        </span>
+                                                    @endforeach
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+                                            </p>
                                             <p><strong>ยกเลิก: </strong>
                                                 @if ($item->latestStatusChange)
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
@@ -174,4 +188,5 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 @endsection
+
 </html>

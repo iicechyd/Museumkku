@@ -67,7 +67,7 @@
                                 @else
                                     -
                                 @endif
-                            </td> 
+                            </td>
                             <td>
                                 {!! $item->status == 3 ? '<button type="button" class="btn-except">ยกเลิก</button>' : '' !!}
                             </td>
@@ -142,7 +142,20 @@
                                                 </strong>{{ $item->children_qty + $item->students_qty + $item->adults_qty + $item->kid_qty + $item->disabled_qty + $item->elderly_qty + $item->monk_qty }}
                                                 คน</p>
                                             <p><strong>ยอดรวมราคา: </strong>{{ number_format($item->totalPrice, 2) }} บาท</p>
-
+                                            <p><strong>แนบเอกสาร: </strong>
+                                                @if ($item->documents->isNotEmpty())
+                                                    @foreach ($item->documents as $document)
+                                                        <span class="mr-2">
+                                                            <a href="{{ asset('storage/' . $document->file_path) }}"
+                                                                target="_blank">
+                                                                {{ $document->file_name }}
+                                                            </a>
+                                                        </span>
+                                                    @endforeach
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+                                            </p>
                                             <p><strong>ยกเลิก: </strong>
                                                 @if ($item->latestStatusChange)
                                                     {{ \Carbon\Carbon::parse($item->latestStatusChange->updated_at)->locale('th')->translatedFormat('j F') }}
